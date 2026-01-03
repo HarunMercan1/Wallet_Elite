@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // State Management
+import 'package:supabase_flutter/supabase_flutter.dart'; // Veritabanı
+import 'core/app_router.dart'; // Trafik Polisi (Router)
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 1. SUPABASE BAĞLANTISI
-  // Buraya kendi URL ve KEY bilgilerini tırnak içine yapıştır
+  // 1. SUPABASE BAĞLANTISI (Burası Çok Önemli!)
   await Supabase.initialize(
+    // DİKKAT: Buraya kendi proje URL'ini yaz (Doğru görünüyor)
     url: 'https://udekdhskflduszcoknch.supabase.co',
-    anonKey: 'https://udekdhskflduszcoknch.supabase.co',
+
+    // DİKKAT: Buraya 'anon public key' gelecek.
+    // Sen URL'yi tekrar yazmışsın, o yanlış. Supabase panelinden 'Project Settings > API' kısmından kopyala.
+    anonKey: 'sb_publishable_iUxetHgqsdyb1HXu2KWGkA__k-7WKDX',
   );
 
-  runApp(const WalletEliteApp());
+  // 2. UYGULAMAYI BAŞLAT (Riverpod Kapsayıcısı ile)
+  runApp(const ProviderScope(child: WalletEliteApp()));
 }
 
 class WalletEliteApp extends StatelessWidget {
@@ -19,65 +25,25 @@ class WalletEliteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // 3. ROUTER KURULUMU
+    return MaterialApp.router(
       title: 'Wallet Elite',
       debugShowCheckedModeBanner: false,
-      // ELITE TEMA: Gece Mavisi ve Altın Sarısı
+
+      // ELITE TEMA AYARLARI
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: const Color(0xFF1A1F38), // Midnight Blue
-        scaffoldBackgroundColor: const Color(0xFF0F172A), // Daha koyu lacivert
+        scaffoldBackgroundColor: const Color(0xFF0F172A), // Koyu Lacivert
         useMaterial3: true,
-      ),
-      home: const ConnectionTestScreen(),
-    );
-  }
-}
-
-class ConnectionTestScreen extends StatelessWidget {
-  const ConnectionTestScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo niyetine bir ikon
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A1F38),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.amber, width: 2),
-                boxShadow: [
-                  BoxShadow(color: Colors.amber.withOpacity(0.3), blurRadius: 20)
-                ],
-              ),
-              child: const Icon(Icons.account_balance_wallet, size: 60, color: Colors.amber),
-            ),
-            const SizedBox(height: 30),
-            const Text(
-              'WALLET ELITE',
-              style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: Colors.white
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Bağlantı kontrolü
-            const Chip(
-              label: Text('Supabase Bağlantısı Başarılı'),
-              avatar: Icon(Icons.check_circle, color: Colors.green),
-              backgroundColor: Color(0xFF1A1F38),
-              labelStyle: TextStyle(color: Colors.white70),
-            ),
-          ],
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF1A1F38),
+          elevation: 0,
         ),
       ),
+
+      // Trafik polisini (Router) buraya bağlıyoruz
+      routerConfig: router,
     );
   }
 }
