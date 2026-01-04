@@ -14,20 +14,31 @@ class AuthController extends StateNotifier<bool> {
   Future<void> signIn({required String email, required String password}) async {
     state = true;
     try {
+      print("🚀 Giriş deneniyor... Email: $email");
       await _authRepository.signIn(email: email, password: password);
+      print("✅ GİRİŞ BAŞARILI! Yönlendirme bekleniyor...");
     } catch (e) {
-      rethrow;
+      print("🛑 GİRİŞ HATASI: $e"); // <-- Hatayı burada göreceğiz
     } finally {
       state = false;
     }
   }
 
+  // auth_controller.dart içindeki signUp fonksiyonunu bununla değiştir:
+
   Future<void> signUp({required String email, required String password, required String fullName}) async {
-    state = true;
+    state = true; // Yükleniyor simgesi dönsün
     try {
+      print("🚀 Sinyal gönderiliyor... Hedef: Supabase");
+      print("📧 Email: $email");
+
       await _authRepository.signUp(email: email, password: password, fullName: fullName);
+
+      print("✅ OPERASYON BAŞARILI! Kullanıcı oluştu.");
+    } catch (e) {
+      print("🛑 HATA TESPİT EDİLDİ: $e"); // <-- İşte katili bize burası söyleyecek
     } finally {
-      state = false;
+      state = false; // İşlem bitti
     }
   }
 
