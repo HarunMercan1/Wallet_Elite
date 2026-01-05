@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/transaction_model.dart';
-
+import '../models/category_model.dart';
 class WalletRepository {
   final SupabaseClient _client;
 
@@ -74,4 +74,26 @@ class WalletRepository {
       'date': DateTime.now().toIso8601String(),
     });
   }
+
+  // ... (Mevcut kodların altına ekle)
+
+  // 3. KATEGORİLERİ GETİR
+  Future<List<CategoryModel>> getCategories() async {
+    try {
+      final userId = _client.auth.currentUser!.id;
+
+      // Veritabanından çek
+      final data = await _client
+          .from('categories')
+          .select()
+          .eq('user_id', userId);
+
+      // Gelen veriyi Modele çevirip listele
+      return (data as List).map((e) => CategoryModel.fromJson(e)).toList();
+    } catch (e) {
+      print("Kategori hatası: $e");
+      return []; // Hata olursa boş liste dön
+    }
+  }
+
 }

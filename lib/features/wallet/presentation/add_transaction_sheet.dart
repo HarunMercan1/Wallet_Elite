@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/icon_helper.dart'; // İkon yardımcısı
+import '../../../core/widgets/custom_button.dart'; // Özel butonumuz
 import '../data/wallet_provider.dart';
+import '../models/category_model.dart';
+import 'package:go_router/go_router.dart';
 
 class AddTransactionSheet extends ConsumerStatefulWidget {
   const AddTransactionSheet({super.key});
@@ -12,141 +15,155 @@ class AddTransactionSheet extends ConsumerStatefulWidget {
 }
 
 class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
-  // Form verilerini tutan değişkenler
-  bool isExpense = true; // Gider mi? (Kırmızı)
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
-  bool isLoading = false; // Kayıt sırasında döner tekerlek için
+  bool isExpense = true;
+  final _amountController = TextEditingController();
+  final _titleController = TextEditingController();
+  bool isLoading = false;
+  String? selectedCategoryId;
 
   @override
   Widget build(BuildContext context) {
-    // Klavye açılınca ekranı yukarı itmesi için
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    final categoriesState = ref.watch(categoriesProvider);
 
     return Container(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, keyboardSpace + 24),
+      height: MediaQuery.of(context).size.height * 0.85,
+      padding: EdgeInsets.fromLTRB(24, 16, 24, keyboardSpace + 24),
       decoration: const BoxDecoration(
-        color: Color(0xFF1A1F38), // Koyu lacivert
+        color: AppColors.container,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // İçerik kadar yer kapla
         children: [
-          // 1. ÜST ÇİZGİ (Tutma yeri)
+          // Tutma Çizgisi
+          Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[700], borderRadius: BorderRadius.circular(2))),
+          const SizedBox(height: 20),
+
+          // 1. GELİR / GİDER SEÇİMİ
           Container(
-            width: 40, height: 4,
-            decoration: BoxDecoration(color: Colors.grey[700], borderRadius: BorderRadius.circular(2)),
-          ),
-          const SizedBox(height: 24),
-
-          // 2. GELİR / GİDER SEÇİMİ (Toggle)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildTypeButton(title: 'Gider', isActive: isExpense, color: Colors.redAccent, onTap: () => setState(() => isExpense = true)),
-              const SizedBox(width: 16),
-              _buildTypeButton(title: 'Gelir', isActive: !isExpense, color: Colors.greenAccent, onTap: () => setState(() => isExpense = false)),
-            ],
-          ),
-
-          const SizedBox(height: 30),
-
-          // 3. TUTAR GİRİŞİ (Büyük Yazı)
-          TextField(
-            controller: _amountController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
-            decoration: InputDecoration(
-              hintText: '₺0.00',
-              hintStyle: TextStyle(color: Colors.grey[600]),
-              border: InputBorder.none, // Çizgisiz
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(12)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTab('Gider', true),
+                _buildTab('Gelir', false),
+              ],
             ),
           ),
 
           const SizedBox(height: 20),
 
-          // 4. AÇIKLAMA GİRİŞİ
-          TextField(
-            controller: _titleController,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: isExpense ? 'Nereye harcadın?' : 'Para nereden geldi?',
-              hintStyle: const TextStyle(color: Colors.grey),
-              filled: true,
-              fillColor: const Color(0xFF0F172A),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-              prefixIcon: Icon(isExpense ? FontAwesomeIcons.burger : FontAwesomeIcons.moneyBill, color: Colors.grey),
+          // 2. KATEGORİ IZGARASI (GRID)
+          Expanded(
+            child: categoriesState.when(
+              loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+              error: (err, _) => Center(child: Text("Hata: $err")),
+              data: (categories) {
+                final filtered = categories.where((c) => c.type == (isExpense ? 'expense' : 'income')).toList();
+                if (filtered.isEmpty) return const Center(child: Text("Kategori yok", style: TextStyle(color: Colors.grey)));
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 0.8),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final cat = filtered[index];
+                    final isSelected = selectedCategoryId == cat.id;
+                    return GestureDetector(
+                      onTap: () => setState(() {
+                        selectedCategoryId = cat.id;
+                        if (_titleController.text.isEmpty) _titleController.text = cat.name;
+                      }),
+                      child: Column(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.primary : AppColors.background,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(IconHelper.getIcon(cat.iconCode), color: isSelected ? Colors.black : Colors.grey, size: 20),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(cat.name, style: TextStyle(color: isSelected ? AppColors.primary : Colors.grey, fontSize: 11), maxLines: 1),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ),
 
-          const SizedBox(height: 30),
-
-          // 5. KAYDET BUTONU
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isExpense ? Colors.redAccent : Colors.greenAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              ),
-              onPressed: isLoading ? null : _saveTransaction, // Tıklayınca kaydet
-              child: isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('KAYDET', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+          // 3. ALT KISIM (INPUTLAR)
+          TextField(
+            controller: _amountController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+            cursorColor: AppColors.primary,
+            decoration: InputDecoration(
+              hintText: '0', hintStyle: TextStyle(color: Colors.grey[700], fontSize: 32),
+              suffixText: '₺', suffixStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+              border: InputBorder.none,
             ),
+          ),
+
+          TextField(
+            controller: _titleController,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            textAlign: TextAlign.center,
+            cursorColor: AppColors.primary,
+            decoration: InputDecoration(
+              hintText: 'Açıklama ekle...', hintStyle: TextStyle(color: Colors.grey[700], fontSize: 14),
+              border: InputBorder.none,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // MODÜLER BUTON KULLANIMI
+          CustomButton(
+            text: 'KAYDET',
+            isLoading: isLoading,
+            onPressed: _saveTransaction,
           ),
         ],
       ),
     );
   }
 
-  // BUTON TASARIMI İÇİN YARDIMCI
-  Widget _buildTypeButton({required String title, required bool isActive, required Color color, required VoidCallback onTap}) {
+  Widget _buildTab(String text, bool isExpenseTab) {
+    final isSelected = isExpense == isExpenseTab;
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => setState(() => isExpense = isExpenseTab),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? color.withOpacity(0.2) : Colors.transparent,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: isActive ? color : Colors.grey.withOpacity(0.3)),
+          color: isSelected ? (isExpenseTab ? AppColors.expense : AppColors.income) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
-          title,
-          style: TextStyle(color: isActive ? color : Colors.grey, fontWeight: FontWeight.bold),
-        ),
+        child: Text(text, style: TextStyle(color: isSelected ? Colors.white : Colors.grey, fontWeight: FontWeight.bold, fontSize: 14)),
       ),
     );
   }
 
-  // --- KAYDETME MANTIĞI ---
   Future<void> _saveTransaction() async {
-    // 1. Basit kontrol: Boş mu?
-    if (_amountController.text.isEmpty || _titleController.text.isEmpty) return;
-
-    setState(() => isLoading = true); // Dönme dolabı başlat
-
+    if (_amountController.text.isEmpty) return;
+    setState(() => isLoading = true);
     try {
-      final amount = double.parse(_amountController.text.replaceAll(',', '.')); // Virgülü noktaya çevir
-
-      // 2. Repository'e Gönder (Mutfak siparişi)
+      final amount = double.parse(_amountController.text.replaceAll(',', '.'));
       await ref.read(walletRepositoryProvider).addTransaction(
-        title: _titleController.text,
+        title: _titleController.text.isEmpty ? 'Harcama' : _titleController.text,
         amount: amount,
         isExpense: isExpense,
       );
-
-      // 3. Listeyi Yenile (Ekran güncellensin)
       ref.refresh(recentTransactionsProvider);
-
-      // 4. Paneli Kapat
       if (mounted) context.pop();
-
     } catch (e) {
-      print("Hata: $e"); // Hata olursa konsola yaz
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Hata: $e")));
     } finally {
       if (mounted) setState(() => isLoading = false);
