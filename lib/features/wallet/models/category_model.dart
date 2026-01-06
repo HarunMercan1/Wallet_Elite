@@ -1,24 +1,50 @@
+// lib/features/wallet/models/category_model.dart
+
+/// Kategori modeli (categories tablosu)
 class CategoryModel {
   final String id;
-  final String name;      // Örn: Market
-  final String type;      // income (gelir) veya expense (gider)
-  final String iconCode;  // Örn: cartShopping
+  final String userId;
+  final String name;
+  final String? icon; // Icon kodu (FontAwesome)
+  final String type; // income veya expense
+  final DateTime createdAt;
 
   CategoryModel({
     required this.id,
+    required this.userId,
     required this.name,
+    this.icon,
     required this.type,
-    required this.iconCode,
+    required this.createdAt,
   });
 
-  // Supabase'den gelen JSON verisini modele çeviren fabrika
+  /// JSON'dan model oluştur
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
-      id: json['id'],
-      name: json['name'],
-      type: json['type'],
-      // Eğer veritabanında ikon boşsa 'question' (soru işareti) koy
-      iconCode: json['icon'] ?? 'question',
+      id: json['id'] as String,
+      userId: json['user_id'] as String,
+      name: json['name'] as String,
+      icon: json['icon'] as String?,
+      type: json['type'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
+
+  /// Model'i JSON'a çevir
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user_id': userId,
+      'name': name,
+      'icon': icon,
+      'type': type,
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
+
+  /// Gelir kategorisi mi?
+  bool get isIncome => type == 'income';
+
+  /// Gider kategorisi mi?
+  bool get isExpense => type == 'expense';
 }

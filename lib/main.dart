@@ -1,43 +1,65 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'core/app_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-Future<void> main() async {
+import 'core/constants/supabase_config.dart';
+import 'core/theme/app_colors.dart';
+import 'core/widgets/app_router.dart';
+
+void main() async {
+  // Flutter Engine başlatma
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Supabase başlatma
   await Supabase.initialize(
-    // DİKKAT: Buraya kendi URL ve KEY bilgilerini tekrar yapıştır!
-    url: 'https://udekdhskflduszcoknch.supabase.co',
-    anonKey: 'sb_publishable_iUxetHgqsdyb1HXu2KWGkA__k-7WKDX',
+    url: SupabaseConfig.url,
+    anonKey: SupabaseConfig.anonKey,
   );
 
-  runApp(const ProviderScope(child: WalletEliteApp()));
+  // Uygulamayı başlat
+  runApp(
+    const ProviderScope(
+      child: WalletEliteApp(),
+    ),
+  );
 }
 
-// StatelessWidget -> ConsumerWidget oldu (Router'ı okumak için)
 class WalletEliteApp extends ConsumerWidget {
   const WalletEliteApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Yeni oluşturduğumuz Router Provider'ını izle
-    final router = ref.watch(appRouterProvider);
+    final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
       title: 'Wallet Elite',
       debugShowCheckedModeBanner: false,
+
+      // Tema Ayarları
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: const Color(0xFF1A1F38),
-        scaffoldBackgroundColor: const Color(0xFF0F172A),
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1A1F38),
-          elevation: 0,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.light,
         ),
+        textTheme: GoogleFonts.interTextTheme(),
       ),
-      // Config artık provider'dan geliyor
+
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.dark,
+        ),
+        textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+      ),
+
+      themeMode: ThemeMode.system, // Sistem temasını takip et
+
+      // Router
       routerConfig: router,
     );
   }

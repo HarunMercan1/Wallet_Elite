@@ -1,20 +1,34 @@
+// lib/core/theme/app_colors.dart
+
 import 'package:flutter/material.dart';
 
+/// Elite teması renkleri (Midnight Blue & Gold)
 class AppColors {
-  // Ana Arka Plan (O koyu lacivert)
-  static const Color background = Color(0xFF0F172A);
+  // Primary - Elite Mavi
+  static const Color primary = Color(0xFF1E3A8A); // Gece Mavisi
+  static const Color primaryLight = Color(0xFF3B82F6);
+  static const Color primaryDark = Color(0xFF1E293B);
 
-  // Kartların Rengi (Bir tık açık lacivert)
-  static const Color container = Color(0xFF1A1F38);
+  // Accent - Elite Altın
+  static const Color accent = Color(0xFFFFD700); // Altın
+  static const Color accentLight = Color(0xFFFFF4CC);
 
-  // Vurgu Rengi (Sarı)
-  static const Color primary = Colors.amber;
+  // Background
+  static const Color background = Color(0xFFF8FAFC);
+  static const Color backgroundDark = Color(0xFF0F172A);
 
-  // Gelir / Gider
-  static const Color income = Color(0xFF22C55E); // Daha canlı yeşil
-  static const Color expense = Color(0xFFEF4444); // Daha canlı kırmızı
+  // Surface
+  static const Color surface = Colors.white;
+  static const Color surfaceDark = Color(0xFF1E293B);
 
-  // Yazılar
-  static const Color textPrimary = Colors.white;
-  static const Color textSecondary = Colors.grey;
+  // Text
+  static const Color textPrimary = Color(0xFF0F172A);
+  static const Color textSecondary = Color(0xFF64748B);
+  static const Color textDark = Color(0xFFF1F5F9);
+
+  // Status
+  static const Color success = Color(0xFF10B981);
+  static const Color error = Color(0xFFEF4444);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color info = Color(0xFF3B82F6);
 }

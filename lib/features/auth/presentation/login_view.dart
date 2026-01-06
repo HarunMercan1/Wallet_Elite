@@ -1,193 +1,147 @@
+// lib/features/auth/presentation/login_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'auth_controller.dart';
+import '../data/auth_provider.dart';
+import '../../../core/theme/app_colors.dart';
 
-class LoginView extends ConsumerStatefulWidget {
+class LoginView extends ConsumerWidget {
   const LoginView({super.key});
 
   @override
-  ConsumerState<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends ConsumerState<LoginView> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final isLoading = ref.watch(authControllerProvider);
-
-    // Ekran boyutunu alıyoruz (Responsive tasarım için)
-    final screenHeight = MediaQuery.of(context).size.height;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authController = ref.watch(authControllerProvider);
 
     return Scaffold(
-      // resizeToAvoidBottomInset: false yaparsak klavye açılınca ekran sıkışmaz
-      // ama inputlar altta kalabilir. True en sağlıklısıdır.
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            // Klavye açılınca kayabilsin ama normalde tam ekran dursun diye:
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight, // En az ekran boyu kadar olsun
-              ),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Üstten biraz boşluk (Spacer esnek boşluktur)
-                      const Spacer(flex: 2),
-
-                      // LOGO (Ekran küçükse biraz küçülsün)
-                      Icon(
-                        Icons.account_balance_wallet,
-                        size: screenHeight < 600 ? 60 : 80, // Küçük ekranda küçült
-                        color: Colors.amber,
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'WALLET ELITE',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Paranı Yönet, Geleceğini İnşa Et',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: screenHeight < 600 ? 14 : 16,
-                        ),
-                      ),
-
-                      const Spacer(flex: 2), // Araya esnek boşluk
-
-                      // FORM ALANLARI
-                      TextField(
-                        controller: _emailController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'E-posta',
-                          prefixIcon: const Icon(Icons.email_outlined),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                          filled: true,
-                          fillColor: const Color(0xFF1A1F38),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Şifre',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                          filled: true,
-                          fillColor: const Color(0xFF1A1F38),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // GİRİŞ BUTONU
-                      ElevatedButton(
-                        onPressed: isLoading ? null : () {
-                          ref.read(authControllerProvider.notifier).signIn(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: isLoading
-                            ? const CircularProgressIndicator(color: Colors.black)
-                            : const Text('Giriş Yap', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      ),
-
-                      const Spacer(flex: 2), // Araya esnek boşluk
-
-                      const Text('veya', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
-                      const SizedBox(height: 20),
-
-                      // SOSYAL MEDYA
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _SocialButton(
-                            icon: FontAwesomeIcons.google,
-                            color: Colors.red,
-                            onTap: () => ref.read(authControllerProvider.notifier).signInWithGoogle(),
-                          ),
-                          const SizedBox(width: 20),
-                          _SocialButton(
-                            icon: FontAwesomeIcons.apple,
-                            color: Colors.white,
-                            onTap: () => ref.read(authControllerProvider.notifier).signInWithApple(),
-                          ),
-                        ],
-                      ),
-
-                      const Spacer(flex: 1), // Alt kısımdan biraz boşluk
-
-                      // KAYIT OL LİNKİ
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Hesabın yok mu?", style: TextStyle(color: Colors.grey)),
-                          TextButton(
-                            onPressed: () => context.push('/register'),
-                            child: const Text('Kayıt Ol', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-
-                      const Spacer(flex: 1), // En altta biraz boşluk kalsın
-                    ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.primary,
+              AppColors.primaryDark,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo & Başlık
+                  const Icon(
+                    Icons.account_balance_wallet_rounded,
+                    size: 80,
+                    color: AppColors.accent,
                   ),
-                ),
+                  const SizedBox(height: 16),
+
+                  const Text(
+                    'Wallet Elite',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  const Text(
+                    'Finansal özgürlüğünüz, avucunuzda',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.accentLight,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+
+                  const SizedBox(height: 60),
+
+                  // Google Sign In Button
+                  _SocialButton(
+                    icon: FontAwesomeIcons.google,
+                    label: 'Google ile Devam Et',
+                    onPressed: () async {
+                      final success = await authController.signInWithGoogle();
+                      if (!success && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Giriş başarısız oldu'),
+                            backgroundColor: AppColors.error,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+
+                  // Apple butonunu KALDIRILDI (iOS'ta test edilecek)
+
+                  const SizedBox(height: 40),
+
+                  // Privacy Text
+                  const Text(
+                    'Devam ederek Kullanım Şartları ve\nGizlilik Politikası\'nı kabul etmiş olursunuz',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.accentLight,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
 }
 
+/// Sosyal medya giriş butonu widget'ı
 class _SocialButton extends StatelessWidget {
   final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
+  final String label;
+  final VoidCallback onPressed;
+  final Color backgroundColor;
 
-  const _SocialButton({required this.icon, required this.color, required this.onTap});
+  const _SocialButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.backgroundColor = Colors.white,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(50),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1F38),
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white24),
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: FaIcon(
+          icon,
+          color: backgroundColor == Colors.white ? Colors.black87 : Colors.white,
         ),
-        child: Icon(icon, color: color, size: 30),
+        label: Text(
+          label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: backgroundColor == Colors.white ? Colors.black87 : Colors.white,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       ),
     );
   }

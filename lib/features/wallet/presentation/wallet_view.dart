@@ -1,7 +1,9 @@
+// lib/features/wallet/presentation/wallet_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../auth/presentation/auth_controller.dart';
+import '../../../features/auth/data/auth_provider.dart';
 import '../data/wallet_provider.dart';
 
 class WalletView extends ConsumerWidget {
@@ -9,8 +11,8 @@ class WalletView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. VERİYİ ÇEK (Supabase'den gelen liste)
-    final transactionState = ref.watch(recentTransactionsProvider);
+    // 1. VERİYİ ÇEK (transactionsProvider kullan, recentTransactionsProvider yok)
+    final transactionState = ref.watch(transactionsProvider);
 
     // 2. HESAP MAKİNESİ (Gelen veriyi topla/çıkar)
     double totalBalance = 0;
@@ -23,7 +25,7 @@ class WalletView extends ConsumerWidget {
         if (t.isExpense) {
           totalBalance -= t.amount;
           totalExpense += t.amount;
-        } else {
+        } else if (t.isIncome) {
           totalBalance += t.amount;
           totalIncome += t.amount;
         }
@@ -76,7 +78,7 @@ class WalletView extends ConsumerWidget {
               children: [
                 const Text('Son Hareketler', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                 TextButton(
-                    onPressed: () => ref.refresh(recentTransactionsProvider),
+                    onPressed: () => ref.refresh(transactionsProvider),
                     child: const Text('Yenile', style: TextStyle(color: Colors.amber))),
               ],
             ),
@@ -95,12 +97,16 @@ class WalletView extends ConsumerWidget {
                     ),
                   );
                 }
+
+                // Son 10 işlemi göster
+                final recentTransactions = transactions.take(10).toList();
+
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: transactions.length,
+                  itemCount: recentTransactions.length,
                   itemBuilder: (context, index) {
-                    return _TransactionTile(transaction: transactions[index]);
+                    return _TransactionTile(transaction: recentTransactions[index]);
                   },
                 );
               },
@@ -115,6 +121,8 @@ class WalletView extends ConsumerWidget {
 
   // --- 1. Header Parçası ---
   Widget _buildHeader(WidgetRef ref) {
+    final authController = ref.read(authControllerProvider);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -136,7 +144,7 @@ class WalletView extends ConsumerWidget {
         ),
         IconButton(
           icon: const Icon(Icons.logout, color: Colors.redAccent),
-          onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
+          onPressed: () => authController.signOut(),
         ),
       ],
     );
@@ -269,15 +277,25 @@ class _TransactionTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(transaction.title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(
+                  transaction.description ?? 'İşlem',
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                ),
                 const SizedBox(height: 4),
-                Text(transaction.date.toString().substring(0, 10), style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                Text(
+                  transaction.date.toString().substring(0, 10),
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
               ],
             ),
           ),
           Text(
-            '${transaction.isExpense ? '-' : '+'} ₺${transaction.amount}',
-            style: TextStyle(color: transaction.isExpense ? Colors.white : Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 16),
+            '${transaction.isExpense ? '-' : '+'} ₺${transaction.amount.toStringAsFixed(2)}',
+            style: TextStyle(
+              color: transaction.isExpense ? Colors.redAccent : Colors.greenAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
         ],
       ),
