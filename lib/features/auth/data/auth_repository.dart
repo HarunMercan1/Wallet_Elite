@@ -13,11 +13,62 @@ class AuthRepository {
   /// Auth state değişikliklerini dinle
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
 
-  /// Google ile giriş yap
-  // lib/features/auth/data/auth_repository.dart
+  /// Email ile kayıt ol
+  Future<bool> signUpWithEmail(String email, String password) async {
+    try {
+      print('🔄 Email ile kayıt başlatılıyor: $email');
 
-  /// Google ile giriş yap
-  // lib/features/auth/data/auth_repository.dart (DÜZELTME)
+      final response = await _supabase.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      print(
+        '📧 Kayıt response: user=${response.user?.id}, session=${response.session != null}',
+      );
+
+      if (response.user != null) {
+        print('✅ Kayıt başarılı! User ID: ${response.user!.id}');
+        return true;
+      } else {
+        print('⚠️ Kayıt response geldi ama user null');
+        return false;
+      }
+    } on AuthException catch (e) {
+      print('❌ AuthException: ${e.message}');
+      print('   Status Code: ${e.statusCode}');
+      return false;
+    } catch (e) {
+      print('❌ Email kayıt hatası: $e');
+      print('   Hata tipi: ${e.runtimeType}');
+      return false;
+    }
+  }
+
+  /// Email ile giriş yap
+  Future<bool> signInWithEmail(String email, String password) async {
+    try {
+      final response = await _supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      return response.user != null;
+    } catch (e) {
+      print('Email giriş hatası: $e');
+      return false;
+    }
+  }
+
+  /// Şifre sıfırlama e-postası gönder
+  Future<bool> resetPassword(String email) async {
+    try {
+      await _supabase.auth.resetPasswordForEmail(email);
+      return true;
+    } catch (e) {
+      print('Şifre sıfırlama hatası: $e');
+      return false;
+    }
+  }
 
   /// Google ile giriş yap
   Future<bool> signInWithGoogle() async {
@@ -38,19 +89,6 @@ class AuthRepository {
     // TODO: iOS cihazda test edilecek
     print('Apple Sign-In şu an sadece iOS cihazlarda çalışır');
     return false;
-
-    /* ÖNCEKİ KOD:
-  try {
-    await _supabase.auth.signInWithOAuth(
-      OAuthProvider.apple,
-      redirectTo: 'io.supabase.walletelite://login-callback',
-    );
-    return true;
-  } catch (e) {
-    print('Apple giriş hatası: $e');
-    return false;
-  }
-  */
   }
 
   /// Çıkış yap

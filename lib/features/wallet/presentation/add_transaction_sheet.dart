@@ -10,7 +10,8 @@ class AddTransactionSheet extends ConsumerStatefulWidget {
   const AddTransactionSheet({super.key});
 
   @override
-  ConsumerState<AddTransactionSheet> createState() => _AddTransactionSheetState();
+  ConsumerState<AddTransactionSheet> createState() =>
+      _AddTransactionSheetState();
 }
 
 class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
@@ -22,6 +23,20 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
   String? _selectedAccountId;
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    // İlk cüzdanı otomatik seç
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final accounts = ref.read(accountsProvider);
+      accounts.whenData((list) {
+        if (list.isNotEmpty && _selectedAccountId == null) {
+          setState(() => _selectedAccountId = list.first.id);
+        }
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -52,9 +67,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.grey[200]!),
-              ),
+              border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
             ),
             child: Row(
               children: [
@@ -65,10 +78,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                 const Expanded(
                   child: Text(
                     'Yeni İşlem',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -251,7 +261,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                       leading: const Icon(Icons.calendar_today),
                       title: const Text('Tarih'),
                       subtitle: Text(
-                        DateFormat('dd MMMM yyyy', 'tr_TR').format(_selectedDate),
+                        DateFormat(
+                          'dd MMMM yyyy',
+                          'tr_TR',
+                        ).format(_selectedDate),
                       ),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () async {
@@ -301,7 +314,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     );
   }
 
-  Widget _buildTypeButton(String label, String type, IconData icon, Color color) {
+  Widget _buildTypeButton(
+    String label,
+    String type,
+    IconData icon,
+    Color color,
+  ) {
     final isSelected = _transactionType == type;
 
     return GestureDetector(
@@ -320,10 +338,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.white : Colors.grey[600],
-            ),
+            Icon(icon, color: isSelected ? Colors.white : Colors.grey[600]),
             const SizedBox(width: 8),
             Text(
               label,

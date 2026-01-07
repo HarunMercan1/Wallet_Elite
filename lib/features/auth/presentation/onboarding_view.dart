@@ -1,8 +1,9 @@
 // lib/features/auth/presentation/onboarding_view.dart
-
+import '../../../core/utils/responsive_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/auth_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
@@ -20,7 +21,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
   // Form kontrolörleri
   final _accountNameController = TextEditingController();
-  final _initialBalanceController = TextEditingController(text: '0');
+  final _initialBalanceController = TextEditingController(text: '0.0');
 
   // Seçimler
   String _selectedCurrency = 'TRY';
@@ -45,7 +46,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
             LinearProgressIndicator(
               value: (_currentPage + 1) / 3,
               backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.primary,
+              ),
             ),
 
             Expanded(
@@ -80,7 +83,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                     ),
                   const Spacer(),
                   ElevatedButton(
-                    onPressed: _currentPage == 2 ? _completeOnboarding : _nextPage,
+                    onPressed: _currentPage == 2
+                        ? _completeOnboarding
+                        : _nextPage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -111,57 +116,60 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
   /// Hoş geldin sayfası
   /// Hoş geldin sayfası
+  /// Hoş geldin sayfası
   Widget _buildWelcomePage() {
-    return SingleChildScrollView( // ← EKLE
-      padding: const EdgeInsets.all(32),
+    final responsive = ResponsiveHelper(context);
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(responsive.horizontalPadding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 32), // ← EKLE
-          const Icon(
+          SizedBox(height: responsive.hp(4)),
+          Icon(
             Icons.account_balance_wallet_rounded,
-            size: 100, // 120 → 100
+            size: responsive.largeIconSize,
             color: AppColors.accent,
           ),
-          const SizedBox(height: 24), // 32 → 24
-          const Text(
+          SizedBox(height: responsive.hp(3)),
+          Text(
             'Wallet Elite\'e\nHoş Geldin! 👋',
             style: TextStyle(
-              fontSize: 28, // 32 → 28
+              fontSize: responsive.titleFontSize,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: responsive.hp(2)),
           Text(
             'Finansal özgürlüğüne giden yolculuğa başlamak için birkaç basit adım kaldı.',
             style: TextStyle(
-              fontSize: 15, // 16 → 15
+              fontSize: responsive.bodyFontSize,
               color: Colors.grey[600],
               height: 1.5,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 40), // 48 → 40
+          SizedBox(height: responsive.hp(5)),
           _buildFeatureItem(
             Icons.account_balance_wallet,
             'Cüzdanlarını Yönet',
             'Tüm hesaplarını tek yerden takip et',
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: responsive.hp(2)),
           _buildFeatureItem(
             Icons.trending_up,
             'Harcamalarını Analiz Et',
             'Nereye para gittiğini gör',
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: responsive.hp(2)),
           _buildFeatureItem(
             Icons.people_outline,
             'Borç Defteri',
             'Alacak ve borçlarını takip et',
           ),
-          const SizedBox(height: 32), // ← EKLE (alta boşluk)
+          SizedBox(height: responsive.hp(4)),
         ],
       ),
     );
@@ -192,10 +200,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
               ),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),
@@ -221,18 +226,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           const SizedBox(height: 32),
           const Text(
             'Para Birimi Seç',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Tüm hesaplarında kullanacağın para birimini seç',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
           const SizedBox(height: 32),
           Expanded(
@@ -279,7 +278,10 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                     ),
                     subtitle: Text(currency['code']!),
                     trailing: isSelected
-                        ? const Icon(Icons.check_circle, color: AppColors.primary)
+                        ? const Icon(
+                            Icons.check_circle,
+                            color: AppColors.primary,
+                          )
                         : null,
                     onTap: () {
                       setState(() => _selectedCurrency = currency['code']!);
@@ -311,18 +313,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           const SizedBox(height: 32),
           const Text(
             'İlk Cüzdanını Oluştur',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'Paranı takip etmeye başlamak için bir cüzdan oluştur',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
           const SizedBox(height: 32),
 
@@ -344,10 +340,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           // Cüzdan Tipi
           const Text(
             'Cüzdan Tipi',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           GridView.builder(
@@ -406,10 +399,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           // Başlangıç Bakiyesi
           TextField(
             controller: _initialBalanceController,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+            ), // ← Ondalık sayı
             decoration: InputDecoration(
               labelText: 'Başlangıç Bakiyesi (Opsiyonel)',
-              hintText: '0',
+              hintText: '0.00', // ← 0 yerine 0.00
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -433,10 +428,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 Expanded(
                   child: Text(
                     'Şu anda cüzdanında ne kadar para olduğunu gir. Sonra istediğin zaman değiştirebilirsin.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                 ),
               ],
@@ -466,20 +458,19 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
       return;
     }
 
-    final initialBalance = double.tryParse(_initialBalanceController.text) ?? 0;
+    final initialBalance =
+        double.tryParse(_initialBalanceController.text.trim()) ?? 0.0;
 
     // Loading göster
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
     try {
-      // ÖNCE KULLANICI ID'Sİ AL
-      final user = ref.read(currentUserProvider).value;
+      // ÖNCE KULLANICI ID'Sİ AL - Doğrudan Supabase'den al (StreamProvider gecikebilir)
+      final user = Supabase.instance.client.auth.currentUser;
 
       if (user == null) {
         throw Exception('Kullanıcı oturumu bulunamadı');
@@ -503,7 +494,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
       print('✅ Cüzdan başarıyla oluşturuldu');
 
-      // 2. Onboarding'i tamamla
+      // 2. Varsayılan kategorileri oluştur (user_id ile - schema'ya uygun)
+      final walletRepo = ref.read(walletRepositoryProvider);
+      await walletRepo.createDefaultCategories(user.id);
+
+      print('✅ Varsayılan kategoriler oluşturuldu');
+
+      // 3. Onboarding'i tamamla
       final authController = ref.read(authControllerProvider);
       final onboardingCompleted = await authController.completeOnboarding();
 
@@ -518,7 +515,6 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
       // Home'a yönlendir
       if (mounted) context.go('/home');
-
     } catch (e) {
       print('❌ HATA: $e');
 

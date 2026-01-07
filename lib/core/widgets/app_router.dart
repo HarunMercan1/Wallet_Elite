@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/auth/presentation/login_view.dart';
 import '../../features/auth/presentation/onboarding_view.dart';
-import '../../features/home/presentation/dashboard_view.dart';
+import '../../features/home/presentation/main_shell.dart';
 
 /// Router Provider
 final routerProvider = Provider<GoRouter>((ref) {
@@ -38,7 +38,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               .from('profiles')
               .select('onboarding_completed')
               .eq('id', session.user.id)
-              .maybeSingle(); // ← single() yerine maybeSingle() kullan
+              .maybeSingle();
 
           if (profileResponse == null) {
             // Profil henüz oluşmamış, onboarding'e git
@@ -46,7 +46,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             return null;
           }
 
-          final onboardingCompleted = profileResponse['onboarding_completed'] as bool? ?? false;
+          final onboardingCompleted =
+              profileResponse['onboarding_completed'] as bool? ?? false;
 
           // Onboarding tamamlanmamış ve onboarding'e gitmiyorsa → onboarding'e yönlendir
           if (!onboardingCompleted && !isGoingToOnboarding) {
@@ -83,11 +84,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingView(),
       ),
 
-      // Home Routes
+      // Home Routes - MainShell ile bottom navigation
       GoRoute(
         path: '/home',
         name: 'home',
-        builder: (context, state) => const DashboardView(),
+        builder: (context, state) => const MainShell(),
       ),
     ],
   );

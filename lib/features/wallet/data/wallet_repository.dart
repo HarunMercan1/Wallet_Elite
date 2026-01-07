@@ -37,20 +37,35 @@ class WalletRepository {
     double initialBalance = 0,
   }) async {
     try {
+      print('🔄 Cüzdan oluşturuluyor...');
+      print('   user_id: $userId');
+      print('   name: $name');
+      print('   type: $type');
+      print('   balance: $initialBalance');
+
       final response = await _supabase
           .from('accounts')
           .insert({
-        'user_id': userId,
-        'name': name,
-        'type': type,
-        'balance': initialBalance,
-      })
+            'user_id': userId,
+            'name': name,
+            'type': type,
+            'balance': initialBalance,
+          })
           .select()
           .single();
 
+      print('✅ Cüzdan başarıyla oluşturuldu: ${response['id']}');
       return AccountModel.fromJson(response);
+    } on PostgrestException catch (e) {
+      print('❌ Supabase PostgrestException:');
+      print('   Code: ${e.code}');
+      print('   Message: ${e.message}');
+      print('   Details: ${e.details}');
+      print('   Hint: ${e.hint}');
+      return null;
     } catch (e) {
-      print('Cüzdan oluşturma hatası: $e');
+      print('❌ Cüzdan oluşturma hatası: $e');
+      print('   Hata tipi: ${e.runtimeType}');
       return null;
     }
   }
@@ -67,6 +82,174 @@ class WalletRepository {
   }
 
   // ==================== CATEGORIES (Kategoriler) ====================
+
+  /// Varsayılan kategorileri oluştur (ilk kayıtta)
+  Future<void> createDefaultCategories(String userId) async {
+    try {
+      print('🔄 Varsayılan kategoriler oluşturuluyor...');
+
+      // Gelir kategorileri
+      final incomeCategories = [
+        {
+          'name': 'Maaş',
+          'type': 'income',
+          'icon': 'wallet',
+          'color': '#4CAF50',
+        },
+        {
+          'name': 'Freelance',
+          'type': 'income',
+          'icon': 'laptop',
+          'color': '#2196F3',
+        },
+        {
+          'name': 'Yatırım',
+          'type': 'income',
+          'icon': 'trending_up',
+          'color': '#9C27B0',
+        },
+        {
+          'name': 'Hediye',
+          'type': 'income',
+          'icon': 'card_giftcard',
+          'color': '#E91E63',
+        },
+        {
+          'name': 'Diğer Gelir',
+          'type': 'income',
+          'icon': 'attach_money',
+          'color': '#00BCD4',
+        },
+      ];
+
+      // Gider kategorileri
+      final expenseCategories = [
+        {
+          'name': 'Market',
+          'type': 'expense',
+          'icon': 'shopping_cart',
+          'color': '#FF5722',
+        },
+        {
+          'name': 'Ulaşım',
+          'type': 'expense',
+          'icon': 'directions_car',
+          'color': '#795548',
+        },
+        {
+          'name': 'Faturalar',
+          'type': 'expense',
+          'icon': 'receipt',
+          'color': '#607D8B',
+        },
+        {
+          'name': 'Eğlence',
+          'type': 'expense',
+          'icon': 'movie',
+          'color': '#F44336',
+        },
+        {
+          'name': 'Yemek',
+          'type': 'expense',
+          'icon': 'restaurant',
+          'color': '#FF9800',
+        },
+        {
+          'name': 'Sağlık',
+          'type': 'expense',
+          'icon': 'local_hospital',
+          'color': '#E91E63',
+        },
+        {
+          'name': 'Giyim',
+          'type': 'expense',
+          'icon': 'checkroom',
+          'color': '#3F51B5',
+        },
+        {
+          'name': 'Eğitim',
+          'type': 'expense',
+          'icon': 'school',
+          'color': '#009688',
+        },
+        {
+          'name': 'Diğer Gider',
+          'type': 'expense',
+          'icon': 'more_horiz',
+          'color': '#9E9E9E',
+        },
+      ];
+
+      // Tüm kategorileri birleştir ve user_id ekle
+      final allCategories = [
+        ...incomeCategories,
+        ...expenseCategories,
+      ].map((cat) => {...cat, 'user_id': userId}).toList();
+
+      await _supabase.from('categories').insert(allCategories);
+
+      print('✅ ${allCategories.length} varsayılan kategori oluşturuldu');
+    } catch (e) {
+      print('❌ Varsayılan kategori oluşturma hatası: $e');
+    }
+  }
+
+  // ==================== GLOBAL CATEGORIES (User-independent) ====================
+
+  /// Tüm kategorileri getir (global - user_id yok)
+  Future<List<CategoryModel>> getAllCategories() async {
+    try {
+      final response = await _supabase
+          .from('categories')
+          .select()
+          .order('name');
+
+      return (response as List)
+          .map((json) => CategoryModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Global kategorileri getirme hatası: $e');
+      return [];
+    }
+  }
+
+  /// Tüm gelir kategorilerini getir (global)
+  Future<List<CategoryModel>> getAllIncomeCategories() async {
+    try {
+      final response = await _supabase
+          .from('categories')
+          .select()
+          .eq('type', 'income')
+          .order('name');
+
+      return (response as List)
+          .map((json) => CategoryModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Global gelir kategorileri hatası: $e');
+      return [];
+    }
+  }
+
+  /// Tüm gider kategorilerini getir (global)
+  Future<List<CategoryModel>> getAllExpenseCategories() async {
+    try {
+      final response = await _supabase
+          .from('categories')
+          .select()
+          .eq('type', 'expense')
+          .order('name');
+
+      return (response as List)
+          .map((json) => CategoryModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Global gider kategorileri hatası: $e');
+      return [];
+    }
+  }
+
+  // ==================== USER-SPECIFIC CATEGORIES ====================
 
   /// Kullanıcının tüm kategorilerini getir
   Future<List<CategoryModel>> getCategories(String userId) async {
@@ -146,9 +329,9 @@ class WalletRepository {
 
   /// Belirli bir cüzdanın işlemlerini getir
   Future<List<TransactionModel>> getAccountTransactions(
-      String userId,
-      String accountId,
-      ) async {
+    String userId,
+    String accountId,
+  ) async {
     try {
       final response = await _supabase
           .from('transactions')
@@ -180,14 +363,14 @@ class WalletRepository {
       final response = await _supabase
           .from('transactions')
           .insert({
-        'user_id': userId,
-        'account_id': accountId,
-        'category_id': categoryId,
-        'amount': amount,
-        'type': type,
-        'description': description,
-        'date': (date ?? DateTime.now()).toIso8601String(),
-      })
+            'user_id': userId,
+            'account_id': accountId,
+            'category_id': categoryId,
+            'amount': amount,
+            'type': type,
+            'description': description,
+            'date': (date ?? DateTime.now()).toIso8601String(),
+          })
           .select()
           .single();
 
@@ -203,10 +386,10 @@ class WalletRepository {
 
   /// Cüzdan bakiyesini güncelle (private method)
   Future<void> _updateAccountBalance(
-      String accountId,
-      double amount,
-      String type,
-      ) async {
+    String accountId,
+    double amount,
+    String type,
+  ) async {
     try {
       // Mevcut bakiyeyi al
       final account = await _supabase
@@ -253,11 +436,7 @@ class WalletRepository {
       await _supabase.from('transactions').delete().eq('id', transactionId);
 
       // Bakiyeyi geri döndür
-      await _reverseAccountBalance(
-        txn.accountId,
-        txn.amount,
-        txn.type,
-      );
+      await _reverseAccountBalance(txn.accountId, txn.amount, txn.type);
 
       return true;
     } catch (e) {
@@ -268,10 +447,10 @@ class WalletRepository {
 
   /// Bakiyeyi geri döndür (private method)
   Future<void> _reverseAccountBalance(
-      String accountId,
-      double amount,
-      String type,
-      ) async {
+    String accountId,
+    double amount,
+    String type,
+  ) async {
     try {
       final account = await _supabase
           .from('accounts')

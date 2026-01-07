@@ -31,12 +31,43 @@ final authControllerProvider = Provider<AuthController>((ref) {
   return AuthController(ref);
 });
 
-// lib/features/auth/data/auth_provider.dart (DÜZELTME)
-
 class AuthController {
   final Ref ref;
 
   AuthController(this.ref);
+
+  /// Email ile kayıt
+  Future<bool> signUpWithEmail(String email, String password) async {
+    try {
+      final authRepo = ref.read(authRepositoryProvider);
+      return await authRepo.signUpWithEmail(email, password);
+    } catch (e) {
+      print('Email kayıt hatası: $e');
+      return false;
+    }
+  }
+
+  /// Email ile giriş
+  Future<bool> signInWithEmail(String email, String password) async {
+    try {
+      final authRepo = ref.read(authRepositoryProvider);
+      return await authRepo.signInWithEmail(email, password);
+    } catch (e) {
+      print('Email giriş hatası: $e');
+      return false;
+    }
+  }
+
+  /// Şifre sıfırlama
+  Future<bool> resetPassword(String email) async {
+    try {
+      final authRepo = ref.read(authRepositoryProvider);
+      return await authRepo.resetPassword(email);
+    } catch (e) {
+      print('Şifre sıfırlama hatası: $e');
+      return false;
+    }
+  }
 
   /// Google ile giriş
   Future<bool> signInWithGoogle() async {
@@ -68,7 +99,7 @@ class AuthController {
 
   /// Onboarding'i tamamla
   Future<bool> completeOnboarding() async {
-    final user = ref.read(currentUserProvider).value;
+    final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return false;
 
     final authRepo = ref.read(authRepositoryProvider);
