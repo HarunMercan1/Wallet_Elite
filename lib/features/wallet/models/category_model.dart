@@ -7,6 +7,7 @@ class CategoryModel {
   final String name;
   final String? icon; // Icon kodu (FontAwesome)
   final String type; // income veya expense
+  final bool isFavorite; // Favori mi?
   final DateTime createdAt;
 
   CategoryModel({
@@ -15,6 +16,7 @@ class CategoryModel {
     required this.name,
     this.icon,
     required this.type,
+    this.isFavorite = false,
     required this.createdAt,
   });
 
@@ -26,6 +28,7 @@ class CategoryModel {
       name: json['name'] as String,
       icon: json['icon'] as String?,
       type: json['type'] as String,
+      isFavorite: json['is_favorite'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -38,6 +41,7 @@ class CategoryModel {
       'name': name,
       'icon': icon,
       'type': type,
+      'is_favorite': isFavorite,
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -47,4 +51,25 @@ class CategoryModel {
 
   /// Gider kategorisi mi?
   bool get isExpense => type == 'expense';
+
+  /// Kopyala ve güncelle
+  CategoryModel copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? icon,
+    String? type,
+    bool? isFavorite,
+    DateTime? createdAt,
+  }) {
+    return CategoryModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      type: type ?? this.type,
+      isFavorite: isFavorite ?? this.isFavorite,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

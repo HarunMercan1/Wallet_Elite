@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/l10n/app_localizations.dart';
+import '../../../core/utils/responsive_helper.dart';
+import '../../settings/data/settings_provider.dart';
 import 'dashboard_view.dart';
 import '../../wallet/presentation/add_transaction_sheet.dart';
 import '../../settings/presentation/settings_view.dart';
@@ -18,6 +21,10 @@ class MainShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedTab = ref.watch(selectedTabProvider);
+    final locale = ref.watch(localeProvider);
+    final l = AppLocalizations(locale);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final r = ResponsiveHelper.of(context);
 
     return Scaffold(
       body: IndexedStack(
@@ -32,10 +39,10 @@ class MainShell extends ConsumerWidget {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? AppColors.surfaceDark : Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -43,22 +50,27 @@ class MainShell extends ConsumerWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: r.paddingS,
+              vertical: r.paddingS,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _NavItem(
                   icon: Icons.home_outlined,
                   selectedIcon: Icons.home,
-                  label: 'Ana Sayfa',
+                  label: l.home,
                   isSelected: selectedTab == 0,
+                  isDark: isDark,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 0,
                 ),
                 _NavItem(
                   icon: Icons.receipt_long_outlined,
                   selectedIcon: Icons.receipt_long,
-                  label: 'İşlemler',
+                  label: l.transactions,
                   isSelected: selectedTab == 1,
+                  isDark: isDark,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 1,
                 ),
                 // Ortadaki büyük + butonu
@@ -75,15 +87,17 @@ class MainShell extends ConsumerWidget {
                 _NavItem(
                   icon: Icons.bar_chart_outlined,
                   selectedIcon: Icons.bar_chart,
-                  label: 'İstatistik',
+                  label: l.statistics,
                   isSelected: selectedTab == 3,
+                  isDark: isDark,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 3,
                 ),
                 _NavItem(
                   icon: Icons.settings_outlined,
                   selectedIcon: Icons.settings,
-                  label: 'Ayarlar',
+                  label: l.settings,
                   isSelected: selectedTab == 4,
+                  isDark: isDark,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 4,
                 ),
               ],
@@ -101,6 +115,7 @@ class _NavItem extends StatelessWidget {
   final IconData selectedIcon;
   final String label;
   final bool isSelected;
+  final bool isDark;
   final VoidCallback onTap;
 
   const _NavItem({
@@ -108,31 +123,47 @@ class _NavItem extends StatelessWidget {
     required this.selectedIcon,
     required this.label,
     required this.isSelected,
+    required this.isDark,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final r = ResponsiveHelper.of(context);
+
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      borderRadius: BorderRadius.circular(r.radiusM),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: r.wp(18)), // Dinamik max width
+        padding: EdgeInsets.symmetric(
+          horizontal: r.paddingXS,
+          vertical: r.paddingS,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               isSelected ? selectedIcon : icon,
-              color: isSelected ? AppColors.primary : Colors.grey[500],
-              size: 24,
+              color: isSelected
+                  ? AppColors.primary
+                  : (isDark ? Colors.grey[500] : Colors.grey[500]),
+              size: r.navIconSize,
             ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isSelected ? AppColors.primary : Colors.grey[500],
+            SizedBox(height: r.spaceXS),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: r.navFontSize,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  color: isSelected
+                      ? AppColors.primary
+                      : (isDark ? Colors.grey[500] : Colors.grey[500]),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -150,11 +181,14 @@ class _AddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final r = ResponsiveHelper.of(context);
+    final size = r.wp(14); // Dinamik boyut
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 56,
-        height: 56,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppColors.primary, AppColors.primaryLight],
@@ -170,7 +204,7 @@ class _AddButton extends StatelessWidget {
             ),
           ],
         ),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
+        child: Icon(Icons.add, color: Colors.white, size: r.iconXL),
       ),
     );
   }

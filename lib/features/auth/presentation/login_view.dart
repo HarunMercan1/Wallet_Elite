@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../data/auth_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive_helper.dart';
@@ -18,6 +19,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nameController = TextEditingController(); // İsim için eklendi
 
   bool _isLogin = true; // true = giriş, false = kayıt
   bool _isLoading = false;
@@ -27,6 +29,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _nameController.dispose(); // İsim controller dispose
     super.dispose();
   }
 
@@ -47,7 +50,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(responsive.horizontalPadding),
+              padding: EdgeInsets.all(responsive.paddingL),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -126,6 +129,32 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           ),
 
                           const SizedBox(height: 24),
+
+                          // İsim alanı (sadece kayıt modunda)
+                          if (!_isLogin) ...[
+                            TextFormField(
+                              controller: _nameController,
+                              textCapitalization: TextCapitalization.words,
+                              decoration: InputDecoration(
+                                labelText: 'Ad Soyad',
+                                prefixIcon: const Icon(Icons.person_outlined),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (!_isLogin &&
+                                    (value == null || value.trim().isEmpty)) {
+                                  return 'Ad soyad giriniz';
+                                }
+                                if (!_isLogin && value!.trim().length < 2) {
+                                  return 'Ad en az 2 karakter olmalı';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                          ],
 
                           // Email
                           TextFormField(
@@ -342,35 +371,67 @@ class _LoginViewState extends ConsumerState<LoginView> {
     try {
       final authController = ref.read(authControllerProvider);
       bool success;
+      String? errorMessage;
 
       if (_isLogin) {
-        success = await authController.signInWithEmail(
+        // Giriş işlemi
+        final result = await authController.signInWithEmail(
           _emailController.text.trim(),
           _passwordController.text,
         );
+        success = result['success'] as bool;
+        errorMessage = result['error'] as String?;
       } else {
-        success = await authController.signUpWithEmail(
-          _emailController.text.trim(),
-          _passwordController.text,
+        // Kayıt işlemi - fullName ile birlikte
+        final result = await authController.signUpWithEmail(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          fullName: _nameController.text.trim(),
         );
+        success = result['success'] as bool;
+        errorMessage = result['error'] as String?;
       }
 
-      if (!success && mounted) {
+      if (mounted) {
+        if (success) {
+          if (_isLogin) {
+            // Başarılı giriş - router kendisi yönlendirecek ama biz force edelim
+            context.go('/home');
+          } else {
+            // Kayıt başarılı
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Kayıt başarılı! Giriş yapabilirsiniz.'),
+                backgroundColor: AppColors.success,
+              ),
+            );
+            // Giriş moduna geç
+            setState(() {
+              _isLogin = true;
+              _nameController.clear();
+            });
+          }
+        } else {
+          // Hata
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                errorMessage ??
+                    (_isLogin
+                        ? 'Giriş başarısız. E-posta veya şifre yanlış.'
+                        : 'Kayıt başarısız. Bu e-posta zaten kullanılıyor olabilir.'),
+              ),
+              backgroundColor: AppColors.error,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              _isLogin
-                  ? 'Giriş başarısız. E-posta veya şifre yanlış.'
-                  : 'Kayıt başarısız. Bu e-posta zaten kullanılıyor olabilir.',
-            ),
+            content: Text('Bir hata oluştu: $e'),
             backgroundColor: AppColors.error,
-          ),
-        );
-      } else if (!_isLogin && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Kayıt başarılı! Lütfen e-postanızı doğrulayın.'),
-            backgroundColor: AppColors.success,
           ),
         );
       }

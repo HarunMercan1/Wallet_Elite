@@ -121,7 +121,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     final responsive = ResponsiveHelper(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(responsive.horizontalPadding),
+      padding: EdgeInsets.all(responsive.paddingL),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

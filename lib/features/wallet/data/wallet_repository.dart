@@ -90,94 +90,24 @@ class WalletRepository {
 
       // Gelir kategorileri
       final incomeCategories = [
-        {
-          'name': 'Maaş',
-          'type': 'income',
-          'icon': 'wallet',
-          'color': '#4CAF50',
-        },
-        {
-          'name': 'Freelance',
-          'type': 'income',
-          'icon': 'laptop',
-          'color': '#2196F3',
-        },
-        {
-          'name': 'Yatırım',
-          'type': 'income',
-          'icon': 'trending_up',
-          'color': '#9C27B0',
-        },
-        {
-          'name': 'Hediye',
-          'type': 'income',
-          'icon': 'card_giftcard',
-          'color': '#E91E63',
-        },
-        {
-          'name': 'Diğer Gelir',
-          'type': 'income',
-          'icon': 'attach_money',
-          'color': '#00BCD4',
-        },
+        {'name': 'Maaş', 'type': 'income', 'icon': 'wallet'},
+        {'name': 'Freelance', 'type': 'income', 'icon': 'laptop'},
+        {'name': 'Yatırım', 'type': 'income', 'icon': 'trending_up'},
+        {'name': 'Hediye', 'type': 'income', 'icon': 'card_giftcard'},
+        {'name': 'Diğer Gelir', 'type': 'income', 'icon': 'attach_money'},
       ];
 
       // Gider kategorileri
       final expenseCategories = [
-        {
-          'name': 'Market',
-          'type': 'expense',
-          'icon': 'shopping_cart',
-          'color': '#FF5722',
-        },
-        {
-          'name': 'Ulaşım',
-          'type': 'expense',
-          'icon': 'directions_car',
-          'color': '#795548',
-        },
-        {
-          'name': 'Faturalar',
-          'type': 'expense',
-          'icon': 'receipt',
-          'color': '#607D8B',
-        },
-        {
-          'name': 'Eğlence',
-          'type': 'expense',
-          'icon': 'movie',
-          'color': '#F44336',
-        },
-        {
-          'name': 'Yemek',
-          'type': 'expense',
-          'icon': 'restaurant',
-          'color': '#FF9800',
-        },
-        {
-          'name': 'Sağlık',
-          'type': 'expense',
-          'icon': 'local_hospital',
-          'color': '#E91E63',
-        },
-        {
-          'name': 'Giyim',
-          'type': 'expense',
-          'icon': 'checkroom',
-          'color': '#3F51B5',
-        },
-        {
-          'name': 'Eğitim',
-          'type': 'expense',
-          'icon': 'school',
-          'color': '#009688',
-        },
-        {
-          'name': 'Diğer Gider',
-          'type': 'expense',
-          'icon': 'more_horiz',
-          'color': '#9E9E9E',
-        },
+        {'name': 'Market', 'type': 'expense', 'icon': 'shopping_cart'},
+        {'name': 'Ulaşım', 'type': 'expense', 'icon': 'directions_car'},
+        {'name': 'Faturalar', 'type': 'expense', 'icon': 'receipt'},
+        {'name': 'Eğlence', 'type': 'expense', 'icon': 'movie'},
+        {'name': 'Yemek', 'type': 'expense', 'icon': 'restaurant'},
+        {'name': 'Sağlık', 'type': 'expense', 'icon': 'local_hospital'},
+        {'name': 'Giyim', 'type': 'expense', 'icon': 'checkroom'},
+        {'name': 'Eğitim', 'type': 'expense', 'icon': 'school'},
+        {'name': 'Diğer Gider', 'type': 'expense', 'icon': 'more_horiz'},
       ];
 
       // Tüm kategorileri birleştir ve user_id ekle

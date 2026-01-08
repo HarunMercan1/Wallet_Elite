@@ -37,24 +37,35 @@ class AuthController {
   AuthController(this.ref);
 
   /// Email ile kayıt
-  Future<bool> signUpWithEmail(String email, String password) async {
+  Future<Map<String, dynamic>> signUpWithEmail({
+    required String email,
+    required String password,
+    required String fullName,
+  }) async {
     try {
       final authRepo = ref.read(authRepositoryProvider);
-      return await authRepo.signUpWithEmail(email, password);
+      return await authRepo.signUpWithEmail(
+        email: email,
+        password: password,
+        fullName: fullName,
+      );
     } catch (e) {
       print('Email kayıt hatası: $e');
-      return false;
+      return {'success': false, 'error': 'Bir hata oluştu: $e'};
     }
   }
 
   /// Email ile giriş
-  Future<bool> signInWithEmail(String email, String password) async {
+  Future<Map<String, dynamic>> signInWithEmail(
+    String email,
+    String password,
+  ) async {
     try {
       final authRepo = ref.read(authRepositoryProvider);
       return await authRepo.signInWithEmail(email, password);
     } catch (e) {
       print('Email giriş hatası: $e');
-      return false;
+      return {'success': false, 'error': 'Bir hata oluştu: $e'};
     }
   }
 

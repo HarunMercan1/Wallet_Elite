@@ -1,10 +1,16 @@
 // lib/features/wallet/presentation/add_transaction_sheet.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/l10n/app_localizations.dart';
+import '../../../core/utils/responsive_helper.dart';
+import '../../settings/data/settings_provider.dart';
 import '../data/wallet_provider.dart';
+import '../models/category_model.dart';
 
 class AddTransactionSheet extends ConsumerStatefulWidget {
   const AddTransactionSheet({super.key});
@@ -14,32 +20,66 @@ class AddTransactionSheet extends ConsumerStatefulWidget {
       _AddTransactionSheetState();
 }
 
-class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
+class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String _transactionType = 'expense'; // expense veya income
+  late TabController _tabController;
+  String _transactionType = 'expense';
   String? _selectedAccountId;
   String? _selectedCategoryId;
   DateTime _selectedDate = DateTime.now();
+  bool _isLoading = false;
+
+  // Favori kategoriler (varsayılan popüler olanlar)
+  final List<String> _defaultFavoriteExpenseCategories = [
+    'Market',
+    'Yemek',
+    'Ulaşım',
+    'Faturalar',
+    'Eğlence',
+    'Sağlık',
+  ];
+  final List<String> _defaultFavoriteIncomeCategories = [
+    'Maaş',
+    'Freelance',
+    'Yatırım',
+    'Hediye',
+    'Diğer Gelir',
+  ];
 
   @override
   void initState() {
     super.initState();
-    // İlk cüzdanı otomatik seç
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          _transactionType = _tabController.index == 0 ? 'expense' : 'income';
+          _selectedCategoryId = null;
+        });
+      }
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final accounts = ref.read(accountsProvider);
-      accounts.whenData((list) {
-        if (list.isNotEmpty && _selectedAccountId == null) {
-          setState(() => _selectedAccountId = list.first.id);
-        }
-      });
+      _initializeData();
+    });
+  }
+
+  Future<void> _initializeData() async {
+    final accounts = ref.read(accountsProvider);
+    accounts.whenData((list) {
+      if (list.isNotEmpty && _selectedAccountId == null) {
+        setState(() => _selectedAccountId = list.first.id);
+      }
     });
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     _amountController.dispose();
     _descriptionController.dispose();
     super.dispose();
@@ -51,259 +91,88 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     final categories = _transactionType == 'income'
         ? ref.watch(incomeCategoriesProvider)
         : ref.watch(expenseCategoriesProvider);
+    final locale = ref.watch(localeProvider);
+    final l = AppLocalizations(locale);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final r = ResponsiveHelper.of(context);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      height: r.hp(92),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.backgroundDark : Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(r.radiusXL),
+          topRight: Radius.circular(r.radiusXL),
         ),
       ),
       child: Column(
         children: [
-          // Başlık
+          // Handle bar
           Container(
-            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(top: 12),
+            width: 40,
+            height: 4,
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                const Expanded(
-                  child: Text(
-                    'Yeni İşlem',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(width: 48), // IconButton için denge
-              ],
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
 
+          // Header
+          _buildHeader(),
+
+          // Tab Bar
+          _buildTabBar(),
+
+          // Content
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               child: Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tip Seçimi (Gelir/Gider)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildTypeButton(
-                            'Gider',
-                            'expense',
-                            Icons.arrow_upward,
-                            AppColors.error,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildTypeButton(
-                            'Gelir',
-                            'income',
-                            Icons.arrow_downward,
-                            AppColors.success,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // 1. Amount Input
+                    _buildAmountInput(),
 
                     const SizedBox(height: 24),
 
-                    // Tutar
-                    TextFormField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: '0.00',
-                        prefixText: '₺ ',
-                        prefixStyle: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textSecondary,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Tutar giriniz';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Geçerli bir tutar giriniz';
-                        }
-                        return null;
-                      },
+                    // 2. Favorite Categories (6 adet + Daha Fazla)
+                    _buildSectionTitle(l.category, Icons.category_outlined),
+                    const SizedBox(height: 12),
+                    _buildFavoriteCategoryGrid(categories),
+
+                    const SizedBox(height: 20),
+
+                    // 3. Description
+                    _buildSectionTitle(
+                      '${l.note} (${l.isTr ? "Opsiyonel" : "Optional"})',
+                      Icons.note_outlined,
                     ),
+                    const SizedBox(height: 10),
+                    _buildDescriptionInput(),
 
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
-                    // Cüzdan Seçimi
-                    const Text(
-                      'Cüzdan',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    // 4. Date Selection
+                    _buildDateSelector(),
+
+                    const SizedBox(height: 20),
+
+                    // 5. Wallet Selection (En altta)
+                    _buildSectionTitle(
+                      l.wallet,
+                      Icons.account_balance_wallet_outlined,
                     ),
-                    const SizedBox(height: 8),
-                    accounts.when(
-                      data: (accountsList) {
-                        if (accountsList.isEmpty) {
-                          return const Text('Cüzdan bulunamadı');
-                        }
+                    const SizedBox(height: 10),
+                    _buildWalletSelector(accounts),
 
-                        return DropdownButtonFormField<String>(
-                          value: _selectedAccountId,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          hint: const Text('Cüzdan seçin'),
-                          items: accountsList.map((account) {
-                            return DropdownMenuItem(
-                              value: account.id,
-                              child: Text(account.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() => _selectedAccountId = value);
-                          },
-                          validator: (value) {
-                            if (value == null) return 'Cüzdan seçiniz';
-                            return null;
-                          },
-                        );
-                      },
-                      loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => const Text('Hata'),
-                    ),
+                    const SizedBox(height: 28),
 
-                    const SizedBox(height: 24),
-
-                    // Kategori Seçimi
-                    const Text(
-                      'Kategori',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    categories.when(
-                      data: (categoriesList) {
-                        if (categoriesList.isEmpty) {
-                          return const Text('Kategori bulunamadı');
-                        }
-
-                        return DropdownButtonFormField<String>(
-                          value: _selectedCategoryId,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          hint: const Text('Kategori seçin'),
-                          items: categoriesList.map((category) {
-                            return DropdownMenuItem(
-                              value: category.id,
-                              child: Text(category.name),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() => _selectedCategoryId = value);
-                          },
-                          validator: (value) {
-                            if (value == null) return 'Kategori seçiniz';
-                            return null;
-                          },
-                        );
-                      },
-                      loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => const Text('Hata'),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Açıklama
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: InputDecoration(
-                        labelText: 'Açıklama (Opsiyonel)',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      maxLines: 2,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Tarih Seçimi
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.calendar_today),
-                      title: const Text('Tarih'),
-                      subtitle: Text(
-                        DateFormat(
-                          'dd MMMM yyyy',
-                          'tr_TR',
-                        ).format(_selectedDate),
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _selectedDate,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now(),
-                        );
-                        if (date != null) {
-                          setState(() => _selectedDate = date);
-                        }
-                      },
-                    ),
-
-                    const SizedBox(height: 32),
-
-                    // Kaydet Butonu
-                    SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: _saveTransaction,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          'Kaydet',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Save Button
+                    _buildSaveButton(),
                   ],
                 ),
               ),
@@ -314,38 +183,303 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     );
   }
 
-  Widget _buildTypeButton(
-    String label,
-    String type,
-    IconData icon,
-    Color color,
+  Widget _buildHeader() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final locale = ref.watch(localeProvider);
+    final l = AppLocalizations(locale);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.close_rounded,
+              color: isDark ? Colors.white : Colors.black,
+            ),
+            onPressed: () => Navigator.pop(context),
+            style: IconButton.styleFrom(
+              backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+            ),
+          ),
+          Expanded(
+            child: Text(
+              l.addTransaction,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 48),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final locale = ref.watch(localeProvider);
+    final l = AppLocalizations(locale);
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 12, 20, 4),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.grey[850] : Colors.grey[100],
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: _transactionType == 'expense'
+              ? AppColors.error.withOpacity(0.9)
+              : AppColors.success.withOpacity(0.9),
+          boxShadow: [
+            BoxShadow(
+              color:
+                  (_transactionType == 'expense'
+                          ? AppColors.error
+                          : AppColors.success)
+                      .withOpacity(0.25),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
+        labelColor: Colors.white,
+        unselectedLabelColor: isDark ? Colors.grey[400] : Colors.grey[600],
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        padding: const EdgeInsets.all(4),
+        tabs: [
+          Tab(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.arrow_upward_rounded, size: 16),
+                const SizedBox(width: 4),
+                Text(l.expense),
+              ],
+            ),
+          ),
+          Tab(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.arrow_downward_rounded, size: 16),
+                const SizedBox(width: 4),
+                Text(l.income),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAmountInput() {
+    final isExpense = _transactionType == 'expense';
+    final color = isExpense ? AppColors.error : AppColors.success;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color.withOpacity(0.08), color.withOpacity(0.03)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withOpacity(0.15), width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '₺',
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Flexible(
+            child: IntrinsicWidth(
+              child: TextFormField(
+                controller: _amountController,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                textAlign: TextAlign.center,
+                showCursor: false,
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                ],
+                decoration: InputDecoration(
+                  hintText: '0',
+                  hintStyle: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: color.withOpacity(0.3),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  isDense: true,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Tutar giriniz';
+                  if (double.tryParse(value) == null ||
+                      double.parse(value) <= 0) {
+                    return 'Geçerli tutar giriniz';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: AppColors.primary),
+        const SizedBox(width: 6),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFavoriteCategoryGrid(
+    AsyncValue<List<CategoryModel>> categories,
   ) {
-    final isSelected = _transactionType == type;
+    return categories.when(
+      data: (categoriesList) {
+        if (categoriesList.isEmpty) {
+          return _buildEmptyCategories();
+        }
+
+        // Önce veritabanındaki favorileri al
+        final dbFavorites = categoriesList.where((c) => c.isFavorite).toList();
+
+        // Eğer veritabanında favori yoksa, varsayılan isimlere göre filtrele
+        List<CategoryModel> favoriteCategories;
+        List<CategoryModel> otherCategories;
+
+        if (dbFavorites.isNotEmpty) {
+          // Veritabanındaki favorileri kullan
+          favoriteCategories = dbFavorites;
+          otherCategories = categoriesList.where((c) => !c.isFavorite).toList();
+        } else {
+          // Varsayılan isimlere göre filtrele (fallback)
+          final defaultNames = _transactionType == 'expense'
+              ? _defaultFavoriteExpenseCategories
+              : _defaultFavoriteIncomeCategories;
+
+          favoriteCategories = [];
+          otherCategories = [];
+
+          for (final cat in categoriesList) {
+            if (defaultNames.contains(cat.name)) {
+              favoriteCategories.add(cat);
+            } else {
+              otherCategories.add(cat);
+            }
+          }
+
+          // Varsayılan sırayı koru
+          favoriteCategories.sort((a, b) {
+            final indexA = defaultNames.indexOf(a.name);
+            final indexB = defaultNames.indexOf(b.name);
+            return indexA.compareTo(indexB);
+          });
+        }
+
+        // Maksimum 6 favori göster
+        final displayCategories = favoriteCategories.take(6).toList();
+        final hasMore =
+            otherCategories.isNotEmpty || favoriteCategories.length > 6;
+
+        return Column(
+          children: [
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ...displayCategories.map(
+                  (category) => _buildCategoryChip(category),
+                ),
+                if (hasMore) _buildMoreButton(categoriesList),
+              ],
+            ),
+          ],
+        );
+      },
+      loading: () => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      error: (_, __) => _buildEmptyCategories(),
+    );
+  }
+
+  Widget _buildCategoryChip(CategoryModel category) {
+    final isSelected = _selectedCategoryId == category.id;
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _transactionType = type;
-          _selectedCategoryId = null; // Kategoriyi sıfırla
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+      onTap: () => setState(() => _selectedCategoryId = category.id),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? color : Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? AppColors.primary : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.grey[200]!,
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withOpacity(0.2),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: isSelected ? Colors.white : Colors.grey[600]),
-            const SizedBox(width: 8),
+            Icon(
+              _getCategoryIcon(category.icon ?? 'category'),
+              size: 16,
+              color: isSelected ? Colors.white : Colors.grey[700],
+            ),
+            const SizedBox(width: 6),
             Text(
-              label,
+              category.name,
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Colors.grey[600],
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                color: isSelected ? Colors.white : Colors.black87,
               ),
             ),
           ],
@@ -354,14 +488,745 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     );
   }
 
+  Widget _buildMoreButton(List<CategoryModel> allCategories) {
+    return GestureDetector(
+      onTap: () => _showAllCategoriesSheet(allCategories),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[300]!, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.more_horiz, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 6),
+            Text(
+              'Daha Fazla',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAllCategoriesSheet(List<CategoryModel> allCategories) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheetState) => Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Handle
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.category_outlined,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _transactionType == 'expense'
+                            ? 'Gider Kategorileri'
+                            : 'Gelir Kategorileri',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    // Yeni Kategori Ekle butonu
+                    TextButton.icon(
+                      onPressed: () => _showAddCategoryDialog(ctx),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('Yeni'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1),
+              // İpucu
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                color: Colors.grey[50],
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, size: 14, color: Colors.grey[500]),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'Uzun basarak favorilere ekle/çıkar',
+                        style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Categories List
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 2.2,
+                  ),
+                  itemCount: allCategories.length,
+                  itemBuilder: (context, index) {
+                    final category = allCategories[index];
+                    final isSelected = _selectedCategoryId == category.id;
+                    final isFavorite = category.isFavorite;
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() => _selectedCategoryId = category.id);
+                        Navigator.pop(ctx);
+                      },
+                      onLongPress: () => _toggleFavorite(category),
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : Colors.grey[100],
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : (isFavorite
+                                          ? AppColors.accent
+                                          : Colors.grey[200]!),
+                                width: isFavorite ? 2 : 1,
+                              ),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      _getCategoryIcon(category.icon),
+                                      size: 14,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.grey[700],
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Flexible(
+                                      child: Text(
+                                        category.name,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black87,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Yıldız ikonu
+                          if (isFavorite)
+                            Positioned(
+                              top: 2,
+                              right: 2,
+                              child: Icon(
+                                Icons.star,
+                                size: 12,
+                                color: AppColors.accent,
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _toggleFavorite(CategoryModel category) async {
+    try {
+      final newValue = !category.isFavorite;
+      await Supabase.instance.client
+          .from('categories')
+          .update({'is_favorite': newValue})
+          .eq('id', category.id);
+
+      // Provider'ları yenile
+      ref.invalidate(categoriesProvider);
+      ref.invalidate(incomeCategoriesProvider);
+      ref.invalidate(expenseCategoriesProvider);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              newValue
+                  ? '${category.name} favorilere eklendi'
+                  : '${category.name} favorilerden çıkarıldı',
+            ),
+            backgroundColor: AppColors.success,
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Hata: $e'), backgroundColor: AppColors.error),
+        );
+      }
+    }
+  }
+
+  void _showAddCategoryDialog(BuildContext parentContext) {
+    final nameController = TextEditingController();
+    String? selectedIcon = 'category';
+
+    final icons = [
+      'shopping_cart',
+      'restaurant',
+      'directions_car',
+      'receipt',
+      'movie',
+      'local_hospital',
+      'checkroom',
+      'school',
+      'wallet',
+      'laptop',
+      'trending_up',
+      'card_giftcard',
+      'attach_money',
+      'more_horiz',
+    ];
+
+    showDialog(
+      context: parentContext,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Text(
+            _transactionType == 'expense'
+                ? 'Yeni Gider Kategorisi'
+                : 'Yeni Gelir Kategorisi',
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Kategori Adı',
+                  border: OutlineInputBorder(),
+                ),
+                autofocus: true,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'İkon Seç:',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: icons.map((iconName) {
+                  final isSelected = selectedIcon == iconName;
+                  return GestureDetector(
+                    onTap: () => setDialogState(() => selectedIcon = iconName),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primary
+                            : Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primary
+                              : Colors.grey[200]!,
+                        ),
+                      ),
+                      child: Icon(
+                        _getCategoryIcon(iconName),
+                        size: 20,
+                        color: isSelected ? Colors.white : Colors.grey[700],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('İptal'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (nameController.text.trim().isEmpty) return;
+
+                Navigator.pop(ctx); // Dialog kapat
+                Navigator.pop(parentContext); // Sheet kapat
+
+                // Kategori oluştur
+                final userId = Supabase.instance.client.auth.currentUser?.id;
+                if (userId != null) {
+                  try {
+                    await Supabase.instance.client.from('categories').insert({
+                      'user_id': userId,
+                      'name': nameController.text.trim(),
+                      'type': _transactionType,
+                      'icon': selectedIcon,
+                    });
+
+                    // Provider'ları yenile
+                    ref.invalidate(categoriesProvider);
+                    ref.invalidate(incomeCategoriesProvider);
+                    ref.invalidate(expenseCategoriesProvider);
+
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Kategori eklendi'),
+                          backgroundColor: AppColors.success,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Hata: $e'),
+                          backgroundColor: AppColors.error,
+                        ),
+                      );
+                    }
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
+              child: const Text('Ekle'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyCategories() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.category_outlined, size: 28, color: Colors.grey[400]),
+          const SizedBox(height: 8),
+          Text(
+            'Kategori bulunamadı',
+            style: TextStyle(color: Colors.grey[500], fontSize: 13),
+          ),
+          const SizedBox(height: 10),
+          TextButton.icon(
+            onPressed: () async {
+              setState(() => _isLoading = true);
+              final walletRepo = ref.read(walletRepositoryProvider);
+              final userId = Supabase.instance.client.auth.currentUser?.id;
+              if (userId != null) {
+                await walletRepo.createDefaultCategories(userId);
+                ref.invalidate(categoriesProvider);
+                ref.invalidate(incomeCategoriesProvider);
+                ref.invalidate(expenseCategoriesProvider);
+              }
+              setState(() => _isLoading = false);
+            },
+            icon: _isLoading
+                ? const SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.add_circle_outline, size: 16),
+            label: Text(
+              _isLoading ? 'Oluşturuluyor...' : 'Kategorileri Oluştur',
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDescriptionInput() {
+    return TextFormField(
+      controller: _descriptionController,
+      maxLines: 1,
+      decoration: InputDecoration(
+        hintText: 'Not ekle...',
+        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+        filled: true,
+        fillColor: Colors.grey[50],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[200]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[200]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 12,
+        ),
+        isDense: true,
+      ),
+    );
+  }
+
+  Widget _buildDateSelector() {
+    return GestureDetector(
+      onTap: () async {
+        final date = await showDatePicker(
+          context: context,
+          initialDate: _selectedDate,
+          firstDate: DateTime(2020),
+          lastDate: DateTime.now().add(const Duration(days: 1)),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: AppColors.primary,
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+        if (date != null) setState(() => _selectedDate = date);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.calendar_today_rounded,
+              color: AppColors.primary,
+              size: 18,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              _isToday(_selectedDate)
+                  ? 'Bugün'
+                  : DateFormat('dd MMM yyyy', 'tr_TR').format(_selectedDate),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+            const Spacer(),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.grey[400],
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWalletSelector(AsyncValue<List<dynamic>> accounts) {
+    return accounts.when(
+      data: (accountsList) {
+        if (accountsList.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey[200]!),
+            ),
+            child: Text(
+              'Cüzdan bulunamadı',
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+          );
+        }
+
+        return SizedBox(
+          height: 60,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: accountsList.length,
+            itemBuilder: (context, index) {
+              final account = accountsList[index];
+              final isSelected = _selectedAccountId == account.id;
+
+              return GestureDetector(
+                onTap: () => setState(() => _selectedAccountId = account.id),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  margin: EdgeInsets.only(
+                    right: index < accountsList.length - 1 ? 10 : 0,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primary : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected ? AppColors.primary : Colors.grey[200]!,
+                      width: isSelected ? 2 : 1,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primary.withOpacity(0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _getAccountIcon(account.type),
+                        color: isSelected ? Colors.white : AppColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            account.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          Text(
+                            '₺${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isSelected
+                                  ? Colors.white70
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => const Text('Hata'),
+    );
+  }
+
+  Widget _buildSaveButton() {
+    final isExpense = _transactionType == 'expense';
+
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _saveTransaction,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isExpense ? AppColors.error : AppColors.success,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: _isLoading
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    isExpense
+                        ? Icons.remove_circle_outline
+                        : Icons.add_circle_outline,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    isExpense ? 'Gider Ekle' : 'Gelir Ekle',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
+
+  IconData _getAccountIcon(String type) {
+    switch (type) {
+      case 'cash':
+        return Icons.payments_outlined;
+      case 'bank':
+        return Icons.account_balance_outlined;
+      case 'credit_card':
+        return Icons.credit_card_outlined;
+      case 'gold':
+        return Icons.diamond_outlined;
+      default:
+        return Icons.account_balance_wallet_outlined;
+    }
+  }
+
+  IconData _getCategoryIcon(String? iconName) {
+    switch (iconName) {
+      case 'wallet':
+        return Icons.wallet;
+      case 'laptop':
+        return Icons.laptop;
+      case 'trending_up':
+        return Icons.trending_up;
+      case 'card_giftcard':
+        return Icons.card_giftcard;
+      case 'attach_money':
+        return Icons.attach_money;
+      case 'shopping_cart':
+        return Icons.shopping_cart;
+      case 'directions_car':
+        return Icons.directions_car;
+      case 'receipt':
+        return Icons.receipt;
+      case 'movie':
+        return Icons.movie;
+      case 'restaurant':
+        return Icons.restaurant;
+      case 'local_hospital':
+        return Icons.local_hospital;
+      case 'checkroom':
+        return Icons.checkroom;
+      case 'school':
+        return Icons.school;
+      case 'more_horiz':
+        return Icons.more_horiz;
+      default:
+        return Icons.category;
+    }
+  }
+
   void _saveTransaction() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (_selectedAccountId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lütfen bir cüzdan seçin'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
 
     final amount = double.parse(_amountController.text);
     final description = _descriptionController.text.isEmpty
         ? null
         : _descriptionController.text;
-
     final walletController = ref.read(walletControllerProvider);
 
     final success = await walletController.createTransaction(
@@ -373,12 +1238,28 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       date: _selectedDate,
     );
 
+    setState(() => _isLoading = false);
+
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('İşlem başarıyla eklendi'),
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white, size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  _transactionType == 'expense'
+                      ? 'Gider eklendi'
+                      : 'Gelir eklendi',
+                ),
+              ],
+            ),
             backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         );
         Navigator.pop(context);
@@ -387,6 +1268,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
           const SnackBar(
             content: Text('İşlem eklenirken hata oluştu'),
             backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }

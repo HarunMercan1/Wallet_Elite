@@ -14,13 +14,18 @@ class AuthRepository {
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
 
   /// Email ile kayıt ol
-  Future<bool> signUpWithEmail(String email, String password) async {
+  Future<Map<String, dynamic>> signUpWithEmail({
+    required String email,
+    required String password,
+    required String fullName,
+  }) async {
     try {
-      print('🔄 Email ile kayıt başlatılıyor: $email');
+      print('🔄 Email ile kayıt başlatılıyor: $email, fullName: $fullName');
 
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
+        data: {'full_name': fullName, 'display_name': fullName},
       );
 
       print(
@@ -29,33 +34,74 @@ class AuthRepository {
 
       if (response.user != null) {
         print('✅ Kayıt başarılı! User ID: ${response.user!.id}');
-        return true;
+
+        // Profil tablosunda full_name'i güncelle (trigger yoksa manuel)
+        try {
+          await _supabase.from('profiles').upsert({
+            'id': response.user!.id,
+            'full_name': fullName,
+          });
+          print('✅ Profil güncellendi: $fullName');
+        } catch (e) {
+          print(
+            '⚠️ Profil güncellenirken hata (trigger varsa sorun değil): $e',
+          );
+        }
+
+        return {'success': true};
       } else {
         print('⚠️ Kayıt response geldi ama user null');
-        return false;
+        return {'success': false, 'error': 'Kayıt işlemi başarısız oldu'};
       }
     } on AuthException catch (e) {
       print('❌ AuthException: ${e.message}');
       print('   Status Code: ${e.statusCode}');
-      return false;
+      String errorMessage = 'Kayıt başarısız';
+      if (e.message.contains('already registered')) {
+        errorMessage = 'Bu e-posta adresi zaten kullanılıyor';
+      } else if (e.message.contains('weak password')) {
+        errorMessage = 'Şifre çok zayıf';
+      } else if (e.message.contains('invalid email')) {
+        errorMessage = 'Geçersiz e-posta adresi';
+      }
+      return {'success': false, 'error': errorMessage};
     } catch (e) {
       print('❌ Email kayıt hatası: $e');
       print('   Hata tipi: ${e.runtimeType}');
-      return false;
+      return {'success': false, 'error': 'Bir hata oluştu: $e'};
     }
   }
 
   /// Email ile giriş yap
-  Future<bool> signInWithEmail(String email, String password) async {
+  Future<Map<String, dynamic>> signInWithEmail(
+    String email,
+    String password,
+  ) async {
     try {
+      print('🔄 Email ile giriş yapılıyor: $email');
       final response = await _supabase.auth.signInWithPassword(
         email: email,
         password: password,
       );
-      return response.user != null;
+      if (response.user != null) {
+        print('✅ Giriş başarılı! User ID: ${response.user!.id}');
+        return {'success': true};
+      }
+      return {'success': false, 'error': 'Giriş başarısız'};
+    } on AuthException catch (e) {
+      print('❌ AuthException: ${e.message}');
+      String errorMessage = 'Giriş başarısız';
+      if (e.message.contains('Invalid login credentials')) {
+        errorMessage = 'E-posta veya şifre hatalı';
+      } else if (e.message.contains('Email not confirmed')) {
+        errorMessage = 'E-posta adresinizi doğrulayın';
+      } else if (e.message.contains('Too many requests')) {
+        errorMessage = 'Çok fazla deneme yaptınız, lütfen bekleyin';
+      }
+      return {'success': false, 'error': errorMessage};
     } catch (e) {
       print('Email giriş hatası: $e');
-      return false;
+      return {'success': false, 'error': 'Bir hata oluştu'};
     }
   }
 
