@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
@@ -18,6 +19,7 @@ class SettingsView extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
     final user = Supabase.instance.client.auth.currentUser;
     final accounts = ref.watch(accountsProvider);
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -29,7 +31,7 @@ class SettingsView extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           children: [
             // Profil Kartı
-            _buildProfileCard(context, user, l, isDark),
+            _buildProfileCard(context, user, l, isDark, colorTheme),
 
             const SizedBox(height: 24),
 
@@ -40,6 +42,11 @@ class SettingsView extends ConsumerWidget {
               isDark: isDark,
               children: [
                 _buildThemeTile(context, ref, themeMode, l, isDark),
+                Divider(
+                  height: 1,
+                  color: isDark ? Colors.white10 : Colors.grey[200],
+                ),
+                _buildColorSchemeTile(context, ref, l, isDark),
                 Divider(
                   height: 1,
                   color: isDark ? Colors.white10 : Colors.grey[200],
@@ -151,19 +158,20 @@ class SettingsView extends ConsumerWidget {
     User? user,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryLight],
+        gradient: LinearGradient(
+          colors: [colorTheme.primary, colorTheme.primaryLight],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: colorTheme.primary.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -173,7 +181,7 @@ class SettingsView extends ConsumerWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundColor: AppColors.accent,
+            backgroundColor: colorTheme.accent,
             backgroundImage: user?.userMetadata?['avatar_url'] != null
                 ? NetworkImage(user!.userMetadata!['avatar_url'])
                 : null,
@@ -299,6 +307,182 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
+  Widget _buildColorSchemeTile(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    bool isDark,
+  ) {
+    final colorScheme = ref.watch(colorSchemeProvider);
+    final theme = ColorTheme.fromString(colorScheme);
+
+    return ListTile(
+      leading: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [theme.primary, theme.accent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(6),
+        ),
+      ),
+      title: Text(
+        _getColorSchemeLabel(l),
+        style: TextStyle(color: isDark ? Colors.white : Colors.black),
+      ),
+      subtitle: Text(
+        theme.name,
+        style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
+      ),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: isDark ? Colors.grey[600] : Colors.grey[400],
+      ),
+      onTap: () => _showColorSchemeDialog(context, ref, colorScheme, l, isDark),
+    );
+  }
+
+  String _getColorSchemeLabel(AppLocalizations l) {
+    // Use translation if available, fallback to English
+    try {
+      return l.colorScheme;
+    } catch (_) {
+      return 'Color Scheme';
+    }
+  }
+
+  void _showColorSchemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String current,
+    AppLocalizations l,
+    bool isDark,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.5,
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.surfaceDark : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[600] : Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _getColorSchemeLabel(l),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: ColorTheme.all
+                    .map(
+                      (theme) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _buildColorSchemeOption(
+                          context,
+                          ref,
+                          theme,
+                          current,
+                          isDark,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColorSchemeOption(
+    BuildContext context,
+    WidgetRef ref,
+    ColorTheme theme,
+    String current,
+    bool isDark,
+  ) {
+    final isSelected = theme.id == current;
+    return GestureDetector(
+      onTap: () {
+        ref.read(colorSchemeProvider.notifier).setColorScheme(theme.id);
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? theme.primary.withOpacity(0.1)
+              : (isDark ? Colors.grey[850] : Colors.grey[50]),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected
+                ? theme.primary
+                : (isDark ? Colors.grey[700]! : Colors.grey[200]!),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [theme.primary, theme.accent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                theme.name,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+              ),
+            ),
+            if (isSelected)
+              Icon(Icons.check_circle, color: theme.primary, size: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildLanguageTile(
     BuildContext context,
     WidgetRef ref,
@@ -349,6 +533,12 @@ class SettingsView extends ConsumerWidget {
         return 'العربية';
       case 'pt':
         return 'Português';
+      case 'it':
+        return 'Italiano';
+      case 'id':
+        return 'Indonesia';
+      case 'ko':
+        return '한국어';
       default:
         return code.toUpperCase();
     }
@@ -364,7 +554,11 @@ class SettingsView extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.45,
+        ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         decoration: BoxDecoration(
           color: isDark ? AppColors.surfaceDark : Colors.white,
@@ -381,7 +575,7 @@ class SettingsView extends ConsumerWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: isDark ? Colors.grey[600] : Colors.grey[300],
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -395,39 +589,45 @@ class SettingsView extends ConsumerWidget {
                 color: isDark ? Colors.white : Colors.black,
               ),
             ),
-            const SizedBox(height: 24),
-            // Options
-            _buildThemeOption(
-              context,
-              ref,
-              l.light,
-              Icons.light_mode,
-              ThemeMode.light,
-              current,
-              isDark,
-              color: Colors.orange,
-            ),
-            const SizedBox(height: 12),
-            _buildThemeOption(
-              context,
-              ref,
-              l.dark,
-              Icons.dark_mode,
-              ThemeMode.dark,
-              current,
-              isDark,
-              color: Colors.indigo,
-            ),
-            const SizedBox(height: 12),
-            _buildThemeOption(
-              context,
-              ref,
-              l.system,
-              Icons.settings_suggest,
-              ThemeMode.system,
-              current,
-              isDark,
-              color: AppColors.primary,
+            const SizedBox(height: 16),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  _buildThemeOption(
+                    context,
+                    ref,
+                    l.light,
+                    Icons.light_mode,
+                    ThemeMode.light,
+                    current,
+                    isDark,
+                    color: Colors.orange,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildThemeOption(
+                    context,
+                    ref,
+                    l.dark,
+                    Icons.dark_mode,
+                    ThemeMode.dark,
+                    current,
+                    isDark,
+                    color: Colors.indigo,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildThemeOption(
+                    context,
+                    ref,
+                    l.system,
+                    Icons.settings_suggest,
+                    ThemeMode.system,
+                    current,
+                    isDark,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -506,11 +706,14 @@ class SettingsView extends ConsumerWidget {
       {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
       {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
       {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
-      {'code': 'zh', 'name': '中文', 'flag': '🇨🇳'},
-      {'code': 'ja', 'name': '日本語', 'flag': '🇯🇵'},
+      {'code': 'it', 'name': 'Italiano', 'flag': '🇮🇹'},
+      {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
       {'code': 'ru', 'name': 'Русский', 'flag': '🇷🇺'},
       {'code': 'ar', 'name': 'العربية', 'flag': '🇸🇦'},
-      {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
+      {'code': 'zh', 'name': '中文', 'flag': '🇨🇳'},
+      {'code': 'ja', 'name': '日本語', 'flag': '🇯🇵'},
+      {'code': 'ko', 'name': '한국어', 'flag': '🇰🇷'},
+      {'code': 'id', 'name': 'Indonesia', 'flag': '🇮🇩'},
     ];
 
     showModalBottomSheet(

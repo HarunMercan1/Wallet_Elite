@@ -482,6 +482,8 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         case 'cat_other':
         case 'cat_others':
           return l.cat_other;
+        case 'cat_travel':
+          return l.cat_travel;
       }
     }
 
@@ -504,6 +506,8 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     if (name.contains('entert')) return l.cat_entertainment;
     if (name.contains('shop')) return l.cat_shopping;
     if (name.contains('transport')) return l.cat_transport;
+    if (name.contains('travel') || name.contains('seyahat'))
+      return l.cat_travel;
 
     return category.name;
   }

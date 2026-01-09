@@ -264,6 +264,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectLanguage => '言語を選択';
 
   @override
+  String get colorScheme => 'カラースキーム';
+
+  @override
   String get account => 'アカウント';
 
   @override
@@ -378,22 +381,73 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cat_other => 'その他';
 
   @override
-  String get cat_pets => 'Pets';
+  String get cat_pets => 'ペット';
 
   @override
-  String get cat_groceries => 'Groceries';
+  String get cat_groceries => '食料品';
 
   @override
-  String get cat_electronics => 'Electronics';
+  String get cat_electronics => '電子機器';
 
   @override
-  String get cat_charity => 'Charity';
+  String get cat_charity => '寄付';
 
   @override
-  String get cat_insurance => 'Insurance';
+  String get cat_insurance => '保険';
 
   @override
-  String get cat_gym => 'Gym';
+  String get cat_gym => 'ジム';
+
+  @override
+  String get cat_travel => '旅行';
+
+  @override
+  String get statisticsTitle => '統計概要';
+
+  @override
+  String get periodFilter => '期間';
+
+  @override
+  String get allTime => '全期間';
+
+  @override
+  String get last7Days => '過去7日間';
+
+  @override
+  String get last30Days => '過去30日間';
+
+  @override
+  String get averageDailySpending => '1日平均支出';
+
+  @override
+  String get totalTransactions => '総取引数';
+
+  @override
+  String get incomeCount => '収入回数';
+
+  @override
+  String get expenseCount => '支出回数';
+
+  @override
+  String get topCategories => '上位カテゴリ';
+
+  @override
+  String get savingsRate => '貯蓄率';
+
+  @override
+  String get biggestIncome => '最大収入';
+
+  @override
+  String get biggestExpense => '最大支出';
+
+  @override
+  String get noData => 'この期間のデータはありません';
+
+  @override
+  String get spendingTrend => '支出傾向';
+
+  @override
+  String get incomeVsExpense => '収入 vs 支出';
 
   @override
   String get loginTab => 'ログイン';

@@ -1,6 +1,5 @@
 {
     "@@locale": "en",
-    
     "appName": "Wallet Elite",
     "cancel": "Cancel",
     "save": "Save",
@@ -16,18 +15,15 @@
     "today": "Today",
     "yesterday": "Yesterday",
     "notFound": "not found",
-    
     "home": "Home",
     "transactions": "Transactions",
     "statistics": "Statistics",
     "settings": "Settings",
-    
     "welcome": "Welcome,",
     "totalBalance": "Total Balance",
     "recentTransactions": "Recent Transactions",
     "noTransactions": "No transactions yet",
     "addFirstTransaction": "Tap + to add your first!",
-    
     "income": "Income",
     "expense": "Expense",
     "amount": "Amount",
@@ -49,7 +45,6 @@
     "noIncomeFound": "No income found",
     "noExpenseFound": "No expense found",
     "confirmDelete": "Are you sure you want to delete this transaction? This cannot be undone.",
-    
     "categories": "Categories",
     "incomeCategories": "Income Categories",
     "expenseCategories": "Expense Categories",
@@ -63,10 +58,21 @@
     "noCategories": "No categories yet",
     "longPressToFavorite": "Long press to add/remove favorites",
     "addedToFavorites": "{name} added to favorites",
-    "@addedToFavorites": { "placeholders": { "name": { "type": "String" } } },
+    "@addedToFavorites": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "removedFromFavorites": "{name} removed from favorites",
-    "@removedFromFavorites": { "placeholders": { "name": { "type": "String" } } },
-    
+    "@removedFromFavorites": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "wallets": "Wallets",
     "addWallet": "Add Wallet",
     "walletName": "Wallet Name",
@@ -82,9 +88,14 @@
     "categoryNotFound": "No category found",
     "walletNotFound": "No wallet found",
     "errorWithDetails": "Error: {details}",
-    "@errorWithDetails": { "placeholders": { "details": { "type": "String" } } },
+    "@errorWithDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
     "networkError": "Network connection error. Please check your internet.",
-
     "appearance": "Appearance",
     "theme": "Theme",
     "language": "Language",
@@ -93,11 +104,11 @@
     "system": "System",
     "selectTheme": "Select Theme",
     "selectLanguage": "Select Language",
+    "colorScheme": "Color Scheme",
     "account": "Account",
     "signOut": "Sign Out",
     "signOutConfirm": "Are you sure you want to sign out?",
     "user": "User",
-    
     "login": "Sign In",
     "register": "Sign Up",
     "email": "Email",
@@ -108,7 +119,6 @@
     "haveAccount": "Already have an account?",
     "loginSuccess": "Login successful!",
     "registerSuccess": "Registration successful! Please verify your email.",
-    
     "thisMonth": "This Month",
     "lastMonth": "Last Month",
     "thisYear": "This Year",
@@ -119,7 +129,6 @@
     "totalExpense": "Total Expense",
     "balance": "Balance",
     "categoryBreakdown": "Category Breakdown",
-
     "cat_food": "Food",
     "cat_transport": "Transport",
     "cat_shopping": "Start Shopping",
@@ -140,7 +149,23 @@
     "cat_charity": "Charity",
     "cat_insurance": "Insurance",
     "cat_gym": "Gym",
-
+    "cat_travel": "Travel",
+    "statisticsTitle": "Statistics Overview",
+    "periodFilter": "Period",
+    "allTime": "All Time",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "averageDailySpending": "Avg. Daily Spending",
+    "totalTransactions": "Total Transactions",
+    "incomeCount": "Income Count",
+    "expenseCount": "Expense Count",
+    "topCategories": "Top Categories",
+    "savingsRate": "Savings Rate",
+    "biggestIncome": "Biggest Income",
+    "biggestExpense": "Biggest Expense",
+    "noData": "No data for this period",
+    "spendingTrend": "Spending Trend",
+    "incomeVsExpense": "Income vs Expense",
     "loginTab": "Sign In",
     "registerTab": "Sign Up",
     "tagline": "Your financial freedom, in your hands",
@@ -161,10 +186,8 @@
     "orDivider": "or",
     "privacyText": "By continuing, you agree to our Terms of Service and Privacy Policy",
     "errorOccurred": "An error occurred",
-
     "welcomeTitle": "Welcome to\\nWallet Elite! 👋",
     "welcomeSubtitle": "Just a few simple steps to start your journey to financial freedom.",
-    "manageWallets": "Manage Wallets",
     "manageWalletsDesc": "Track all accounts in one place",
     "analyzeSpending": "Analyze Spending",
     "analyzeSpendingDesc": "See where your money goes",
@@ -173,14 +196,12 @@
     "backButton": "Back",
     "continueButton": "Continue",
     "startButton": "Start",
-
     "selectCurrency": "Select Currency",
     "selectCurrencyDesc": "Select the currency you'll use in all accounts",
     "turkishLira": "Turkish Lira",
     "usDollar": "US Dollar",
     "euro": "Euro",
     "britishPound": "British Pound",
-
     "createFirstWallet": "Create Your First Wallet",
     "createWalletDesc": "Create a wallet to start tracking your money",
     "walletNameHint": "e.g. My Cash",
@@ -192,7 +213,6 @@
     "initialBalanceHint": "Enter how much money you currently have. You can change it later.",
     "enterWalletName": "Please enter wallet name",
     "onboardingSuccess": "Registration successful! You can now sign in.",
-
     "mon": "Mon",
     "tue": "Tue",
     "wed": "Wed",
@@ -200,7 +220,6 @@
     "fri": "Fri",
     "sat": "Sat",
     "sun": "Sun",
-
     "addExpense": "Add Expense",
     "addIncome": "Add Income",
     "expenseAdded": "Expense added",

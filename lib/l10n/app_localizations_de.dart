@@ -265,6 +265,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get selectLanguage => 'Sprache wählen';
 
   @override
+  String get colorScheme => 'Farbschema';
+
+  @override
   String get account => 'Konto';
 
   @override
@@ -379,22 +382,73 @@ class AppLocalizationsDe extends AppLocalizations {
   String get cat_other => 'Sonstiges';
 
   @override
-  String get cat_pets => 'Pets';
+  String get cat_pets => 'Haustiere';
 
   @override
-  String get cat_groceries => 'Groceries';
+  String get cat_groceries => 'Lebensmittel';
 
   @override
-  String get cat_electronics => 'Electronics';
+  String get cat_electronics => 'Elektronik';
 
   @override
-  String get cat_charity => 'Charity';
+  String get cat_charity => 'Spenden';
 
   @override
-  String get cat_insurance => 'Insurance';
+  String get cat_insurance => 'Versicherung';
 
   @override
-  String get cat_gym => 'Gym';
+  String get cat_gym => 'Fitnessstudio';
+
+  @override
+  String get cat_travel => 'Reisen';
+
+  @override
+  String get statisticsTitle => 'Statistikübersicht';
+
+  @override
+  String get periodFilter => 'Zeitraum';
+
+  @override
+  String get allTime => 'Gesamt';
+
+  @override
+  String get last7Days => 'Letzte 7 Tage';
+
+  @override
+  String get last30Days => 'Letzte 30 Tage';
+
+  @override
+  String get averageDailySpending => 'Durchschn. Tagesausgaben';
+
+  @override
+  String get totalTransactions => 'Gesamttransaktionen';
+
+  @override
+  String get incomeCount => 'Einkommensanzahl';
+
+  @override
+  String get expenseCount => 'Ausgabenanzahl';
+
+  @override
+  String get topCategories => 'Top-Kategorien';
+
+  @override
+  String get savingsRate => 'Sparquote';
+
+  @override
+  String get biggestIncome => 'Größtes Einkommen';
+
+  @override
+  String get biggestExpense => 'Größte Ausgabe';
+
+  @override
+  String get noData => 'Keine Daten für diesen Zeitraum';
+
+  @override
+  String get spendingTrend => 'Ausgabentrend';
+
+  @override
+  String get incomeVsExpense => 'Einkommen vs Ausgaben';
 
   @override
   String get loginTab => 'Anmelden';

@@ -266,6 +266,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get selectLanguage => 'Dil Seçin';
 
   @override
+  String get colorScheme => 'Renk Şeması';
+
+  @override
   String get account => 'Hesap';
 
   @override
@@ -397,6 +400,57 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get cat_gym => 'Spor';
+
+  @override
+  String get cat_travel => 'Seyahat';
+
+  @override
+  String get statisticsTitle => 'İstatistik Özeti';
+
+  @override
+  String get periodFilter => 'Dönem';
+
+  @override
+  String get allTime => 'Tüm Zamanlar';
+
+  @override
+  String get last7Days => 'Son 7 Gün';
+
+  @override
+  String get last30Days => 'Son 30 Gün';
+
+  @override
+  String get averageDailySpending => 'Günlük Ort. Harcama';
+
+  @override
+  String get totalTransactions => 'Toplam İşlem';
+
+  @override
+  String get incomeCount => 'Gelir Sayısı';
+
+  @override
+  String get expenseCount => 'Gider Sayısı';
+
+  @override
+  String get topCategories => 'En Çok Harcama';
+
+  @override
+  String get savingsRate => 'Tasarruf Oranı';
+
+  @override
+  String get biggestIncome => 'En Büyük Gelir';
+
+  @override
+  String get biggestExpense => 'En Büyük Gider';
+
+  @override
+  String get noData => 'Bu dönem için veri yok';
+
+  @override
+  String get spendingTrend => 'Harcama Trendi';
+
+  @override
+  String get incomeVsExpense => 'Gelir - Gider';
 
   @override
   String get loginTab => 'Giriş Yap';

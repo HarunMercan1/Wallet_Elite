@@ -8,6 +8,7 @@ import '../../../features/wallet/models/account_model.dart';
 import '../../../features/wallet/models/transaction_model.dart';
 import '../../../features/wallet/models/category_model.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
@@ -22,6 +23,7 @@ class DashboardView extends ConsumerWidget {
     final transactions = ref.watch(transactionsProvider);
     final categories = ref.watch(categoriesProvider);
     final locale = ref.watch(localeProvider);
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -53,7 +55,7 @@ class DashboardView extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header - Kullanıcı Kartı
-              _buildUserHeader(userProfile, l),
+              _buildUserHeader(userProfile, l, colorTheme),
 
               const SizedBox(height: 24),
 
@@ -67,6 +69,7 @@ class DashboardView extends ConsumerWidget {
                   totalExpense,
                   l,
                   isDark,
+                  colorTheme,
                 ),
               ),
 
@@ -105,13 +108,17 @@ class DashboardView extends ConsumerWidget {
     );
   }
 
-  Widget _buildUserHeader(AsyncValue userProfile, AppLocalizations l) {
+  Widget _buildUserHeader(
+    AsyncValue userProfile,
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorTheme.primary,
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
@@ -127,7 +134,7 @@ class DashboardView extends ConsumerWidget {
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundColor: AppColors.accent,
+                      backgroundColor: colorTheme.accent,
                       backgroundImage: profile?.avatarUrl != null
                           ? NetworkImage(profile!.avatarUrl!)
                           : null,
@@ -152,8 +159,8 @@ class DashboardView extends ConsumerWidget {
                         children: [
                           Text(
                             l.welcome,
-                            style: const TextStyle(
-                              color: AppColors.accentLight,
+                            style: TextStyle(
+                              color: colorTheme.accentLight,
                               fontSize: 13,
                             ),
                           ),
@@ -175,7 +182,7 @@ class DashboardView extends ConsumerWidget {
                           vertical: 5,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.accent,
+                          color: colorTheme.accent,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: const Text(
@@ -207,6 +214,7 @@ class DashboardView extends ConsumerWidget {
     double totalExpense,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     return accounts.when(
       data: (List<AccountModel> accountsList) {
@@ -218,15 +226,15 @@ class DashboardView extends ConsumerWidget {
         return Container(
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.primaryLight, AppColors.primary],
+            gradient: LinearGradient(
+              colors: [colorTheme.primaryLight, colorTheme.primary],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
+                color: colorTheme.primary.withOpacity(0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -237,10 +245,7 @@ class DashboardView extends ConsumerWidget {
             children: [
               Text(
                 l.totalBalance,
-                style: const TextStyle(
-                  color: AppColors.accentLight,
-                  fontSize: 13,
-                ),
+                style: TextStyle(color: colorTheme.accentLight, fontSize: 13),
               ),
               const SizedBox(height: 6),
               Text(
@@ -564,6 +569,8 @@ class DashboardView extends ConsumerWidget {
         case 'cat_other':
         case 'cat_others':
           return l.cat_other;
+        case 'cat_travel':
+          return l.cat_travel;
       }
     }
 
@@ -586,6 +593,8 @@ class DashboardView extends ConsumerWidget {
     if (name.contains('entert')) return l.cat_entertainment;
     if (name.contains('shop')) return l.cat_shopping;
     if (name.contains('transport')) return l.cat_transport;
+    if (name.contains('travel') || name.contains('seyahat'))
+      return l.cat_travel;
 
     return category.name;
   }

@@ -264,6 +264,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get selectLanguage => 'Selecionar Idioma';
 
   @override
+  String get colorScheme => 'Esquema de Cores';
+
+  @override
   String get account => 'Conta';
 
   @override
@@ -378,22 +381,73 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cat_other => 'Outros';
 
   @override
-  String get cat_pets => 'Pets';
+  String get cat_pets => 'Animais';
 
   @override
-  String get cat_groceries => 'Groceries';
+  String get cat_groceries => 'Supermercado';
 
   @override
-  String get cat_electronics => 'Electronics';
+  String get cat_electronics => 'Eletrônicos';
 
   @override
-  String get cat_charity => 'Charity';
+  String get cat_charity => 'Caridade';
 
   @override
-  String get cat_insurance => 'Insurance';
+  String get cat_insurance => 'Seguro';
 
   @override
-  String get cat_gym => 'Gym';
+  String get cat_gym => 'Academia';
+
+  @override
+  String get cat_travel => 'Viagem';
+
+  @override
+  String get statisticsTitle => 'Visão Geral de Estatísticas';
+
+  @override
+  String get periodFilter => 'Período';
+
+  @override
+  String get allTime => 'Todo o tempo';
+
+  @override
+  String get last7Days => 'Últimos 7 dias';
+
+  @override
+  String get last30Days => 'Últimos 30 dias';
+
+  @override
+  String get averageDailySpending => 'Gasto diário médio';
+
+  @override
+  String get totalTransactions => 'Total de transações';
+
+  @override
+  String get incomeCount => 'Quantidade de receitas';
+
+  @override
+  String get expenseCount => 'Quantidade de despesas';
+
+  @override
+  String get topCategories => 'Principais categorias';
+
+  @override
+  String get savingsRate => 'Taxa de poupança';
+
+  @override
+  String get biggestIncome => 'Maior receita';
+
+  @override
+  String get biggestExpense => 'Maior despesa';
+
+  @override
+  String get noData => 'Sem dados para este período';
+
+  @override
+  String get spendingTrend => 'Tendência de gastos';
+
+  @override
+  String get incomeVsExpense => 'Receitas vs Despesas';
 
   @override
   String get loginTab => 'Entrar';

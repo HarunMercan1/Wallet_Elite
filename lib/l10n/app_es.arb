@@ -74,7 +74,13 @@
     "categoryNotFound": "Categoría no encontrada",
     "walletNotFound": "Billetera no encontrada",
     "errorWithDetails": "Error: {details}",
-    "@errorWithDetails": { "placeholders": { "details": { "type": "String" } } },
+    "@errorWithDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
     "networkError": "Error de conexión de red. Por favor, verifique su internet.",
     "appearance": "Apariencia",
     "theme": "Tema",
@@ -84,6 +90,7 @@
     "system": "Sistema",
     "selectTheme": "Seleccionar Tema",
     "selectLanguage": "Seleccionar Idioma",
+    "colorScheme": "Esquema de Color",
     "account": "Cuenta",
     "signOut": "Cerrar Sesión",
     "signOutConfirm": "¿Cerrar sesión?",
@@ -128,6 +135,23 @@
     "cat_charity": "Caridad",
     "cat_insurance": "Seguro",
     "cat_gym": "Gimnasio",
+    "cat_travel": "Viajes",
+    "statisticsTitle": "Resumen de Estadísticas",
+    "periodFilter": "Período",
+    "allTime": "Todo el tiempo",
+    "last7Days": "Últimos 7 días",
+    "last30Days": "Últimos 30 días",
+    "averageDailySpending": "Gasto diario promedio",
+    "totalTransactions": "Total de transacciones",
+    "incomeCount": "Cantidad de ingresos",
+    "expenseCount": "Cantidad de gastos",
+    "topCategories": "Categorías principales",
+    "savingsRate": "Tasa de ahorro",
+    "biggestIncome": "Mayor ingreso",
+    "biggestExpense": "Mayor gasto",
+    "noData": "Sin datos para este período",
+    "spendingTrend": "Tendencia de gastos",
+    "incomeVsExpense": "Ingresos vs Gastos",
     "loginTab": "Iniciar Sesión",
     "registerTab": "Registrarse",
     "tagline": "Tu libertad financiera, en tus manos",

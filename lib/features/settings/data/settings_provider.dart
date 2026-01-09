@@ -87,3 +87,33 @@ class LocaleNotifier extends StateNotifier<String> {
     await prefs.setString(_key, locale);
   }
 }
+
+/// Color Scheme provider (persistent)
+final colorSchemeProvider = StateNotifierProvider<ColorSchemeNotifier, String>((
+  ref,
+) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return ColorSchemeNotifier(prefs.asData?.value);
+});
+
+class ColorSchemeNotifier extends StateNotifier<String> {
+  final SharedPreferences? _prefs;
+  static const String _key = 'color_scheme';
+
+  ColorSchemeNotifier(this._prefs) : super(_loadInitial(_prefs));
+
+  static String _loadInitial(SharedPreferences? prefs) {
+    if (prefs == null) return 'elite';
+    return prefs.getString(_key) ?? 'elite';
+  }
+
+  void setColorScheme(String scheme) {
+    state = scheme;
+    _saveColorScheme(scheme);
+  }
+
+  Future<void> _saveColorScheme(String scheme) async {
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    await prefs.setString(_key, scheme);
+  }
+}

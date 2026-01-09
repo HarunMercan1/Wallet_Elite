@@ -44,6 +44,10 @@ class WalletEliteApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final localeCode = ref.watch(localeProvider);
+    final colorSchemeId = ref.watch(colorSchemeProvider);
+
+    // Get the selected color theme
+    final colorTheme = ColorTheme.fromString(colorSchemeId);
 
     return MaterialApp.router(
       title: 'Wallet Elite',
@@ -59,22 +63,28 @@ class WalletEliteApp extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
 
-      // Tema Ayarları
+      // Tema Ayarları - Dynamic based on selected color scheme
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
+          seedColor: colorTheme.primary,
           brightness: Brightness.light,
+          primary: colorTheme.primary,
+          secondary: colorTheme.accent,
         ),
+        primaryColor: colorTheme.primary,
         textTheme: GoogleFonts.interTextTheme(),
       ),
 
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
+          seedColor: colorTheme.primary,
           brightness: Brightness.dark,
+          primary: colorTheme.primary,
+          secondary: colorTheme.accent,
         ),
+        primaryColor: colorTheme.primary,
         textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
       ),
 

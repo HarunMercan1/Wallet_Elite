@@ -264,6 +264,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectLanguage => 'اختر اللغة';
 
   @override
+  String get colorScheme => 'نظام الألوان';
+
+  @override
   String get account => 'الحساب';
 
   @override
@@ -378,22 +381,73 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cat_other => 'أخرى';
 
   @override
-  String get cat_pets => 'Pets';
+  String get cat_pets => 'حيوانات أليفة';
 
   @override
-  String get cat_groceries => 'Groceries';
+  String get cat_groceries => 'بقالة';
 
   @override
-  String get cat_electronics => 'Electronics';
+  String get cat_electronics => 'إلكترونيات';
 
   @override
-  String get cat_charity => 'Charity';
+  String get cat_charity => 'صدقة';
 
   @override
-  String get cat_insurance => 'Insurance';
+  String get cat_insurance => 'تأمين';
 
   @override
-  String get cat_gym => 'Gym';
+  String get cat_gym => 'رياضة';
+
+  @override
+  String get cat_travel => 'سفر';
+
+  @override
+  String get statisticsTitle => 'نظرة عامة على الإحصائيات';
+
+  @override
+  String get periodFilter => 'الفترة';
+
+  @override
+  String get allTime => 'كل الأوقات';
+
+  @override
+  String get last7Days => 'آخر 7 أيام';
+
+  @override
+  String get last30Days => 'آخر 30 يوم';
+
+  @override
+  String get averageDailySpending => 'متوسط الإنفاق اليومي';
+
+  @override
+  String get totalTransactions => 'إجمالي المعاملات';
+
+  @override
+  String get incomeCount => 'عدد الدخل';
+
+  @override
+  String get expenseCount => 'عدد المصروفات';
+
+  @override
+  String get topCategories => 'أعلى الفئات';
+
+  @override
+  String get savingsRate => 'معدل التوفير';
+
+  @override
+  String get biggestIncome => 'أكبر دخل';
+
+  @override
+  String get biggestExpense => 'أكبر مصروف';
+
+  @override
+  String get noData => 'لا توجد بيانات لهذه الفترة';
+
+  @override
+  String get spendingTrend => 'اتجاه الإنفاق';
+
+  @override
+  String get incomeVsExpense => 'الدخل مقابل المصروف';
 
   @override
   String get loginTab => 'تسجيل الدخول';

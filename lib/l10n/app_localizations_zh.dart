@@ -264,6 +264,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectLanguage => '选择语言';
 
   @override
+  String get colorScheme => '配色方案';
+
+  @override
   String get account => '账户';
 
   @override
@@ -378,22 +381,73 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cat_other => '其他';
 
   @override
-  String get cat_pets => 'Pets';
+  String get cat_pets => '宠物';
 
   @override
-  String get cat_groceries => 'Groceries';
+  String get cat_groceries => '杂货';
 
   @override
-  String get cat_electronics => 'Electronics';
+  String get cat_electronics => '电子产品';
 
   @override
-  String get cat_charity => 'Charity';
+  String get cat_charity => '慈善';
 
   @override
-  String get cat_insurance => 'Insurance';
+  String get cat_insurance => '保险';
 
   @override
-  String get cat_gym => 'Gym';
+  String get cat_gym => '健身';
+
+  @override
+  String get cat_travel => '旅行';
+
+  @override
+  String get statisticsTitle => '统计概览';
+
+  @override
+  String get periodFilter => '时期';
+
+  @override
+  String get allTime => '全部时间';
+
+  @override
+  String get last7Days => '过去7天';
+
+  @override
+  String get last30Days => '过去30天';
+
+  @override
+  String get averageDailySpending => '日均支出';
+
+  @override
+  String get totalTransactions => '总交易数';
+
+  @override
+  String get incomeCount => '收入次数';
+
+  @override
+  String get expenseCount => '支出次数';
+
+  @override
+  String get topCategories => '热门分类';
+
+  @override
+  String get savingsRate => '储蓄率';
+
+  @override
+  String get biggestIncome => '最大收入';
+
+  @override
+  String get biggestExpense => '最大支出';
+
+  @override
+  String get noData => '此期间无数据';
+
+  @override
+  String get spendingTrend => '支出趋势';
+
+  @override
+  String get incomeVsExpense => '收入 vs 支出';
 
   @override
   String get loginTab => '登录';

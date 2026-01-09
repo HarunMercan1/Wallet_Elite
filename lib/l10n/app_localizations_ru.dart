@@ -265,6 +265,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectLanguage => 'Выберите язык';
 
   @override
+  String get colorScheme => 'Цветовая схема';
+
+  @override
   String get account => 'Аккаунт';
 
   @override
@@ -379,22 +382,73 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cat_other => 'Прочее';
 
   @override
-  String get cat_pets => 'Pets';
+  String get cat_pets => 'Питомцы';
 
   @override
-  String get cat_groceries => 'Groceries';
+  String get cat_groceries => 'Продукты';
 
   @override
-  String get cat_electronics => 'Electronics';
+  String get cat_electronics => 'Электроника';
 
   @override
-  String get cat_charity => 'Charity';
+  String get cat_charity => 'Благотворительность';
 
   @override
-  String get cat_insurance => 'Insurance';
+  String get cat_insurance => 'Страхование';
 
   @override
-  String get cat_gym => 'Gym';
+  String get cat_gym => 'Спортзал';
+
+  @override
+  String get cat_travel => 'Путешествия';
+
+  @override
+  String get statisticsTitle => 'Обзор статистики';
+
+  @override
+  String get periodFilter => 'Период';
+
+  @override
+  String get allTime => 'Все время';
+
+  @override
+  String get last7Days => 'Последние 7 дней';
+
+  @override
+  String get last30Days => 'Последние 30 дней';
+
+  @override
+  String get averageDailySpending => 'Средний расход в день';
+
+  @override
+  String get totalTransactions => 'Всего транзакций';
+
+  @override
+  String get incomeCount => 'Количество доходов';
+
+  @override
+  String get expenseCount => 'Количество расходов';
+
+  @override
+  String get topCategories => 'Топ категорий';
+
+  @override
+  String get savingsRate => 'Норма сбережений';
+
+  @override
+  String get biggestIncome => 'Самый большой доход';
+
+  @override
+  String get biggestExpense => 'Самый большой расход';
+
+  @override
+  String get noData => 'Нет данных за этот период';
+
+  @override
+  String get spendingTrend => 'Тренд расходов';
+
+  @override
+  String get incomeVsExpense => 'Доходы vs Расходы';
 
   @override
   String get loginTab => 'Вход';

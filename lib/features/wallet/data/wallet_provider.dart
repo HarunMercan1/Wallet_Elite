@@ -52,7 +52,27 @@ final expenseCategoriesProvider = FutureProvider<List<CategoryModel>>((
   return await walletRepo.getExpenseCategories(user.id);
 });
 
-/// Kullanıcının işlemlerini getir
+/// Seçili Cüzdan ID'si (Global State)
+/// Null ise "Tüm Cüzdanlar" seçili demektir.
+final selectedWalletIdProvider = StateProvider<String?>((ref) => null);
+
+/// Filtrelenmiş İşlemler (Seçili cüzdana göre)
+final filteredTransactionsProvider =
+    Provider<AsyncValue<List<TransactionModel>>>((ref) {
+      final transactionsAsync = ref.watch(transactionsProvider);
+      final selectedWalletId = ref.watch(selectedWalletIdProvider);
+
+      return transactionsAsync.whenData((transactions) {
+        if (selectedWalletId == null) {
+          return transactions;
+        }
+        return transactions
+            .where((t) => t.accountId == selectedWalletId)
+            .toList();
+      });
+    });
+
+/// Kullanıcının işlemlerini getir (Tümü)
 final transactionsProvider = FutureProvider<List<TransactionModel>>((
   ref,
 ) async {

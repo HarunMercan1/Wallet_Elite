@@ -1,6 +1,5 @@
 {
     "@@locale": "tr",
-
     "appName": "Wallet Elite",
     "cancel": "İptal",
     "save": "Kaydet",
@@ -16,18 +15,15 @@
     "today": "Bugün",
     "yesterday": "Dün",
     "notFound": "bulunamadı",
-
     "home": "Ana Sayfa",
     "transactions": "İşlemler",
     "statistics": "İstatistik",
     "settings": "Ayarlar",
-
     "welcome": "Hoş geldin,",
     "totalBalance": "Toplam Bakiye",
     "recentTransactions": "Son İşlemler",
     "noTransactions": "Henüz işlem yok",
     "addFirstTransaction": "+ butonuna basarak başla!",
-
     "income": "Gelir",
     "expense": "Gider",
     "amount": "Tutar",
@@ -49,7 +45,6 @@
     "noIncomeFound": "Gelir işlemi bulunamadı",
     "noExpenseFound": "Gider işlemi bulunamadı",
     "confirmDelete": "Bu işlemi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
-
     "categories": "Kategoriler",
     "incomeCategories": "Gelir Kategorileri",
     "expenseCategories": "Gider Kategorileri",
@@ -64,7 +59,6 @@
     "longPressToFavorite": "Uzun basarak favorilere ekle/çıkar",
     "addedToFavorites": "{name} favorilere eklendi",
     "removedFromFavorites": "{name} favorilerden çıkarıldı",
-
     "wallets": "Cüzdanlar",
     "addWallet": "Cüzdan Ekle",
     "walletName": "Cüzdan Adı",
@@ -80,9 +74,14 @@
     "categoryNotFound": "Kategori bulunamadı",
     "walletNotFound": "Cüzdan bulunamadı",
     "errorWithDetails": "Hata: {details}",
-    "@errorWithDetails": { "placeholders": { "details": { "type": "String" } } },
+    "@errorWithDetails": {
+        "placeholders": {
+            "details": {
+                "type": "String"
+            }
+        }
+    },
     "networkError": "Ağ bağlantı hatası. Lütfen internetinizi kontrol edin.",
-
     "appearance": "Görünüm",
     "theme": "Tema",
     "language": "Dil",
@@ -91,11 +90,11 @@
     "system": "Sistem",
     "selectTheme": "Tema Seçin",
     "selectLanguage": "Dil Seçin",
+    "colorScheme": "Renk Şeması",
     "account": "Hesap",
     "signOut": "Çıkış Yap",
     "signOutConfirm": "Çıkış yapmak istediğinizden emin misiniz?",
     "user": "Kullanıcı",
-
     "login": "Giriş Yap",
     "register": "Kayıt Ol",
     "email": "E-posta",
@@ -106,7 +105,6 @@
     "haveAccount": "Zaten hesabınız var mı?",
     "loginSuccess": "Giriş başarılı!",
     "registerSuccess": "Kayıt başarılı! Lütfen e-postanızı doğrulayın.",
-
     "thisMonth": "Bu Ay",
     "lastMonth": "Geçen Ay",
     "thisYear": "Bu Yıl",
@@ -117,7 +115,6 @@
     "totalExpense": "Toplam Gider",
     "balance": "Bakiye",
     "categoryBreakdown": "Kategori Dağılımı",
-    
     "cat_food": "Yemek",
     "cat_transport": "Ulaşım",
     "cat_shopping": "Market",
@@ -138,7 +135,23 @@
     "cat_charity": "Bağış",
     "cat_insurance": "Sigorta",
     "cat_gym": "Spor",
-
+    "cat_travel": "Seyahat",
+    "statisticsTitle": "İstatistik Özeti",
+    "periodFilter": "Dönem",
+    "allTime": "Tüm Zamanlar",
+    "last7Days": "Son 7 Gün",
+    "last30Days": "Son 30 Gün",
+    "averageDailySpending": "Günlük Ort. Harcama",
+    "totalTransactions": "Toplam İşlem",
+    "incomeCount": "Gelir Sayısı",
+    "expenseCount": "Gider Sayısı",
+    "topCategories": "En Çok Harcama",
+    "savingsRate": "Tasarruf Oranı",
+    "biggestIncome": "En Büyük Gelir",
+    "biggestExpense": "En Büyük Gider",
+    "noData": "Bu dönem için veri yok",
+    "spendingTrend": "Harcama Trendi",
+    "incomeVsExpense": "Gelir - Gider",
     "loginTab": "Giriş Yap",
     "registerTab": "Kayıt Ol",
     "tagline": "Finansal özgürlüğünüz, avucunuzda",
@@ -159,7 +172,6 @@
     "orDivider": "veya",
     "privacyText": "Devam ederek Kullanım Şartları ve Gizlilik Politikası'nı kabul etmiş olursunuz",
     "errorOccurred": "Bir hata oluştu",
-
     "welcomeTitle": "Wallet Elite'e\\nHoş Geldin! 👋",
     "welcomeSubtitle": "Finansal özgürlüğüne giden yolculuğa başlamak için birkaç basit adım kaldı.",
     "manageWalletsDesc": "Tüm hesaplarını tek yerden takip et",
@@ -170,14 +182,12 @@
     "backButton": "Geri",
     "continueButton": "Devam",
     "startButton": "Başla",
-
     "selectCurrency": "Para Birimi Seç",
     "selectCurrencyDesc": "Tüm hesaplarında kullanacağın para birimini seç",
     "turkishLira": "Türk Lirası",
     "usDollar": "Amerikan Doları",
     "euro": "Euro",
     "britishPound": "İngiliz Sterlini",
-
     "createFirstWallet": "İlk Cüzdanını Oluştur",
     "createWalletDesc": "Paranı takip etmeye başlamak için bir cüzdan oluştur",
     "walletNameHint": "örn: Nakit Param",
@@ -189,7 +199,6 @@
     "initialBalanceHint": "Şu anda cüzdanında ne kadar para olduğunu gir. Sonra istediğin zaman değiştirebilirsin.",
     "enterWalletName": "Lütfen cüzdan adı girin",
     "onboardingSuccess": "Kayıt başarılı! Giriş yapabilirsiniz.",
-
     "mon": "Pt",
     "tue": "Sa",
     "wed": "Ça",
@@ -197,7 +206,6 @@
     "fri": "Cu",
     "sat": "Ct",
     "sun": "Pz",
-
     "addExpense": "Gider Ekle",
     "addIncome": "Gelir Ekle",
     "expenseAdded": "Gider eklendi",

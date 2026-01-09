@@ -128,6 +128,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         case 'cat_gym':
         case 'cat_sport':
           return l.cat_gym;
+        case 'cat_travel':
+          return l.cat_travel;
       }
     }
 
@@ -150,6 +152,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     if (name.contains('entert')) return l.cat_entertainment;
     if (name.contains('shop')) return l.cat_shopping;
     if (name.contains('transport')) return l.cat_transport;
+    if (name.contains('travel') || name.contains('seyahat'))
+      return l.cat_travel;
 
     return category.name;
   }
@@ -422,13 +426,18 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildSectionTitle(String title, IconData icon) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Icon(icon, size: 18, color: AppColors.primary),
         const SizedBox(width: 6),
         Text(
           title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : Colors.black87,
+          ),
         ),
       ],
     );
@@ -496,6 +505,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildCategoryChip(CategoryModel category) {
     final isSelected = _selectedCategoryId == category.id;
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () => setState(() => _selectedCategoryId = category.id),
@@ -503,10 +513,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected
+              ? AppColors.primary
+              : (isDark ? AppColors.surfaceDark : Colors.white),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColors.primary : Colors.grey[200]!,
+            color: isSelected
+                ? AppColors.primary
+                : (isDark ? Colors.white24 : Colors.grey[200]!),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
@@ -525,7 +539,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             Icon(
               _getCategoryIcon(category.icon ?? 'category'),
               size: 16,
-              color: isSelected ? Colors.white : Colors.grey[700],
+              color: isSelected
+                  ? Colors.white
+                  : (isDark ? Colors.grey[300] : Colors.grey[700]),
             ),
             const SizedBox(width: 6),
             Text(
@@ -533,7 +549,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? Colors.white : Colors.black87,
+                color: isSelected
+                    ? Colors.white
+                    : (isDark ? Colors.white : Colors.black87),
               ),
             ),
           ],
@@ -544,26 +562,34 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildMoreButton(List<CategoryModel> allCategories) {
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () => _showAllCategoriesSheet(allCategories),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: isDark ? AppColors.surfaceDark : Colors.grey[50],
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey[300]!, width: 1),
+          border: Border.all(
+            color: isDark ? Colors.white24 : Colors.grey[300]!,
+            width: 1,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.more_horiz, size: 16, color: Colors.grey[600]),
+            Icon(
+              Icons.more_horiz,
+              size: 16,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
             const SizedBox(width: 6),
             Text(
               l.more,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: Colors.grey[600],
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
               ),
             ),
           ],
@@ -573,6 +599,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   void _showAllCategoriesSheet(List<CategoryModel> allCategories) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -582,9 +609,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         return StatefulBuilder(
           builder: (ctx, setSheetState) => Container(
             height: MediaQuery.of(context).size.height * 0.7,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.backgroundDark : Colors.white,
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24),
                 topRight: Radius.circular(24),
               ),
@@ -597,7 +624,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: isDark ? Colors.grey[600] : Colors.grey[300],
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -616,9 +643,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                           _transactionType == 'expense'
                               ? l.expenseCategories
                               : l.incomeCategories,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -638,14 +666,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+                Divider(height: 1, color: isDark ? Colors.white12 : null),
                 // İpucu
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  color: Colors.grey[50],
+                  color: isDark ? AppColors.surfaceDark : Colors.grey[50],
                   child: Row(
                     children: [
                       Icon(
@@ -695,14 +723,18 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.primary
-                                    : Colors.grey[100],
+                                    : (isDark
+                                          ? AppColors.surfaceDark
+                                          : Colors.grey[100]),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: isSelected
                                       ? AppColors.primary
                                       : (isFavorite
                                             ? AppColors.accent
-                                            : Colors.grey[200]!),
+                                            : (isDark
+                                                  ? Colors.white24
+                                                  : Colors.grey[200]!)),
                                   width: isFavorite ? 2 : 1,
                                 ),
                               ),
@@ -719,7 +751,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                         size: 14,
                                         color: isSelected
                                             ? Colors.white
-                                            : Colors.grey[700],
+                                            : (isDark
+                                                  ? Colors.grey[300]
+                                                  : Colors.grey[700]),
                                       ),
                                       const SizedBox(width: 4),
                                       Flexible(
@@ -730,7 +764,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                             fontWeight: FontWeight.w500,
                                             color: isSelected
                                                 ? Colors.white
-                                                : Colors.black87,
+                                                : (isDark
+                                                      ? Colors.white
+                                                      : Colors.black87),
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -1008,21 +1044,27 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildDescriptionInput() {
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return TextFormField(
       controller: _descriptionController,
       maxLines: 1,
+      style: TextStyle(color: isDark ? Colors.white : Colors.black87),
       decoration: InputDecoration(
         hintText: l.addNote,
-        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         filled: true,
-        fillColor: Colors.grey[50],
+        fillColor: isDark ? AppColors.surfaceDark : Colors.grey[50],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[200]!),
+          borderSide: BorderSide(
+            color: isDark ? Colors.white24 : Colors.grey[200]!,
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[200]!),
+          borderSide: BorderSide(
+            color: isDark ? Colors.white24 : Colors.grey[200]!,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -1039,6 +1081,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildDateSelector() {
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () async {
         final date = await showDatePicker(
@@ -1049,9 +1092,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           builder: (context, child) {
             return Theme(
               data: Theme.of(context).copyWith(
-                colorScheme: const ColorScheme.light(
-                  primary: AppColors.primary,
-                ),
+                colorScheme: isDark
+                    ? const ColorScheme.dark(primary: AppColors.primary)
+                    : const ColorScheme.light(primary: AppColors.primary),
               ),
               child: child!,
             );
@@ -1062,9 +1105,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.grey[50],
+          color: isDark ? AppColors.surfaceDark : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[200]!),
+          border: Border.all(
+            color: isDark ? Colors.white24 : Colors.grey[200]!,
+          ),
         ),
         child: Row(
           children: [
@@ -1081,7 +1126,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                       'dd MMM yyyy',
                       Localizations.localeOf(context).languageCode,
                     ).format(_selectedDate),
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
             const Spacer(),
             Icon(
@@ -1097,15 +1146,18 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildWalletSelector(AsyncValue<List<dynamic>> accounts) {
     final l = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return accounts.when(
       data: (accountsList) {
         if (accountsList.isEmpty) {
           return Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.grey[50],
+              color: isDark ? AppColors.surfaceDark : Colors.grey[50],
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[200]!),
+              border: Border.all(
+                color: isDark ? Colors.white24 : Colors.grey[200]!,
+              ),
             ),
             child: Text(
               l.walletNotFound,
@@ -1135,10 +1187,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : Colors.white,
+                    color: isSelected
+                        ? AppColors.primary
+                        : (isDark ? AppColors.surfaceDark : Colors.white),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isSelected ? AppColors.primary : Colors.grey[200]!,
+                      color: isSelected
+                          ? AppColors.primary
+                          : (isDark ? Colors.white24 : Colors.grey[200]!),
                       width: isSelected ? 2 : 1,
                     ),
                     boxShadow: isSelected
@@ -1168,7 +1224,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? Colors.white : Colors.black87,
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark ? Colors.white : Colors.black87),
                             ),
                           ),
                           Text(
@@ -1177,7 +1235,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                               fontSize: 11,
                               color: isSelected
                                   ? Colors.white70
-                                  : Colors.grey[600],
+                                  : Colors.grey[500],
                             ),
                           ),
                         ],
@@ -1191,7 +1249,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Text('Hata'),
+      error: (_, __) => Text(l.error),
     );
   }
 

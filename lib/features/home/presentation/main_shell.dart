@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/utils/responsive_helper.dart';
 import '../../settings/data/settings_provider.dart';
@@ -22,6 +23,7 @@ class MainShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedTab = ref.watch(selectedTabProvider);
     final locale = ref.watch(localeProvider);
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final r = ResponsiveHelper.of(context);
@@ -63,6 +65,7 @@ class MainShell extends ConsumerWidget {
                   label: l.home,
                   isSelected: selectedTab == 0,
                   isDark: isDark,
+                  primaryColor: colorTheme.primary,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 0,
                 ),
                 _NavItem(
@@ -71,10 +74,13 @@ class MainShell extends ConsumerWidget {
                   label: l.transactions,
                   isSelected: selectedTab == 1,
                   isDark: isDark,
+                  primaryColor: colorTheme.primary,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 1,
                 ),
                 // Ortadaki büyük + butonu
                 _AddButton(
+                  primaryColor: colorTheme.primary,
+                  primaryLightColor: colorTheme.primaryLight,
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -90,6 +96,7 @@ class MainShell extends ConsumerWidget {
                   label: l.statistics,
                   isSelected: selectedTab == 3,
                   isDark: isDark,
+                  primaryColor: colorTheme.primary,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 3,
                 ),
                 _NavItem(
@@ -98,6 +105,7 @@ class MainShell extends ConsumerWidget {
                   label: l.settings,
                   isSelected: selectedTab == 4,
                   isDark: isDark,
+                  primaryColor: colorTheme.primary,
                   onTap: () => ref.read(selectedTabProvider.notifier).state = 4,
                 ),
               ],
@@ -116,6 +124,7 @@ class _NavItem extends StatelessWidget {
   final String label;
   final bool isSelected;
   final bool isDark;
+  final Color primaryColor;
   final VoidCallback onTap;
 
   const _NavItem({
@@ -124,6 +133,7 @@ class _NavItem extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.isDark,
+    required this.primaryColor,
     required this.onTap,
   });
 
@@ -146,7 +156,7 @@ class _NavItem extends StatelessWidget {
             Icon(
               isSelected ? selectedIcon : icon,
               color: isSelected
-                  ? AppColors.primary
+                  ? primaryColor
                   : (isDark ? Colors.grey[500] : Colors.grey[500]),
               size: r.navIconSize,
             ),
@@ -159,7 +169,7 @@ class _NavItem extends StatelessWidget {
                   fontSize: r.navFontSize,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   color: isSelected
-                      ? AppColors.primary
+                      ? primaryColor
                       : (isDark ? Colors.grey[500] : Colors.grey[500]),
                 ),
                 maxLines: 1,
@@ -175,9 +185,15 @@ class _NavItem extends StatelessWidget {
 
 /// Ortadaki büyük + butonu
 class _AddButton extends StatelessWidget {
+  final Color primaryColor;
+  final Color primaryLightColor;
   final VoidCallback onTap;
 
-  const _AddButton({required this.onTap});
+  const _AddButton({
+    required this.primaryColor,
+    required this.primaryLightColor,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -190,15 +206,15 @@ class _AddButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.primaryLight],
+          gradient: LinearGradient(
+            colors: [primaryColor, primaryLightColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.4),
+              color: primaryColor.withOpacity(0.4),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),

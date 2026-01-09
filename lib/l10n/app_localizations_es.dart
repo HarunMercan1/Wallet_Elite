@@ -265,6 +265,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get selectLanguage => 'Seleccionar Idioma';
 
   @override
+  String get colorScheme => 'Esquema de Color';
+
+  @override
   String get account => 'Cuenta';
 
   @override
@@ -395,6 +398,57 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cat_gym => 'Gimnasio';
+
+  @override
+  String get cat_travel => 'Viajes';
+
+  @override
+  String get statisticsTitle => 'Resumen de Estadísticas';
+
+  @override
+  String get periodFilter => 'Período';
+
+  @override
+  String get allTime => 'Todo el tiempo';
+
+  @override
+  String get last7Days => 'Últimos 7 días';
+
+  @override
+  String get last30Days => 'Últimos 30 días';
+
+  @override
+  String get averageDailySpending => 'Gasto diario promedio';
+
+  @override
+  String get totalTransactions => 'Total de transacciones';
+
+  @override
+  String get incomeCount => 'Cantidad de ingresos';
+
+  @override
+  String get expenseCount => 'Cantidad de gastos';
+
+  @override
+  String get topCategories => 'Categorías principales';
+
+  @override
+  String get savingsRate => 'Tasa de ahorro';
+
+  @override
+  String get biggestIncome => 'Mayor ingreso';
+
+  @override
+  String get biggestExpense => 'Mayor gasto';
+
+  @override
+  String get noData => 'Sin datos para este período';
+
+  @override
+  String get spendingTrend => 'Tendencia de gastos';
+
+  @override
+  String get incomeVsExpense => 'Ingresos vs Gastos';
 
   @override
   String get loginTab => 'Iniciar Sesión';

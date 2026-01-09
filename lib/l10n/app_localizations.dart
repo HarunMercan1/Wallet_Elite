@@ -10,7 +10,10 @@ import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_id.dart';
+import 'app_localizations_it.dart';
 import 'app_localizations_ja.dart';
+import 'app_localizations_ko.dart';
 import 'app_localizations_pt.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
@@ -107,7 +110,10 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('fr'),
+    Locale('id'),
+    Locale('it'),
     Locale('ja'),
+    Locale('ko'),
     Locale('pt'),
     Locale('ru'),
     Locale('tr'),
@@ -612,6 +618,12 @@ abstract class AppLocalizations {
   /// **'Select Language'**
   String get selectLanguage;
 
+  /// No description provided for @colorScheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Scheme'**
+  String get colorScheme;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:
@@ -875,6 +887,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gym'**
   String get cat_gym;
+
+  /// No description provided for @cat_travel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get cat_travel;
+
+  /// No description provided for @statisticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics Overview'**
+  String get statisticsTitle;
+
+  /// No description provided for @periodFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get periodFilter;
+
+  /// No description provided for @allTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get allTime;
+
+  /// No description provided for @last7Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 Days'**
+  String get last7Days;
+
+  /// No description provided for @last30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 Days'**
+  String get last30Days;
+
+  /// No description provided for @averageDailySpending.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Daily Spending'**
+  String get averageDailySpending;
+
+  /// No description provided for @totalTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Transactions'**
+  String get totalTransactions;
+
+  /// No description provided for @incomeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Income Count'**
+  String get incomeCount;
+
+  /// No description provided for @expenseCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Count'**
+  String get expenseCount;
+
+  /// No description provided for @topCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Categories'**
+  String get topCategories;
+
+  /// No description provided for @savingsRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Rate'**
+  String get savingsRate;
+
+  /// No description provided for @biggestIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest Income'**
+  String get biggestIncome;
+
+  /// No description provided for @biggestExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest Expense'**
+  String get biggestExpense;
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data for this period'**
+  String get noData;
+
+  /// No description provided for @spendingTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending Trend'**
+  String get spendingTrend;
+
+  /// No description provided for @incomeVsExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Income vs Expense'**
+  String get incomeVsExpense;
 
   /// No description provided for @loginTab.
   ///
@@ -1241,7 +1355,10 @@ class _AppLocalizationsDelegate
     'en',
     'es',
     'fr',
+    'id',
+    'it',
     'ja',
+    'ko',
     'pt',
     'ru',
     'tr',
@@ -1265,8 +1382,14 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'id':
+      return AppLocalizationsId();
+    case 'it':
+      return AppLocalizationsIt();
     case 'ja':
       return AppLocalizationsJa();
+    case 'ko':
+      return AppLocalizationsKo();
     case 'pt':
       return AppLocalizationsPt();
     case 'ru':
