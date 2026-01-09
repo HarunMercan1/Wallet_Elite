@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/utils/responsive_helper.dart';
 import '../../settings/data/settings_provider.dart';
 import 'dashboard_view.dart';
@@ -22,7 +22,7 @@ class MainShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedTab = ref.watch(selectedTabProvider);
     final locale = ref.watch(localeProvider);
-    final l = AppLocalizations(locale);
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final r = ResponsiveHelper.of(context);
 

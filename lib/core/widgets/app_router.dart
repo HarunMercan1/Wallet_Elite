@@ -38,7 +38,8 @@ final routerProvider = Provider<GoRouter>((ref) {
               .from('profiles')
               .select('onboarding_completed')
               .eq('id', session.user.id)
-              .maybeSingle();
+              .maybeSingle()
+              .timeout(const Duration(seconds: 3)); // 3 saniye zaman aşımı
 
           if (profileResponse == null) {
             // Profil henüz oluşmamış, onboarding'e git
@@ -60,8 +61,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           }
         } catch (e) {
           print('Router profil kontrolü hatası: $e');
-          // Hata varsa onboarding'e yönlendir
-          if (!isGoingToOnboarding) return '/onboarding';
+          // Hata varsa (internet yoksa vb) ve giriş yapmışsa Home'a izin ver
+          // Kullanıcıyı engellemek yerine offline moda geçiş yapıyoruz
+          if (isGoingToAuth || isGoingToOnboarding) return '/home';
+          return null;
         }
       }
 

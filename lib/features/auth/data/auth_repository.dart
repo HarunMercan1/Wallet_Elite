@@ -68,6 +68,11 @@ class AuthRepository {
     } catch (e) {
       print('❌ Email kayıt hatası: $e');
       print('   Hata tipi: ${e.runtimeType}');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('host lookup') ||
+          e.toString().contains('Network is unreachable')) {
+        return {'success': false, 'error': 'network_error'};
+      }
       return {'success': false, 'error': 'Bir hata oluştu: $e'};
     }
   }
@@ -101,6 +106,11 @@ class AuthRepository {
       return {'success': false, 'error': errorMessage};
     } catch (e) {
       print('Email giriş hatası: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('host lookup') ||
+          e.toString().contains('Network is unreachable')) {
+        return {'success': false, 'error': 'network_error'};
+      }
       return {'success': false, 'error': 'Bir hata oluştu'};
     }
   }

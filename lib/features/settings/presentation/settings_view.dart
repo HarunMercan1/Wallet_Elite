@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
 
@@ -19,7 +19,7 @@ class SettingsView extends ConsumerWidget {
     final user = Supabase.instance.client.auth.currentUser;
     final accounts = ref.watch(accountsProvider);
 
-    final l = AppLocalizations(locale);
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -316,7 +316,7 @@ class SettingsView extends ConsumerWidget {
         style: TextStyle(color: isDark ? Colors.white : Colors.black),
       ),
       subtitle: Text(
-        locale == 'tr' ? 'Türkçe' : 'English',
+        _getLanguageName(locale),
         style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
       ),
       trailing: Icon(
@@ -325,6 +325,33 @@ class SettingsView extends ConsumerWidget {
       ),
       onTap: () => _showLanguageDialog(context, ref, locale, l, isDark),
     );
+  }
+
+  String _getLanguageName(String code) {
+    switch (code) {
+      case 'tr':
+        return 'Türkçe';
+      case 'en':
+        return 'English';
+      case 'es':
+        return 'Español';
+      case 'fr':
+        return 'Français';
+      case 'de':
+        return 'Deutsch';
+      case 'zh':
+        return '中文';
+      case 'ja':
+        return '日本語';
+      case 'ru':
+        return 'Русский';
+      case 'ar':
+        return 'العربية';
+      case 'pt':
+        return 'Português';
+      default:
+        return code.toUpperCase();
+    }
   }
 
   void _showThemeDialog(
@@ -473,10 +500,25 @@ class SettingsView extends ConsumerWidget {
     AppLocalizations l,
     bool isDark,
   ) {
+    final languages = [
+      {'code': 'en', 'name': 'English', 'flag': '🇺🇸'},
+      {'code': 'tr', 'name': 'Türkçe', 'flag': '🇹🇷'},
+      {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
+      {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
+      {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
+      {'code': 'zh', 'name': '中文', 'flag': '🇨🇳'},
+      {'code': 'ja', 'name': '日本語', 'flag': '🇯🇵'},
+      {'code': 'ru', 'name': 'Русский', 'flag': '🇷🇺'},
+      {'code': 'ar', 'name': 'العربية', 'flag': '🇸🇦'},
+      {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
+    ];
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         decoration: BoxDecoration(
           color: isDark ? AppColors.surfaceDark : Colors.white,
@@ -486,9 +528,7 @@ class SettingsView extends ConsumerWidget {
           ),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            // Handle
             Container(
               width: 40,
               height: 4,
@@ -498,7 +538,6 @@ class SettingsView extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Title
             Text(
               l.selectLanguage,
               style: TextStyle(
@@ -507,27 +546,25 @@ class SettingsView extends ConsumerWidget {
                 color: isDark ? Colors.white : Colors.black,
               ),
             ),
-            const SizedBox(height: 24),
-            // Türkçe option
-            _buildLanguageOption(
-              context,
-              ref,
-              'Türkçe',
-              '🇹🇷',
-              'tr',
-              current,
-              isDark,
-            ),
-            const SizedBox(height: 12),
-            // English option
-            _buildLanguageOption(
-              context,
-              ref,
-              'English',
-              '🇺🇸',
-              'en',
-              current,
-              isDark,
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.separated(
+                itemCount: languages.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final lang = languages[index];
+                  return _buildLanguageOption(
+                    context,
+                    ref,
+                    lang['name']!,
+                    lang['flag']!,
+                    lang['code']!,
+                    current,
+                    isDark,
+                  );
+                },
+              ),
             ),
           ],
         ),

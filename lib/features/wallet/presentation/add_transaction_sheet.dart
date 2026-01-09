@@ -1,14 +1,12 @@
-// lib/features/wallet/presentation/add_transaction_sheet.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../l10n/app_localizations.dart';
+
 import '../../../core/theme/app_colors.dart';
-import '../../../core/l10n/app_localizations.dart';
 import '../../../core/utils/responsive_helper.dart';
-import '../../settings/data/settings_provider.dart';
 import '../data/wallet_provider.dart';
 import '../models/category_model.dart';
 
@@ -85,14 +83,84 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     super.dispose();
   }
 
+  String _getCategoryName(CategoryModel category, AppLocalizations l) {
+    if (category.translationKey != null) {
+      switch (category.translationKey) {
+        case 'cat_food':
+          return l.cat_food;
+        case 'cat_transport':
+          return l.cat_transport;
+        case 'cat_shopping':
+          return l.cat_shopping;
+        case 'cat_entertainment':
+          return l.cat_entertainment;
+        case 'cat_bills':
+          return l.cat_bills;
+        case 'cat_health':
+          return l.cat_health;
+        case 'cat_education':
+          return l.cat_education;
+        case 'cat_rent':
+          return l.cat_rent;
+        case 'cat_taxes':
+          return l.cat_taxes;
+        case 'cat_salary':
+          return l.cat_salary;
+        case 'cat_freelance':
+          return l.cat_freelance;
+        case 'cat_investment':
+          return l.cat_investment;
+        case 'cat_gift':
+          return l.cat_gift;
+        case 'cat_others':
+        case 'cat_other':
+          return l.cat_other;
+        case 'cat_pets':
+          return l.cat_pets;
+        case 'cat_groceries':
+          return l.cat_groceries;
+        case 'cat_electronics':
+          return l.cat_electronics;
+        case 'cat_charity':
+          return l.cat_charity;
+        case 'cat_insurance':
+          return l.cat_insurance;
+        case 'cat_gym':
+        case 'cat_sport':
+          return l.cat_gym;
+      }
+    }
+
+    // Fallback: Check English name
+    final name = category.name.toLowerCase();
+    if (name.contains('food') || name.contains('yemek')) return l.cat_food;
+    if (name.contains('pet') || name.contains('evcil')) return l.cat_pets;
+    if (name.contains('grocer') || name.contains('market'))
+      return l.cat_groceries;
+    if (name.contains('electronic')) return l.cat_electronics;
+    if (name.contains('charity') || name.contains('bağış'))
+      return l.cat_charity;
+    if (name.contains('insuranc') || name.contains('sigorta'))
+      return l.cat_insurance;
+    if (name.contains('gym') || name.contains('spor')) return l.cat_gym;
+    if (name.contains('health')) return l.cat_health;
+    if (name.contains('gift')) return l.cat_gift;
+    if (name.contains('bill')) return l.cat_bills;
+    if (name.contains('educat')) return l.cat_education;
+    if (name.contains('entert')) return l.cat_entertainment;
+    if (name.contains('shop')) return l.cat_shopping;
+    if (name.contains('transport')) return l.cat_transport;
+
+    return category.name;
+  }
+
   @override
   Widget build(BuildContext context) {
     final accounts = ref.watch(accountsProvider);
     final categories = _transactionType == 'income'
         ? ref.watch(incomeCategoriesProvider)
         : ref.watch(expenseCategoriesProvider);
-    final locale = ref.watch(localeProvider);
-    final l = AppLocalizations(locale);
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final r = ResponsiveHelper.of(context);
 
@@ -147,10 +215,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     const SizedBox(height: 20),
 
                     // 3. Description
-                    _buildSectionTitle(
-                      '${l.note} (${l.isTr ? "Opsiyonel" : "Optional"})',
-                      Icons.note_outlined,
-                    ),
+                    _buildSectionTitle(l.note, Icons.note_outlined),
                     const SizedBox(height: 10),
                     _buildDescriptionInput(),
 
@@ -185,8 +250,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildHeader() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final locale = ref.watch(localeProvider);
-    final l = AppLocalizations(locale);
+    final l = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -221,8 +285,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildTabBar() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final locale = ref.watch(localeProvider);
-    final l = AppLocalizations(locale);
+    final l = AppLocalizations.of(context)!;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 12, 20, 4),
@@ -281,9 +344,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     );
   }
 
+  // _buildAmountInput remains mostly the same, just checking if l10n is used there (it's not, just numbers)
+
   Widget _buildAmountInput() {
     final isExpense = _transactionType == 'expense';
     final color = isExpense ? AppColors.error : AppColors.success;
+    final l = AppLocalizations.of(
+      context,
+    )!; // Added mostly for completeness if needed later
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
@@ -337,10 +405,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   isDense: true,
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Tutar giriniz';
+                  if (value == null || value.isEmpty)
+                    return l.enterAmount; // Translated
                   if (double.tryParse(value) == null ||
                       double.parse(value) <= 0) {
-                    return 'Geçerli tutar giriniz';
+                    return l.enterAmount;
                   }
                   return null;
                 },
@@ -368,6 +437,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildFavoriteCategoryGrid(
     AsyncValue<List<CategoryModel>> categories,
   ) {
+    final l = AppLocalizations.of(context)!;
+
     return categories.when(
       data: (categoriesList) {
         if (categoriesList.isEmpty) {
@@ -387,27 +458,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           otherCategories = categoriesList.where((c) => !c.isFavorite).toList();
         } else {
           // Varsayılan isimlere göre filtrele (fallback)
-          final defaultNames = _transactionType == 'expense'
-              ? _defaultFavoriteExpenseCategories
-              : _defaultFavoriteIncomeCategories;
-
-          favoriteCategories = [];
-          otherCategories = [];
-
-          for (final cat in categoriesList) {
-            if (defaultNames.contains(cat.name)) {
-              favoriteCategories.add(cat);
-            } else {
-              otherCategories.add(cat);
-            }
-          }
-
-          // Varsayılan sırayı koru
-          favoriteCategories.sort((a, b) {
-            final indexA = defaultNames.indexOf(a.name);
-            final indexB = defaultNames.indexOf(b.name);
-            return indexA.compareTo(indexB);
-          });
+          // Not: İdealde kullanıcı favorileri DB'de tutulmalı
+          favoriteCategories = categoriesList.take(6).toList();
+          otherCategories = categoriesList.skip(6).toList();
         }
 
         // Maksimum 6 favori göster
@@ -442,6 +495,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildCategoryChip(CategoryModel category) {
     final isSelected = _selectedCategoryId == category.id;
+    final l = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: () => setState(() => _selectedCategoryId = category.id),
@@ -475,7 +529,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             ),
             const SizedBox(width: 6),
             Text(
-              category.name,
+              _getCategoryName(category, l), // Use translated name
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
@@ -489,6 +543,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildMoreButton(List<CategoryModel> allCategories) {
+    final l = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => _showAllCategoriesSheet(allCategories),
       child: Container(
@@ -504,7 +559,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             Icon(Icons.more_horiz, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 6),
             Text(
-              'Daha Fazla',
+              l.more,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -522,184 +577,196 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheetState) => Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
+      builder: (ctx) {
+        final l = AppLocalizations.of(context)!;
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) => Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Title
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.category_outlined,
-                      color: AppColors.primary,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _transactionType == 'expense'
-                            ? 'Gider Kategorileri'
-                            : 'Gelir Kategorileri',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    // Yeni Kategori Ekle butonu
-                    TextButton.icon(
-                      onPressed: () => _showAddCategoryDialog(ctx),
-                      icon: const Icon(Icons.add, size: 18),
-                      label: const Text('Yeni'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              // İpucu
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                color: Colors.grey[50],
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline, size: 14, color: Colors.grey[500]),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        'Uzun basarak favorilere ekle/çıkar',
-                        style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Categories List
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 2.2,
+            child: Column(
+              children: [
+                // Handle
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  itemCount: allCategories.length,
-                  itemBuilder: (context, index) {
-                    final category = allCategories[index];
-                    final isSelected = _selectedCategoryId == category.id;
-                    final isFavorite = category.isFavorite;
+                ),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.category_outlined,
+                        color: AppColors.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _transactionType == 'expense'
+                              ? l.expenseCategories
+                              : l.incomeCategories,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      // Yeni Kategori Ekle butonu
+                      TextButton.icon(
+                        onPressed: () => _showAddCategoryDialog(ctx),
+                        icon: const Icon(Icons.add, size: 18),
+                        label: Text(l.newCategory),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                // İpucu
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  color: Colors.grey[50],
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 14,
+                        color: Colors.grey[500],
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          l.longPressToFavorite,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Categories List
+                Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 2.2,
+                        ),
+                    itemCount: allCategories.length,
+                    itemBuilder: (context, index) {
+                      final category = allCategories[index];
+                      final isSelected = _selectedCategoryId == category.id;
+                      final isFavorite = category.isFavorite;
 
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() => _selectedCategoryId = category.id);
-                        Navigator.pop(ctx);
-                      },
-                      onLongPress: () => _toggleFavorite(category),
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.primary
-                                  : Colors.grey[100],
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() => _selectedCategoryId = category.id);
+                          Navigator.pop(ctx);
+                        },
+                        onLongPress: () => _toggleFavorite(category),
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.primary
-                                    : (isFavorite
-                                          ? AppColors.accent
-                                          : Colors.grey[200]!),
-                                width: isFavorite ? 2 : 1,
-                              ),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                                    : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : (isFavorite
+                                            ? AppColors.accent
+                                            : Colors.grey[200]!),
+                                  width: isFavorite ? 2 : 1,
                                 ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      _getCategoryIcon(category.icon),
-                                      size: 14,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.grey[700],
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Flexible(
-                                      child: Text(
-                                        category.name,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                          color: isSelected
-                                              ? Colors.white
-                                              : Colors.black87,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        _getCategoryIcon(category.icon),
+                                        size: 14,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.grey[700],
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          _getCategoryName(category, l),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                            color: isSelected
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          // Yıldız ikonu
-                          if (isFavorite)
-                            Positioned(
-                              top: 2,
-                              right: 2,
-                              child: Icon(
-                                Icons.star,
-                                size: 12,
-                                color: AppColors.accent,
+                            // Yıldız ikonu
+                            if (isFavorite)
+                              Positioned(
+                                top: 2,
+                                right: 2,
+                                child: Icon(
+                                  Icons.star,
+                                  size: 12,
+                                  color: AppColors.accent,
+                                ),
                               ),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Future<void> _toggleFavorite(CategoryModel category) async {
+    final l = AppLocalizations.of(context)!;
     try {
       final newValue = !category.isFavorite;
       await Supabase.instance.client
@@ -717,8 +784,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           SnackBar(
             content: Text(
               newValue
-                  ? '${category.name} favorilere eklendi'
-                  : '${category.name} favorilerden çıkarıldı',
+                  ? l.addedToFavorites(category.name)
+                  : l.removedFromFavorites(category.name),
             ),
             backgroundColor: AppColors.success,
             duration: const Duration(seconds: 1),
@@ -728,13 +795,23 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hata: $e'), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text(
+              (e.toString().contains('SocketException') ||
+                      e.toString().contains('host lookup') ||
+                      e.toString().contains('Network is unreachable'))
+                  ? l.networkError
+                  : l.errorWithDetails(e.toString()),
+            ),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }
   }
 
   void _showAddCategoryDialog(BuildContext parentContext) {
+    final l = AppLocalizations.of(parentContext)!;
     final nameController = TextEditingController();
     String? selectedIcon = 'category';
 
@@ -761,8 +838,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         builder: (ctx, setDialogState) => AlertDialog(
           title: Text(
             _transactionType == 'expense'
-                ? 'Yeni Gider Kategorisi'
-                : 'Yeni Gelir Kategorisi',
+                ? l.newExpenseCategory
+                : l.newIncomeCategory,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -770,16 +847,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Kategori Adı',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l.categoryName,
+                  border: const OutlineInputBorder(),
                 ),
                 autofocus: true,
               ),
               const SizedBox(height: 16),
-              const Text(
-                'İkon Seç:',
-                style: TextStyle(fontWeight: FontWeight.w500),
+              Text(
+                l.selectIcon,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -816,14 +893,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('İptal'),
+              child: Text(l.cancel),
             ),
             ElevatedButton(
               onPressed: () async {
                 if (nameController.text.trim().isEmpty) return;
 
                 Navigator.pop(ctx); // Dialog kapat
-                Navigator.pop(parentContext); // Sheet kapat
 
                 // Kategori oluştur
                 final userId = Supabase.instance.client.auth.currentUser?.id;
@@ -842,9 +918,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     ref.invalidate(expenseCategoriesProvider);
 
                     if (mounted) {
+                      Navigator.pop(parentContext); // Sheet kapat
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Kategori eklendi'),
+                        SnackBar(
+                          content: Text(l.categoryAdded),
                           backgroundColor: AppColors.success,
                         ),
                       );
@@ -853,7 +930,15 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Hata: $e'),
+                          content: Text(
+                            (e.toString().contains('SocketException') ||
+                                    e.toString().contains('host lookup') ||
+                                    e.toString().contains(
+                                      'Network is unreachable',
+                                    ))
+                                ? l.networkError
+                                : l.errorWithDetails(e.toString()),
+                          ),
                           backgroundColor: AppColors.error,
                         ),
                       );
@@ -864,7 +949,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
               ),
-              child: const Text('Ekle'),
+              child: Text(l.add),
             ),
           ],
         ),
@@ -873,6 +958,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildEmptyCategories() {
+    final l = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -886,7 +972,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           Icon(Icons.category_outlined, size: 28, color: Colors.grey[400]),
           const SizedBox(height: 8),
           Text(
-            'Kategori bulunamadı',
+            l.categoryNotFound,
             style: TextStyle(color: Colors.grey[500], fontSize: 13),
           ),
           const SizedBox(height: 10),
@@ -921,11 +1007,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildDescriptionInput() {
+    final l = AppLocalizations.of(context)!;
     return TextFormField(
       controller: _descriptionController,
       maxLines: 1,
       decoration: InputDecoration(
-        hintText: 'Not ekle...',
+        hintText: l.addNote,
         hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
         filled: true,
         fillColor: Colors.grey[50],
@@ -951,6 +1038,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildDateSelector() {
+    final l = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () async {
         final date = await showDatePicker(
@@ -988,8 +1076,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             const SizedBox(width: 10),
             Text(
               _isToday(_selectedDate)
-                  ? 'Bugün'
-                  : DateFormat('dd MMM yyyy', 'tr_TR').format(_selectedDate),
+                  ? l.today
+                  : DateFormat(
+                      'dd MMM yyyy',
+                      Localizations.localeOf(context).languageCode,
+                    ).format(_selectedDate),
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
             const Spacer(),
@@ -1005,6 +1096,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildWalletSelector(AsyncValue<List<dynamic>> accounts) {
+    final l = AppLocalizations.of(context)!;
     return accounts.when(
       data: (accountsList) {
         if (accountsList.isEmpty) {
@@ -1016,7 +1108,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               border: Border.all(color: Colors.grey[200]!),
             ),
             child: Text(
-              'Cüzdan bulunamadı',
+              l.walletNotFound,
               style: TextStyle(color: Colors.grey[500]),
             ),
           );
@@ -1104,6 +1196,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildSaveButton() {
+    final l = AppLocalizations.of(context)!;
     final isExpense = _transactionType == 'expense';
 
     return SizedBox(
@@ -1139,7 +1232,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    isExpense ? 'Gider Ekle' : 'Gelir Ekle',
+                    isExpense ? l.addExpense : l.addIncome,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -1209,12 +1302,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   void _saveTransaction() async {
+    final l = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen bir cüzdan seçin'),
+        SnackBar(
+          content: Text(l.selectWallet),
           backgroundColor: AppColors.error,
         ),
       );
@@ -1250,8 +1344,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 const SizedBox(width: 8),
                 Text(
                   _transactionType == 'expense'
-                      ? 'Gider eklendi'
-                      : 'Gelir eklendi',
+                      ? l.expenseAdded
+                      : l.incomeAdded,
                 ),
               ],
             ),
@@ -1265,8 +1359,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('İşlem eklenirken hata oluştu'),
+          SnackBar(
+            content: Text(l.error),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),

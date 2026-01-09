@@ -6,6 +6,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
+
 import 'core/constants/supabase_config.dart';
 import 'core/theme/app_colors.dart';
 import 'core/widgets/app_router.dart';
@@ -16,13 +19,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Supabase başlatma
-  await Supabase.initialize(
-    url: SupabaseConfig.url,
-    anonKey: SupabaseConfig.anonKey,
-  );
+  try {
+    await Supabase.initialize(
+      url: SupabaseConfig.url,
+      anonKey: SupabaseConfig.anonKey,
+    );
+  } catch (e) {
+    print('Supabase başlatma hatası: $e');
+    // Hata olsa bile devam et, router offline durumu yönetecek
+  }
 
-  // Intl locale başlatma (Türkçe tarih formatı için)
-  await initializeDateFormatting('tr_TR', null);
+  // Intl locale başlatma (Tüm diller için)
+  await initializeDateFormatting(null, null);
 
   // Uygulamayı başlat
   runApp(const ProviderScope(child: WalletEliteApp()));
@@ -41,6 +49,15 @@ class WalletEliteApp extends ConsumerWidget {
       title: 'Wallet Elite',
       debugShowCheckedModeBanner: false,
       locale: Locale(localeCode),
+
+      // Localization
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
 
       // Tema Ayarları
       theme: ThemeData(

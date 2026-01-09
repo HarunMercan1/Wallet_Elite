@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
 import '../data/auth_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
+import '../../../l10n/app_localizations.dart';
 
 class OnboardingView extends ConsumerStatefulWidget {
   const OnboardingView({super.key});
@@ -19,11 +20,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Form kontrolörleri
   final _accountNameController = TextEditingController();
   final _initialBalanceController = TextEditingController(text: '0.0');
 
-  // Seçimler
   String _selectedCurrency = 'TRY';
   String _selectedAccountType = 'cash';
 
@@ -37,12 +36,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            // Progress Bar
             LinearProgressIndicator(
               value: (_currentPage + 1) / 3,
               backgroundColor: Colors.grey[200],
@@ -59,14 +59,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                   setState(() => _currentPage = page);
                 },
                 children: [
-                  _buildWelcomePage(),
-                  _buildCurrencyPage(),
-                  _buildAccountPage(),
+                  _buildWelcomePage(l),
+                  _buildCurrencyPage(l),
+                  _buildAccountPage(l),
                 ],
               ),
             ),
 
-            // Butonlar
             Padding(
               padding: const EdgeInsets.all(24),
               child: Row(
@@ -79,12 +78,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                           curve: Curves.easeInOut,
                         );
                       },
-                      child: const Text('Geri'),
+                      child: Text(l.backButton),
                     ),
                   const Spacer(),
                   ElevatedButton(
                     onPressed: _currentPage == 2
-                        ? _completeOnboarding
+                        ? () => _completeOnboarding(l)
                         : _nextPage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
@@ -98,7 +97,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                       ),
                     ),
                     child: Text(
-                      _currentPage == 2 ? 'Başla' : 'Devam',
+                      _currentPage == 2 ? l.startButton : l.continueButton,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -114,10 +113,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  /// Hoş geldin sayfası
-  /// Hoş geldin sayfası
-  /// Hoş geldin sayfası
-  Widget _buildWelcomePage() {
+  Widget _buildWelcomePage(AppLocalizations l) {
     final responsive = ResponsiveHelper(context);
 
     return SingleChildScrollView(
@@ -133,7 +129,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           ),
           SizedBox(height: responsive.hp(3)),
           Text(
-            'Wallet Elite\'e\nHoş Geldin! 👋',
+            l.welcomeTitle.replaceAll('\\n', '\n'),
             style: TextStyle(
               fontSize: responsive.titleFontSize,
               fontWeight: FontWeight.bold,
@@ -143,7 +139,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           ),
           SizedBox(height: responsive.hp(2)),
           Text(
-            'Finansal özgürlüğüne giden yolculuğa başlamak için birkaç basit adım kaldı.',
+            l.welcomeSubtitle,
             style: TextStyle(
               fontSize: responsive.bodyFontSize,
               color: Colors.grey[600],
@@ -154,21 +150,17 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           SizedBox(height: responsive.hp(5)),
           _buildFeatureItem(
             Icons.account_balance_wallet,
-            'Cüzdanlarını Yönet',
-            'Tüm hesaplarını tek yerden takip et',
+            l.manageWallets,
+            l.manageWalletsDesc,
           ),
           SizedBox(height: responsive.hp(2)),
           _buildFeatureItem(
             Icons.trending_up,
-            'Harcamalarını Analiz Et',
-            'Nereye para gittiğini gör',
+            l.analyzeSpending,
+            l.analyzeSpendingDesc,
           ),
           SizedBox(height: responsive.hp(2)),
-          _buildFeatureItem(
-            Icons.people_outline,
-            'Borç Defteri',
-            'Alacak ve borçlarını takip et',
-          ),
+          _buildFeatureItem(Icons.people_outline, l.debtBook, l.debtBookDesc),
           SizedBox(height: responsive.hp(4)),
         ],
       ),
@@ -209,13 +201,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  /// Para birimi seçim sayfası
-  Widget _buildCurrencyPage() {
+  Widget _buildCurrencyPage(AppLocalizations l) {
     final currencies = [
-      {'code': 'TRY', 'name': 'Türk Lirası', 'symbol': '₺'},
-      {'code': 'USD', 'name': 'Amerikan Doları', 'symbol': '\$'},
-      {'code': 'EUR', 'name': 'Euro', 'symbol': '€'},
-      {'code': 'GBP', 'name': 'İngiliz Sterlini', 'symbol': '£'},
+      {'code': 'TRY', 'name': l.turkishLira, 'symbol': '₺'},
+      {'code': 'USD', 'name': l.usDollar, 'symbol': '\$'},
+      {'code': 'EUR', 'name': l.euro, 'symbol': '€'},
+      {'code': 'GBP', 'name': l.britishPound, 'symbol': '£'},
     ];
 
     return Padding(
@@ -224,13 +215,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 32),
-          const Text(
-            'Para Birimi Seç',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          Text(
+            l.selectCurrency,
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            'Tüm hesaplarında kullanacağın para birimini seç',
+            l.selectCurrencyDesc,
             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
           const SizedBox(height: 32),
@@ -296,13 +287,16 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  /// İlk cüzdan oluşturma sayfası
-  Widget _buildAccountPage() {
+  Widget _buildAccountPage(AppLocalizations l) {
     final accountTypes = [
-      {'type': 'cash', 'name': 'Nakit', 'icon': Icons.payments},
-      {'type': 'bank', 'name': 'Banka Hesabı', 'icon': Icons.account_balance},
-      {'type': 'credit_card', 'name': 'Kredi Kartı', 'icon': Icons.credit_card},
-      {'type': 'gold', 'name': 'Altın/Yatırım', 'icon': Icons.diamond},
+      {'type': 'cash', 'name': l.cashType, 'icon': Icons.payments},
+      {'type': 'bank', 'name': l.bankAccount, 'icon': Icons.account_balance},
+      {
+        'type': 'credit_card',
+        'name': l.creditCardType,
+        'icon': Icons.credit_card,
+      },
+      {'type': 'gold', 'name': l.investmentType, 'icon': Icons.diamond},
     ];
 
     return SingleChildScrollView(
@@ -311,23 +305,22 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 32),
-          const Text(
-            'İlk Cüzdanını Oluştur',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          Text(
+            l.createFirstWallet,
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            'Paranı takip etmeye başlamak için bir cüzdan oluştur',
+            l.createWalletDesc,
             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
           const SizedBox(height: 32),
 
-          // Cüzdan Adı
           TextField(
             controller: _accountNameController,
             decoration: InputDecoration(
-              labelText: 'Cüzdan Adı',
-              hintText: 'örn: Nakit Param',
+              labelText: l.walletName,
+              hintText: l.walletNameHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -337,10 +330,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
           const SizedBox(height: 24),
 
-          // Cüzdan Tipi
-          const Text(
-            'Cüzdan Tipi',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Text(
+            l.walletType,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           GridView.builder(
@@ -396,15 +388,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
           const SizedBox(height: 24),
 
-          // Başlangıç Bakiyesi
           TextField(
             controller: _initialBalanceController,
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-            ), // ← Ondalık sayı
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              labelText: 'Başlangıç Bakiyesi (Opsiyonel)',
-              hintText: '0.00', // ← 0 yerine 0.00
+              labelText: l.initialBalanceOptional,
+              hintText: '0.00',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -427,7 +416,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Şu anda cüzdanında ne kadar para olduğunu gir. Sonra istediğin zaman değiştirebilirsin.',
+                    l.initialBalanceHint,
                     style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                 ),
@@ -446,12 +435,11 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  void _completeOnboarding() async {
-    // Validasyon
+  void _completeOnboarding(AppLocalizations l) async {
     if (_accountNameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen cüzdan adı girin'),
+        SnackBar(
+          content: Text(l.enterWalletName),
           backgroundColor: AppColors.error,
         ),
       );
@@ -461,7 +449,6 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     final initialBalance =
         double.tryParse(_initialBalanceController.text.trim()) ?? 0.0;
 
-    // Loading göster
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -469,18 +456,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
 
     try {
-      // ÖNCE KULLANICI ID'Sİ AL - Doğrudan Supabase'den al (StreamProvider gecikebilir)
       final user = Supabase.instance.client.auth.currentUser;
 
       if (user == null) {
-        throw Exception('Kullanıcı oturumu bulunamadı');
+        throw Exception('User session not found');
       }
 
-      print('👤 Kullanıcı ID: ${user.id}');
-      print('💼 Cüzdan: ${_accountNameController.text}');
-      print('💰 Bakiye: $initialBalance');
-
-      // 1. İlk cüzdanı oluştur
       final walletController = ref.read(walletControllerProvider);
       final accountCreated = await walletController.createAccount(
         name: _accountNameController.text,
@@ -489,53 +470,32 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
       );
 
       if (!accountCreated) {
-        throw Exception('Cüzdan oluşturulamadı');
+        throw Exception('Could not create wallet');
       }
 
-      print('✅ Cüzdan başarıyla oluşturuldu');
-
-      // 2. Varsayılan kategorileri oluştur (user_id ile - schema'ya uygun)
       final walletRepo = ref.read(walletRepositoryProvider);
       await walletRepo.createDefaultCategories(user.id);
 
-      print('✅ Varsayılan kategoriler oluşturuldu');
-
-      // 3. Onboarding'i tamamla
       final authController = ref.read(authControllerProvider);
       final onboardingCompleted = await authController.completeOnboarding();
 
       if (!onboardingCompleted) {
-        throw Exception('Onboarding tamamlanamadı');
+        throw Exception('Could not complete onboarding');
       }
 
-      print('✅ Onboarding tamamlandı');
-
-      // Loading'i kapat
       if (mounted) Navigator.pop(context);
-
-      // Home'a yönlendir
       if (mounted) context.go('/home');
     } catch (e) {
-      print('❌ HATA: $e');
-
-      // Loading'i kapat
       if (mounted) Navigator.pop(context);
-
-      // Hata göster
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Hata: $e'),
+            content: Text('${l.error}: $e'),
             backgroundColor: AppColors.error,
             duration: const Duration(seconds: 5),
           ),
         );
       }
     }
-  }
-
-  Future<void> _createDefaultCategories() async {
-    // TODO: Varsayılan kategorileri oluştur
-    // Şimdilik Supabase'de zaten var, bu yüzden pass
   }
 }

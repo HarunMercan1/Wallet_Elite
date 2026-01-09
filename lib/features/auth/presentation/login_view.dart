@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../data/auth_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive_helper.dart';
+import '../../../l10n/app_localizations.dart';
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({super.key});
@@ -19,9 +20,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController(); // İsim için eklendi
+  final _nameController = TextEditingController();
 
-  bool _isLogin = true; // true = giriş, false = kayıt
+  bool _isLogin = true;
   bool _isLoading = false;
   bool _obscurePassword = true;
 
@@ -29,7 +30,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _nameController.dispose(); // İsim controller dispose
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -37,6 +38,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   Widget build(BuildContext context) {
     final authController = ref.watch(authControllerProvider);
     final responsive = ResponsiveHelper(context);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -54,7 +56,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Logo & Başlık
+                  // Logo & Title
                   Icon(
                     Icons.account_balance_wallet_rounded,
                     size: responsive.largeIconSize,
@@ -74,7 +76,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   SizedBox(height: responsive.hp(1)),
 
                   Text(
-                    'Finansal özgürlüğünüz, avucunuzda',
+                    l.tagline,
                     style: TextStyle(
                       fontSize: responsive.bodyFontSize,
                       color: AppColors.accentLight,
@@ -84,7 +86,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                   SizedBox(height: responsive.hp(4)),
 
-                  // Form Kartı
+                  // Form Card
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -103,12 +105,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // Tab Seçimi
+                          // Tab Selection
                           Row(
                             children: [
                               Expanded(
                                 child: _buildTabButton(
-                                  'Giriş Yap',
+                                  l.loginTab,
                                   _isLogin,
                                   () {
                                     setState(() => _isLogin = true);
@@ -118,7 +120,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: _buildTabButton(
-                                  'Kayıt Ol',
+                                  l.registerTab,
                                   !_isLogin,
                                   () {
                                     setState(() => _isLogin = false);
@@ -130,13 +132,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                           const SizedBox(height: 24),
 
-                          // İsim alanı (sadece kayıt modunda)
+                          // Name field (only for registration)
                           if (!_isLogin) ...[
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
                               decoration: InputDecoration(
-                                labelText: 'Ad Soyad',
+                                labelText: l.fullName,
                                 prefixIcon: const Icon(Icons.person_outlined),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -145,10 +147,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               validator: (value) {
                                 if (!_isLogin &&
                                     (value == null || value.trim().isEmpty)) {
-                                  return 'Ad soyad giriniz';
+                                  return l.enterFullName;
                                 }
                                 if (!_isLogin && value!.trim().length < 2) {
-                                  return 'Ad en az 2 karakter olmalı';
+                                  return l.nameTooShort;
                                 }
                                 return null;
                               },
@@ -161,7 +163,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
-                              labelText: 'E-posta',
+                              labelText: l.email,
                               prefixIcon: const Icon(Icons.email_outlined),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -169,10 +171,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'E-posta giriniz';
+                                return l.enterEmail;
                               }
                               if (!value.contains('@')) {
-                                return 'Geçerli bir e-posta giriniz';
+                                return l.validEmail;
                               }
                               return null;
                             },
@@ -180,12 +182,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                           const SizedBox(height: 16),
 
-                          // Şifre
+                          // Password
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
-                              labelText: 'Şifre',
+                              labelText: l.password,
                               prefixIcon: const Icon(Icons.lock_outlined),
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -205,10 +207,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Şifre giriniz';
+                                return l.enterPassword;
                               }
                               if (value.length < 6) {
-                                return 'Şifre en az 6 karakter olmalı';
+                                return l.passwordTooShort;
                               }
                               return null;
                             },
@@ -219,19 +221,21 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
-                                onPressed: _showForgotPasswordDialog,
-                                child: const Text('Şifremi Unuttum'),
+                                onPressed: () => _showForgotPasswordDialog(l),
+                                child: Text(l.forgotPassword),
                               ),
                             ),
                           ],
 
                           const SizedBox(height: 16),
 
-                          // Giriş/Kayıt Butonu
+                          // Login/Register Button
                           SizedBox(
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: _isLoading ? null : _handleEmailAuth,
+                              onPressed: _isLoading
+                                  ? null
+                                  : () => _handleEmailAuth(l),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
@@ -249,7 +253,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                       ),
                                     )
                                   : Text(
-                                      _isLogin ? 'Giriş Yap' : 'Kayıt Ol',
+                                      _isLogin ? l.loginTab : l.registerTab,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -260,7 +264,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                           const SizedBox(height: 24),
 
-                          // Veya ayırıcı
+                          // Or divider
                           Row(
                             children: [
                               Expanded(child: Divider(color: Colors.grey[300])),
@@ -269,7 +273,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   horizontal: 16,
                                 ),
                                 child: Text(
-                                  'veya',
+                                  l.orDivider,
                                   style: TextStyle(color: Colors.grey[500]),
                                 ),
                               ),
@@ -279,7 +283,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                           const SizedBox(height: 24),
 
-                          // Google ile giriş
+                          // Google sign-in
                           OutlinedButton.icon(
                             onPressed: _isLoading
                                 ? null
@@ -293,10 +297,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            'Google ile giriş başarısız oldu',
-                                          ),
+                                        SnackBar(
+                                          content: Text(l.googleLoginFailed),
                                           backgroundColor: AppColors.error,
                                         ),
                                       );
@@ -312,9 +314,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               FontAwesomeIcons.google,
                               size: 20,
                             ),
-                            label: const Text(
-                              'Google ile Devam Et',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                            label: Text(
+                              l.continueWithGoogle,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -326,7 +330,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                   // Privacy Text
                   Text(
-                    'Devam ederek Kullanım Şartları ve\nGizlilik Politikası\'nı kabul etmiş olursunuz',
+                    l.privacyText,
                     style: TextStyle(
                       fontSize: responsive.subtitleFontSize,
                       color: AppColors.accentLight,
@@ -363,7 +367,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     );
   }
 
-  Future<void> _handleEmailAuth() async {
+  Future<void> _handleEmailAuth(AppLocalizations l) async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
@@ -374,7 +378,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
       String? errorMessage;
 
       if (_isLogin) {
-        // Giriş işlemi
         final result = await authController.signInWithEmail(
           _emailController.text.trim(),
           _passwordController.text,
@@ -382,7 +385,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
         success = result['success'] as bool;
         errorMessage = result['error'] as String?;
       } else {
-        // Kayıt işlemi - fullName ile birlikte
         final result = await authController.signUpWithEmail(
           email: _emailController.text.trim(),
           password: _passwordController.text,
@@ -395,31 +397,27 @@ class _LoginViewState extends ConsumerState<LoginView> {
       if (mounted) {
         if (success) {
           if (_isLogin) {
-            // Başarılı giriş - router kendisi yönlendirecek ama biz force edelim
             context.go('/home');
           } else {
-            // Kayıt başarılı
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Kayıt başarılı! Giriş yapabilirsiniz.'),
+              SnackBar(
+                content: Text(l.onboardingSuccess),
                 backgroundColor: AppColors.success,
               ),
             );
-            // Giriş moduna geç
             setState(() {
               _isLogin = true;
               _nameController.clear();
             });
           }
         } else {
-          // Hata
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                errorMessage ??
-                    (_isLogin
-                        ? 'Giriş başarısız. E-posta veya şifre yanlış.'
-                        : 'Kayıt başarısız. Bu e-posta zaten kullanılıyor olabilir.'),
+                errorMessage == 'network_error'
+                    ? l.networkError
+                    : (errorMessage ??
+                          (_isLogin ? l.loginFailed : l.registerFailed)),
               ),
               backgroundColor: AppColors.error,
             ),
@@ -430,7 +428,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Bir hata oluştu: $e'),
+            content: Text('${l.errorOccurred}: $e'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -442,26 +440,24 @@ class _LoginViewState extends ConsumerState<LoginView> {
     }
   }
 
-  void _showForgotPasswordDialog() {
+  void _showForgotPasswordDialog(AppLocalizations l) {
     final emailController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Şifre Sıfırla'),
+        title: Text(l.forgotPasswordTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'E-posta adresinize şifre sıfırlama bağlantısı göndereceğiz.',
-            ),
+            Text(l.forgotPasswordText),
             const SizedBox(height: 16),
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: 'E-posta',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l.email,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -469,7 +465,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            child: Text(l.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -479,15 +475,15 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 if (mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Şifre sıfırlama bağlantısı gönderildi.'),
+                    SnackBar(
+                      content: Text(l.passwordResetSent),
                       backgroundColor: AppColors.success,
                     ),
                   );
                 }
               }
             },
-            child: const Text('Gönder'),
+            child: Text(l.send),
           ),
         ],
       ),

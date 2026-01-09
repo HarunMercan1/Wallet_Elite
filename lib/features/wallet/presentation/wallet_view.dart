@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../features/auth/data/auth_provider.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/wallet_provider.dart';
 
 class WalletView extends ConsumerWidget {
@@ -11,10 +12,9 @@ class WalletView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. VERİYİ ÇEK (transactionsProvider kullan, recentTransactionsProvider yok)
+    final l = AppLocalizations.of(context)!;
     final transactionState = ref.watch(transactionsProvider);
 
-    // 2. HESAP MAKİNESİ (Gelen veriyi topla/çıkar)
     double totalBalance = 0;
     double totalIncome = 0;
     double totalExpense = 0;
@@ -32,73 +32,103 @@ class WalletView extends ConsumerWidget {
       }
     }
 
-    // 3. EKRAN TASARIMI
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- HEADER (Profil Resmi ve Çıkış) ---
-            _buildHeader(ref),
+            _buildHeader(ref, l),
 
             const SizedBox(height: 24),
 
-            // --- TOPLAM VARLIK KARTI (O sevdiğin Gradient Tasarım) ---
-            _buildBalanceCard(totalBalance, totalIncome, totalExpense),
+            _buildBalanceCard(totalBalance, totalIncome, totalExpense, l),
 
             const SizedBox(height: 30),
 
-            // --- ARAÇLAR MENÜSÜ (Yeni Butonlar) ---
-            const Text('Araçlar', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+              l.categories,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _ActionBox(icon: FontAwesomeIcons.layerGroup, label: 'Kategori', onTap: () {
-                  print("Kategori");
-                }),
-                _ActionBox(icon: FontAwesomeIcons.handHoldingDollar, label: 'Borçlar', onTap: () {
-                  print("Borçlar");
-                }),
-                _ActionBox(icon: FontAwesomeIcons.buildingColumns, label: 'Hesaplar', onTap: () {
-                  print("Hesaplar");
-                }),
-                _ActionBox(icon: FontAwesomeIcons.moneyBillTransfer, label: 'Transfer', onTap: () {
-                  print("Transfer");
-                }),
+                _ActionBox(
+                  icon: FontAwesomeIcons.layerGroup,
+                  label: l.category,
+                  onTap: () {},
+                ),
+                _ActionBox(
+                  icon: FontAwesomeIcons.handHoldingDollar,
+                  label: l.debtBook,
+                  onTap: () {},
+                ),
+                _ActionBox(
+                  icon: FontAwesomeIcons.buildingColumns,
+                  label: l.wallets,
+                  onTap: () {},
+                ),
+                _ActionBox(
+                  icon: FontAwesomeIcons.moneyBillTransfer,
+                  label: l.more,
+                  onTap: () {},
+                ),
               ],
             ),
 
             const SizedBox(height: 30),
 
-            // --- SON HAREKETLER LİSTESİ ---
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Son Hareketler', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  l.recentTransactions,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextButton(
-                    onPressed: () => ref.refresh(transactionsProvider),
-                    child: const Text('Yenile', style: TextStyle(color: Colors.amber))),
+                  onPressed: () => ref.refresh(transactionsProvider),
+                  child: Text(
+                    l.loading.replaceAll('...', ''),
+                    style: const TextStyle(color: Colors.amber),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
 
-            // Liste Durumu (Yükleniyor mu? Hata mı var? Veri mi geldi?)
             transactionState.when(
-              loading: () => const Center(child: CircularProgressIndicator(color: Colors.amber)),
-              error: (err, stack) => Center(child: Text('Hata: $err', style: const TextStyle(color: Colors.red))),
+              loading: () => const Center(
+                child: CircularProgressIndicator(color: Colors.amber),
+              ),
+              error: (err, stack) => Center(
+                child: Text(
+                  '${l.error}: $err',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
               data: (transactions) {
                 if (transactions.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Text("Henüz işlem yok.\n'+' butonuna basarak ekle!", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        '${l.noTransactions}\n${l.addFirstTransaction}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
                     ),
                   );
                 }
 
-                // Son 10 işlemi göster
                 final recentTransactions = transactions.take(10).toList();
 
                 return ListView.builder(
@@ -106,21 +136,23 @@ class WalletView extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: recentTransactions.length,
                   itemBuilder: (context, index) {
-                    return _TransactionTile(transaction: recentTransactions[index]);
+                    return _TransactionTile(
+                      transaction: recentTransactions[index],
+                      l: l,
+                    );
                   },
                 );
               },
             ),
 
-            const SizedBox(height: 80), // Alttaki menü kapatmasın diye boşluk
+            const SizedBox(height: 80),
           ],
         ),
       ),
     );
   }
 
-  // --- 1. Header Parçası ---
-  Widget _buildHeader(WidgetRef ref) {
+  Widget _buildHeader(WidgetRef ref, AppLocalizations l) {
     final authController = ref.read(authControllerProvider);
 
     return Row(
@@ -135,9 +167,19 @@ class WalletView extends ConsumerWidget {
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Hoş geldin,', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                Text('Harun Reşit', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+              children: [
+                Text(
+                  l.welcome,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                Text(
+                  l.user,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
           ],
@@ -150,13 +192,16 @@ class WalletView extends ConsumerWidget {
     );
   }
 
-  // --- 2. Balance Kartı (GRADIENT GERİ GELDİ!) ---
-  Widget _buildBalanceCard(double total, double income, double expense) {
+  Widget _buildBalanceCard(
+    double total,
+    double income,
+    double expense,
+    AppLocalizations l,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        // İŞTE O SEVDİĞİN RENK GEÇİŞİ:
         gradient: const LinearGradient(
           colors: [Color(0xFF1A1F38), Color(0xFF2D3760)],
           begin: Alignment.topLeft,
@@ -175,18 +220,36 @@ class WalletView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Toplam Varlık', style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(
+            l.totalBalance,
+            style: const TextStyle(color: Colors.grey, fontSize: 14),
+          ),
           const SizedBox(height: 8),
           Text(
             '₺ ${total.toStringAsFixed(2)}',
-            style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 1),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
           ),
           const SizedBox(height: 24),
           Row(
             children: [
-              _BalanceBadge(icon: Icons.arrow_downward, text: 'Gelir', amount: '₺ ${income.toStringAsFixed(0)}', color: Colors.greenAccent),
+              _BalanceBadge(
+                icon: Icons.arrow_downward,
+                text: l.income,
+                amount: '₺ ${income.toStringAsFixed(0)}',
+                color: Colors.greenAccent,
+              ),
               const SizedBox(width: 20),
-              _BalanceBadge(icon: Icons.arrow_upward, text: 'Gider', amount: '₺ ${expense.toStringAsFixed(0)}', color: Colors.redAccent),
+              _BalanceBadge(
+                icon: Icons.arrow_upward,
+                text: l.expense,
+                amount: '₺ ${expense.toStringAsFixed(0)}',
+                color: Colors.redAccent,
+              ),
             ],
           ),
         ],
@@ -195,29 +258,44 @@ class WalletView extends ConsumerWidget {
   }
 }
 
-// --- YARDIMCI WIDGET'LAR ---
-
 class _BalanceBadge extends StatelessWidget {
   final IconData icon;
   final String text;
   final String amount;
   final Color color;
-  const _BalanceBadge({required this.icon, required this.text, required this.amount, required this.color});
+  const _BalanceBadge({
+    required this.icon,
+    required this.text,
+    required this.amount,
+    required this.color,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(color: color.withOpacity(0.2), shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
           child: Icon(icon, color: color, size: 16),
         ),
         const SizedBox(width: 8),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(text, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-            Text(amount, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            Text(
+              text,
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+            Text(
+              amount,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
       ],
@@ -229,7 +307,11 @@ class _ActionBox extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _ActionBox({required this.icon, required this.label, required this.onTap});
+  const _ActionBox({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -237,8 +319,13 @@ class _ActionBox extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 60, width: 60,
-            decoration: BoxDecoration(color: const Color(0xFF1A1F38), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white10)),
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1F38),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white10),
+            ),
             child: Icon(icon, color: Colors.white, size: 24),
           ),
           const SizedBox(height: 8),
@@ -251,24 +338,34 @@ class _ActionBox extends StatelessWidget {
 
 class _TransactionTile extends StatelessWidget {
   final dynamic transaction;
-  const _TransactionTile({required this.transaction});
+  final AppLocalizations l;
+  const _TransactionTile({required this.transaction, required this.l});
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: const Color(0xFF1A1F38), borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1F38),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: transaction.isExpense ? Colors.red.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+              color: transaction.isExpense
+                  ? Colors.red.withOpacity(0.1)
+                  : Colors.green.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              transaction.isExpense ? FontAwesomeIcons.burger : FontAwesomeIcons.sackDollar,
-              color: transaction.isExpense ? Colors.redAccent : Colors.greenAccent,
+              transaction.isExpense
+                  ? FontAwesomeIcons.burger
+                  : FontAwesomeIcons.sackDollar,
+              color: transaction.isExpense
+                  ? Colors.redAccent
+                  : Colors.greenAccent,
               size: 20,
             ),
           ),
@@ -278,8 +375,13 @@ class _TransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.description ?? 'İşlem',
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  transaction.description ??
+                      (transaction.isExpense ? l.expense : l.income),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -292,7 +394,9 @@ class _TransactionTile extends StatelessWidget {
           Text(
             '${transaction.isExpense ? '-' : '+'} ₺${transaction.amount.toStringAsFixed(2)}',
             style: TextStyle(
-              color: transaction.isExpense ? Colors.redAccent : Colors.greenAccent,
+              color: transaction.isExpense
+                  ? Colors.redAccent
+                  : Colors.greenAccent,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),

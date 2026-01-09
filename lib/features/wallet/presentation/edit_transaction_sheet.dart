@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/wallet_provider.dart';
 import '../models/transaction_model.dart';
 
@@ -34,7 +35,6 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
   @override
   void initState() {
     super.initState();
-    // Mevcut değerleri yükle
     _amountController = TextEditingController(
       text: widget.transaction.amount.toString(),
     );
@@ -56,6 +56,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final accounts = ref.watch(accountsProvider);
     final categories = _transactionType == 'income'
         ? ref.watch(incomeCategoriesProvider)
@@ -92,14 +93,17 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                   icon: const Icon(Icons.close_rounded),
                   onPressed: () => Navigator.pop(context),
                 ),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'İşlemi Düzenle',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    l.editTransaction,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // Silme butonu
+                // Delete button
                 IconButton(
                   icon: _isDeleting
                       ? const SizedBox(
@@ -111,7 +115,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                           Icons.delete_outline,
                           color: AppColors.error,
                         ),
-                  onPressed: _isDeleting ? null : _confirmDelete,
+                  onPressed: _isDeleting ? null : () => _confirmDelete(l),
                 ),
               ],
             ),
@@ -126,7 +130,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tip gösterimi (salt okunur)
+                    // Type indicator (read-only)
                     Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 10,
@@ -154,7 +158,9 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            _transactionType == 'expense' ? 'Gider' : 'Gelir',
+                            _transactionType == 'expense'
+                                ? l.expense
+                                : l.income,
                             style: TextStyle(
                               color: _transactionType == 'expense'
                                   ? AppColors.error
@@ -168,8 +174,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
 
                     const SizedBox(height: 20),
 
-                    // Tutar
-                    _buildSectionTitle('Tutar', Icons.attach_money),
+                    // Amount
+                    _buildSectionTitle(l.amount, Icons.attach_money),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _amountController,
@@ -207,10 +213,10 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty)
-                          return 'Tutar giriniz';
+                          return l.enterAmount;
                         if (double.tryParse(value) == null ||
                             double.parse(value) <= 0) {
-                          return 'Geçerli tutar giriniz';
+                          return l.enterAmount;
                         }
                         return null;
                       },
@@ -218,8 +224,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
 
                     const SizedBox(height: 20),
 
-                    // Kategori
-                    _buildSectionTitle('Kategori', Icons.category_outlined),
+                    // Category
+                    _buildSectionTitle(l.category, Icons.category_outlined),
                     const SizedBox(height: 8),
                     categories.when(
                       data: (categoriesList) {
@@ -265,19 +271,19 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         );
                       },
                       loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => const Text('Kategoriler yüklenemedi'),
+                      error: (_, __) => Text(l.error),
                     ),
 
                     const SizedBox(height: 20),
 
-                    // Not
-                    _buildSectionTitle('Not', Icons.note_outlined),
+                    // Note
+                    _buildSectionTitle(l.note, Icons.note_outlined),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _descriptionController,
                       maxLines: 2,
                       decoration: InputDecoration(
-                        hintText: 'Açıklama ekle...',
+                        hintText: l.addNote,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -287,8 +293,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
 
                     const SizedBox(height: 20),
 
-                    // Tarih
-                    _buildSectionTitle('Tarih', Icons.calendar_today),
+                    // Date
+                    _buildSectionTitle(l.date, Icons.calendar_today),
                     const SizedBox(height: 8),
                     GestureDetector(
                       onTap: () async {
@@ -317,7 +323,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                             Text(
                               DateFormat(
                                 'dd MMMM yyyy',
-                                'tr_TR',
+                                Localizations.localeOf(context).languageCode,
                               ).format(_selectedDate),
                               style: const TextStyle(fontSize: 15),
                             ),
@@ -328,9 +334,9 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
 
                     const SizedBox(height: 20),
 
-                    // Cüzdan
+                    // Wallet
                     _buildSectionTitle(
-                      'Cüzdan',
+                      l.wallet,
                       Icons.account_balance_wallet_outlined,
                     ),
                     const SizedBox(height: 8),
@@ -358,17 +364,19 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         );
                       },
                       loading: () => const CircularProgressIndicator(),
-                      error: (_, __) => const Text('Cüzdanlar yüklenemedi'),
+                      error: (_, __) => Text(l.error),
                     ),
 
                     const SizedBox(height: 28),
 
-                    // Güncelle butonu
+                    // Update button
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _updateTransaction,
+                        onPressed: _isLoading
+                            ? null
+                            : () => _updateTransaction(l),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
@@ -385,14 +393,14 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Row(
+                            : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.save_outlined, size: 20),
-                                  SizedBox(width: 8),
+                                  const Icon(Icons.save_outlined, size: 20),
+                                  const SizedBox(width: 8),
                                   Text(
-                                    'Güncelle',
-                                    style: TextStyle(
+                                    l.save,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -424,33 +432,31 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     );
   }
 
-  void _confirmDelete() {
+  void _confirmDelete(AppLocalizations l) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('İşlemi Sil'),
-        content: const Text(
-          'Bu işlemi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
-        ),
+        title: Text(l.deleteTransaction),
+        content: Text(l.confirmDelete),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('İptal'),
+            child: Text(l.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
-              _deleteTransaction();
+              _deleteTransaction(l);
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Sil'),
+            child: Text(l.delete),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _deleteTransaction() async {
+  Future<void> _deleteTransaction(AppLocalizations l) async {
     setState(() => _isDeleting = true);
 
     final walletController = ref.read(walletControllerProvider);
@@ -463,29 +469,26 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('İşlem silindi'),
+          SnackBar(
+            content: Text(l.transactionDeleted),
             backgroundColor: AppColors.success,
           ),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Silme hatası'),
-            backgroundColor: AppColors.error,
-          ),
+          SnackBar(content: Text(l.error), backgroundColor: AppColors.error),
         );
       }
     }
   }
 
-  Future<void> _updateTransaction() async {
+  Future<void> _updateTransaction(AppLocalizations l) async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cüzdan seçiniz'),
+        SnackBar(
+          content: Text(l.selectWallet),
           backgroundColor: AppColors.error,
         ),
       );
@@ -497,18 +500,18 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     try {
       final supabase = Supabase.instance.client;
 
-      // Eski işlemi al (bakiye geri alma için)
+      // Get old transaction (for balance revert)
       final oldAmount = widget.transaction.amount;
       final oldType = widget.transaction.type;
       final oldAccountId = widget.transaction.accountId;
 
-      // Yeni değerler
+      // New values
       final newAmount = double.parse(_amountController.text);
       final newDescription = _descriptionController.text.isEmpty
           ? null
           : _descriptionController.text;
 
-      // İşlemi güncelle
+      // Update transaction
       await supabase
           .from('transactions')
           .update({
@@ -520,22 +523,22 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
           })
           .eq('id', widget.transaction.id);
 
-      // Bakiyeleri güncelle
-      // 1. Eski hesaptan eski tutarı geri al
+      // Update balances
+      // 1. Revert old amount from old account
       if (oldType == 'income') {
         await _updateAccountBalance(oldAccountId, -oldAmount);
       } else {
         await _updateAccountBalance(oldAccountId, oldAmount);
       }
 
-      // 2. Yeni hesaba yeni tutarı ekle
+      // 2. Add new amount to new account
       if (_transactionType == 'income') {
         await _updateAccountBalance(_selectedAccountId!, newAmount);
       } else {
         await _updateAccountBalance(_selectedAccountId!, -newAmount);
       }
 
-      // Provider'ları yenile
+      // Refresh providers
       ref.invalidate(transactionsProvider);
       ref.invalidate(accountsProvider);
 
@@ -543,8 +546,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('İşlem güncellendi'),
+          SnackBar(
+            content: Text(l.transactionUpdated),
             backgroundColor: AppColors.success,
           ),
         );
@@ -554,7 +557,10 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hata: $e'), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text('${l.error}: $e'),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }

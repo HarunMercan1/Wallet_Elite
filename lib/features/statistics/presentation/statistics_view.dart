@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
-import '../../settings/data/settings_provider.dart';
 
 class StatisticsView extends ConsumerWidget {
   const StatisticsView({super.key});
@@ -13,7 +13,7 @@ class StatisticsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final transactions = ref.watch(transactionsProvider);
-    final locale = ref.watch(localeProvider);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -41,7 +41,7 @@ class StatisticsView extends ConsumerWidget {
                 children: [
                   // Başlık
                   Text(
-                    locale == 'tr' ? 'İstatistikler' : 'Statistics',
+                    l.statistics,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -56,9 +56,7 @@ class StatisticsView extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: _buildSummaryCard(
-                          title: locale == 'tr'
-                              ? 'Toplam Gelir'
-                              : 'Total Income',
+                          title: l.totalIncome,
                           amount: totalIncome,
                           color: AppColors.success,
                           icon: Icons.arrow_downward,
@@ -67,9 +65,7 @@ class StatisticsView extends ConsumerWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: _buildSummaryCard(
-                          title: locale == 'tr'
-                              ? 'Toplam Gider'
-                              : 'Total Expense',
+                          title: l.totalExpense,
                           amount: totalExpense,
                           color: AppColors.error,
                           icon: Icons.arrow_upward,
@@ -81,17 +77,13 @@ class StatisticsView extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Net bakiye
-                  _buildBalanceCard(
-                    title: locale == 'tr' ? 'Net Bakiye' : 'Net Balance',
-                    amount: balance,
-                    locale: locale,
-                  ),
+                  _buildBalanceCard(title: l.balance, amount: balance),
 
                   const SizedBox(height: 32),
 
                   // Son işlemler başlığı
                   Text(
-                    locale == 'tr' ? 'Bu Ay' : 'This Month',
+                    l.thisMonth,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -102,13 +94,13 @@ class StatisticsView extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Basit bar chart placeholder
-                  _buildMonthlyChart(txList, locale),
+                  _buildMonthlyChart(txList, l),
                 ],
               ),
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Hata: $e')),
+          error: (e, _) => Center(child: Text('${l.error}: $e')),
         ),
       ),
     );
@@ -160,11 +152,7 @@ class StatisticsView extends ConsumerWidget {
     );
   }
 
-  Widget _buildBalanceCard({
-    required String title,
-    required double amount,
-    required String locale,
-  }) {
+  Widget _buildBalanceCard({required String title, required double amount}) {
     final isPositive = amount >= 0;
 
     return Container(
@@ -212,7 +200,7 @@ class StatisticsView extends ConsumerWidget {
     );
   }
 
-  Widget _buildMonthlyChart(List<TransactionModel> txList, String locale) {
+  Widget _buildMonthlyChart(List<TransactionModel> txList, AppLocalizations l) {
     // Basit bir görsel - ileride gerçek chart eklenebilir
     return Container(
       height: 200,
@@ -236,9 +224,7 @@ class StatisticsView extends ConsumerWidget {
                   Icon(Icons.bar_chart, size: 48, color: Colors.grey[300]),
                   const SizedBox(height: 8),
                   Text(
-                    locale == 'tr'
-                        ? 'Grafik için işlem ekleyin'
-                        : 'Add transactions for chart',
+                    l.noTransactions,
                     style: TextStyle(color: Colors.grey[500]),
                   ),
                 ],

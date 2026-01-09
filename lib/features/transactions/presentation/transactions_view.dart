@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
 import '../../wallet/models/category_model.dart';
@@ -35,7 +35,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     final categories = ref.watch(categoriesProvider);
     final locale = ref.watch(localeProvider);
 
-    final l = AppLocalizations(locale);
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -277,8 +277,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     String message = l.noTransactions;
     if (_filterType == 'income') message = l.noIncomeFound;
     if (_filterType == 'expense') message = l.noExpenseFound;
-    if (_searchQuery.isNotEmpty)
-      message = '"$_searchQuery" ${l.isTr ? 'bulunamadı' : 'not found'}';
+    if (_searchQuery.isNotEmpty) message = '"$_searchQuery" ${l.notFound}';
 
     return Center(
       child: Column(
@@ -318,7 +317,10 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     } else if (DateFormat('yyyy-MM-dd').format(yesterday) == dateKey) {
       return l.yesterday;
     } else {
-      return DateFormat('d MMMM yyyy', l.isTr ? 'tr_TR' : 'en_US').format(date);
+      return DateFormat(
+        'd MMMM yyyy',
+        Localizations.localeOf(context).toString(),
+      ).format(date);
     }
   }
 
@@ -378,7 +380,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    category?.name ??
+                    _getCategoryName(category, l) ??
                         (tx.description ?? (isIncome ? l.income : l.expense)),
                     style: TextStyle(
                       fontSize: 15,
@@ -432,6 +434,78 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         ),
       ),
     );
+  }
+
+  String? _getCategoryName(CategoryModel? category, AppLocalizations l) {
+    if (category == null) return null;
+
+    if (category.translationKey != null) {
+      switch (category.translationKey) {
+        case 'cat_food':
+          return l.cat_food;
+        case 'cat_transport':
+          return l.cat_transport;
+        case 'cat_shopping':
+          return l.cat_shopping;
+        case 'cat_entertainment':
+          return l.cat_entertainment;
+        case 'cat_bills':
+          return l.cat_bills;
+        case 'cat_health':
+          return l.cat_health;
+        case 'cat_education':
+          return l.cat_education;
+        case 'cat_rent':
+          return l.cat_rent;
+        case 'cat_taxes':
+          return l.cat_taxes;
+        case 'cat_salary':
+          return l.cat_salary;
+        case 'cat_freelance':
+          return l.cat_freelance;
+        case 'cat_investment':
+          return l.cat_investment;
+        case 'cat_gift':
+          return l.cat_gift;
+        case 'cat_pets':
+          return l.cat_pets;
+        case 'cat_groceries':
+          return l.cat_groceries;
+        case 'cat_electronics':
+          return l.cat_electronics;
+        case 'cat_charity':
+          return l.cat_charity;
+        case 'cat_insurance':
+          return l.cat_insurance;
+        case 'cat_gym':
+          return l.cat_gym;
+        case 'cat_other':
+        case 'cat_others':
+          return l.cat_other;
+      }
+    }
+
+    // Fallback Check
+    final name = category.name.toLowerCase();
+    if (name.contains('food') || name.contains('yemek')) return l.cat_food;
+    if (name.contains('pet') || name.contains('evcil')) return l.cat_pets;
+    if (name.contains('grocer') || name.contains('market'))
+      return l.cat_groceries;
+    if (name.contains('electronic')) return l.cat_electronics;
+    if (name.contains('charity') || name.contains('bağış'))
+      return l.cat_charity;
+    if (name.contains('insuranc') || name.contains('sigorta'))
+      return l.cat_insurance;
+    if (name.contains('gym') || name.contains('spor')) return l.cat_gym;
+    if (name.contains('health')) return l.cat_health;
+    if (name.contains('gift')) return l.cat_gift;
+    if (name.contains('bill')) return l.cat_bills;
+    if (name.contains('educat')) return l.cat_education;
+    if (name.contains('entert')) return l.cat_entertainment;
+    if (name.contains('shop')) return l.cat_shopping;
+    if (name.contains('transport')) return l.cat_transport;
+
+    return category.name;
   }
 
   IconData _getCategoryIcon(String? iconName) {
