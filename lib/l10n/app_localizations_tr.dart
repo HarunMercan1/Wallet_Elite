@@ -632,4 +632,187 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Gelir eklendi';
+
+  @override
+  String get debtTracking => 'Borç Takibi';
+
+  @override
+  String get myLends => 'Alacaklarım';
+
+  @override
+  String get myDebts => 'Borçlarım';
+
+  @override
+  String get personName => 'Kişi Adı';
+
+  @override
+  String get dueDate => 'Vade Tarihi';
+
+  @override
+  String get recordPayment => 'Ödeme Kaydet';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days gün kaldı';
+  }
+
+  @override
+  String get overdue => 'Vadesi geçmiş';
+
+  @override
+  String get remaining => 'Kalan';
+
+  @override
+  String get lend => 'Borç Verdim';
+
+  @override
+  String get borrow => 'Borç Aldım';
+
+  @override
+  String get upcomingDues => 'Yaklaşan Vadeler';
+
+  @override
+  String get allRecords => 'Tüm Kayıtlar';
+
+  @override
+  String get hideCompleted => 'Tamamlananları Gizle';
+
+  @override
+  String get showCompleted => 'Tamamlananları Göster';
+
+  @override
+  String get markAsCompleted => 'Tamamlandı Olarak İşaretle';
+
+  @override
+  String get debtAdded => 'Kayıt eklendi';
+
+  @override
+  String get debtUpdated => 'Kayıt güncellendi';
+
+  @override
+  String get debtDeleted => 'Kayıt silindi';
+
+  @override
+  String get paymentRecorded => 'Ödeme kaydedildi';
+
+  @override
+  String get noDebts => 'Henüz borç kaydı yok';
+
+  @override
+  String get addDebt => 'Kayıt Ekle';
+
+  @override
+  String get debtAmount => 'Tutar';
+
+  @override
+  String get debtDescription => 'Açıklama (opsiyonel)';
+
+  @override
+  String get selectDueDate => 'Vade tarihi seç';
+
+  @override
+  String get totalLent => 'Toplam Alacak';
+
+  @override
+  String get totalBorrowed => 'Toplam Borç';
+
+  @override
+  String people(int count) {
+    return '$count kişi';
+  }
+
+  @override
+  String memberSince(String date) {
+    return '$date tarihinden beri üye';
+  }
+
+  @override
+  String get editProfile => 'Profili Düzenle';
+
+  @override
+  String get profileUpdated => 'Profil güncellendi';
+
+  @override
+  String get changePhoto => 'Fotoğrafı Değiştir';
+
+  @override
+  String get takePhoto => 'Fotoğraf Çek';
+
+  @override
+  String get chooseFromGallery => 'Galeriden Seç';
+
+  @override
+  String get removePhoto => 'Fotoğrafı Kaldır';
+
+  @override
+  String get notifications => 'Bildirimler';
+
+  @override
+  String get quickActions => 'Hızlı İşlemler';
+
+  @override
+  String get thisMonthSummary => 'Bu Ay Özeti';
+
+  @override
+  String get financialScore => 'Finansal Skor';
+
+  @override
+  String get financialScoreDesc => 'Finansal sağlık puanınız';
+
+  @override
+  String get spendingTips => 'Harcama İpuçları';
+
+  @override
+  String get spendingTipsDesc => 'Tasarruf önerileri';
+
+  @override
+  String get categoryAnalysis => 'Kategori Analizi';
+
+  @override
+  String get categoryAnalysisDesc => 'Detaylı harcama dağılımı';
+
+  @override
+  String get monthlyComparison => 'Aylık Karşılaştırma';
+
+  @override
+  String get monthlyComparisonDesc => 'Geçmiş aylarla kıyasla';
+
+  @override
+  String get budgetProgress => 'Bütçe Durumu';
+
+  @override
+  String get budgetProgressDesc => 'Hedeflerine ne kadar yakınsın';
+
+  @override
+  String get viewDetails => 'Detayları Gör';
+
+  @override
+  String get excellent => 'Mükemmel';
+
+  @override
+  String get good => 'İyi';
+
+  @override
+  String get average => 'Ortalama';
+
+  @override
+  String get needsImprovement => 'Geliştirilmeli';
+
+  @override
+  String get poor => 'Zayıf';
+
+  @override
+  String get comparedToLastMonth => 'Geçen aya göre';
+
+  @override
+  String get youSpentLess => 'daha az harcadın';
+
+  @override
+  String get youSpentMore => 'daha fazla harcadın';
+
+  @override
+  String get noChange => 'Değişiklik yok';
+
+  @override
+  String get allWallets => 'Tüm Cüzdanlar';
 }

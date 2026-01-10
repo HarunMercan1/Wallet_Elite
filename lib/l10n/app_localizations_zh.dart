@@ -622,4 +622,187 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get incomeAdded => '收入已添加';
+
+  @override
+  String get debtTracking => '债务追踪';
+
+  @override
+  String get myLends => '借出的钱';
+
+  @override
+  String get myDebts => '欠的钱';
+
+  @override
+  String get personName => '对方姓名';
+
+  @override
+  String get dueDate => '到期日';
+
+  @override
+  String get recordPayment => '记录还款';
+
+  @override
+  String daysRemaining(int days) {
+    return '剩余$days天';
+  }
+
+  @override
+  String get overdue => '已逾期';
+
+  @override
+  String get remaining => '剩余';
+
+  @override
+  String get lend => '借出';
+
+  @override
+  String get borrow => '借入';
+
+  @override
+  String get upcomingDues => '即将到期';
+
+  @override
+  String get allRecords => '所有记录';
+
+  @override
+  String get hideCompleted => '隐藏已完成';
+
+  @override
+  String get showCompleted => '显示已完成';
+
+  @override
+  String get markAsCompleted => '标记为已完成';
+
+  @override
+  String get debtAdded => '记录已添加';
+
+  @override
+  String get debtUpdated => '记录已更新';
+
+  @override
+  String get debtDeleted => '记录已删除';
+
+  @override
+  String get paymentRecorded => '还款已记录';
+
+  @override
+  String get noDebts => '暂无债务记录';
+
+  @override
+  String get addDebt => '添加记录';
+
+  @override
+  String get debtAmount => '金额';
+
+  @override
+  String get debtDescription => '描述（可选）';
+
+  @override
+  String get selectDueDate => '选择到期日';
+
+  @override
+  String get totalLent => '总借出';
+
+  @override
+  String get totalBorrowed => '总借入';
+
+  @override
+  String people(int count) {
+    return '$count人';
+  }
+
+  @override
+  String memberSince(String date) {
+    return '自$date成为会员';
+  }
+
+  @override
+  String get editProfile => '编辑资料';
+
+  @override
+  String get profileUpdated => '资料已更新';
+
+  @override
+  String get changePhoto => '更换照片';
+
+  @override
+  String get takePhoto => '拍照';
+
+  @override
+  String get chooseFromGallery => '从相册选择';
+
+  @override
+  String get removePhoto => '删除照片';
+
+  @override
+  String get notifications => '通知';
+
+  @override
+  String get quickActions => '快捷操作';
+
+  @override
+  String get thisMonthSummary => '本月概要';
+
+  @override
+  String get financialScore => '财务评分';
+
+  @override
+  String get financialScoreDesc => '您的财务健康评分';
+
+  @override
+  String get spendingTips => '消费建议';
+
+  @override
+  String get spendingTipsDesc => '省钱小贴士';
+
+  @override
+  String get categoryAnalysis => '分类分析';
+
+  @override
+  String get categoryAnalysisDesc => '详细支出明细';
+
+  @override
+  String get monthlyComparison => '月度对比';
+
+  @override
+  String get monthlyComparisonDesc => '与往月对比';
+
+  @override
+  String get budgetProgress => '预算进度';
+
+  @override
+  String get budgetProgressDesc => '距离目标有多近';
+
+  @override
+  String get viewDetails => '查看详情';
+
+  @override
+  String get excellent => '优秀';
+
+  @override
+  String get good => '良好';
+
+  @override
+  String get average => '一般';
+
+  @override
+  String get needsImprovement => '待改进';
+
+  @override
+  String get poor => '较差';
+
+  @override
+  String get comparedToLastMonth => '与上月相比';
+
+  @override
+  String get youSpentLess => '您花费减少';
+
+  @override
+  String get youSpentMore => '您花费增加';
+
+  @override
+  String get noChange => '无变化';
+
+  @override
+  String get allWallets => '所有钱包';
 }

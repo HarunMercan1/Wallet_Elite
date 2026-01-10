@@ -209,5 +209,85 @@
     "addExpense": "支出を追加",
     "addIncome": "収入を追加",
     "expenseAdded": "支出を追加しました",
-    "incomeAdded": "収入を追加しました"
+    "incomeAdded": "収入を追加しました",
+    "debtTracking": "債務追跡",
+    "myLends": "貸したお金",
+    "myDebts": "借りたお金",
+    "personName": "相手の名前",
+    "dueDate": "期限",
+    "recordPayment": "支払いを記録",
+    "daysRemaining": "残り{days}日",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "期限切れ",
+    "remaining": "残り",
+    "lend": "貸した",
+    "borrow": "借りた",
+    "upcomingDues": "今後の期限",
+    "allRecords": "すべての記録",
+    "hideCompleted": "完了を非表示",
+    "showCompleted": "完了を表示",
+    "markAsCompleted": "完了としてマーク",
+    "debtAdded": "記録を追加しました",
+    "debtUpdated": "記録を更新しました",
+    "debtDeleted": "記録を削除しました",
+    "paymentRecorded": "支払いを記録しました",
+    "noDebts": "債務記録はまだありません",
+    "addDebt": "記録を追加",
+    "debtAmount": "金額",
+    "debtDescription": "説明（任意）",
+    "selectDueDate": "期限を選択",
+    "totalLent": "貸し出し合計",
+    "totalBorrowed": "借入合計",
+    "people": "{count}人",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "{date}から会員",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "プロフィール編集",
+    "profileUpdated": "プロフィールを更新しました",
+    "changePhoto": "写真を変更",
+    "takePhoto": "写真を撮る",
+    "chooseFromGallery": "ギャラリーから選択",
+    "removePhoto": "写真を削除",
+    "notifications": "通知",
+    "quickActions": "クイックアクション",
+    "thisMonthSummary": "今月のまとめ",
+    "financialScore": "財務スコア",
+    "financialScoreDesc": "あなたの財務健全性スコア",
+    "spendingTips": "支出のヒント",
+    "spendingTipsDesc": "節約の提案",
+    "categoryAnalysis": "カテゴリ分析",
+    "categoryAnalysisDesc": "支出の詳細内訳",
+    "monthlyComparison": "月間比較",
+    "monthlyComparisonDesc": "前月との比較",
+    "budgetProgress": "予算進捗",
+    "budgetProgressDesc": "目標への達成度",
+    "viewDetails": "詳細を見る",
+    "excellent": "素晴らしい",
+    "good": "良い",
+    "average": "普通",
+    "needsImprovement": "改善が必要",
+    "poor": "悪い",
+    "comparedToLastMonth": "先月と比較して",
+    "youSpentLess": "支出が減少",
+    "youSpentMore": "支出が増加",
+    "noChange": "変化なし",
+    "allWallets": "すべてのウォレット"
 }

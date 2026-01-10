@@ -8,6 +8,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
 import '../../wallet/models/category_model.dart';
+import '../../../core/theme/color_theme_provider.dart';
+import '../../debts/presentation/debts_view.dart';
 
 class StatisticsView extends ConsumerStatefulWidget {
   const StatisticsView({super.key});
@@ -25,6 +27,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     final categories = ref.watch(categoriesProvider);
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
@@ -102,7 +105,34 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                           color: isDark ? Colors.white : AppColors.textPrimary,
                         ),
                       ),
-                      _buildPeriodSelector(l, isDark),
+                      Row(
+                        children: [
+                          // Borç takibi butonu
+                          Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              color: colorTheme.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.account_balance_wallet,
+                                color: colorTheme.primary,
+                              ),
+                              tooltip: l.debtTracking,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const DebtsView(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          _buildPeriodSelector(l, isDark),
+                        ],
+                      ),
                     ],
                   ),
 

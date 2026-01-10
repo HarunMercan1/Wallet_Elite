@@ -223,5 +223,85 @@
     "addExpense": "Tambah Pengeluaran",
     "addIncome": "Tambah Pemasukan",
     "expenseAdded": "Pengeluaran ditambahkan",
-    "incomeAdded": "Pemasukan ditambahkan"
+    "incomeAdded": "Pemasukan ditambahkan",
+    "debtTracking": "Pelacakan Hutang",
+    "myLends": "Uang Dipinjamkan",
+    "myDebts": "Uang Dipinjam",
+    "personName": "Nama Orang",
+    "dueDate": "Tanggal Jatuh Tempo",
+    "recordPayment": "Catat Pembayaran",
+    "daysRemaining": "{days} hari tersisa",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "Terlambat",
+    "remaining": "Tersisa",
+    "lend": "Saya Pinjamkan",
+    "borrow": "Saya Pinjam",
+    "upcomingDues": "Jatuh Tempo Mendatang",
+    "allRecords": "Semua Catatan",
+    "hideCompleted": "Sembunyikan Selesai",
+    "showCompleted": "Tampilkan Selesai",
+    "markAsCompleted": "Tandai Selesai",
+    "debtAdded": "Catatan ditambahkan",
+    "debtUpdated": "Catatan diperbarui",
+    "debtDeleted": "Catatan dihapus",
+    "paymentRecorded": "Pembayaran dicatat",
+    "noDebts": "Belum ada catatan hutang",
+    "addDebt": "Tambah Catatan",
+    "debtAmount": "Jumlah",
+    "debtDescription": "Deskripsi (opsional)",
+    "selectDueDate": "Pilih tanggal jatuh tempo",
+    "totalLent": "Total Dipinjamkan",
+    "totalBorrowed": "Total Dipinjam",
+    "people": "{count} orang",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "Anggota sejak {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Edit Profil",
+    "profileUpdated": "Profil diperbarui",
+    "changePhoto": "Ubah Foto",
+    "takePhoto": "Ambil Foto",
+    "chooseFromGallery": "Pilih dari Galeri",
+    "removePhoto": "Hapus Foto",
+    "notifications": "Notifikasi",
+    "quickActions": "Aksi Cepat",
+    "thisMonthSummary": "Ringkasan Bulan Ini",
+    "financialScore": "Skor Finansial",
+    "financialScoreDesc": "Skor kesehatan finansial Anda",
+    "spendingTips": "Tips Pengeluaran",
+    "spendingTipsDesc": "Saran penghematan",
+    "categoryAnalysis": "Analisis Kategori",
+    "categoryAnalysisDesc": "Rincian pengeluaran",
+    "monthlyComparison": "Perbandingan Bulanan",
+    "monthlyComparisonDesc": "Bandingkan dengan bulan sebelumnya",
+    "budgetProgress": "Progres Anggaran",
+    "budgetProgressDesc": "Seberapa dekat dengan tujuan Anda",
+    "viewDetails": "Lihat Detail",
+    "excellent": "Sangat Baik",
+    "good": "Baik",
+    "average": "Rata-rata",
+    "needsImprovement": "Perlu Perbaikan",
+    "poor": "Buruk",
+    "comparedToLastMonth": "Dibandingkan bulan lalu",
+    "youSpentLess": "Anda menghabiskan lebih sedikit",
+    "youSpentMore": "Anda menghabiskan lebih banyak",
+    "noChange": "Tidak ada perubahan",
+    "allWallets": "Semua Dompet"
 }

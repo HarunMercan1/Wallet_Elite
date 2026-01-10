@@ -622,4 +622,187 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get incomeAdded => '収入を追加しました';
+
+  @override
+  String get debtTracking => '債務追跡';
+
+  @override
+  String get myLends => '貸したお金';
+
+  @override
+  String get myDebts => '借りたお金';
+
+  @override
+  String get personName => '相手の名前';
+
+  @override
+  String get dueDate => '期限';
+
+  @override
+  String get recordPayment => '支払いを記録';
+
+  @override
+  String daysRemaining(int days) {
+    return '残り$days日';
+  }
+
+  @override
+  String get overdue => '期限切れ';
+
+  @override
+  String get remaining => '残り';
+
+  @override
+  String get lend => '貸した';
+
+  @override
+  String get borrow => '借りた';
+
+  @override
+  String get upcomingDues => '今後の期限';
+
+  @override
+  String get allRecords => 'すべての記録';
+
+  @override
+  String get hideCompleted => '完了を非表示';
+
+  @override
+  String get showCompleted => '完了を表示';
+
+  @override
+  String get markAsCompleted => '完了としてマーク';
+
+  @override
+  String get debtAdded => '記録を追加しました';
+
+  @override
+  String get debtUpdated => '記録を更新しました';
+
+  @override
+  String get debtDeleted => '記録を削除しました';
+
+  @override
+  String get paymentRecorded => '支払いを記録しました';
+
+  @override
+  String get noDebts => '債務記録はまだありません';
+
+  @override
+  String get addDebt => '記録を追加';
+
+  @override
+  String get debtAmount => '金額';
+
+  @override
+  String get debtDescription => '説明（任意）';
+
+  @override
+  String get selectDueDate => '期限を選択';
+
+  @override
+  String get totalLent => '貸し出し合計';
+
+  @override
+  String get totalBorrowed => '借入合計';
+
+  @override
+  String people(int count) {
+    return '$count人';
+  }
+
+  @override
+  String memberSince(String date) {
+    return '$dateから会員';
+  }
+
+  @override
+  String get editProfile => 'プロフィール編集';
+
+  @override
+  String get profileUpdated => 'プロフィールを更新しました';
+
+  @override
+  String get changePhoto => '写真を変更';
+
+  @override
+  String get takePhoto => '写真を撮る';
+
+  @override
+  String get chooseFromGallery => 'ギャラリーから選択';
+
+  @override
+  String get removePhoto => '写真を削除';
+
+  @override
+  String get notifications => '通知';
+
+  @override
+  String get quickActions => 'クイックアクション';
+
+  @override
+  String get thisMonthSummary => '今月のまとめ';
+
+  @override
+  String get financialScore => '財務スコア';
+
+  @override
+  String get financialScoreDesc => 'あなたの財務健全性スコア';
+
+  @override
+  String get spendingTips => '支出のヒント';
+
+  @override
+  String get spendingTipsDesc => '節約の提案';
+
+  @override
+  String get categoryAnalysis => 'カテゴリ分析';
+
+  @override
+  String get categoryAnalysisDesc => '支出の詳細内訳';
+
+  @override
+  String get monthlyComparison => '月間比較';
+
+  @override
+  String get monthlyComparisonDesc => '前月との比較';
+
+  @override
+  String get budgetProgress => '予算進捗';
+
+  @override
+  String get budgetProgressDesc => '目標への達成度';
+
+  @override
+  String get viewDetails => '詳細を見る';
+
+  @override
+  String get excellent => '素晴らしい';
+
+  @override
+  String get good => '良い';
+
+  @override
+  String get average => '普通';
+
+  @override
+  String get needsImprovement => '改善が必要';
+
+  @override
+  String get poor => '悪い';
+
+  @override
+  String get comparedToLastMonth => '先月と比較して';
+
+  @override
+  String get youSpentLess => '支出が減少';
+
+  @override
+  String get youSpentMore => '支出が増加';
+
+  @override
+  String get noChange => '変化なし';
+
+  @override
+  String get allWallets => 'すべてのウォレット';
 }

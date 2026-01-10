@@ -632,4 +632,187 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Pemasukan ditambahkan';
+
+  @override
+  String get debtTracking => 'Pelacakan Hutang';
+
+  @override
+  String get myLends => 'Uang Dipinjamkan';
+
+  @override
+  String get myDebts => 'Uang Dipinjam';
+
+  @override
+  String get personName => 'Nama Orang';
+
+  @override
+  String get dueDate => 'Tanggal Jatuh Tempo';
+
+  @override
+  String get recordPayment => 'Catat Pembayaran';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days hari tersisa';
+  }
+
+  @override
+  String get overdue => 'Terlambat';
+
+  @override
+  String get remaining => 'Tersisa';
+
+  @override
+  String get lend => 'Saya Pinjamkan';
+
+  @override
+  String get borrow => 'Saya Pinjam';
+
+  @override
+  String get upcomingDues => 'Jatuh Tempo Mendatang';
+
+  @override
+  String get allRecords => 'Semua Catatan';
+
+  @override
+  String get hideCompleted => 'Sembunyikan Selesai';
+
+  @override
+  String get showCompleted => 'Tampilkan Selesai';
+
+  @override
+  String get markAsCompleted => 'Tandai Selesai';
+
+  @override
+  String get debtAdded => 'Catatan ditambahkan';
+
+  @override
+  String get debtUpdated => 'Catatan diperbarui';
+
+  @override
+  String get debtDeleted => 'Catatan dihapus';
+
+  @override
+  String get paymentRecorded => 'Pembayaran dicatat';
+
+  @override
+  String get noDebts => 'Belum ada catatan hutang';
+
+  @override
+  String get addDebt => 'Tambah Catatan';
+
+  @override
+  String get debtAmount => 'Jumlah';
+
+  @override
+  String get debtDescription => 'Deskripsi (opsional)';
+
+  @override
+  String get selectDueDate => 'Pilih tanggal jatuh tempo';
+
+  @override
+  String get totalLent => 'Total Dipinjamkan';
+
+  @override
+  String get totalBorrowed => 'Total Dipinjam';
+
+  @override
+  String people(int count) {
+    return '$count orang';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'Anggota sejak $date';
+  }
+
+  @override
+  String get editProfile => 'Edit Profil';
+
+  @override
+  String get profileUpdated => 'Profil diperbarui';
+
+  @override
+  String get changePhoto => 'Ubah Foto';
+
+  @override
+  String get takePhoto => 'Ambil Foto';
+
+  @override
+  String get chooseFromGallery => 'Pilih dari Galeri';
+
+  @override
+  String get removePhoto => 'Hapus Foto';
+
+  @override
+  String get notifications => 'Notifikasi';
+
+  @override
+  String get quickActions => 'Aksi Cepat';
+
+  @override
+  String get thisMonthSummary => 'Ringkasan Bulan Ini';
+
+  @override
+  String get financialScore => 'Skor Finansial';
+
+  @override
+  String get financialScoreDesc => 'Skor kesehatan finansial Anda';
+
+  @override
+  String get spendingTips => 'Tips Pengeluaran';
+
+  @override
+  String get spendingTipsDesc => 'Saran penghematan';
+
+  @override
+  String get categoryAnalysis => 'Analisis Kategori';
+
+  @override
+  String get categoryAnalysisDesc => 'Rincian pengeluaran';
+
+  @override
+  String get monthlyComparison => 'Perbandingan Bulanan';
+
+  @override
+  String get monthlyComparisonDesc => 'Bandingkan dengan bulan sebelumnya';
+
+  @override
+  String get budgetProgress => 'Progres Anggaran';
+
+  @override
+  String get budgetProgressDesc => 'Seberapa dekat dengan tujuan Anda';
+
+  @override
+  String get viewDetails => 'Lihat Detail';
+
+  @override
+  String get excellent => 'Sangat Baik';
+
+  @override
+  String get good => 'Baik';
+
+  @override
+  String get average => 'Rata-rata';
+
+  @override
+  String get needsImprovement => 'Perlu Perbaikan';
+
+  @override
+  String get poor => 'Buruk';
+
+  @override
+  String get comparedToLastMonth => 'Dibandingkan bulan lalu';
+
+  @override
+  String get youSpentLess => 'Anda menghabiskan lebih sedikit';
+
+  @override
+  String get youSpentMore => 'Anda menghabiskan lebih banyak';
+
+  @override
+  String get noChange => 'Tidak ada perubahan';
+
+  @override
+  String get allWallets => 'Semua Dompet';
 }

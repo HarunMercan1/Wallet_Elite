@@ -622,4 +622,187 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get incomeAdded => '수입이 추가되었습니다';
+
+  @override
+  String get debtTracking => '채무 추적';
+
+  @override
+  String get myLends => '빌려준 돈';
+
+  @override
+  String get myDebts => '빌린 돈';
+
+  @override
+  String get personName => '상대방 이름';
+
+  @override
+  String get dueDate => '만기일';
+
+  @override
+  String get recordPayment => '결제 기록';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days일 남음';
+  }
+
+  @override
+  String get overdue => '연체';
+
+  @override
+  String get remaining => '남은 금액';
+
+  @override
+  String get lend => '빌려줌';
+
+  @override
+  String get borrow => '빌림';
+
+  @override
+  String get upcomingDues => '다가오는 만기';
+
+  @override
+  String get allRecords => '모든 기록';
+
+  @override
+  String get hideCompleted => '완료 숨기기';
+
+  @override
+  String get showCompleted => '완료 표시';
+
+  @override
+  String get markAsCompleted => '완료로 표시';
+
+  @override
+  String get debtAdded => '기록이 추가되었습니다';
+
+  @override
+  String get debtUpdated => '기록이 업데이트되었습니다';
+
+  @override
+  String get debtDeleted => '기록이 삭제되었습니다';
+
+  @override
+  String get paymentRecorded => '결제가 기록되었습니다';
+
+  @override
+  String get noDebts => '채무 기록 없음';
+
+  @override
+  String get addDebt => '기록 추가';
+
+  @override
+  String get debtAmount => '금액';
+
+  @override
+  String get debtDescription => '설명 (선택사항)';
+
+  @override
+  String get selectDueDate => '만기일 선택';
+
+  @override
+  String get totalLent => '총 빌려준 금액';
+
+  @override
+  String get totalBorrowed => '총 빌린 금액';
+
+  @override
+  String people(int count) {
+    return '$count명';
+  }
+
+  @override
+  String memberSince(String date) {
+    return '$date부터 회원';
+  }
+
+  @override
+  String get editProfile => '프로필 편집';
+
+  @override
+  String get profileUpdated => '프로필이 업데이트되었습니다';
+
+  @override
+  String get changePhoto => '사진 변경';
+
+  @override
+  String get takePhoto => '사진 촬영';
+
+  @override
+  String get chooseFromGallery => '갤러리에서 선택';
+
+  @override
+  String get removePhoto => '사진 삭제';
+
+  @override
+  String get notifications => '알림';
+
+  @override
+  String get quickActions => '빠른 작업';
+
+  @override
+  String get thisMonthSummary => '이번 달 요약';
+
+  @override
+  String get financialScore => '재정 점수';
+
+  @override
+  String get financialScoreDesc => '재정 건전성 점수';
+
+  @override
+  String get spendingTips => '지출 팁';
+
+  @override
+  String get spendingTipsDesc => '절약 제안';
+
+  @override
+  String get categoryAnalysis => '카테고리 분석';
+
+  @override
+  String get categoryAnalysisDesc => '상세 지출 내역';
+
+  @override
+  String get monthlyComparison => '월별 비교';
+
+  @override
+  String get monthlyComparisonDesc => '이전 달과 비교';
+
+  @override
+  String get budgetProgress => '예산 진행률';
+
+  @override
+  String get budgetProgressDesc => '목표 달성도';
+
+  @override
+  String get viewDetails => '상세 보기';
+
+  @override
+  String get excellent => '훌륭함';
+
+  @override
+  String get good => '좋음';
+
+  @override
+  String get average => '보통';
+
+  @override
+  String get needsImprovement => '개선 필요';
+
+  @override
+  String get poor => '나쁨';
+
+  @override
+  String get comparedToLastMonth => '지난달 대비';
+
+  @override
+  String get youSpentLess => '지출 감소';
+
+  @override
+  String get youSpentMore => '지출 증가';
+
+  @override
+  String get noChange => '변화 없음';
+
+  @override
+  String get allWallets => '모든 지갑';
 }

@@ -209,5 +209,85 @@
     "addExpense": "Agregar Gasto",
     "addIncome": "Agregar Ingreso",
     "expenseAdded": "Gasto agregado",
-    "incomeAdded": "Ingreso agregado"
+    "incomeAdded": "Ingreso agregado",
+    "debtTracking": "Seguimiento de Deudas",
+    "myLends": "Dinero Prestado",
+    "myDebts": "Dinero Adeudado",
+    "personName": "Nombre de Persona",
+    "dueDate": "Fecha de Vencimiento",
+    "recordPayment": "Registrar Pago",
+    "daysRemaining": "{days} días restantes",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "Vencido",
+    "remaining": "Restante",
+    "lend": "Presté",
+    "borrow": "Pedí prestado",
+    "upcomingDues": "Próximos Vencimientos",
+    "allRecords": "Todos los Registros",
+    "hideCompleted": "Ocultar Completados",
+    "showCompleted": "Mostrar Completados",
+    "markAsCompleted": "Marcar como Completado",
+    "debtAdded": "Registro agregado",
+    "debtUpdated": "Registro actualizado",
+    "debtDeleted": "Registro eliminado",
+    "paymentRecorded": "Pago registrado",
+    "noDebts": "Aún no hay registros de deudas",
+    "addDebt": "Agregar Registro",
+    "debtAmount": "Monto",
+    "debtDescription": "Descripción (opcional)",
+    "selectDueDate": "Seleccionar fecha de vencimiento",
+    "totalLent": "Total Prestado",
+    "totalBorrowed": "Total Adeudado",
+    "people": "{count} personas",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "Miembro desde {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Editar Perfil",
+    "profileUpdated": "Perfil actualizado",
+    "changePhoto": "Cambiar Foto",
+    "takePhoto": "Tomar Foto",
+    "chooseFromGallery": "Elegir de Galería",
+    "removePhoto": "Eliminar Foto",
+    "notifications": "Notificaciones",
+    "quickActions": "Acciones Rápidas",
+    "thisMonthSummary": "Resumen de Este Mes",
+    "financialScore": "Puntuación Financiera",
+    "financialScoreDesc": "Tu puntuación de salud financiera",
+    "spendingTips": "Consejos de Gasto",
+    "spendingTipsDesc": "Sugerencias de ahorro",
+    "categoryAnalysis": "Análisis de Categorías",
+    "categoryAnalysisDesc": "Desglose detallado de gastos",
+    "monthlyComparison": "Comparación Mensual",
+    "monthlyComparisonDesc": "Comparar con meses anteriores",
+    "budgetProgress": "Progreso del Presupuesto",
+    "budgetProgressDesc": "Qué tan cerca de tus metas",
+    "viewDetails": "Ver Detalles",
+    "excellent": "Excelente",
+    "good": "Bueno",
+    "average": "Promedio",
+    "needsImprovement": "Necesita Mejora",
+    "poor": "Pobre",
+    "comparedToLastMonth": "Comparado con el mes pasado",
+    "youSpentLess": "gastaste menos",
+    "youSpentMore": "gastaste más",
+    "noChange": "Sin cambios",
+    "allWallets": "Todas las Billeteras"
 }

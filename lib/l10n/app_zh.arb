@@ -209,5 +209,85 @@
     "addExpense": "添加支出",
     "addIncome": "添加收入",
     "expenseAdded": "支出已添加",
-    "incomeAdded": "收入已添加"
+    "incomeAdded": "收入已添加",
+    "debtTracking": "债务追踪",
+    "myLends": "借出的钱",
+    "myDebts": "欠的钱",
+    "personName": "对方姓名",
+    "dueDate": "到期日",
+    "recordPayment": "记录还款",
+    "daysRemaining": "剩余{days}天",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "已逾期",
+    "remaining": "剩余",
+    "lend": "借出",
+    "borrow": "借入",
+    "upcomingDues": "即将到期",
+    "allRecords": "所有记录",
+    "hideCompleted": "隐藏已完成",
+    "showCompleted": "显示已完成",
+    "markAsCompleted": "标记为已完成",
+    "debtAdded": "记录已添加",
+    "debtUpdated": "记录已更新",
+    "debtDeleted": "记录已删除",
+    "paymentRecorded": "还款已记录",
+    "noDebts": "暂无债务记录",
+    "addDebt": "添加记录",
+    "debtAmount": "金额",
+    "debtDescription": "描述（可选）",
+    "selectDueDate": "选择到期日",
+    "totalLent": "总借出",
+    "totalBorrowed": "总借入",
+    "people": "{count}人",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "自{date}成为会员",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "编辑资料",
+    "profileUpdated": "资料已更新",
+    "changePhoto": "更换照片",
+    "takePhoto": "拍照",
+    "chooseFromGallery": "从相册选择",
+    "removePhoto": "删除照片",
+    "notifications": "通知",
+    "quickActions": "快捷操作",
+    "thisMonthSummary": "本月概要",
+    "financialScore": "财务评分",
+    "financialScoreDesc": "您的财务健康评分",
+    "spendingTips": "消费建议",
+    "spendingTipsDesc": "省钱小贴士",
+    "categoryAnalysis": "分类分析",
+    "categoryAnalysisDesc": "详细支出明细",
+    "monthlyComparison": "月度对比",
+    "monthlyComparisonDesc": "与往月对比",
+    "budgetProgress": "预算进度",
+    "budgetProgressDesc": "距离目标有多近",
+    "viewDetails": "查看详情",
+    "excellent": "优秀",
+    "good": "良好",
+    "average": "一般",
+    "needsImprovement": "待改进",
+    "poor": "较差",
+    "comparedToLastMonth": "与上月相比",
+    "youSpentLess": "您花费减少",
+    "youSpentMore": "您花费增加",
+    "noChange": "无变化",
+    "allWallets": "所有钱包"
 }

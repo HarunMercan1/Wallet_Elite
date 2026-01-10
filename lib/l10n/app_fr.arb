@@ -209,5 +209,85 @@
     "addExpense": "Ajouter Dépense",
     "addIncome": "Ajouter Revenu",
     "expenseAdded": "Dépense ajoutée",
-    "incomeAdded": "Revenu ajouté"
+    "incomeAdded": "Revenu ajouté",
+    "debtTracking": "Suivi des Dettes",
+    "myLends": "Argent Prêté",
+    "myDebts": "Argent Emprunté",
+    "personName": "Nom de la Personne",
+    "dueDate": "Date d'Échéance",
+    "recordPayment": "Enregistrer Paiement",
+    "daysRemaining": "{days} jours restants",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "En retard",
+    "remaining": "Restant",
+    "lend": "J'ai prêté",
+    "borrow": "J'ai emprunté",
+    "upcomingDues": "Échéances à Venir",
+    "allRecords": "Tous les Enregistrements",
+    "hideCompleted": "Masquer Terminés",
+    "showCompleted": "Afficher Terminés",
+    "markAsCompleted": "Marquer comme Terminé",
+    "debtAdded": "Enregistrement ajouté",
+    "debtUpdated": "Enregistrement mis à jour",
+    "debtDeleted": "Enregistrement supprimé",
+    "paymentRecorded": "Paiement enregistré",
+    "noDebts": "Pas encore d'enregistrements de dettes",
+    "addDebt": "Ajouter Enregistrement",
+    "debtAmount": "Montant",
+    "debtDescription": "Description (optionnel)",
+    "selectDueDate": "Sélectionner date d'échéance",
+    "totalLent": "Total Prêté",
+    "totalBorrowed": "Total Emprunté",
+    "people": "{count} personnes",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "Membre depuis {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Modifier Profil",
+    "profileUpdated": "Profil mis à jour",
+    "changePhoto": "Changer Photo",
+    "takePhoto": "Prendre Photo",
+    "chooseFromGallery": "Choisir de la Galerie",
+    "removePhoto": "Supprimer Photo",
+    "notifications": "Notifications",
+    "quickActions": "Actions Rapides",
+    "thisMonthSummary": "Résumé de Ce Mois",
+    "financialScore": "Score Financier",
+    "financialScoreDesc": "Votre score de santé financière",
+    "spendingTips": "Conseils Dépenses",
+    "spendingTipsDesc": "Suggestions d'économies",
+    "categoryAnalysis": "Analyse par Catégorie",
+    "categoryAnalysisDesc": "Détail des dépenses",
+    "monthlyComparison": "Comparaison Mensuelle",
+    "monthlyComparisonDesc": "Comparer avec les mois précédents",
+    "budgetProgress": "Progrès Budget",
+    "budgetProgressDesc": "Proximité de vos objectifs",
+    "viewDetails": "Voir Détails",
+    "excellent": "Excellent",
+    "good": "Bon",
+    "average": "Moyen",
+    "needsImprovement": "À améliorer",
+    "poor": "Faible",
+    "comparedToLastMonth": "Par rapport au mois dernier",
+    "youSpentLess": "vous avez dépensé moins",
+    "youSpentMore": "vous avez dépensé plus",
+    "noChange": "Aucun changement",
+    "allWallets": "Tous les Portefeuilles"
 }

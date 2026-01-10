@@ -209,5 +209,85 @@
     "addExpense": "Добавить расход",
     "addIncome": "Добавить доход",
     "expenseAdded": "Расход добавлен",
-    "incomeAdded": "Доход добавлен"
+    "incomeAdded": "Доход добавлен",
+    "debtTracking": "Учет долгов",
+    "myLends": "Одолжил",
+    "myDebts": "Взял в долг",
+    "personName": "Имя человека",
+    "dueDate": "Срок возврата",
+    "recordPayment": "Записать платеж",
+    "daysRemaining": "Осталось {days} дней",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "Просрочено",
+    "remaining": "Остаток",
+    "lend": "Одолжил",
+    "borrow": "Взял в долг",
+    "upcomingDues": "Ближайшие сроки",
+    "allRecords": "Все записи",
+    "hideCompleted": "Скрыть завершенные",
+    "showCompleted": "Показать завершенные",
+    "markAsCompleted": "Отметить как завершенное",
+    "debtAdded": "Запись добавлена",
+    "debtUpdated": "Запись обновлена",
+    "debtDeleted": "Запись удалена",
+    "paymentRecorded": "Платеж записан",
+    "noDebts": "Записей о долгах нет",
+    "addDebt": "Добавить запись",
+    "debtAmount": "Сумма",
+    "debtDescription": "Описание (опционально)",
+    "selectDueDate": "Выберите срок возврата",
+    "totalLent": "Всего одолжено",
+    "totalBorrowed": "Всего взято в долг",
+    "people": "{count} человек",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "Участник с {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Редактировать профиль",
+    "profileUpdated": "Профиль обновлен",
+    "changePhoto": "Изменить фото",
+    "takePhoto": "Сделать фото",
+    "chooseFromGallery": "Выбрать из галереи",
+    "removePhoto": "Удалить фото",
+    "notifications": "Уведомления",
+    "quickActions": "Быстрые действия",
+    "thisMonthSummary": "Сводка за месяц",
+    "financialScore": "Финансовый рейтинг",
+    "financialScoreDesc": "Ваш рейтинг финансового здоровья",
+    "spendingTips": "Советы по расходам",
+    "spendingTipsDesc": "Рекомендации по экономии",
+    "categoryAnalysis": "Анализ категорий",
+    "categoryAnalysisDesc": "Детализация расходов",
+    "monthlyComparison": "Сравнение по месяцам",
+    "monthlyComparisonDesc": "Сравнить с предыдущими месяцами",
+    "budgetProgress": "Прогресс бюджета",
+    "budgetProgressDesc": "Насколько близки к целям",
+    "viewDetails": "Подробнее",
+    "excellent": "Отлично",
+    "good": "Хорошо",
+    "average": "Средне",
+    "needsImprovement": "Требует улучшения",
+    "poor": "Плохо",
+    "comparedToLastMonth": "По сравнению с прошлым месяцем",
+    "youSpentLess": "вы потратили меньше",
+    "youSpentMore": "вы потратили больше",
+    "noChange": "Без изменений",
+    "allWallets": "Все кошельки"
 }

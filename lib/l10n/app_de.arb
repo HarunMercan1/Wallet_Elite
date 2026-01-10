@@ -209,5 +209,85 @@
     "addExpense": "Ausgabe Hinzufügen",
     "addIncome": "Einkommen Hinzufügen",
     "expenseAdded": "Ausgabe hinzugefügt",
-    "incomeAdded": "Einkommen hinzugefügt"
+    "incomeAdded": "Einkommen hinzugefügt",
+    "debtTracking": "Schulden-Tracking",
+    "myLends": "Geliehenes Geld",
+    "myDebts": "Geliehenes Geld",
+    "personName": "Personenname",
+    "dueDate": "Fälligkeitsdatum",
+    "recordPayment": "Zahlung erfassen",
+    "daysRemaining": "{days} Tage übrig",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "Überfällig",
+    "remaining": "Verbleibend",
+    "lend": "Ich habe geliehen",
+    "borrow": "Ich habe geborgt",
+    "upcomingDues": "Kommende Fälligkeiten",
+    "allRecords": "Alle Einträge",
+    "hideCompleted": "Erledigte ausblenden",
+    "showCompleted": "Erledigte anzeigen",
+    "markAsCompleted": "Als erledigt markieren",
+    "debtAdded": "Eintrag hinzugefügt",
+    "debtUpdated": "Eintrag aktualisiert",
+    "debtDeleted": "Eintrag gelöscht",
+    "paymentRecorded": "Zahlung erfasst",
+    "noDebts": "Noch keine Schuldeneinträge",
+    "addDebt": "Eintrag hinzufügen",
+    "debtAmount": "Betrag",
+    "debtDescription": "Beschreibung (optional)",
+    "selectDueDate": "Fälligkeitsdatum wählen",
+    "totalLent": "Gesamt verliehen",
+    "totalBorrowed": "Gesamt geliehen",
+    "people": "{count} Personen",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "Mitglied seit {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Profil bearbeiten",
+    "profileUpdated": "Profil aktualisiert",
+    "changePhoto": "Foto ändern",
+    "takePhoto": "Foto aufnehmen",
+    "chooseFromGallery": "Aus Galerie wählen",
+    "removePhoto": "Foto entfernen",
+    "notifications": "Benachrichtigungen",
+    "quickActions": "Schnellaktionen",
+    "thisMonthSummary": "Zusammenfassung dieses Monats",
+    "financialScore": "Finanzscore",
+    "financialScoreDesc": "Ihr finanzieller Gesundheitswert",
+    "spendingTips": "Spartipps",
+    "spendingTipsDesc": "Sparvorschläge",
+    "categoryAnalysis": "Kategorieanalyse",
+    "categoryAnalysisDesc": "Detaillierte Ausgabenaufschlüsselung",
+    "monthlyComparison": "Monatsvergleich",
+    "monthlyComparisonDesc": "Vergleich mit Vormonaten",
+    "budgetProgress": "Budgetfortschritt",
+    "budgetProgressDesc": "Wie nah an Ihren Zielen",
+    "viewDetails": "Details anzeigen",
+    "excellent": "Ausgezeichnet",
+    "good": "Gut",
+    "average": "Durchschnittlich",
+    "needsImprovement": "Verbesserungsbedürftig",
+    "poor": "Schlecht",
+    "comparedToLastMonth": "Im Vergleich zum letzten Monat",
+    "youSpentLess": "haben Sie weniger ausgegeben",
+    "youSpentMore": "haben Sie mehr ausgegeben",
+    "noChange": "Keine Änderung",
+    "allWallets": "Alle Geldbörsen"
 }

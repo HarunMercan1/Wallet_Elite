@@ -627,4 +627,187 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Доход добавлен';
+
+  @override
+  String get debtTracking => 'Учет долгов';
+
+  @override
+  String get myLends => 'Одолжил';
+
+  @override
+  String get myDebts => 'Взял в долг';
+
+  @override
+  String get personName => 'Имя человека';
+
+  @override
+  String get dueDate => 'Срок возврата';
+
+  @override
+  String get recordPayment => 'Записать платеж';
+
+  @override
+  String daysRemaining(int days) {
+    return 'Осталось $days дней';
+  }
+
+  @override
+  String get overdue => 'Просрочено';
+
+  @override
+  String get remaining => 'Остаток';
+
+  @override
+  String get lend => 'Одолжил';
+
+  @override
+  String get borrow => 'Взял в долг';
+
+  @override
+  String get upcomingDues => 'Ближайшие сроки';
+
+  @override
+  String get allRecords => 'Все записи';
+
+  @override
+  String get hideCompleted => 'Скрыть завершенные';
+
+  @override
+  String get showCompleted => 'Показать завершенные';
+
+  @override
+  String get markAsCompleted => 'Отметить как завершенное';
+
+  @override
+  String get debtAdded => 'Запись добавлена';
+
+  @override
+  String get debtUpdated => 'Запись обновлена';
+
+  @override
+  String get debtDeleted => 'Запись удалена';
+
+  @override
+  String get paymentRecorded => 'Платеж записан';
+
+  @override
+  String get noDebts => 'Записей о долгах нет';
+
+  @override
+  String get addDebt => 'Добавить запись';
+
+  @override
+  String get debtAmount => 'Сумма';
+
+  @override
+  String get debtDescription => 'Описание (опционально)';
+
+  @override
+  String get selectDueDate => 'Выберите срок возврата';
+
+  @override
+  String get totalLent => 'Всего одолжено';
+
+  @override
+  String get totalBorrowed => 'Всего взято в долг';
+
+  @override
+  String people(int count) {
+    return '$count человек';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'Участник с $date';
+  }
+
+  @override
+  String get editProfile => 'Редактировать профиль';
+
+  @override
+  String get profileUpdated => 'Профиль обновлен';
+
+  @override
+  String get changePhoto => 'Изменить фото';
+
+  @override
+  String get takePhoto => 'Сделать фото';
+
+  @override
+  String get chooseFromGallery => 'Выбрать из галереи';
+
+  @override
+  String get removePhoto => 'Удалить фото';
+
+  @override
+  String get notifications => 'Уведомления';
+
+  @override
+  String get quickActions => 'Быстрые действия';
+
+  @override
+  String get thisMonthSummary => 'Сводка за месяц';
+
+  @override
+  String get financialScore => 'Финансовый рейтинг';
+
+  @override
+  String get financialScoreDesc => 'Ваш рейтинг финансового здоровья';
+
+  @override
+  String get spendingTips => 'Советы по расходам';
+
+  @override
+  String get spendingTipsDesc => 'Рекомендации по экономии';
+
+  @override
+  String get categoryAnalysis => 'Анализ категорий';
+
+  @override
+  String get categoryAnalysisDesc => 'Детализация расходов';
+
+  @override
+  String get monthlyComparison => 'Сравнение по месяцам';
+
+  @override
+  String get monthlyComparisonDesc => 'Сравнить с предыдущими месяцами';
+
+  @override
+  String get budgetProgress => 'Прогресс бюджета';
+
+  @override
+  String get budgetProgressDesc => 'Насколько близки к целям';
+
+  @override
+  String get viewDetails => 'Подробнее';
+
+  @override
+  String get excellent => 'Отлично';
+
+  @override
+  String get good => 'Хорошо';
+
+  @override
+  String get average => 'Средне';
+
+  @override
+  String get needsImprovement => 'Требует улучшения';
+
+  @override
+  String get poor => 'Плохо';
+
+  @override
+  String get comparedToLastMonth => 'По сравнению с прошлым месяцем';
+
+  @override
+  String get youSpentLess => 'вы потратили меньше';
+
+  @override
+  String get youSpentMore => 'вы потратили больше';
+
+  @override
+  String get noChange => 'Без изменений';
+
+  @override
+  String get allWallets => 'Все кошельки';
 }

@@ -209,5 +209,85 @@
     "addExpense": "إضافة مصروف",
     "addIncome": "إضافة دخل",
     "expenseAdded": "تمت إضافة المصروف",
-    "incomeAdded": "تمت إضافة الدخل"
+    "incomeAdded": "تمت إضافة الدخل",
+    "debtTracking": "تتبع الديون",
+    "myLends": "أموال أقرضتها",
+    "myDebts": "أموال استلفتها",
+    "personName": "اسم الشخص",
+    "dueDate": "تاريخ الاستحقاق",
+    "recordPayment": "تسجيل دفعة",
+    "daysRemaining": "{days} يوم متبقي",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "متأخر",
+    "remaining": "المتبقي",
+    "lend": "أقرضت",
+    "borrow": "استلفت",
+    "upcomingDues": "استحقاقات قادمة",
+    "allRecords": "جميع السجلات",
+    "hideCompleted": "إخفاء المكتملة",
+    "showCompleted": "إظهار المكتملة",
+    "markAsCompleted": "وضع علامة مكتمل",
+    "debtAdded": "تمت إضافة السجل",
+    "debtUpdated": "تم تحديث السجل",
+    "debtDeleted": "تم حذف السجل",
+    "paymentRecorded": "تم تسجيل الدفعة",
+    "noDebts": "لا توجد سجلات ديون بعد",
+    "addDebt": "إضافة سجل",
+    "debtAmount": "المبلغ",
+    "debtDescription": "الوصف (اختياري)",
+    "selectDueDate": "اختر تاريخ الاستحقاق",
+    "totalLent": "إجمالي المُقرض",
+    "totalBorrowed": "إجمالي المستلف",
+    "people": "{count} أشخاص",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "عضو منذ {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "تعديل الملف الشخصي",
+    "profileUpdated": "تم تحديث الملف الشخصي",
+    "changePhoto": "تغيير الصورة",
+    "takePhoto": "التقاط صورة",
+    "chooseFromGallery": "اختيار من المعرض",
+    "removePhoto": "إزالة الصورة",
+    "notifications": "الإشعارات",
+    "quickActions": "إجراءات سريعة",
+    "thisMonthSummary": "ملخص هذا الشهر",
+    "financialScore": "النقاط المالية",
+    "financialScoreDesc": "نقاط صحتك المالية",
+    "spendingTips": "نصائح الإنفاق",
+    "spendingTipsDesc": "اقتراحات التوفير",
+    "categoryAnalysis": "تحليل الفئات",
+    "categoryAnalysisDesc": "تفصيل الإنفاق",
+    "monthlyComparison": "المقارنة الشهرية",
+    "monthlyComparisonDesc": "مقارنة مع الأشهر السابقة",
+    "budgetProgress": "تقدم الميزانية",
+    "budgetProgressDesc": "مدى قربك من أهدافك",
+    "viewDetails": "عرض التفاصيل",
+    "excellent": "ممتاز",
+    "good": "جيد",
+    "average": "متوسط",
+    "needsImprovement": "يحتاج تحسين",
+    "poor": "ضعيف",
+    "comparedToLastMonth": "مقارنة بالشهر الماضي",
+    "youSpentLess": "أنفقت أقل",
+    "youSpentMore": "أنفقت أكثر",
+    "noChange": "لا تغيير",
+    "allWallets": "جميع المحافظ"
 }

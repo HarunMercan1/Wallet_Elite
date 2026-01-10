@@ -223,5 +223,85 @@
     "addExpense": "지출 추가",
     "addIncome": "수입 추가",
     "expenseAdded": "지출이 추가되었습니다",
-    "incomeAdded": "수입이 추가되었습니다"
+    "incomeAdded": "수입이 추가되었습니다",
+    "debtTracking": "채무 추적",
+    "myLends": "빌려준 돈",
+    "myDebts": "빌린 돈",
+    "personName": "상대방 이름",
+    "dueDate": "만기일",
+    "recordPayment": "결제 기록",
+    "daysRemaining": "{days}일 남음",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "연체",
+    "remaining": "남은 금액",
+    "lend": "빌려줌",
+    "borrow": "빌림",
+    "upcomingDues": "다가오는 만기",
+    "allRecords": "모든 기록",
+    "hideCompleted": "완료 숨기기",
+    "showCompleted": "완료 표시",
+    "markAsCompleted": "완료로 표시",
+    "debtAdded": "기록이 추가되었습니다",
+    "debtUpdated": "기록이 업데이트되었습니다",
+    "debtDeleted": "기록이 삭제되었습니다",
+    "paymentRecorded": "결제가 기록되었습니다",
+    "noDebts": "채무 기록 없음",
+    "addDebt": "기록 추가",
+    "debtAmount": "금액",
+    "debtDescription": "설명 (선택사항)",
+    "selectDueDate": "만기일 선택",
+    "totalLent": "총 빌려준 금액",
+    "totalBorrowed": "총 빌린 금액",
+    "people": "{count}명",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "{date}부터 회원",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "프로필 편집",
+    "profileUpdated": "프로필이 업데이트되었습니다",
+    "changePhoto": "사진 변경",
+    "takePhoto": "사진 촬영",
+    "chooseFromGallery": "갤러리에서 선택",
+    "removePhoto": "사진 삭제",
+    "notifications": "알림",
+    "quickActions": "빠른 작업",
+    "thisMonthSummary": "이번 달 요약",
+    "financialScore": "재정 점수",
+    "financialScoreDesc": "재정 건전성 점수",
+    "spendingTips": "지출 팁",
+    "spendingTipsDesc": "절약 제안",
+    "categoryAnalysis": "카테고리 분석",
+    "categoryAnalysisDesc": "상세 지출 내역",
+    "monthlyComparison": "월별 비교",
+    "monthlyComparisonDesc": "이전 달과 비교",
+    "budgetProgress": "예산 진행률",
+    "budgetProgressDesc": "목표 달성도",
+    "viewDetails": "상세 보기",
+    "excellent": "훌륭함",
+    "good": "좋음",
+    "average": "보통",
+    "needsImprovement": "개선 필요",
+    "poor": "나쁨",
+    "comparedToLastMonth": "지난달 대비",
+    "youSpentLess": "지출 감소",
+    "youSpentMore": "지출 증가",
+    "noChange": "변화 없음",
+    "allWallets": "모든 지갑"
 }

@@ -632,4 +632,187 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Income added';
+
+  @override
+  String get debtTracking => 'Debt Tracking';
+
+  @override
+  String get myLends => 'Money Lent';
+
+  @override
+  String get myDebts => 'Money Borrowed';
+
+  @override
+  String get personName => 'Person Name';
+
+  @override
+  String get dueDate => 'Due Date';
+
+  @override
+  String get recordPayment => 'Record Payment';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days days left';
+  }
+
+  @override
+  String get overdue => 'Overdue';
+
+  @override
+  String get remaining => 'Remaining';
+
+  @override
+  String get lend => 'I Lent';
+
+  @override
+  String get borrow => 'I Borrowed';
+
+  @override
+  String get upcomingDues => 'Upcoming Dues';
+
+  @override
+  String get allRecords => 'All Records';
+
+  @override
+  String get hideCompleted => 'Hide Completed';
+
+  @override
+  String get showCompleted => 'Show Completed';
+
+  @override
+  String get markAsCompleted => 'Mark as Completed';
+
+  @override
+  String get debtAdded => 'Record added';
+
+  @override
+  String get debtUpdated => 'Record updated';
+
+  @override
+  String get debtDeleted => 'Record deleted';
+
+  @override
+  String get paymentRecorded => 'Payment recorded';
+
+  @override
+  String get noDebts => 'No debt records yet';
+
+  @override
+  String get addDebt => 'Add Record';
+
+  @override
+  String get debtAmount => 'Amount';
+
+  @override
+  String get debtDescription => 'Description (optional)';
+
+  @override
+  String get selectDueDate => 'Select due date';
+
+  @override
+  String get totalLent => 'Total Lent';
+
+  @override
+  String get totalBorrowed => 'Total Borrowed';
+
+  @override
+  String people(int count) {
+    return '$count people';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'Member since $date';
+  }
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get profileUpdated => 'Profile updated';
+
+  @override
+  String get changePhoto => 'Change Photo';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get removePhoto => 'Remove Photo';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get quickActions => 'Quick Actions';
+
+  @override
+  String get thisMonthSummary => 'This Month Summary';
+
+  @override
+  String get financialScore => 'Financial Score';
+
+  @override
+  String get financialScoreDesc => 'Your financial health score';
+
+  @override
+  String get spendingTips => 'Spending Tips';
+
+  @override
+  String get spendingTipsDesc => 'Savings suggestions';
+
+  @override
+  String get categoryAnalysis => 'Category Analysis';
+
+  @override
+  String get categoryAnalysisDesc => 'Detailed spending breakdown';
+
+  @override
+  String get monthlyComparison => 'Monthly Comparison';
+
+  @override
+  String get monthlyComparisonDesc => 'Compare with previous months';
+
+  @override
+  String get budgetProgress => 'Budget Progress';
+
+  @override
+  String get budgetProgressDesc => 'How close to your goals';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get excellent => 'Excellent';
+
+  @override
+  String get good => 'Good';
+
+  @override
+  String get average => 'Average';
+
+  @override
+  String get needsImprovement => 'Needs Improvement';
+
+  @override
+  String get poor => 'Poor';
+
+  @override
+  String get comparedToLastMonth => 'Compared to last month';
+
+  @override
+  String get youSpentLess => 'you spent less';
+
+  @override
+  String get youSpentMore => 'you spent more';
+
+  @override
+  String get noChange => 'No change';
+
+  @override
+  String get allWallets => 'All Wallets';
 }

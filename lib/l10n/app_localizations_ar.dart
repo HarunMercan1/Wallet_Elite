@@ -625,4 +625,187 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get incomeAdded => 'تمت إضافة الدخل';
+
+  @override
+  String get debtTracking => 'تتبع الديون';
+
+  @override
+  String get myLends => 'أموال أقرضتها';
+
+  @override
+  String get myDebts => 'أموال استلفتها';
+
+  @override
+  String get personName => 'اسم الشخص';
+
+  @override
+  String get dueDate => 'تاريخ الاستحقاق';
+
+  @override
+  String get recordPayment => 'تسجيل دفعة';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days يوم متبقي';
+  }
+
+  @override
+  String get overdue => 'متأخر';
+
+  @override
+  String get remaining => 'المتبقي';
+
+  @override
+  String get lend => 'أقرضت';
+
+  @override
+  String get borrow => 'استلفت';
+
+  @override
+  String get upcomingDues => 'استحقاقات قادمة';
+
+  @override
+  String get allRecords => 'جميع السجلات';
+
+  @override
+  String get hideCompleted => 'إخفاء المكتملة';
+
+  @override
+  String get showCompleted => 'إظهار المكتملة';
+
+  @override
+  String get markAsCompleted => 'وضع علامة مكتمل';
+
+  @override
+  String get debtAdded => 'تمت إضافة السجل';
+
+  @override
+  String get debtUpdated => 'تم تحديث السجل';
+
+  @override
+  String get debtDeleted => 'تم حذف السجل';
+
+  @override
+  String get paymentRecorded => 'تم تسجيل الدفعة';
+
+  @override
+  String get noDebts => 'لا توجد سجلات ديون بعد';
+
+  @override
+  String get addDebt => 'إضافة سجل';
+
+  @override
+  String get debtAmount => 'المبلغ';
+
+  @override
+  String get debtDescription => 'الوصف (اختياري)';
+
+  @override
+  String get selectDueDate => 'اختر تاريخ الاستحقاق';
+
+  @override
+  String get totalLent => 'إجمالي المُقرض';
+
+  @override
+  String get totalBorrowed => 'إجمالي المستلف';
+
+  @override
+  String people(int count) {
+    return '$count أشخاص';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'عضو منذ $date';
+  }
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get profileUpdated => 'تم تحديث الملف الشخصي';
+
+  @override
+  String get changePhoto => 'تغيير الصورة';
+
+  @override
+  String get takePhoto => 'التقاط صورة';
+
+  @override
+  String get chooseFromGallery => 'اختيار من المعرض';
+
+  @override
+  String get removePhoto => 'إزالة الصورة';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get quickActions => 'إجراءات سريعة';
+
+  @override
+  String get thisMonthSummary => 'ملخص هذا الشهر';
+
+  @override
+  String get financialScore => 'النقاط المالية';
+
+  @override
+  String get financialScoreDesc => 'نقاط صحتك المالية';
+
+  @override
+  String get spendingTips => 'نصائح الإنفاق';
+
+  @override
+  String get spendingTipsDesc => 'اقتراحات التوفير';
+
+  @override
+  String get categoryAnalysis => 'تحليل الفئات';
+
+  @override
+  String get categoryAnalysisDesc => 'تفصيل الإنفاق';
+
+  @override
+  String get monthlyComparison => 'المقارنة الشهرية';
+
+  @override
+  String get monthlyComparisonDesc => 'مقارنة مع الأشهر السابقة';
+
+  @override
+  String get budgetProgress => 'تقدم الميزانية';
+
+  @override
+  String get budgetProgressDesc => 'مدى قربك من أهدافك';
+
+  @override
+  String get viewDetails => 'عرض التفاصيل';
+
+  @override
+  String get excellent => 'ممتاز';
+
+  @override
+  String get good => 'جيد';
+
+  @override
+  String get average => 'متوسط';
+
+  @override
+  String get needsImprovement => 'يحتاج تحسين';
+
+  @override
+  String get poor => 'ضعيف';
+
+  @override
+  String get comparedToLastMonth => 'مقارنة بالشهر الماضي';
+
+  @override
+  String get youSpentLess => 'أنفقت أقل';
+
+  @override
+  String get youSpentMore => 'أنفقت أكثر';
+
+  @override
+  String get noChange => 'لا تغيير';
+
+  @override
+  String get allWallets => 'جميع المحافظ';
 }

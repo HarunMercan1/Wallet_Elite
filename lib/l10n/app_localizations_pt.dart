@@ -628,4 +628,187 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Receita adicionada';
+
+  @override
+  String get debtTracking => 'Acompanhamento de Dívidas';
+
+  @override
+  String get myLends => 'Dinheiro Emprestado';
+
+  @override
+  String get myDebts => 'Dinheiro Devido';
+
+  @override
+  String get personName => 'Nome da Pessoa';
+
+  @override
+  String get dueDate => 'Data de Vencimento';
+
+  @override
+  String get recordPayment => 'Registrar Pagamento';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days dias restantes';
+  }
+
+  @override
+  String get overdue => 'Atrasado';
+
+  @override
+  String get remaining => 'Restante';
+
+  @override
+  String get lend => 'Emprestei';
+
+  @override
+  String get borrow => 'Peguei Emprestado';
+
+  @override
+  String get upcomingDues => 'Próximos Vencimentos';
+
+  @override
+  String get allRecords => 'Todos os Registros';
+
+  @override
+  String get hideCompleted => 'Ocultar Concluídos';
+
+  @override
+  String get showCompleted => 'Mostrar Concluídos';
+
+  @override
+  String get markAsCompleted => 'Marcar como Concluído';
+
+  @override
+  String get debtAdded => 'Registro adicionado';
+
+  @override
+  String get debtUpdated => 'Registro atualizado';
+
+  @override
+  String get debtDeleted => 'Registro excluído';
+
+  @override
+  String get paymentRecorded => 'Pagamento registrado';
+
+  @override
+  String get noDebts => 'Nenhum registro de dívida';
+
+  @override
+  String get addDebt => 'Adicionar Registro';
+
+  @override
+  String get debtAmount => 'Valor';
+
+  @override
+  String get debtDescription => 'Descrição (opcional)';
+
+  @override
+  String get selectDueDate => 'Selecionar data de vencimento';
+
+  @override
+  String get totalLent => 'Total Emprestado';
+
+  @override
+  String get totalBorrowed => 'Total Devido';
+
+  @override
+  String people(int count) {
+    return '$count pessoas';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'Membro desde $date';
+  }
+
+  @override
+  String get editProfile => 'Editar Perfil';
+
+  @override
+  String get profileUpdated => 'Perfil atualizado';
+
+  @override
+  String get changePhoto => 'Alterar Foto';
+
+  @override
+  String get takePhoto => 'Tirar Foto';
+
+  @override
+  String get chooseFromGallery => 'Escolher da Galeria';
+
+  @override
+  String get removePhoto => 'Remover Foto';
+
+  @override
+  String get notifications => 'Notificações';
+
+  @override
+  String get quickActions => 'Ações Rápidas';
+
+  @override
+  String get thisMonthSummary => 'Resumo do Mês';
+
+  @override
+  String get financialScore => 'Pontuação Financeira';
+
+  @override
+  String get financialScoreDesc => 'Sua pontuação de saúde financeira';
+
+  @override
+  String get spendingTips => 'Dicas de Gastos';
+
+  @override
+  String get spendingTipsDesc => 'Sugestões de economia';
+
+  @override
+  String get categoryAnalysis => 'Análise de Categorias';
+
+  @override
+  String get categoryAnalysisDesc => 'Detalhamento de gastos';
+
+  @override
+  String get monthlyComparison => 'Comparação Mensal';
+
+  @override
+  String get monthlyComparisonDesc => 'Comparar com meses anteriores';
+
+  @override
+  String get budgetProgress => 'Progresso do Orçamento';
+
+  @override
+  String get budgetProgressDesc => 'Quão perto de suas metas';
+
+  @override
+  String get viewDetails => 'Ver Detalhes';
+
+  @override
+  String get excellent => 'Excelente';
+
+  @override
+  String get good => 'Bom';
+
+  @override
+  String get average => 'Médio';
+
+  @override
+  String get needsImprovement => 'Precisa Melhorar';
+
+  @override
+  String get poor => 'Ruim';
+
+  @override
+  String get comparedToLastMonth => 'Comparado ao mês passado';
+
+  @override
+  String get youSpentLess => 'você gastou menos';
+
+  @override
+  String get youSpentMore => 'você gastou mais';
+
+  @override
+  String get noChange => 'Sem mudanças';
+
+  @override
+  String get allWallets => 'Todas as Carteiras';
 }

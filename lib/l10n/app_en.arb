@@ -223,5 +223,85 @@
     "addExpense": "Add Expense",
     "addIncome": "Add Income",
     "expenseAdded": "Expense added",
-    "incomeAdded": "Income added"
+    "incomeAdded": "Income added",
+    "debtTracking": "Debt Tracking",
+    "myLends": "Money Lent",
+    "myDebts": "Money Borrowed",
+    "personName": "Person Name",
+    "dueDate": "Due Date",
+    "recordPayment": "Record Payment",
+    "daysRemaining": "{days} days left",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "Overdue",
+    "remaining": "Remaining",
+    "lend": "I Lent",
+    "borrow": "I Borrowed",
+    "upcomingDues": "Upcoming Dues",
+    "allRecords": "All Records",
+    "hideCompleted": "Hide Completed",
+    "showCompleted": "Show Completed",
+    "markAsCompleted": "Mark as Completed",
+    "debtAdded": "Record added",
+    "debtUpdated": "Record updated",
+    "debtDeleted": "Record deleted",
+    "paymentRecorded": "Payment recorded",
+    "noDebts": "No debt records yet",
+    "addDebt": "Add Record",
+    "debtAmount": "Amount",
+    "debtDescription": "Description (optional)",
+    "selectDueDate": "Select due date",
+    "totalLent": "Total Lent",
+    "totalBorrowed": "Total Borrowed",
+    "people": "{count} people",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "Member since {date}",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Edit Profile",
+    "profileUpdated": "Profile updated",
+    "changePhoto": "Change Photo",
+    "takePhoto": "Take Photo",
+    "chooseFromGallery": "Choose from Gallery",
+    "removePhoto": "Remove Photo",
+    "notifications": "Notifications",
+    "quickActions": "Quick Actions",
+    "thisMonthSummary": "This Month Summary",
+    "financialScore": "Financial Score",
+    "financialScoreDesc": "Your financial health score",
+    "spendingTips": "Spending Tips",
+    "spendingTipsDesc": "Savings suggestions",
+    "categoryAnalysis": "Category Analysis",
+    "categoryAnalysisDesc": "Detailed spending breakdown",
+    "monthlyComparison": "Monthly Comparison",
+    "monthlyComparisonDesc": "Compare with previous months",
+    "budgetProgress": "Budget Progress",
+    "budgetProgressDesc": "How close to your goals",
+    "viewDetails": "View Details",
+    "excellent": "Excellent",
+    "good": "Good",
+    "average": "Average",
+    "needsImprovement": "Needs Improvement",
+    "poor": "Poor",
+    "comparedToLastMonth": "Compared to last month",
+    "youSpentLess": "you spent less",
+    "youSpentMore": "you spent more",
+    "noChange": "No change",
+    "allWallets": "All Wallets"
 }

@@ -209,5 +209,85 @@
     "addExpense": "Gider Ekle",
     "addIncome": "Gelir Ekle",
     "expenseAdded": "Gider eklendi",
+    "debtTracking": "Borç Takibi",
+    "myLends": "Alacaklarım",
+    "myDebts": "Borçlarım",
+    "personName": "Kişi Adı",
+    "dueDate": "Vade Tarihi",
+    "recordPayment": "Ödeme Kaydet",
+    "daysRemaining": "{days} gün kaldı",
+    "@daysRemaining": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            }
+        }
+    },
+    "overdue": "Vadesi geçmiş",
+    "remaining": "Kalan",
+    "lend": "Borç Verdim",
+    "borrow": "Borç Aldım",
+    "upcomingDues": "Yaklaşan Vadeler",
+    "allRecords": "Tüm Kayıtlar",
+    "hideCompleted": "Tamamlananları Gizle",
+    "showCompleted": "Tamamlananları Göster",
+    "markAsCompleted": "Tamamlandı Olarak İşaretle",
+    "debtAdded": "Kayıt eklendi",
+    "debtUpdated": "Kayıt güncellendi",
+    "debtDeleted": "Kayıt silindi",
+    "paymentRecorded": "Ödeme kaydedildi",
+    "noDebts": "Henüz borç kaydı yok",
+    "addDebt": "Kayıt Ekle",
+    "debtAmount": "Tutar",
+    "debtDescription": "Açıklama (opsiyonel)",
+    "selectDueDate": "Vade tarihi seç",
+    "totalLent": "Toplam Alacak",
+    "totalBorrowed": "Toplam Borç",
+    "people": "{count} kişi",
+    "@people": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "memberSince": "{date} tarihinden beri üye",
+    "@memberSince": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "editProfile": "Profili Düzenle",
+    "profileUpdated": "Profil güncellendi",
+    "changePhoto": "Fotoğrafı Değiştir",
+    "takePhoto": "Fotoğraf Çek",
+    "chooseFromGallery": "Galeriden Seç",
+    "removePhoto": "Fotoğrafı Kaldır",
+    "notifications": "Bildirimler",
+    "quickActions": "Hızlı İşlemler",
+    "thisMonthSummary": "Bu Ay Özeti",
+    "financialScore": "Finansal Skor",
+    "financialScoreDesc": "Finansal sağlık puanınız",
+    "spendingTips": "Harcama İpuçları",
+    "spendingTipsDesc": "Tasarruf önerileri",
+    "categoryAnalysis": "Kategori Analizi",
+    "categoryAnalysisDesc": "Detaylı harcama dağılımı",
+    "monthlyComparison": "Aylık Karşılaştırma",
+    "monthlyComparisonDesc": "Geçmiş aylarla kıyasla",
+    "budgetProgress": "Bütçe Durumu",
+    "budgetProgressDesc": "Hedeflerine ne kadar yakınsın",
+    "viewDetails": "Detayları Gör",
+    "excellent": "Mükemmel",
+    "good": "İyi",
+    "average": "Ortalama",
+    "needsImprovement": "Geliştirilmeli",
+    "poor": "Zayıf",
+    "comparedToLastMonth": "Geçen aya göre",
+    "youSpentLess": "daha az harcadın",
+    "youSpentMore": "daha fazla harcadın",
+    "noChange": "Değişiklik yok",
+    "allWallets": "Tüm Cüzdanlar",
     "incomeAdded": "Gelir eklendi"
 }

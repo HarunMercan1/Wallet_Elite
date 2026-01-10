@@ -632,4 +632,187 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Revenu ajouté';
+
+  @override
+  String get debtTracking => 'Suivi des Dettes';
+
+  @override
+  String get myLends => 'Argent Prêté';
+
+  @override
+  String get myDebts => 'Argent Emprunté';
+
+  @override
+  String get personName => 'Nom de la Personne';
+
+  @override
+  String get dueDate => 'Date d\'Échéance';
+
+  @override
+  String get recordPayment => 'Enregistrer Paiement';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days jours restants';
+  }
+
+  @override
+  String get overdue => 'En retard';
+
+  @override
+  String get remaining => 'Restant';
+
+  @override
+  String get lend => 'J\'ai prêté';
+
+  @override
+  String get borrow => 'J\'ai emprunté';
+
+  @override
+  String get upcomingDues => 'Échéances à Venir';
+
+  @override
+  String get allRecords => 'Tous les Enregistrements';
+
+  @override
+  String get hideCompleted => 'Masquer Terminés';
+
+  @override
+  String get showCompleted => 'Afficher Terminés';
+
+  @override
+  String get markAsCompleted => 'Marquer comme Terminé';
+
+  @override
+  String get debtAdded => 'Enregistrement ajouté';
+
+  @override
+  String get debtUpdated => 'Enregistrement mis à jour';
+
+  @override
+  String get debtDeleted => 'Enregistrement supprimé';
+
+  @override
+  String get paymentRecorded => 'Paiement enregistré';
+
+  @override
+  String get noDebts => 'Pas encore d\'enregistrements de dettes';
+
+  @override
+  String get addDebt => 'Ajouter Enregistrement';
+
+  @override
+  String get debtAmount => 'Montant';
+
+  @override
+  String get debtDescription => 'Description (optionnel)';
+
+  @override
+  String get selectDueDate => 'Sélectionner date d\'échéance';
+
+  @override
+  String get totalLent => 'Total Prêté';
+
+  @override
+  String get totalBorrowed => 'Total Emprunté';
+
+  @override
+  String people(int count) {
+    return '$count personnes';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'Membre depuis $date';
+  }
+
+  @override
+  String get editProfile => 'Modifier Profil';
+
+  @override
+  String get profileUpdated => 'Profil mis à jour';
+
+  @override
+  String get changePhoto => 'Changer Photo';
+
+  @override
+  String get takePhoto => 'Prendre Photo';
+
+  @override
+  String get chooseFromGallery => 'Choisir de la Galerie';
+
+  @override
+  String get removePhoto => 'Supprimer Photo';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get quickActions => 'Actions Rapides';
+
+  @override
+  String get thisMonthSummary => 'Résumé de Ce Mois';
+
+  @override
+  String get financialScore => 'Score Financier';
+
+  @override
+  String get financialScoreDesc => 'Votre score de santé financière';
+
+  @override
+  String get spendingTips => 'Conseils Dépenses';
+
+  @override
+  String get spendingTipsDesc => 'Suggestions d\'économies';
+
+  @override
+  String get categoryAnalysis => 'Analyse par Catégorie';
+
+  @override
+  String get categoryAnalysisDesc => 'Détail des dépenses';
+
+  @override
+  String get monthlyComparison => 'Comparaison Mensuelle';
+
+  @override
+  String get monthlyComparisonDesc => 'Comparer avec les mois précédents';
+
+  @override
+  String get budgetProgress => 'Progrès Budget';
+
+  @override
+  String get budgetProgressDesc => 'Proximité de vos objectifs';
+
+  @override
+  String get viewDetails => 'Voir Détails';
+
+  @override
+  String get excellent => 'Excellent';
+
+  @override
+  String get good => 'Bon';
+
+  @override
+  String get average => 'Moyen';
+
+  @override
+  String get needsImprovement => 'À améliorer';
+
+  @override
+  String get poor => 'Faible';
+
+  @override
+  String get comparedToLastMonth => 'Par rapport au mois dernier';
+
+  @override
+  String get youSpentLess => 'vous avez dépensé moins';
+
+  @override
+  String get youSpentMore => 'vous avez dépensé plus';
+
+  @override
+  String get noChange => 'Aucun changement';
+
+  @override
+  String get allWallets => 'Tous les Portefeuilles';
 }

@@ -631,4 +631,187 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get incomeAdded => 'Einkommen hinzugefügt';
+
+  @override
+  String get debtTracking => 'Schulden-Tracking';
+
+  @override
+  String get myLends => 'Geliehenes Geld';
+
+  @override
+  String get myDebts => 'Geliehenes Geld';
+
+  @override
+  String get personName => 'Personenname';
+
+  @override
+  String get dueDate => 'Fälligkeitsdatum';
+
+  @override
+  String get recordPayment => 'Zahlung erfassen';
+
+  @override
+  String daysRemaining(int days) {
+    return '$days Tage übrig';
+  }
+
+  @override
+  String get overdue => 'Überfällig';
+
+  @override
+  String get remaining => 'Verbleibend';
+
+  @override
+  String get lend => 'Ich habe geliehen';
+
+  @override
+  String get borrow => 'Ich habe geborgt';
+
+  @override
+  String get upcomingDues => 'Kommende Fälligkeiten';
+
+  @override
+  String get allRecords => 'Alle Einträge';
+
+  @override
+  String get hideCompleted => 'Erledigte ausblenden';
+
+  @override
+  String get showCompleted => 'Erledigte anzeigen';
+
+  @override
+  String get markAsCompleted => 'Als erledigt markieren';
+
+  @override
+  String get debtAdded => 'Eintrag hinzugefügt';
+
+  @override
+  String get debtUpdated => 'Eintrag aktualisiert';
+
+  @override
+  String get debtDeleted => 'Eintrag gelöscht';
+
+  @override
+  String get paymentRecorded => 'Zahlung erfasst';
+
+  @override
+  String get noDebts => 'Noch keine Schuldeneinträge';
+
+  @override
+  String get addDebt => 'Eintrag hinzufügen';
+
+  @override
+  String get debtAmount => 'Betrag';
+
+  @override
+  String get debtDescription => 'Beschreibung (optional)';
+
+  @override
+  String get selectDueDate => 'Fälligkeitsdatum wählen';
+
+  @override
+  String get totalLent => 'Gesamt verliehen';
+
+  @override
+  String get totalBorrowed => 'Gesamt geliehen';
+
+  @override
+  String people(int count) {
+    return '$count Personen';
+  }
+
+  @override
+  String memberSince(String date) {
+    return 'Mitglied seit $date';
+  }
+
+  @override
+  String get editProfile => 'Profil bearbeiten';
+
+  @override
+  String get profileUpdated => 'Profil aktualisiert';
+
+  @override
+  String get changePhoto => 'Foto ändern';
+
+  @override
+  String get takePhoto => 'Foto aufnehmen';
+
+  @override
+  String get chooseFromGallery => 'Aus Galerie wählen';
+
+  @override
+  String get removePhoto => 'Foto entfernen';
+
+  @override
+  String get notifications => 'Benachrichtigungen';
+
+  @override
+  String get quickActions => 'Schnellaktionen';
+
+  @override
+  String get thisMonthSummary => 'Zusammenfassung dieses Monats';
+
+  @override
+  String get financialScore => 'Finanzscore';
+
+  @override
+  String get financialScoreDesc => 'Ihr finanzieller Gesundheitswert';
+
+  @override
+  String get spendingTips => 'Spartipps';
+
+  @override
+  String get spendingTipsDesc => 'Sparvorschläge';
+
+  @override
+  String get categoryAnalysis => 'Kategorieanalyse';
+
+  @override
+  String get categoryAnalysisDesc => 'Detaillierte Ausgabenaufschlüsselung';
+
+  @override
+  String get monthlyComparison => 'Monatsvergleich';
+
+  @override
+  String get monthlyComparisonDesc => 'Vergleich mit Vormonaten';
+
+  @override
+  String get budgetProgress => 'Budgetfortschritt';
+
+  @override
+  String get budgetProgressDesc => 'Wie nah an Ihren Zielen';
+
+  @override
+  String get viewDetails => 'Details anzeigen';
+
+  @override
+  String get excellent => 'Ausgezeichnet';
+
+  @override
+  String get good => 'Gut';
+
+  @override
+  String get average => 'Durchschnittlich';
+
+  @override
+  String get needsImprovement => 'Verbesserungsbedürftig';
+
+  @override
+  String get poor => 'Schlecht';
+
+  @override
+  String get comparedToLastMonth => 'Im Vergleich zum letzten Monat';
+
+  @override
+  String get youSpentLess => 'haben Sie weniger ausgegeben';
+
+  @override
+  String get youSpentMore => 'haben Sie mehr ausgegeben';
+
+  @override
+  String get noChange => 'Keine Änderung';
+
+  @override
+  String get allWallets => 'Alle Geldbörsen';
 }
