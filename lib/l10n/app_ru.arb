@@ -289,5 +289,6 @@
     "youSpentLess": "вы потратили меньше",
     "youSpentMore": "вы потратили больше",
     "noChange": "Без изменений",
-    "allWallets": "Все кошельки"
+    "allWallets": "Все кошельки",
+    "budgets": "Бюджеты"
 }

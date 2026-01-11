@@ -815,4 +815,29 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get allWallets => 'Tüm Cüzdanlar';
+
+  @override
+  String get budgets => 'Bütçeler';
+
+  @override
+  String get history => 'Geçmiş';
+
+  @override
+  String get completedDebts => 'Tamamlanan Borçlar';
+
+  @override
+  String get noCompletedDebts => 'Tamamlanmış borç kaydı yok';
+
+  @override
+  String get lent => 'Borç Verdim';
+
+  @override
+  String get borrowed => 'Borç Aldım';
+
+  @override
+  String get deleteDebt => 'Kaydı Sil';
+
+  @override
+  String get deleteDebtConfirm =>
+      'Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.';
 }

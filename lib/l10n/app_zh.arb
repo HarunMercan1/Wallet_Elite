@@ -289,5 +289,6 @@
     "youSpentLess": "您花费减少",
     "youSpentMore": "您花费增加",
     "noChange": "无变化",
-    "allWallets": "所有钱包"
+    "allWallets": "所有钱包",
+    "budgets": "Budgets"
 }

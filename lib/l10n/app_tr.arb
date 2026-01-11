@@ -289,5 +289,13 @@
     "youSpentMore": "daha fazla harcadın",
     "noChange": "Değişiklik yok",
     "allWallets": "Tüm Cüzdanlar",
-    "incomeAdded": "Gelir eklendi"
+    "incomeAdded": "Gelir eklendi",
+    "budgets": "Bütçeler",
+    "history": "Geçmiş",
+    "completedDebts": "Tamamlanan Borçlar",
+    "noCompletedDebts": "Tamamlanmış borç kaydı yok",
+    "lent": "Borç Verdim",
+    "borrowed": "Borç Aldım",
+    "deleteDebt": "Kaydı Sil",
+    "deleteDebtConfirm": "Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
 }

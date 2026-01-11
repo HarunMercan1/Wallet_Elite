@@ -303,5 +303,13 @@
     "youSpentLess": "you spent less",
     "youSpentMore": "you spent more",
     "noChange": "No change",
-    "allWallets": "All Wallets"
+    "allWallets": "All Wallets",
+    "budgets": "Budgets",
+    "history": "History",
+    "completedDebts": "Completed Debts",
+    "noCompletedDebts": "No completed debt records",
+    "lent": "Lent",
+    "borrowed": "Borrowed",
+    "deleteDebt": "Delete Record",
+    "deleteDebtConfirm": "Are you sure you want to delete this record? This action cannot be undone."
 }

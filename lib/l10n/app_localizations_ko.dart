@@ -805,4 +805,29 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get allWallets => '모든 지갑';
+
+  @override
+  String get budgets => 'Budgets';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get completedDebts => 'Completed Debts';
+
+  @override
+  String get noCompletedDebts => 'No completed debt records';
+
+  @override
+  String get lent => 'Lent';
+
+  @override
+  String get borrowed => 'Borrowed';
+
+  @override
+  String get deleteDebt => 'Delete Record';
+
+  @override
+  String get deleteDebtConfirm =>
+      'Are you sure you want to delete this record? This action cannot be undone.';
 }

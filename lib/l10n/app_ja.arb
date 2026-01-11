@@ -289,5 +289,6 @@
     "youSpentLess": "支出が減少",
     "youSpentMore": "支出が増加",
     "noChange": "変化なし",
-    "allWallets": "すべてのウォレット"
+    "allWallets": "すべてのウォレット",
+    "budgets": "Budgets"
 }

@@ -1691,6 +1691,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Wallets'**
   String get allWallets;
+
+  /// No description provided for @budgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get budgets;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @completedDebts.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Debts'**
+  String get completedDebts;
+
+  /// No description provided for @noCompletedDebts.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed debt records'**
+  String get noCompletedDebts;
+
+  /// No description provided for @lent.
+  ///
+  /// In en, this message translates to:
+  /// **'Lent'**
+  String get lent;
+
+  /// No description provided for @borrowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Borrowed'**
+  String get borrowed;
+
+  /// No description provided for @deleteDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Record'**
+  String get deleteDebt;
+
+  /// No description provided for @deleteDebtConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this record? This action cannot be undone.'**
+  String get deleteDebtConfirm;
 }
 
 class _AppLocalizationsDelegate

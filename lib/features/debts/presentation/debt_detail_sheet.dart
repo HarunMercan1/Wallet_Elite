@@ -117,6 +117,10 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                   ),
                 ),
                 IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  onPressed: () => _deleteDebt(context, ref, debt, l),
+                ),
+                IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
                   color: isDark ? Colors.white54 : Colors.grey,
@@ -202,15 +206,19 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Vade bilgisi
+                  // Vade bilgisi (düzenlenebilir)
                   if (debt.dueDate != null)
-                    _buildInfoRow(
-                      icon: Icons.event,
-                      label: l.dueDate,
-                      value: dateFormat.format(debt.dueDate!),
-                      isDark: isDark,
-                      isWarning: isOverdue,
-                      warningText: isOverdue ? l.overdue : null,
+                    GestureDetector(
+                      onTap: () => _editDueDate(context, ref, debt, l),
+                      child: _buildInfoRow(
+                        icon: Icons.event,
+                        label: l.dueDate,
+                        value: dateFormat.format(debt.dueDate!),
+                        isDark: isDark,
+                        isWarning: isOverdue,
+                        warningText: isOverdue ? l.overdue : null,
+                        showEditIcon: true,
+                      ),
                     ),
 
                   // Oluşturma tarihi
@@ -221,14 +229,20 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                     isDark: isDark,
                   ),
 
-                  // Açıklama
-                  if (debt.description != null && debt.description!.isNotEmpty)
-                    _buildInfoRow(
+                  // Açıklama (düzenlenebilir)
+                  GestureDetector(
+                    onTap: () =>
+                        _editDescription(context, ref, debt, l, isDark),
+                    child: _buildInfoRow(
                       icon: Icons.notes,
                       label: l.note,
-                      value: debt.description!,
+                      value: debt.description?.isNotEmpty == true
+                          ? debt.description!
+                          : '-',
                       isDark: isDark,
+                      showEditIcon: true,
                     ),
+                  ),
 
                   const SizedBox(height: 24),
 
@@ -342,24 +356,6 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
 
                   const SizedBox(height: 16),
 
-                  // Sil butonu
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextButton.icon(
-                      onPressed: _isLoading
-                          ? null
-                          : () => _showDeleteConfirmation(context, l),
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      label: Text(
-                        l.delete,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                    ),
-                  ),
-
                   const SizedBox(height: 32),
                 ],
               ),
@@ -377,6 +373,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     required bool isDark,
     bool isWarning = false,
     String? warningText,
+    bool showEditIcon = false,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -447,6 +444,14 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         ),
                       ),
                     ],
+                    if (showEditIcon) ...[
+                      const Spacer(),
+                      Icon(
+                        Icons.edit,
+                        size: 16,
+                        color: isDark ? Colors.white38 : Colors.grey.shade400,
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -455,6 +460,109 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
         ],
       ),
     );
+  }
+
+  Future<void> _editDueDate(
+    BuildContext context,
+    WidgetRef ref,
+    DebtModel debt,
+    AppLocalizations l,
+  ) async {
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: debt.dueDate ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+    );
+    if (newDate != null && newDate != debt.dueDate) {
+      final controller = ref.read(debtControllerProvider);
+      final updatedDebt = debt.copyWith(dueDate: newDate);
+      await controller.updateDebt(updatedDebt);
+    }
+  }
+
+  Future<void> _editDescription(
+    BuildContext context,
+    WidgetRef ref,
+    DebtModel debt,
+    AppLocalizations l,
+    bool isDark,
+  ) async {
+    final textController = TextEditingController(text: debt.description ?? '');
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        title: Text(l.note),
+        content: TextField(
+          controller: textController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: l.addNote,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(l.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, textController.text),
+            child: Text(l.save),
+          ),
+        ],
+      ),
+    );
+    if (result != null && result != debt.description) {
+      final controller = ref.read(debtControllerProvider);
+      final updatedDebt = debt.copyWith(
+        description: result.isEmpty ? null : result,
+      );
+      await controller.updateDebt(updatedDebt);
+    }
+  }
+
+  Future<void> _deleteDebt(
+    BuildContext context,
+    WidgetRef ref,
+    DebtModel debt,
+    AppLocalizations l,
+  ) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        title: Text(
+          l.deleteDebt,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
+        content: Text(
+          l.deleteDebtConfirm,
+          style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              l.deleteDebt,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      Navigator.pop(context);
+      final controller = ref.read(debtControllerProvider);
+      await controller.deleteDebt(debt.id);
+    }
   }
 
   Future<void> _recordPayment() async {
@@ -501,46 +609,6 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
       final l = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l.debtUpdated), backgroundColor: Colors.green),
-      );
-      Navigator.pop(context);
-    }
-  }
-
-  void _showDeleteConfirmation(BuildContext context, AppLocalizations l) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l.delete),
-        content: Text(l.confirmDelete),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteDebt();
-            },
-            child: Text(l.delete, style: const TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _deleteDebt() async {
-    setState(() => _isLoading = true);
-
-    final controller = ref.read(debtControllerProvider);
-    final success = await controller.deleteDebt(widget.debt.id);
-
-    setState(() => _isLoading = false);
-
-    if (success && mounted) {
-      final l = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.debtDeleted), backgroundColor: Colors.green),
       );
       Navigator.pop(context);
     }

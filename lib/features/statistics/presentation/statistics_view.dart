@@ -116,7 +116,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                             ),
                             child: IconButton(
                               icon: Icon(
-                                Icons.account_balance_wallet,
+                                Icons.people,
                                 color: colorTheme.primary,
                               ),
                               tooltip: l.debtTracking,

@@ -816,4 +816,29 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get allWallets => 'Tutti i Portafogli';
+
+  @override
+  String get budgets => 'Budget';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get completedDebts => 'Completed Debts';
+
+  @override
+  String get noCompletedDebts => 'No completed debt records';
+
+  @override
+  String get lent => 'Lent';
+
+  @override
+  String get borrowed => 'Borrowed';
+
+  @override
+  String get deleteDebt => 'Delete Record';
+
+  @override
+  String get deleteDebtConfirm =>
+      'Are you sure you want to delete this record? This action cannot be undone.';
 }

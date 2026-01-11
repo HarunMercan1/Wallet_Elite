@@ -289,5 +289,6 @@
     "youSpentLess": "haben Sie weniger ausgegeben",
     "youSpentMore": "haben Sie mehr ausgegeben",
     "noChange": "Keine Änderung",
-    "allWallets": "Alle Geldbörsen"
+    "allWallets": "Alle Geldbörsen",
+    "budgets": "Budgets"
 }

@@ -21,7 +21,6 @@ class DebtsView extends ConsumerWidget {
     final colorTheme = ref.watch(currentColorThemeProvider);
     final filteredDebts = ref.watch(filteredDebtsProvider);
     final filterType = ref.watch(debtFilterTypeProvider);
-    final showCompleted = ref.watch(showCompletedDebtsProvider);
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
@@ -31,14 +30,18 @@ class DebtsView extends ConsumerWidget {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          // Tamamlananları göster/gizle butonu
+          // Yeni kayıt ekle butonu
           IconButton(
-            icon: Icon(showCompleted ? Icons.visibility_off : Icons.visibility),
-            tooltip: showCompleted ? l.hideCompleted : l.showCompleted,
-            onPressed: () {
-              ref.read(showCompletedDebtsProvider.notifier).state =
-                  !showCompleted;
-            },
+            icon: const Icon(Icons.add_circle_outline),
+            tooltip: l.addDebt,
+            onPressed: () => _showAddDebtSheet(context),
+          ),
+          // Geçmiş (tamamlananlar) butonu
+          IconButton(
+            icon: const Icon(Icons.history),
+            tooltip: l.history,
+            onPressed: () =>
+                _showHistorySheet(context, ref, l, isDark, colorTheme),
           ),
         ],
       ),
@@ -61,13 +64,6 @@ class DebtsView extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddDebtSheet(context),
-        backgroundColor: colorTheme.primary,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.add),
-        label: Text(l.addDebt),
       ),
     );
   }
@@ -140,31 +136,91 @@ class DebtsView extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // Kişi sayısı
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.people, color: Colors.white70, size: 18),
-                const SizedBox(width: 8),
-                Text(
-                  peopleCount.when(
-                    data: (count) => l.people(count),
-                    loading: () => '...',
-                    error: (_, __) => l.people(0),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+          // Net durum ve kişi sayısı
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Net durum
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
                 ),
-              ],
-            ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Builder(
+                      builder: (context) {
+                        final lent = totalLent.valueOrNull ?? 0;
+                        final borrowed = totalBorrowed.valueOrNull ?? 0;
+                        final net = lent - borrowed;
+                        final isPositive = net >= 0;
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isPositive
+                                  ? Icons.trending_up
+                                  : Icons.trending_down,
+                              color: isPositive
+                                  ? Colors.green.shade300
+                                  : Colors.red.shade300,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '${isPositive ? '+' : ''}${currencyFormat.format(net)}',
+                              style: TextStyle(
+                                color: isPositive
+                                    ? Colors.green.shade300
+                                    : Colors.red.shade300,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Kişi sayısı
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.people, color: Colors.white70, size: 16),
+                    const SizedBox(width: 6),
+                    Text(
+                      peopleCount.when(
+                        data: (count) => l.people(count),
+                        loading: () => '...',
+                        error: (_, __) => l.people(0),
+                      ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -589,6 +645,195 @@ class DebtsView extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DebtDetailSheet(debt: debt),
+    );
+  }
+
+  void _showHistorySheet(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    bool isDark,
+    ColorTheme colorTheme,
+  ) {
+    final completedDebts =
+        ref
+            .read(debtsProvider)
+            .valueOrNull
+            ?.where((d) => d.isCompleted)
+            .toList() ??
+        [];
+    final currencyFormat = NumberFormat.currency(
+      locale: Localizations.localeOf(context).toString(),
+      symbol: '₺',
+      decimalDigits: 2,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        height: MediaQuery.of(context).size.height * 0.75,
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.backgroundDark : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          children: [
+            // Handle
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: isDark ? Colors.grey[600] : Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.history, color: colorTheme.primary),
+                  const SizedBox(width: 8),
+                  Text(
+                    l.completedDebts,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${completedDebts.length}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: colorTheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              height: 1,
+              color: isDark ? Colors.white12 : Colors.grey[200],
+            ),
+            // List
+            Expanded(
+              child: completedDebts.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 64,
+                            color: isDark ? Colors.white24 : Colors.grey[300],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            l.noCompletedDebts,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: isDark ? Colors.white54 : Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: completedDebts.length,
+                      itemBuilder: (context, index) {
+                        final debt = completedDebts[index];
+                        final isLend = debt.type == 'lend';
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            _showDebtDetail(context, debt);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.surfaceDark
+                                  : Colors.grey[50],
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isDark
+                                    ? Colors.white10
+                                    : Colors.grey[200]!,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: (isLend ? Colors.green : Colors.red)
+                                        .withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    Icons.check_circle,
+                                    color: isLend ? Colors.green : Colors.red,
+                                    size: 20,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        debt.personName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black87,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        isLend ? l.lent : l.borrowed,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: isLend
+                                              ? Colors.green
+                                              : Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  currencyFormat.format(debt.amount),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: isLend ? Colors.green : Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
