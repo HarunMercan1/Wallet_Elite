@@ -41,10 +41,24 @@ class MainShell extends ConsumerWidget {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          gradient: LinearGradient(
+            colors: isDark
+                ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+                : [Colors.white, const Color(0xFFF1F5F9)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          border: Border(
+            top: BorderSide(
+              color: isDark
+                  ? colorTheme.primary.withOpacity(0.2)
+                  : colorTheme.primary.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+              color: colorTheme.primary.withOpacity(isDark ? 0.15 : 0.08),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
