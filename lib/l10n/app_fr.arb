@@ -290,5 +290,8 @@
     "youSpentMore": "vous avez dépensé plus",
     "noChange": "Aucun changement",
     "allWallets": "Tous les Portefeuilles",
-    "budgets": "Budgets"
+    "budgets": "Budgets",
+    "paymentHistory": "Historique des paiements",
+    "noPaymentsYet": "Aucun paiement pour le moment",
+    "payment": "Paiement"
 }

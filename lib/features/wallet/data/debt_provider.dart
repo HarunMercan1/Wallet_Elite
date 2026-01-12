@@ -3,6 +3,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/debt_model.dart';
+import '../models/debt_payment_model.dart';
 import 'debt_repository.dart';
 
 /// DebtRepository provider
@@ -127,6 +128,13 @@ final debtControllerProvider = Provider<DebtController>((ref) {
   return DebtController(ref);
 });
 
+/// Belirli bir borcun ödeme geçmişini getir
+final debtPaymentsProvider =
+    FutureProvider.family<List<DebtPaymentModel>, String>((ref, debtId) async {
+      final debtRepo = ref.watch(debtRepositoryProvider);
+      return await debtRepo.getDebtPayments(debtId);
+    });
+
 /// Borç işlemlerini yöneten controller
 class DebtController {
   final Ref ref;
@@ -180,16 +188,21 @@ class DebtController {
     required double amount,
   }) async {
     final debtRepo = ref.read(debtRepositoryProvider);
-    final result = await debtRepo.recordPayment(
-      debtId: debtId,
-      paymentAmount: amount,
-    );
+    try {
+      final result = await debtRepo.recordPayment(
+        debtId: debtId,
+        paymentAmount: amount,
+      );
 
-    if (result != null) {
-      _invalidateAllProviders();
-      return true;
+      if (result != null) {
+        _invalidateAllProviders();
+        ref.invalidate(debtPaymentsProvider(debtId));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
     }
-    return false;
   }
 
   /// Borcu tamamlandı olarak işaretle

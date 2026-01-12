@@ -841,4 +841,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get deleteDebtConfirm =>
       'Are you sure you want to delete this record? This action cannot be undone.';
+
+  @override
+  String get paymentHistory => 'Historial de pagos';
+
+  @override
+  String get noPaymentsYet => 'Aún no hay pagos';
+
+  @override
+  String get payment => 'Pago';
+
+  @override
+  String get sort => 'Sort';
 }

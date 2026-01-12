@@ -290,5 +290,8 @@
     "youSpentMore": "أنفقت أكثر",
     "noChange": "لا تغيير",
     "allWallets": "جميع المحافظ",
-    "budgets": "Budgets"
+    "budgets": "Budgets",
+    "paymentHistory": "سجل الدفعات",
+    "noPaymentsYet": "لا توجد دفعات بعد",
+    "payment": "دفعة"
 }

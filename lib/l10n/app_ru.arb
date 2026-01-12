@@ -290,5 +290,8 @@
     "youSpentMore": "вы потратили больше",
     "noChange": "Без изменений",
     "allWallets": "Все кошельки",
-    "budgets": "Бюджеты"
+    "budgets": "Бюджеты",
+    "paymentHistory": "История платежей",
+    "noPaymentsYet": "Платежей пока нет",
+    "payment": "Платеж"
 }

@@ -297,5 +297,9 @@
     "lent": "Borç Verdim",
     "borrowed": "Borç Aldım",
     "deleteDebt": "Kaydı Sil",
-    "deleteDebtConfirm": "Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+    "deleteDebtConfirm": "Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+    "paymentHistory": "Ödeme Geçmişi",
+    "noPaymentsYet": "Henüz ödeme yok",
+    "payment": "Ödeme",
+    "sort": "Sıralama"
 }

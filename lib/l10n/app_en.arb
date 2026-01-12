@@ -311,5 +311,9 @@
     "lent": "Lent",
     "borrowed": "Borrowed",
     "deleteDebt": "Delete Record",
-    "deleteDebtConfirm": "Are you sure you want to delete this record? This action cannot be undone."
+    "deleteDebtConfirm": "Are you sure you want to delete this record? This action cannot be undone.",
+    "paymentHistory": "Payment History",
+    "noPaymentsYet": "No payments yet",
+    "payment": "Payment",
+    "sort": "Sort"
 }

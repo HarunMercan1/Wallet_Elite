@@ -830,4 +830,16 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get deleteDebtConfirm =>
       'Are you sure you want to delete this record? This action cannot be undone.';
+
+  @override
+  String get paymentHistory => '결제 내역';
+
+  @override
+  String get noPaymentsYet => '아직 결제 없음';
+
+  @override
+  String get payment => '결제';
+
+  @override
+  String get sort => 'Sort';
 }

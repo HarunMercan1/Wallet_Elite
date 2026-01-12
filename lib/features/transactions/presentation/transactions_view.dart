@@ -9,7 +9,8 @@ import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
 import '../../wallet/models/category_model.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
-import '../../settings/data/settings_provider.dart';
+import 'transaction_filter_state.dart';
+import 'transaction_filter_sheet.dart';
 
 class TransactionsView extends ConsumerStatefulWidget {
   const TransactionsView({super.key});
@@ -19,7 +20,7 @@ class TransactionsView extends ConsumerStatefulWidget {
 }
 
 class _TransactionsViewState extends ConsumerState<TransactionsView> {
-  String _filterType = 'all';
+  TransactionFilterState _filterState = const TransactionFilterState();
   String _searchQuery = '';
   final _searchController = TextEditingController();
 
@@ -29,11 +30,25 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     super.dispose();
   }
 
+  void _openFilterSheet(BuildContext context) async {
+    final result = await showModalBottomSheet<TransactionFilterState>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => TransactionFilterSheet(initialState: _filterState),
+    );
+
+    if (result != null) {
+      setState(() {
+        _filterState = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final transactions = ref.watch(transactionsProvider);
+    final transactionsAsync = ref.watch(transactionsProvider);
     final categories = ref.watch(categoriesProvider);
-    final locale = ref.watch(localeProvider);
 
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -44,18 +59,124 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Başlık
+            // Başlık ve Filtre Butonu Top Bar
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Text(
-                l.transactions,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : AppColors.textPrimary,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l.transactions,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => _openFilterSheet(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _filterState.hasFilters
+                            ? AppColors.primary
+                            : (isDark ? AppColors.surfaceDark : Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: _filterState.hasFilters
+                              ? AppColors.primary
+                              : (isDark ? Colors.white10 : Colors.grey[300]!),
+                        ),
+                        boxShadow: [
+                          if (!_filterState.hasFilters)
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.filter_list,
+                            size: 20,
+                            color: _filterState.hasFilters
+                                ? Colors.white
+                                : (isDark ? Colors.white70 : Colors.grey[700]),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Filtrele', // Localize next step
+                            style: TextStyle(
+                              color: _filterState.hasFilters
+                                  ? Colors.white
+                                  : (isDark
+                                        ? Colors.white70
+                                        : Colors.grey[700]),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (_filterState.hasFilters) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.white24,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                size: 10,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            // Seçili Filtreleri Gösteren Yatay Liste (Aktifse)
+            if (_filterState.hasFilters)
+              Container(
+                height: 44,
+                margin: const EdgeInsets.only(bottom: 8),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    if (_filterState.type != 'all')
+                      _buildActiveFilterChip(
+                        _filterState.type == 'income' ? l.income : l.expense,
+                        () => setState(
+                          () =>
+                              _filterState = _filterState.copyWith(type: 'all'),
+                        ),
+                        isDark,
+                      ),
+                    if (_filterState.startDate != null ||
+                        _filterState.endDate != null)
+                      _buildActiveFilterChip(
+                        l.date, // Geliştirilebilir: Tarih aralığını yaz
+                        () => setState(
+                          () => _filterState = _filterState.copyWith(
+                            startDate: null,
+                            endDate: null,
+                          ),
+                        ), // Sıfırlama mantığı daha detaylı olabilir
+                        isDark,
+                      ),
+                    // Kategori sayısı kadar chip veya "X Kategori" eklenebilir
+                  ],
+                ),
+              ),
 
             // Arama
             Padding(
@@ -88,25 +209,11 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
               ),
             ),
 
-            // Filtre Chips
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Row(
-                children: [
-                  _buildFilterChip(l.all, 'all', isDark),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(l.income, 'income', isDark),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(l.expense, 'expense', isDark),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 8),
 
             // İşlemler listesi
             Expanded(
-              child: transactions.when(
+              child: transactionsAsync.when(
                 data: (List<TransactionModel> txList) {
                   Map<String, CategoryModel> categoryMap = {};
                   if (categories.hasValue) {
@@ -115,9 +222,42 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     }
                   }
 
+                  // === FILTRELEME MANTIĞI ===
                   var filteredList = txList.where((tx) {
-                    if (_filterType != 'all' && tx.type != _filterType)
+                    // Tip Filtresi ('all', 'income', 'expense')
+                    if (_filterState.type != 'all' &&
+                        tx.type != _filterState.type) {
                       return false;
+                    }
+
+                    // Kategori Filtresi
+                    if (_filterState.selectedCategoryIds.isNotEmpty) {
+                      if (!_filterState.selectedCategoryIds.contains(
+                        tx.categoryId,
+                      )) {
+                        return false;
+                      }
+                    }
+
+                    // Tarih Aralığı Filtresi
+                    if (_filterState.startDate != null) {
+                      if (tx.date.isBefore(_filterState.startDate!))
+                        return false;
+                    }
+                    if (_filterState.endDate != null) {
+                      // Bitiş tarihinin gün sonunu al (23:59:59)
+                      final endOfDay = DateTime(
+                        _filterState.endDate!.year,
+                        _filterState.endDate!.month,
+                        _filterState.endDate!.day,
+                        23,
+                        59,
+                        59,
+                      );
+                      if (tx.date.isAfter(endOfDay)) return false;
+                    }
+
+                    // Arama Sorgusu
                     if (_searchQuery.isNotEmpty) {
                       final query = _searchQuery.toLowerCase();
                       final desc = tx.description?.toLowerCase() ?? '';
@@ -128,12 +268,55 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     return true;
                   }).toList();
 
+                  // === SIRALAMA MANTIĞI ===
+                  filteredList.sort((a, b) {
+                    switch (_filterState.sortOption) {
+                      case SortOption.dateDesc:
+                        return b.date.compareTo(a.date);
+                      case SortOption.dateAsc:
+                        return a.date.compareTo(b.date);
+                      case SortOption.amountDesc:
+                        return b.amount.compareTo(a.amount);
+                      case SortOption.amountAsc:
+                        return a.amount.compareTo(b.amount);
+                    }
+                  });
+
                   if (filteredList.isEmpty) {
                     return _buildEmptyState(l, isDark);
                   }
 
+                  // Gruplama sadece Tarih sıralaması seçiliyse anlamlıdır
+                  // Ancak kullanıcı "Tutar"a göre sıralasa bile, yine de tarih başlıkları altında göstermek
+                  // kafa karıştırıcı olabilir veya olmayabilir.
+                  // Genelde "Tutar" sıralamasında Tarih gruplaması kaldırılır ve düz liste gösterilir.
+                  // Biz şimdilik her durumda gruplu gösterelim veya Sorting seçeneğine göre değiştirelim.
+
+                  // Eğer Tarihe göre sıralama DEĞİLSE, düz liste gösterelim
+                  if (_filterState.sortOption == SortOption.amountAsc ||
+                      _filterState.sortOption == SortOption.amountDesc) {
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      itemCount: filteredList.length,
+                      itemBuilder: (context, index) {
+                        final tx = filteredList[index];
+                        return _buildTransactionCard(
+                          tx,
+                          categoryMap[tx.categoryId],
+                          l,
+                          isDark,
+                        );
+                      },
+                    );
+                  }
+
+                  // Tarihe Göre Gruplama (Varsayılan)
                   final groupedTx = _groupByDate(filteredList);
 
+                  // Toplam Hesaplama
                   double totalFiltered = 0;
                   for (var tx in filteredList) {
                     totalFiltered += tx.type == 'income'
@@ -143,7 +326,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
 
                   return Column(
                     children: [
-                      // Toplam
+                      // Filtrelenmiş Özeti
                       Container(
                         margin: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -237,46 +420,42 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     );
   }
 
-  Widget _buildFilterChip(String label, String value, bool isDark) {
-    final isSelected = _filterType == value;
-    Color chipColor = AppColors.primary;
-    if (value == 'income') chipColor = AppColors.success;
-    if (value == 'expense') chipColor = AppColors.error;
-
-    return GestureDetector(
-      onTap: () => setState(() => _filterType = value),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? chipColor
-              : (isDark ? AppColors.surfaceDark : Colors.white),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected
-                ? chipColor
-                : (isDark ? Colors.white10 : Colors.grey[300]!),
-          ),
-        ),
-        child: Text(
+  Widget _buildActiveFilterChip(
+    String label,
+    VoidCallback onRemove,
+    bool isDark,
+  ) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8),
+      child: Chip(
+        label: Text(
           label,
           style: TextStyle(
-            color: isSelected
-                ? Colors.white
-                : (isDark ? Colors.grey[400] : Colors.grey[600]),
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            fontSize: 13,
+            fontSize: 12,
+            color: isDark ? Colors.white : AppColors.primary,
           ),
         ),
+        backgroundColor: isDark
+            ? AppColors.surfaceDark
+            : AppColors.primary.withOpacity(0.1),
+        deleteIcon: Icon(
+          Icons.close,
+          size: 14,
+          color: isDark ? Colors.white70 : AppColors.primary,
+        ),
+        onDeleted: onRemove,
+        side: BorderSide.none,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     );
   }
 
+  // _buildTransactionCard, _getCategoryName, _getCategoryIcon, _groupByDate, _formatDate, _buildEmptyState... same as before...
+
   Widget _buildEmptyState(AppLocalizations l, bool isDark) {
     String message = l.noTransactions;
-    if (_filterType == 'income') message = l.noIncomeFound;
-    if (_filterType == 'expense') message = l.noExpenseFound;
+    if (_filterState.type == 'income') message = l.noIncomeFound;
+    if (_filterState.type == 'expense') message = l.noExpenseFound;
     if (_searchQuery.isNotEmpty) message = '"$_searchQuery" ${l.notFound}';
 
     return Center(

@@ -26,8 +26,8 @@ class DebtsView extends ConsumerWidget {
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       appBar: AppBar(
         title: Text(l.debtTracking),
-        backgroundColor: colorTheme.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        foregroundColor: isDark ? Colors.white : AppColors.textPrimary,
         elevation: 0,
         actions: [
           // Yeni kayıt ekle butonu
@@ -45,25 +45,51 @@ class DebtsView extends ConsumerWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Özet kartı
-          _buildSummaryCard(context, ref, colorTheme, l, isDark),
-
-          // Filtre butonları
-          _buildFilterButtons(context, ref, filterType, colorTheme, l, isDark),
-
-          // Borç listesi
-          Expanded(
-            child: filteredDebts.when(
-              data: (debts) => debts.isEmpty
-                  ? _buildEmptyState(context, l, isDark, colorTheme)
-                  : _buildDebtsList(context, ref, debts, l, isDark, colorTheme),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('${l.error}: $e')),
+      body: filteredDebts.when(
+        data: (debts) => CustomScrollView(
+          slivers: [
+            // Özet kartı
+            SliverToBoxAdapter(
+              child: _buildSummaryCard(context, ref, colorTheme, l, isDark),
             ),
-          ),
-        ],
+
+            // Filtre butonları
+            SliverToBoxAdapter(
+              child: _buildFilterButtons(
+                context,
+                ref,
+                filterType,
+                colorTheme,
+                l,
+                isDark,
+              ),
+            ),
+
+            // Borç listesi veya boş durum
+            debts.isEmpty
+                ? SliverFillRemaining(
+                    child: _buildEmptyState(context, l, isDark, colorTheme),
+                  )
+                : SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final debt = debts[index];
+                        return _buildDebtCard(
+                          context,
+                          ref,
+                          debt,
+                          l,
+                          isDark,
+                          colorTheme,
+                        );
+                      }, childCount: debts.length),
+                    ),
+                  ),
+          ],
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('${l.error}: $e')),
       ),
     );
   }
@@ -373,24 +399,6 @@ class DebtsView extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDebtsList(
-    BuildContext context,
-    WidgetRef ref,
-    List<DebtModel> debts,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: debts.length,
-      itemBuilder: (context, index) {
-        final debt = debts[index];
-        return _buildDebtCard(context, ref, debt, l, isDark, colorTheme);
-      },
     );
   }
 

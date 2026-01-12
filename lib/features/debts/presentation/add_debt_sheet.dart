@@ -437,24 +437,38 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     final controller = ref.read(debtControllerProvider);
     final amount = double.parse(_amountController.text);
 
-    final success = await controller.createDebt(
-      personName: _personNameController.text.trim(),
-      amount: amount,
-      type: _selectedType,
-      dueDate: _dueDate,
-      description: _descriptionController.text.trim().isNotEmpty
-          ? _descriptionController.text.trim()
-          : null,
-    );
-
-    setState(() => _isLoading = false);
-
-    if (success && mounted) {
-      final l = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.debtAdded), backgroundColor: Colors.green),
+    try {
+      final success = await controller.createDebt(
+        personName: _personNameController.text.trim(),
+        amount: amount,
+        type: _selectedType,
+        dueDate: _dueDate,
+        description: _descriptionController.text.trim().isNotEmpty
+            ? _descriptionController.text.trim()
+            : null,
       );
-      Navigator.pop(context);
+
+      if (success && mounted) {
+        final l = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l.debtAdded), backgroundColor: Colors.green),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 }

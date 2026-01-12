@@ -304,5 +304,8 @@
     "youSpentMore": "Anda menghabiskan lebih banyak",
     "noChange": "Tidak ada perubahan",
     "allWallets": "Semua Dompet",
-    "budgets": "Budgets"
+    "budgets": "Budgets",
+    "paymentHistory": "Riwayat Pembayaran",
+    "noPaymentsYet": "Belum ada pembayaran",
+    "payment": "Pembayaran"
 }

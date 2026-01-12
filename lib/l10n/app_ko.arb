@@ -304,5 +304,8 @@
     "youSpentMore": "지출 증가",
     "noChange": "변화 없음",
     "allWallets": "모든 지갑",
-    "budgets": "Budgets"
+    "budgets": "Budgets",
+    "paymentHistory": "결제 내역",
+    "noPaymentsYet": "아직 결제 없음",
+    "payment": "결제"
 }

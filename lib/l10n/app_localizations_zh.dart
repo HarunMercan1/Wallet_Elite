@@ -830,4 +830,16 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get deleteDebtConfirm =>
       'Are you sure you want to delete this record? This action cannot be undone.';
+
+  @override
+  String get paymentHistory => '支付历史';
+
+  @override
+  String get noPaymentsYet => '尚无支付';
+
+  @override
+  String get payment => '支付';
+
+  @override
+  String get sort => 'Sort';
 }

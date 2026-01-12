@@ -840,4 +840,16 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get deleteDebtConfirm =>
       'Bu kaydı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.';
+
+  @override
+  String get paymentHistory => 'Ödeme Geçmişi';
+
+  @override
+  String get noPaymentsYet => 'Henüz ödeme yok';
+
+  @override
+  String get payment => 'Ödeme';
+
+  @override
+  String get sort => 'Sıralama';
 }

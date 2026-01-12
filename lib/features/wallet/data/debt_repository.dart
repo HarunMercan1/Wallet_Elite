@@ -2,6 +2,7 @@
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/debt_model.dart';
+import '../models/debt_payment_model.dart';
 
 /// Borç/alacak işlemlerini yöneten repository
 class DebtRepository {
@@ -169,11 +170,10 @@ class DebtRepository {
       print('   Message: ${e.message}');
       print('   Details: ${e.details}');
       print('   Hint: ${e.hint}');
-      return null;
+      throw 'Veritabanı hatası: ${e.message} (Kod: ${e.code})';
     } catch (e) {
       print('❌ Borç/alacak oluşturma hatası: $e');
-      print('   Hata tipi: ${e.runtimeType}');
-      return null;
+      throw 'Beklenmeyen bir hata oluştu: $e';
     }
   }
 
@@ -213,7 +213,14 @@ class DebtRepository {
       final newRemaining = debt.remainingAmount - paymentAmount;
       final isCompleted = newRemaining <= 0;
 
-      // Güncelle
+      // 1. Ödemeyi 'debt_payments' tablosuna kaydet
+      await _supabase.from('debt_payments').insert({
+        'debt_id': debtId,
+        'amount': paymentAmount,
+        'payment_date': DateTime.now().toIso8601String(),
+      });
+
+      // 2. 'debts' tablosunu güncelle
       final response = await _supabase
           .from('debts')
           .update({
@@ -227,7 +234,25 @@ class DebtRepository {
       return DebtModel.fromJson(response);
     } catch (e) {
       print('Ödeme kaydetme hatası: $e');
-      return null;
+      throw 'Ödeme kaydedilirken hata oluştu: $e';
+    }
+  }
+
+  /// Ödeme geçmişini getir
+  Future<List<DebtPaymentModel>> getDebtPayments(String debtId) async {
+    try {
+      final response = await _supabase
+          .from('debt_payments')
+          .select()
+          .eq('debt_id', debtId)
+          .order('payment_date', ascending: false);
+
+      return (response as List)
+          .map((json) => DebtPaymentModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Ödeme geçmişi getirme hatası: $e');
+      return [];
     }
   }
 
