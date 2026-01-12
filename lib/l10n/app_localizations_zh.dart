@@ -18,6 +18,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save => '保存';
 
   @override
+  String get saved => 'Saved';
+
+  @override
   String get delete => '删除';
 
   @override
@@ -813,6 +816,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get history => 'History';
 
   @override
+  String get sort => 'Sort';
+
+  @override
+  String get payment => '支付';
+
+  @override
   String get completedDebts => 'Completed Debts';
 
   @override
@@ -838,8 +847,5 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noPaymentsYet => '尚无支付';
 
   @override
-  String get payment => '支付';
-
-  @override
-  String get sort => 'Sort';
+  String get displayName => 'Display Name';
 }

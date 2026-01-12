@@ -13,6 +13,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
 import '../../debts/presentation/debts_view.dart';
+import '../../auth/presentation/profile_edit_sheet.dart';
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
@@ -56,7 +57,7 @@ class DashboardView extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header - Kullanıcı Kartı
-              _buildUserHeader(userProfile, l, colorTheme),
+              _buildUserHeader(context, userProfile, l, colorTheme, isDark),
 
               const SizedBox(height: 24),
 
@@ -174,19 +175,36 @@ class DashboardView extends ConsumerWidget {
   }
 
   Widget _buildUserHeader(
+    BuildContext context,
     AsyncValue userProfile,
     AppLocalizations l,
     ColorTheme colorTheme,
+    bool isDark,
   ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: colorTheme.primary,
+        gradient: LinearGradient(
+          colors: [
+            colorTheme.primary,
+            colorTheme.primaryLight,
+            colorTheme.primary.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: colorTheme.primary.withOpacity(0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: SafeArea(
         bottom: false,
@@ -197,25 +215,55 @@ class DashboardView extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 28,
-                      backgroundColor: colorTheme.accent,
-                      backgroundImage: profile?.avatarUrl != null
-                          ? NetworkImage(profile!.avatarUrl!)
-                          : null,
-                      child: profile?.avatarUrl == null
-                          ? Text(
-                              profile?.fullName
-                                      ?.substring(0, 1)
-                                      .toUpperCase() ??
-                                  'U',
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            )
-                          : null,
+                    // Tappable Avatar
+                    GestureDetector(
+                      onTap: () {
+                        if (profile != null) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (_) => ProfileEditSheet(profile: profile),
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: colorTheme.accent,
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 28,
+                          backgroundColor: colorTheme.accent,
+                          backgroundImage: profile?.avatarUrl != null
+                              ? NetworkImage(profile!.avatarUrl!)
+                              : null,
+                          child: profile?.avatarUrl == null
+                              ? Text(
+                                  profile?.fullName
+                                          ?.substring(0, 1)
+                                          .toUpperCase() ??
+                                      'U',
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                )
+                              : null,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -225,7 +273,7 @@ class DashboardView extends ConsumerWidget {
                           Text(
                             l.welcome,
                             style: TextStyle(
-                              color: colorTheme.accentLight,
+                              color: Colors.white.withOpacity(0.8),
                               fontSize: 13,
                             ),
                           ),
@@ -233,22 +281,55 @@ class DashboardView extends ConsumerWidget {
                             profile?.fullName ?? l.user,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    if (profile?.isPremium ?? false)
+                    // Edit Profile Button
+                    GestureDetector(
+                      onTap: () {
+                        if (profile != null) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (_) => ProfileEditSheet(profile: profile),
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    if (profile?.isPremium ?? false) ...[
+                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
-                          vertical: 5,
+                          vertical: 6,
                         ),
                         decoration: BoxDecoration(
                           color: colorTheme.accent,
                           borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colorTheme.accent.withOpacity(0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: const Text(
                           '👑 ELITE',
@@ -259,12 +340,15 @@ class DashboardView extends ConsumerWidget {
                           ),
                         ),
                       ),
+                    ],
                   ],
                 ),
               ],
             );
           },
-          loading: () => const CircularProgressIndicator(color: Colors.white),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
           error: (_, __) =>
               Text(l.error, style: const TextStyle(color: Colors.white)),
         ),
@@ -643,13 +727,16 @@ class DashboardView extends ConsumerWidget {
     final name = category.name.toLowerCase();
     if (name.contains('food') || name.contains('yemek')) return l.cat_food;
     if (name.contains('pet') || name.contains('evcil')) return l.cat_pets;
-    if (name.contains('grocer') || name.contains('market'))
+    if (name.contains('grocer') || name.contains('market')) {
       return l.cat_groceries;
+    }
     if (name.contains('electronic')) return l.cat_electronics;
-    if (name.contains('charity') || name.contains('bağış'))
+    if (name.contains('charity') || name.contains('bağış')) {
       return l.cat_charity;
-    if (name.contains('insuranc') || name.contains('sigorta'))
+    }
+    if (name.contains('insuranc') || name.contains('sigorta')) {
       return l.cat_insurance;
+    }
     if (name.contains('gym') || name.contains('spor')) return l.cat_gym;
     if (name.contains('health')) return l.cat_health;
     if (name.contains('gift')) return l.cat_gift;
@@ -658,8 +745,9 @@ class DashboardView extends ConsumerWidget {
     if (name.contains('entert')) return l.cat_entertainment;
     if (name.contains('shop')) return l.cat_shopping;
     if (name.contains('transport')) return l.cat_transport;
-    if (name.contains('travel') || name.contains('seyahat'))
+    if (name.contains('travel') || name.contains('seyahat')) {
       return l.cat_travel;
+    }
 
     return category.name;
   }

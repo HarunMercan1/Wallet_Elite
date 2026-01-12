@@ -3,6 +3,7 @@
     "appName": "Wallet Elite",
     "cancel": "Cancel",
     "save": "Save",
+    "saved": "Saved",
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
@@ -306,6 +307,8 @@
     "allWallets": "All Wallets",
     "budgets": "Budgets",
     "history": "History",
+    "sort": "Sort",
+    "payment": "Payment",
     "completedDebts": "Completed Debts",
     "noCompletedDebts": "No completed debt records",
     "lent": "Lent",
@@ -314,6 +317,5 @@
     "deleteDebtConfirm": "Are you sure you want to delete this record? This action cannot be undone.",
     "paymentHistory": "Payment History",
     "noPaymentsYet": "No payments yet",
-    "payment": "Payment",
-    "sort": "Sort"
+    "displayName": "Display Name"
 }

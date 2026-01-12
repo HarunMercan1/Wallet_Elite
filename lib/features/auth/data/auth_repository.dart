@@ -182,6 +182,43 @@ class AuthRepository {
     }
   }
 
+  /// Avatar yükle (Supabase Storage)
+  Future<String?> uploadAvatar(String userId, List<int> imageBytes) async {
+    try {
+      final fileName =
+          '$userId/avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      // Supabase Storage'a yükle
+      await _supabase.storage
+          .from('avatars')
+          .uploadBinary(
+            fileName,
+            imageBytes as dynamic,
+            fileOptions: const FileOptions(
+              contentType: 'image/jpeg',
+              upsert: true,
+            ),
+          );
+
+      // Public URL al
+      final publicUrl = _supabase.storage
+          .from('avatars')
+          .getPublicUrl(fileName);
+
+      // Profili güncelle
+      await _supabase
+          .from('profiles')
+          .update({'avatar_url': publicUrl})
+          .eq('id', userId);
+
+      print('✅ Avatar yüklendi: $publicUrl');
+      return publicUrl;
+    } catch (e) {
+      print('❌ Avatar yükleme hatası: $e');
+      return null;
+    }
+  }
+
   /// Onboarding'i tamamla
   Future<bool> completeOnboarding(String userId) async {
     try {

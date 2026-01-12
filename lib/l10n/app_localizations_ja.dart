@@ -18,6 +18,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get save => '保存';
 
   @override
+  String get saved => 'Saved';
+
+  @override
   String get delete => '削除';
 
   @override
@@ -813,6 +816,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get history => 'History';
 
   @override
+  String get sort => 'Sort';
+
+  @override
+  String get payment => '支払い';
+
+  @override
   String get completedDebts => 'Completed Debts';
 
   @override
@@ -838,8 +847,5 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noPaymentsYet => '支払いはまだありません';
 
   @override
-  String get payment => '支払い';
-
-  @override
-  String get sort => 'Sort';
+  String get displayName => 'Display Name';
 }

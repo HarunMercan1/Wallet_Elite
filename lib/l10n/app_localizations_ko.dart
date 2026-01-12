@@ -18,6 +18,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get save => '저장';
 
   @override
+  String get saved => 'Saved';
+
+  @override
   String get delete => '삭제';
 
   @override
@@ -813,6 +816,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get history => 'History';
 
   @override
+  String get sort => 'Sort';
+
+  @override
+  String get payment => '결제';
+
+  @override
   String get completedDebts => 'Completed Debts';
 
   @override
@@ -838,8 +847,5 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noPaymentsYet => '아직 결제 없음';
 
   @override
-  String get payment => '결제';
-
-  @override
-  String get sort => 'Sort';
+  String get displayName => 'Display Name';
 }

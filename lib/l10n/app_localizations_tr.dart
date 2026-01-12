@@ -18,6 +18,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get save => 'Kaydet';
 
   @override
+  String get saved => 'Kaydedildi';
+
+  @override
   String get delete => 'Sil';
 
   @override
@@ -823,6 +826,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get history => 'Geçmiş';
 
   @override
+  String get sort => 'Sıralama';
+
+  @override
+  String get payment => 'Ödeme';
+
+  @override
   String get completedDebts => 'Tamamlanan Borçlar';
 
   @override
@@ -848,8 +857,5 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noPaymentsYet => 'Henüz ödeme yok';
 
   @override
-  String get payment => 'Ödeme';
-
-  @override
-  String get sort => 'Sıralama';
+  String get displayName => 'Görünen İsim';
 }

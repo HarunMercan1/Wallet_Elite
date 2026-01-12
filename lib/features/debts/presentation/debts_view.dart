@@ -425,9 +425,7 @@ class DebtsView extends ConsumerWidget {
         debt.dueDate != null &&
         debt.dueDate!.isBefore(DateTime.now()) &&
         !debt.isCompleted;
-    final daysRemaining = debt.dueDate != null
-        ? debt.dueDate!.difference(DateTime.now()).inDays
-        : null;
+    final daysRemaining = debt.dueDate?.difference(DateTime.now()).inDays;
 
     // İlerleme yüzdesi
     final progress = debt.amount > 0

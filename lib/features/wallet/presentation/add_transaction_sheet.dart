@@ -137,13 +137,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     final name = category.name.toLowerCase();
     if (name.contains('food') || name.contains('yemek')) return l.cat_food;
     if (name.contains('pet') || name.contains('evcil')) return l.cat_pets;
-    if (name.contains('grocer') || name.contains('market'))
+    if (name.contains('grocer') || name.contains('market')) {
       return l.cat_groceries;
+    }
     if (name.contains('electronic')) return l.cat_electronics;
-    if (name.contains('charity') || name.contains('bağış'))
+    if (name.contains('charity') || name.contains('bağış')) {
       return l.cat_charity;
-    if (name.contains('insuranc') || name.contains('sigorta'))
+    }
+    if (name.contains('insuranc') || name.contains('sigorta')) {
       return l.cat_insurance;
+    }
     if (name.contains('gym') || name.contains('spor')) return l.cat_gym;
     if (name.contains('health')) return l.cat_health;
     if (name.contains('gift')) return l.cat_gift;
@@ -152,8 +155,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     if (name.contains('entert')) return l.cat_entertainment;
     if (name.contains('shop')) return l.cat_shopping;
     if (name.contains('transport')) return l.cat_transport;
-    if (name.contains('travel') || name.contains('seyahat'))
+    if (name.contains('travel') || name.contains('seyahat')) {
       return l.cat_travel;
+    }
 
     return category.name;
   }
@@ -409,8 +413,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   isDense: true,
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return l.enterAmount; // Translated
+                  }
                   if (double.tryParse(value) == null ||
                       double.parse(value) <= 0) {
                     return l.enterAmount;

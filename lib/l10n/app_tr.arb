@@ -3,6 +3,7 @@
     "appName": "Wallet Elite",
     "cancel": "İptal",
     "save": "Kaydet",
+    "saved": "Kaydedildi",
     "delete": "Sil",
     "edit": "Düzenle",
     "add": "Ekle",
@@ -301,5 +302,6 @@
     "paymentHistory": "Ödeme Geçmişi",
     "noPaymentsYet": "Henüz ödeme yok",
     "payment": "Ödeme",
-    "sort": "Sıralama"
+    "sort": "Sıralama",
+    "displayName": "Görünen İsim"
 }

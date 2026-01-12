@@ -212,8 +212,9 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                             : AppColors.success,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return l.enterAmount;
+                        }
                         if (double.tryParse(value) == null ||
                             double.parse(value) <= 0) {
                           return l.enterAmount;

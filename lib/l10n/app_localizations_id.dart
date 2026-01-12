@@ -18,6 +18,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get save => 'Simpan';
 
   @override
+  String get saved => 'Saved';
+
+  @override
   String get delete => 'Hapus';
 
   @override
@@ -823,6 +826,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get history => 'History';
 
   @override
+  String get sort => 'Sort';
+
+  @override
+  String get payment => 'Pembayaran';
+
+  @override
   String get completedDebts => 'Completed Debts';
 
   @override
@@ -848,8 +857,5 @@ class AppLocalizationsId extends AppLocalizations {
   String get noPaymentsYet => 'Belum ada pembayaran';
 
   @override
-  String get payment => 'Pembayaran';
-
-  @override
-  String get sort => 'Sort';
+  String get displayName => 'Display Name';
 }

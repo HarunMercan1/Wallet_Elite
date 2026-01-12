@@ -138,6 +138,12 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
+  /// No description provided for @saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
@@ -1704,6 +1710,18 @@ abstract class AppLocalizations {
   /// **'History'**
   String get history;
 
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
   /// No description provided for @completedDebts.
   ///
   /// In en, this message translates to:
@@ -1752,17 +1770,11 @@ abstract class AppLocalizations {
   /// **'No payments yet'**
   String get noPaymentsYet;
 
-  /// No description provided for @payment.
+  /// No description provided for @displayName.
   ///
   /// In en, this message translates to:
-  /// **'Payment'**
-  String get payment;
-
-  /// No description provided for @sort.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort'**
-  String get sort;
+  /// **'Display Name'**
+  String get displayName;
 }
 
 class _AppLocalizationsDelegate
