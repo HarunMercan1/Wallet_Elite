@@ -38,7 +38,287 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
+  // Preset avatar options
+  static const List<Map<String, dynamic>> _presetAvatars = [
+    {'emoji': '😀', 'color': 0xFF4CAF50},
+    {'emoji': '😎', 'color': 0xFF2196F3},
+    {'emoji': '🤓', 'color': 0xFF9C27B0},
+    {'emoji': '😊', 'color': 0xFFFF9800},
+    {'emoji': '🦊', 'color': 0xFFFF5722},
+    {'emoji': '🐱', 'color': 0xFFE91E63},
+    {'emoji': '🐶', 'color': 0xFF795548},
+    {'emoji': '🦁', 'color': 0xFFFFC107},
+    {'emoji': '🐼', 'color': 0xFF607D8B},
+    {'emoji': '🦄', 'color': 0xFF673AB7},
+    {'emoji': '🎮', 'color': 0xFF00BCD4},
+    {'emoji': '💼', 'color': 0xFF3F51B5},
+    {'emoji': '🎨', 'color': 0xFFE91E63},
+    {'emoji': '🚀', 'color': 0xFF009688},
+    {'emoji': '⭐', 'color': 0xFFFFEB3B},
+    {'emoji': '💎', 'color': 0xFF03A9F4},
+  ];
+
+  String? _selectedPresetAvatar; // Format: "emoji:color" e.g. "😀:0xFF4CAF50"
+
+  void _showAvatarOptions() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.read(currentColorThemeProvider);
+    final l = AppLocalizations.of(context)!;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.backgroundDark : Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Column(
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            // Title
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Text(
+                    l.changePhoto,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.grey[500]),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+            // Gallery option
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GestureDetector(
+                onTap: () async {
+                  Navigator.pop(context);
+                  await _pickImageFromGallery();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorTheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: colorTheme.primary.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: colorTheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.photo_library,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Galeriden Seç',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppColors.textPrimary,
+                              ),
+                            ),
+                            Text(
+                              'Kendi fotoğrafını yükle',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Colors.grey[400],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Preset avatars title
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'veya bir avatar seç',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[500],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Avatar grid
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: _presetAvatars.length,
+                itemBuilder: (context, index) {
+                  final avatar = _presetAvatars[index];
+                  final avatarKey = '${avatar['emoji']}:${avatar['color']}';
+                  final isSelected = _selectedPresetAvatar == avatarKey;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedPresetAvatar = avatarKey;
+                        _selectedImage = null; // Clear gallery image
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        color: Color(avatar['color'] as int),
+                        shape: BoxShape.circle,
+                        border: isSelected
+                            ? Border.all(color: colorTheme.primary, width: 3)
+                            : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(
+                              avatar['color'] as int,
+                            ).withOpacity(0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          avatar['emoji'] as String,
+                          style: const TextStyle(fontSize: 32),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatarContent(ColorTheme colorTheme, bool isDark) {
+    // Check for preset avatar selection
+    if (_selectedPresetAvatar != null) {
+      final parts = _selectedPresetAvatar!.split(':');
+      if (parts.length >= 2) {
+        final emoji = parts[0];
+        final colorValue = int.tryParse(parts[1]) ?? 0xFF2196F3;
+        return CircleAvatar(
+          radius: 56,
+          backgroundColor: Color(colorValue),
+          child: Text(emoji, style: const TextStyle(fontSize: 48)),
+        );
+      }
+    }
+
+    // Check for gallery image
+    if (_selectedImage != null) {
+      return CircleAvatar(
+        radius: 56,
+        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        backgroundImage: FileImage(_selectedImage!),
+      );
+    }
+
+    // Check for existing avatar URL (could be preset or uploaded image)
+    final avatarUrl = widget.profile.avatarUrl;
+    if (avatarUrl != null) {
+      if (avatarUrl.startsWith('preset:')) {
+        final presetData = avatarUrl.substring(7); // Remove 'preset:' prefix
+        final parts = presetData.split(':');
+        if (parts.length >= 2) {
+          final emoji = parts[0];
+          final colorValue = int.tryParse(parts[1]) ?? 0xFF2196F3;
+          return CircleAvatar(
+            radius: 56,
+            backgroundColor: Color(colorValue),
+            child: Text(emoji, style: const TextStyle(fontSize: 48)),
+          );
+        }
+      } else {
+        // Regular image URL
+        return CircleAvatar(
+          radius: 56,
+          backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+          backgroundImage: NetworkImage(avatarUrl),
+        );
+      }
+    }
+
+    // Default: show initial letter
+    return CircleAvatar(
+      radius: 56,
+      backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+      child: Text(
+        widget.profile.fullName?.substring(0, 1).toUpperCase() ?? 'U',
+        style: TextStyle(
+          fontSize: 40,
+          fontWeight: FontWeight.bold,
+          color: colorTheme.primary,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImageFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -50,6 +330,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
+        _selectedPresetAvatar = null; // Clear preset selection
       });
     }
   }
@@ -62,7 +343,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     final authRepo = ref.read(authRepositoryProvider);
     String? newAvatarUrl = widget.profile.avatarUrl;
 
-    // Avatar yükleme
+    // Avatar yükleme (galeri resmi)
     if (_selectedImage != null) {
       final bytes = await _selectedImage!.readAsBytes();
       final uploadedUrl = await authRepo.uploadAvatar(
@@ -72,6 +353,10 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
       if (uploadedUrl != null) {
         newAvatarUrl = uploadedUrl;
       }
+    }
+    // Preset avatar seçildiyse, avatar_url olarak emoji:color formatında kaydet
+    else if (_selectedPresetAvatar != null) {
+      newAvatarUrl = 'preset:$_selectedPresetAvatar';
     }
 
     // Profil güncelleme
@@ -165,7 +450,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                 children: [
                   // Avatar Section
                   GestureDetector(
-                    onTap: _pickImage,
+                    onTap: _showAvatarOptions,
                     child: Stack(
                       children: [
                         Container(
@@ -191,35 +476,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(4),
-                            child: CircleAvatar(
-                              radius: 56,
-                              backgroundColor: isDark
-                                  ? AppColors.surfaceDark
-                                  : Colors.white,
-                              backgroundImage: _selectedImage != null
-                                  ? FileImage(_selectedImage!)
-                                  : (widget.profile.avatarUrl != null
-                                            ? NetworkImage(
-                                                widget.profile.avatarUrl!,
-                                              )
-                                            : null)
-                                        as ImageProvider?,
-                              child:
-                                  _selectedImage == null &&
-                                      widget.profile.avatarUrl == null
-                                  ? Text(
-                                      widget.profile.fullName
-                                              ?.substring(0, 1)
-                                              .toUpperCase() ??
-                                          'U',
-                                      style: TextStyle(
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.bold,
-                                        color: colorTheme.primary,
-                                      ),
-                                    )
-                                  : null,
-                            ),
+                            child: _buildAvatarContent(colorTheme, isDark),
                           ),
                         ),
                         Positioned(

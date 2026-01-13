@@ -152,18 +152,50 @@ class AuthRepository {
     await _supabase.auth.signOut();
   }
 
-  /// Kullanıcı profilini getir
+  /// Kullanıcı profilini getir (yoksa oluştur)
   Future<ProfileModel?> getProfile(String userId) async {
     try {
       final response = await _supabase
           .from('profiles')
           .select()
           .eq('id', userId)
+          .maybeSingle(); // single() yerine maybeSingle() kullan
+
+      if (response != null) {
+        return ProfileModel.fromJson(response);
+      }
+
+      // Profil yoksa oluştur
+      print('⚠️ Profil bulunamadı, yeni profil oluşturuluyor...');
+
+      // Auth'dan kullanıcı bilgilerini al
+      final user = _supabase.auth.currentUser;
+      final fullName =
+          user?.userMetadata?['full_name'] ??
+          user?.userMetadata?['display_name'] ??
+          user?.email?.split('@').first ??
+          'Kullanıcı';
+
+      // Yeni profil oluştur
+      await _supabase.from('profiles').insert({
+        'id': userId,
+        'full_name': fullName,
+        'is_premium': false,
+        'onboarding_completed': true,
+      });
+
+      print('✅ Yeni profil oluşturuldu: $fullName');
+
+      // Oluşturulan profili getir
+      final newProfile = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', userId)
           .single();
 
-      return ProfileModel.fromJson(response);
+      return ProfileModel.fromJson(newProfile);
     } catch (e) {
-      print('Profil getirme hatası: $e');
+      print('❌ Profil getirme/oluşturma hatası: $e');
       return null;
     }
   }
@@ -171,13 +203,18 @@ class AuthRepository {
   /// Profili güncelle
   Future<bool> updateProfile(ProfileModel profile) async {
     try {
-      await _supabase
-          .from('profiles')
-          .update(profile.toJson())
-          .eq('id', profile.id);
+      // Sadece değiştirilebilir alanları gönder (id ve updated_at hariç)
+      final updateData = <String, dynamic>{
+        'full_name': profile.fullName,
+        'avatar_url': profile.avatarUrl,
+      };
+
+      await _supabase.from('profiles').update(updateData).eq('id', profile.id);
+
+      print('✅ Profil güncellendi: ${profile.fullName}');
       return true;
     } catch (e) {
-      print('Profil güncelleme hatası: $e');
+      print('❌ Profil güncelleme hatası: $e');
       return false;
     }
   }

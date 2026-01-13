@@ -183,13 +183,12 @@ class DashboardView extends ConsumerWidget {
   ) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
             colorTheme.primary,
             colorTheme.primaryLight,
-            colorTheme.primary.withOpacity(0.8),
+            colorTheme.primary.withOpacity(0.9),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -208,149 +207,194 @@ class DashboardView extends ConsumerWidget {
       ),
       child: SafeArea(
         bottom: false,
-        child: userProfile.when(
-          data: (profile) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    // Tappable Avatar
-                    GestureDetector(
-                      onTap: () {
-                        if (profile != null) {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (_) => ProfileEditSheet(profile: profile),
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: colorTheme.accent,
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),
+          child: userProfile.when(
+            data: (profile) {
+              return Row(
+                children: [
+                  // Tappable Avatar with Edit Badge
+                  GestureDetector(
+                    onTap: () {
+                      if (profile != null) {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => ProfileEditSheet(profile: profile),
+                        );
+                      }
+                    },
+                    child: Stack(
+                      children: [
+                        // Glassmorphism container
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white.withOpacity(0.3),
+                                Colors.white.withOpacity(0.1),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 28,
-                          backgroundColor: colorTheme.accent,
-                          backgroundImage: profile?.avatarUrl != null
-                              ? NetworkImage(profile!.avatarUrl!)
-                              : null,
-                          child: profile?.avatarUrl == null
-                              ? Text(
-                                  profile?.fullName
-                                          ?.substring(0, 1)
-                                          .toUpperCase() ??
-                                      'U',
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87,
-                                  ),
-                                )
-                              : null,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l.welcome,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
-                              fontSize: 13,
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.4),
+                              width: 2,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 15,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
                           ),
-                          Text(
-                            profile?.fullName ?? l.user,
-                            style: const TextStyle(
+                          child: _buildDashboardAvatar(profile, colorTheme),
+                        ),
+                        // Edit badge
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
                               color: Colors.white,
-                              fontSize: 20,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              size: 14,
+                              color: colorTheme.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // User info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l.welcome,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.85),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          profile?.fullName ?? l.user,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Premium badge (if applicable)
+                  if (profile?.isPremium ?? false)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colorTheme.accent,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colorTheme.accent.withOpacity(0.4),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('👑', style: TextStyle(fontSize: 14)),
+                          SizedBox(width: 4),
+                          Text(
+                            'ELITE',
+                            style: TextStyle(
+                              color: Colors.black87,
                               fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    // Edit Profile Button
-                    GestureDetector(
-                      onTap: () {
-                        if (profile != null) {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (_) => ProfileEditSheet(profile: profile),
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    if (profile?.isPremium ?? false) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorTheme.accent,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorTheme.accent.withOpacity(0.4),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Text(
-                          '👑 ELITE',
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            );
-          },
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: Colors.white),
+                ],
+              );
+            },
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+            error: (_, __) =>
+                Text(l.error, style: const TextStyle(color: Colors.white)),
           ),
-          error: (_, __) =>
-              Text(l.error, style: const TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardAvatar(dynamic profile, ColorTheme colorTheme) {
+    final avatarUrl = profile?.avatarUrl;
+
+    // Check for preset avatar
+    if (avatarUrl != null && avatarUrl.startsWith('preset:')) {
+      final presetData = avatarUrl.substring(7); // Remove 'preset:' prefix
+      final parts = presetData.split(':');
+      if (parts.length >= 2) {
+        final emoji = parts[0];
+        final colorValue = int.tryParse(parts[1]) ?? 0xFF2196F3;
+        return CircleAvatar(
+          radius: 30,
+          backgroundColor: Color(colorValue),
+          child: Text(emoji, style: const TextStyle(fontSize: 28)),
+        );
+      }
+    }
+
+    // Regular image URL
+    if (avatarUrl != null) {
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: colorTheme.accent,
+        backgroundImage: NetworkImage(avatarUrl),
+      );
+    }
+
+    // Default: show initial letter
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: colorTheme.accent,
+      child: Text(
+        profile?.fullName?.substring(0, 1).toUpperCase() ?? 'U',
+        style: const TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
         ),
       ),
     );
