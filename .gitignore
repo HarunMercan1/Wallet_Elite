@@ -43,3 +43,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment files - NEVER commit these!
+.env
+.env.local
+.env.development
+.env.production
+*.env
+
+# Debug/diagnostic scripts with secrets (should be deleted)
+bin/diagnose_db.dart
+bin/check_rls.dart
+bin/check_migration.dart
