@@ -1,10 +1,13 @@
 // lib/core/constants/supabase_config.dart
 
 /// Supabase bağlantı bilgileri
-/// NOT: Bu bilgiler public olabilir çünkü RLS politikaları ile korunuyoruz
+/// NOT: Publishable key RLS politikaları ile korunuyor, public olarak kullanılabilir
 class SupabaseConfig {
-  // Asla değişmeyecek sabitler
+  // Supabase Project URL
   static const String url = 'https://udekdhskflduszcoknch.supabase.co';
+
+  // Yeni Publishable API Key (eski anon key'in yerine geçti)
+  // Bu key güvenle client-side'da kullanılabilir çünkü RLS aktif
   static const String anonKey =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkZWtkaHNrZmxkdXN6Y29rbmNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczODQ4NDgsImV4cCI6MjA4Mjk2MDg0OH0.jWJk6srnoDHqXaWtprvDMRIE8rvEsENYEhxpBOteoc0';
+      'sb_publishable_iUxetHgqsdyb1HXu2KWGkA__k-7WKDX';
 }
