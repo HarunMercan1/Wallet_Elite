@@ -858,4 +858,93 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get displayName => 'Görünen İsim';
+
+  @override
+  String get customDateRange => 'Özel Aralık';
+
+  @override
+  String get startDate => 'Başlangıç Tarihi';
+
+  @override
+  String get endDate => 'Bitiş Tarihi';
+
+  @override
+  String get selectDateRange => 'Tarih Aralığı Seç';
+
+  @override
+  String get transactionSummary => 'İşlem Özeti';
+
+  @override
+  String get topSpendingCategory => 'En Çok Harcama';
+
+  @override
+  String get leastSpendingCategory => 'En Az Harcama';
+
+  @override
+  String get averageTransaction => 'Ort. İşlem';
+
+  @override
+  String get weekdaySpending => 'Hafta İçi Harcama';
+
+  @override
+  String get weekendSpending => 'Hafta Sonu Harcama';
+
+  @override
+  String get vsLastMonth => 'Geçen Aya Göre';
+
+  @override
+  String get thisWeek => 'Bu Hafta';
+
+  @override
+  String get lastWeek => 'Geçen Hafta';
+
+  @override
+  String get last3Months => 'Son 3 Ay';
+
+  @override
+  String get last6Months => 'Son 6 Ay';
+
+  @override
+  String get viewAllCategories => 'Tüm Kategorileri Gör';
+
+  @override
+  String get viewTrendDetails => 'Trend Detayları';
+
+  @override
+  String get budgetTips => 'Bütçe Önerileri';
+
+  @override
+  String get savingsGoal => 'Tasarruf Hedefi';
+
+  @override
+  String get potentialSavings => 'Potansiyel Tasarruf';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return '$category kategorisinde %$percent azaltırsan ayda $amount tasarruf edersin';
+  }
+
+  @override
+  String get allCategories => 'Tüm Kategoriler';
+
+  @override
+  String get categoryDetails => 'Kategori Detayları';
+
+  @override
+  String get trendDetails => 'Trend Detayları';
+
+  @override
+  String get periodComparison => 'Dönem Karşılaştırma';
+
+  @override
+  String get noExpenseData => 'Gider verisi yok';
+
+  @override
+  String get spendingPatterns => 'Harcama Kalıpları';
+
+  @override
+  String get apply => 'Uygula';
+
+  @override
+  String get reset => 'Sıfırla';
 }

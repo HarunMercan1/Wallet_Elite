@@ -813,32 +813,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get budgets => 'Budgets';
 
   @override
-  String get history => 'History';
+  String get history => '历史';
 
   @override
-  String get sort => 'Sort';
+  String get sort => '排序';
 
   @override
   String get payment => '支付';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => '已完成债务';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => '无已完成债务';
 
   @override
-  String get lent => 'Lent';
+  String get lent => '借出';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => '借入';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => '删除';
 
   @override
-  String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+  String get deleteDebtConfirm => '确定要删除此记录吗？此操作无法撤销。';
 
   @override
   String get paymentHistory => '支付历史';
@@ -847,5 +846,94 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noPaymentsYet => '尚无支付';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => '显示名称';
+
+  @override
+  String get customDateRange => '自定义时间';
+
+  @override
+  String get startDate => '开始日期';
+
+  @override
+  String get endDate => '结束日期';
+
+  @override
+  String get selectDateRange => '选择时间范围';
+
+  @override
+  String get transactionSummary => '交易摘要';
+
+  @override
+  String get topSpendingCategory => '最高支出';
+
+  @override
+  String get leastSpendingCategory => '最低支出';
+
+  @override
+  String get averageTransaction => '平均交易';
+
+  @override
+  String get weekdaySpending => '工作日支出';
+
+  @override
+  String get weekendSpending => '周末支出';
+
+  @override
+  String get vsLastMonth => 'vs 上月';
+
+  @override
+  String get thisWeek => '本周';
+
+  @override
+  String get lastWeek => '上周';
+
+  @override
+  String get last3Months => '最近3个月';
+
+  @override
+  String get last6Months => '最近6个月';
+
+  @override
+  String get viewAllCategories => '查看全部分类';
+
+  @override
+  String get viewTrendDetails => '查看趋势详情';
+
+  @override
+  String get budgetTips => '预算建议';
+
+  @override
+  String get savingsGoal => '储蓄目标';
+
+  @override
+  String get potentialSavings => '潜在节省';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => '趋势详情';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => '无支出数据';
+
+  @override
+  String get spendingPatterns => '消费模式';
+
+  @override
+  String get apply => '应用';
+
+  @override
+  String get reset => '重置';
 }

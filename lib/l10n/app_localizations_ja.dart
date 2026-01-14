@@ -813,32 +813,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get budgets => 'Budgets';
 
   @override
-  String get history => 'History';
+  String get history => '履歴';
 
   @override
-  String get sort => 'Sort';
+  String get sort => '並べ替え';
 
   @override
   String get payment => '支払い';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => '完了した債務';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => '完了した債務なし';
 
   @override
-  String get lent => 'Lent';
+  String get lent => '貸出';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => '借入';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => '削除';
 
   @override
-  String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+  String get deleteDebtConfirm => 'この記録を削除しますか？この操作は元に戻せません。';
 
   @override
   String get paymentHistory => '支払い履歴';
@@ -847,5 +846,94 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noPaymentsYet => '支払いはまだありません';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => '表示名';
+
+  @override
+  String get customDateRange => 'カスタム期間';
+
+  @override
+  String get startDate => '開始日';
+
+  @override
+  String get endDate => '終了日';
+
+  @override
+  String get selectDateRange => '期間を選択';
+
+  @override
+  String get transactionSummary => '取引概要';
+
+  @override
+  String get topSpendingCategory => '最大支出';
+
+  @override
+  String get leastSpendingCategory => '最小支出';
+
+  @override
+  String get averageTransaction => '平均取引';
+
+  @override
+  String get weekdaySpending => '平日の支出';
+
+  @override
+  String get weekendSpending => '週末の支出';
+
+  @override
+  String get vsLastMonth => 'vs 先月';
+
+  @override
+  String get thisWeek => '今週';
+
+  @override
+  String get lastWeek => '先週';
+
+  @override
+  String get last3Months => '過去3ヶ月';
+
+  @override
+  String get last6Months => '過去6ヶ月';
+
+  @override
+  String get viewAllCategories => '全カテゴリを見る';
+
+  @override
+  String get viewTrendDetails => 'トレンド詳細';
+
+  @override
+  String get budgetTips => '予算のヒント';
+
+  @override
+  String get savingsGoal => '貯蓄目標';
+
+  @override
+  String get potentialSavings => '節約可能額';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'トレンド詳細';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => '支出データなし';
+
+  @override
+  String get spendingPatterns => '支出パターン';
+
+  @override
+  String get apply => '適用';
+
+  @override
+  String get reset => 'リセット';
 }

@@ -816,32 +816,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get budgets => 'Budgets';
 
   @override
-  String get history => 'History';
+  String get history => 'السجل';
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'ترتيب';
 
   @override
   String get payment => 'دفعة';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => 'الديون المكتملة';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => 'لا توجد ديون مكتملة';
 
   @override
-  String get lent => 'Lent';
+  String get lent => 'أقرضت';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => 'استلفت';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => 'حذف';
 
   @override
   String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+      'هل تريد حذف هذا السجل؟ لا يمكن التراجع عن هذا الإجراء.';
 
   @override
   String get paymentHistory => 'سجل الدفعات';
@@ -850,5 +850,94 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noPaymentsYet => 'لا توجد دفعات بعد';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => 'اسم العرض';
+
+  @override
+  String get customDateRange => 'نطاق مخصص';
+
+  @override
+  String get startDate => 'تاريخ البداية';
+
+  @override
+  String get endDate => 'تاريخ النهاية';
+
+  @override
+  String get selectDateRange => 'اختر نطاق التاريخ';
+
+  @override
+  String get transactionSummary => 'ملخص المعاملات';
+
+  @override
+  String get topSpendingCategory => 'أعلى إنفاق';
+
+  @override
+  String get leastSpendingCategory => 'أقل إنفاق';
+
+  @override
+  String get averageTransaction => 'متوسط المعاملة';
+
+  @override
+  String get weekdaySpending => 'إنفاق أيام الأسبوع';
+
+  @override
+  String get weekendSpending => 'إنفاق نهاية الأسبوع';
+
+  @override
+  String get vsLastMonth => 'مقابل الشهر الماضي';
+
+  @override
+  String get thisWeek => 'هذا الأسبوع';
+
+  @override
+  String get lastWeek => 'الأسبوع الماضي';
+
+  @override
+  String get last3Months => 'آخر 3 أشهر';
+
+  @override
+  String get last6Months => 'آخر 6 أشهر';
+
+  @override
+  String get viewAllCategories => 'عرض جميع الفئات';
+
+  @override
+  String get viewTrendDetails => 'عرض تفاصيل الاتجاه';
+
+  @override
+  String get budgetTips => 'نصائح الميزانية';
+
+  @override
+  String get savingsGoal => 'هدف التوفير';
+
+  @override
+  String get potentialSavings => 'التوفير المحتمل';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'تفاصيل الاتجاه';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => 'لا توجد بيانات مصروفات';
+
+  @override
+  String get spendingPatterns => 'أنماط الإنفاق';
+
+  @override
+  String get apply => 'تطبيق';
+
+  @override
+  String get reset => 'إعادة تعيين';
 }

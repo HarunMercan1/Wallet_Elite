@@ -823,32 +823,32 @@ class AppLocalizationsId extends AppLocalizations {
   String get budgets => 'Budgets';
 
   @override
-  String get history => 'History';
+  String get history => 'Riwayat';
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'Urutkan';
 
   @override
   String get payment => 'Pembayaran';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => 'Hutang Selesai';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => 'Tidak ada hutang selesai';
 
   @override
-  String get lent => 'Lent';
+  String get lent => 'Dipinjamkan';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => 'Dipinjam';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => 'Hapus';
 
   @override
   String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+      'Apakah Anda yakin ingin menghapus catatan ini? Tindakan ini tidak dapat dibatalkan.';
 
   @override
   String get paymentHistory => 'Riwayat Pembayaran';
@@ -857,5 +857,94 @@ class AppLocalizationsId extends AppLocalizations {
   String get noPaymentsYet => 'Belum ada pembayaran';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => 'Nama Tampilan';
+
+  @override
+  String get customDateRange => 'Rentang Kustom';
+
+  @override
+  String get startDate => 'Tanggal Mulai';
+
+  @override
+  String get endDate => 'Tanggal Selesai';
+
+  @override
+  String get selectDateRange => 'Pilih Rentang';
+
+  @override
+  String get transactionSummary => 'Ringkasan Transaksi';
+
+  @override
+  String get topSpendingCategory => 'Pengeluaran Tertinggi';
+
+  @override
+  String get leastSpendingCategory => 'Pengeluaran Terendah';
+
+  @override
+  String get averageTransaction => 'Rata-rata Transaksi';
+
+  @override
+  String get weekdaySpending => 'Pengeluaran Hari Kerja';
+
+  @override
+  String get weekendSpending => 'Pengeluaran Akhir Pekan';
+
+  @override
+  String get vsLastMonth => 'vs Bulan Lalu';
+
+  @override
+  String get thisWeek => 'Minggu Ini';
+
+  @override
+  String get lastWeek => 'Minggu Lalu';
+
+  @override
+  String get last3Months => '3 Bulan Terakhir';
+
+  @override
+  String get last6Months => '6 Bulan Terakhir';
+
+  @override
+  String get viewAllCategories => 'Lihat Semua Kategori';
+
+  @override
+  String get viewTrendDetails => 'Lihat Detail Tren';
+
+  @override
+  String get budgetTips => 'Tips Anggaran';
+
+  @override
+  String get savingsGoal => 'Target Tabungan';
+
+  @override
+  String get potentialSavings => 'Potensi Penghematan';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'Detail Tren';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => 'Tidak ada data pengeluaran';
+
+  @override
+  String get spendingPatterns => 'Pola Pengeluaran';
+
+  @override
+  String get apply => 'Terapkan';
+
+  @override
+  String get reset => 'Reset';
 }

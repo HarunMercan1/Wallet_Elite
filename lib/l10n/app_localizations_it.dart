@@ -824,32 +824,32 @@ class AppLocalizationsIt extends AppLocalizations {
   String get budgets => 'Budget';
 
   @override
-  String get history => 'History';
+  String get history => 'Cronologia';
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'Ordina';
 
   @override
   String get payment => 'Pagamento';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => 'Debiti completati';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => 'Nessun debito completato';
 
   @override
-  String get lent => 'Lent';
+  String get lent => 'Prestato';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => 'Preso in prestito';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => 'Elimina';
 
   @override
   String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+      'Vuoi eliminare questo record? Questa azione non può essere annullata.';
 
   @override
   String get paymentHistory => 'Cronologia pagamenti';
@@ -858,5 +858,94 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noPaymentsYet => 'Nessun pagamento ancora';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => 'Nome visualizzato';
+
+  @override
+  String get customDateRange => 'Intervallo personalizzato';
+
+  @override
+  String get startDate => 'Data inizio';
+
+  @override
+  String get endDate => 'Data fine';
+
+  @override
+  String get selectDateRange => 'Seleziona intervallo';
+
+  @override
+  String get transactionSummary => 'Riepilogo transazioni';
+
+  @override
+  String get topSpendingCategory => 'Spesa maggiore';
+
+  @override
+  String get leastSpendingCategory => 'Spesa minore';
+
+  @override
+  String get averageTransaction => 'Transaz. media';
+
+  @override
+  String get weekdaySpending => 'Spese giorni feriali';
+
+  @override
+  String get weekendSpending => 'Spese fine settimana';
+
+  @override
+  String get vsLastMonth => 'vs Mese scorso';
+
+  @override
+  String get thisWeek => 'Questa settimana';
+
+  @override
+  String get lastWeek => 'Settimana scorsa';
+
+  @override
+  String get last3Months => 'Ultimi 3 mesi';
+
+  @override
+  String get last6Months => 'Ultimi 6 mesi';
+
+  @override
+  String get viewAllCategories => 'Vedi tutte le categorie';
+
+  @override
+  String get viewTrendDetails => 'Vedi dettagli trend';
+
+  @override
+  String get budgetTips => 'Consigli budget';
+
+  @override
+  String get savingsGoal => 'Obiettivo risparmio';
+
+  @override
+  String get potentialSavings => 'Risparmio potenziale';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'Dettagli trend';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => 'Nessun dato spese';
+
+  @override
+  String get spendingPatterns => 'Modelli di spesa';
+
+  @override
+  String get apply => 'Applica';
+
+  @override
+  String get reset => 'Reimposta';
 }

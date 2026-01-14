@@ -10,6 +10,9 @@ import '../../wallet/models/transaction_model.dart';
 import '../../wallet/models/category_model.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../debts/presentation/debts_view.dart';
+import 'category_analysis_view.dart';
+import 'trend_detail_view.dart';
+import 'date_range_picker_view.dart';
 
 class StatisticsView extends ConsumerStatefulWidget {
   const StatisticsView({super.key});
@@ -20,6 +23,9 @@ class StatisticsView extends ConsumerStatefulWidget {
 
 class _StatisticsViewState extends ConsumerState<StatisticsView> {
   String _selectedPeriod = 'thisMonth';
+  DateTime? _customStartDate;
+  DateTime? _customEndDate;
+  String? _customPeriodLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -151,55 +157,81 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
 
                   const SizedBox(height: 20),
 
-                  // Quick Stats Row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickStatCard(
-                          l.averageDailySpending,
-                          '₺${NumberFormat('#,##0.00', 'tr_TR').format(avgDailySpending)}',
-                          Icons.calendar_today,
-                          AppColors.primary,
-                          isDark,
+                  // Quick Stats Row 1: Daily spending & Transaction Summary
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: _buildQuickStatCard(
+                            l.averageDailySpending,
+                            '₺${NumberFormat('#,##0.00', 'tr_TR').format(avgDailySpending)}',
+                            Icons.calendar_today,
+                            colorTheme.primary,
+                            isDark,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickStatCard(
-                          l.totalTransactions,
-                          '${incomeCount + expenseCount}',
-                          Icons.receipt_long,
-                          AppColors.accent,
-                          isDark,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildTransactionSummaryCard(
+                            incomeCount + expenseCount,
+                            incomeCount,
+                            expenseCount,
+                            l,
+                            isDark,
+                            colorTheme,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 12),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickStatCard(
-                          l.incomeCount,
-                          '$incomeCount',
-                          Icons.arrow_downward,
-                          AppColors.success,
-                          isDark,
+                  // Quick Stats Row 2: Top Category & Financial Score
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: _buildTopCategoryCard(
+                            sortedCategories.isNotEmpty
+                                ? categoryMap[sortedCategories.first.key]
+                                : null,
+                            sortedCategories.isNotEmpty
+                                ? sortedCategories.first.value
+                                : 0,
+                            totalExpense,
+                            l,
+                            isDark,
+                            colorTheme,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CategoryAnalysisView(
+                                    transactions: filteredTx,
+                                    periodLabel: _getPeriodLabel(
+                                      _selectedPeriod,
+                                      l,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildQuickStatCard(
-                          l.expenseCount,
-                          '$expenseCount',
-                          Icons.arrow_upward,
-                          AppColors.error,
-                          isDark,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildFinancialScoreCard(
+                            savingsRate,
+                            l,
+                            isDark,
+                            colorTheme,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 24),
@@ -269,16 +301,68 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   ],
 
                   // Weekly Spending Trend
-                  Text(
-                    l.spendingTrend,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l.spendingTrend,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : AppColors.textPrimary,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TrendDetailView(
+                                transactions: filteredTx,
+                                periodLabel: _getPeriodLabel(
+                                  _selectedPeriod,
+                                  l,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              l.viewDetails,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: colorTheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12,
+                              color: colorTheme.primary,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
-                  _buildWeeklyTrend(filteredTx, l, isDark),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TrendDetailView(
+                            transactions: filteredTx,
+                            periodLabel: _getPeriodLabel(_selectedPeriod, l),
+                          ),
+                        ),
+                      );
+                    },
+                    child: _buildWeeklyTrend(filteredTx, l, isDark),
+                  ),
 
                   const SizedBox(height: 100),
                 ],
@@ -294,7 +378,34 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
 
   Widget _buildPeriodSelector(AppLocalizations l, bool isDark) {
     return PopupMenuButton<String>(
-      onSelected: (value) => setState(() => _selectedPeriod = value),
+      onSelected: (value) async {
+        if (value == 'customRange') {
+          final result = await Navigator.push<DateRangeResult>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DateRangePickerView(
+                initialStartDate: _customStartDate,
+                initialEndDate: _customEndDate,
+              ),
+            ),
+          );
+          if (result != null) {
+            setState(() {
+              _selectedPeriod = 'customRange';
+              _customStartDate = result.startDate;
+              _customEndDate = result.endDate;
+              _customPeriodLabel = result.label;
+            });
+          }
+        } else {
+          setState(() {
+            _selectedPeriod = value;
+            _customStartDate = null;
+            _customEndDate = null;
+            _customPeriodLabel = null;
+          });
+        }
+      },
       offset: const Offset(0, 40),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: isDark ? AppColors.surfaceDark : Colors.white,
@@ -313,7 +424,9 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             Icon(Icons.calendar_month, size: 16, color: AppColors.primary),
             const SizedBox(width: 6),
             Text(
-              _getPeriodLabel(_selectedPeriod, l),
+              _selectedPeriod == 'customRange'
+                  ? (_customPeriodLabel ?? l.customDateRange)
+                  : _getPeriodLabel(_selectedPeriod, l),
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -335,6 +448,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         _buildMenuItem('last30Days', l.last30Days, isDark),
         _buildMenuItem('thisYear', l.thisYear, isDark),
         _buildMenuItem('allTime', l.allTime, isDark),
+        const PopupMenuDivider(),
+        _buildMenuItem('customRange', l.customDateRange, isDark),
       ],
     );
   }
@@ -564,6 +679,258 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: isDark ? Colors.white : AppColors.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionSummaryCard(
+    int total,
+    int incomeCount,
+    int expenseCount,
+    AppLocalizations l,
+    bool isDark,
+    dynamic colorTheme,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: colorTheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.receipt_long,
+              color: colorTheme.primary,
+              size: 18,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l.transactionSummary,
+            style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '$total',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Icon(Icons.arrow_downward, color: AppColors.success, size: 12),
+              Text(
+                '$incomeCount',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.success,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(Icons.arrow_upward, color: AppColors.error, size: 12),
+              Text(
+                '$expenseCount',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopCategoryCard(
+    CategoryModel? category,
+    double amount,
+    double totalExpense,
+    AppLocalizations l,
+    bool isDark,
+    dynamic colorTheme, {
+    VoidCallback? onTap,
+  }) {
+    final percent = totalExpense > 0 ? (amount / totalExpense * 100) : 0.0;
+    final categoryName = _getCategoryName(category, l) ?? l.noExpenseData;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.surfaceDark : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    _getCategoryIcon(category?.icon),
+                    color: AppColors.error,
+                    size: 18,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: Colors.grey[400],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              l.topSpendingCategory,
+              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              categoryName,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : AppColors.textPrimary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (amount > 0) ...[
+              const SizedBox(height: 2),
+              Text(
+                '${percent.toStringAsFixed(0)}%',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFinancialScoreCard(
+    double savingsRate,
+    AppLocalizations l,
+    bool isDark,
+    dynamic colorTheme,
+  ) {
+    // Calculate score (0-100) based on savings rate
+    final score = (savingsRate.clamp(-50, 100) + 50) / 1.5;
+    String scoreLabel;
+    Color scoreColor;
+
+    if (score >= 80) {
+      scoreLabel = l.excellent;
+      scoreColor = AppColors.success;
+    } else if (score >= 60) {
+      scoreLabel = l.good;
+      scoreColor = Colors.teal;
+    } else if (score >= 40) {
+      scoreLabel = l.average;
+      scoreColor = Colors.orange;
+    } else if (score >= 20) {
+      scoreLabel = l.needsImprovement;
+      scoreColor = Colors.deepOrange;
+    } else {
+      scoreLabel = l.poor;
+      scoreColor = AppColors.error;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: scoreColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(Icons.speed, color: scoreColor, size: 18),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l.financialScore,
+            style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${score.toInt()}',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: scoreColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              scoreLabel,
+              style: TextStyle(
+                fontSize: 10,
+                color: scoreColor,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -962,6 +1329,21 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         return txList.where((tx) => tx.date.isAfter(startDate)).toList();
       case 'thisYear':
         return txList.where((tx) => tx.date.year == now.year).toList();
+      case 'customRange':
+        if (_customStartDate != null && _customEndDate != null) {
+          return txList
+              .where(
+                (tx) =>
+                    tx.date.isAfter(
+                      _customStartDate!.subtract(const Duration(days: 1)),
+                    ) &&
+                    tx.date.isBefore(
+                      _customEndDate!.add(const Duration(days: 1)),
+                    ),
+              )
+              .toList();
+        }
+        return txList;
       case 'allTime':
       default:
         return txList;

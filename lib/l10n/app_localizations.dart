@@ -1775,6 +1775,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Display Name'**
   String get displayName;
+
+  /// No description provided for @customDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Range'**
+  String get customDateRange;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// No description provided for @selectDateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date Range'**
+  String get selectDateRange;
+
+  /// No description provided for @transactionSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Summary'**
+  String get transactionSummary;
+
+  /// No description provided for @topSpendingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Spending'**
+  String get topSpendingCategory;
+
+  /// No description provided for @leastSpendingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Least Spending'**
+  String get leastSpendingCategory;
+
+  /// No description provided for @averageTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Transaction'**
+  String get averageTransaction;
+
+  /// No description provided for @weekdaySpending.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekday Spending'**
+  String get weekdaySpending;
+
+  /// No description provided for @weekendSpending.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekend Spending'**
+  String get weekendSpending;
+
+  /// No description provided for @vsLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'vs Last Month'**
+  String get vsLastMonth;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @lastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Week'**
+  String get lastWeek;
+
+  /// No description provided for @last3Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3Months;
+
+  /// No description provided for @last6Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 6 Months'**
+  String get last6Months;
+
+  /// No description provided for @viewAllCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'View All Categories'**
+  String get viewAllCategories;
+
+  /// No description provided for @viewTrendDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Trend Details'**
+  String get viewTrendDetails;
+
+  /// No description provided for @budgetTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Tips'**
+  String get budgetTips;
+
+  /// No description provided for @savingsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Goal'**
+  String get savingsGoal;
+
+  /// No description provided for @potentialSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'Potential Savings'**
+  String get potentialSavings;
+
+  /// No description provided for @ifYouReduce.
+  ///
+  /// In en, this message translates to:
+  /// **'If you reduce {category} by {percent}%, you could save {amount} monthly'**
+  String ifYouReduce(String category, int percent, String amount);
+
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get allCategories;
+
+  /// No description provided for @categoryDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Details'**
+  String get categoryDetails;
+
+  /// No description provided for @trendDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Trend Details'**
+  String get trendDetails;
+
+  /// No description provided for @periodComparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Period Comparison'**
+  String get periodComparison;
+
+  /// No description provided for @noExpenseData.
+  ///
+  /// In en, this message translates to:
+  /// **'No expense data'**
+  String get noExpenseData;
+
+  /// No description provided for @spendingPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending Patterns'**
+  String get spendingPatterns;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
 }
 
 class _AppLocalizationsDelegate

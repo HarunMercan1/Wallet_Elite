@@ -303,5 +303,47 @@
     "noPaymentsYet": "Henüz ödeme yok",
     "payment": "Ödeme",
     "sort": "Sıralama",
-    "displayName": "Görünen İsim"
+    "displayName": "Görünen İsim",
+    "customDateRange": "Özel Aralık",
+    "startDate": "Başlangıç Tarihi",
+    "endDate": "Bitiş Tarihi",
+    "selectDateRange": "Tarih Aralığı Seç",
+    "transactionSummary": "İşlem Özeti",
+    "topSpendingCategory": "En Çok Harcama",
+    "leastSpendingCategory": "En Az Harcama",
+    "averageTransaction": "Ort. İşlem",
+    "weekdaySpending": "Hafta İçi Harcama",
+    "weekendSpending": "Hafta Sonu Harcama",
+    "vsLastMonth": "Geçen Aya Göre",
+    "thisWeek": "Bu Hafta",
+    "lastWeek": "Geçen Hafta",
+    "last3Months": "Son 3 Ay",
+    "last6Months": "Son 6 Ay",
+    "viewAllCategories": "Tüm Kategorileri Gör",
+    "viewTrendDetails": "Trend Detayları",
+    "budgetTips": "Bütçe Önerileri",
+    "savingsGoal": "Tasarruf Hedefi",
+    "potentialSavings": "Potansiyel Tasarruf",
+    "ifYouReduce": "{category} kategorisinde %{percent} azaltırsan ayda {amount} tasarruf edersin",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Tüm Kategoriler",
+    "categoryDetails": "Kategori Detayları",
+    "trendDetails": "Trend Detayları",
+    "periodComparison": "Dönem Karşılaştırma",
+    "noExpenseData": "Gider verisi yok",
+    "spendingPatterns": "Harcama Kalıpları",
+    "apply": "Uygula",
+    "reset": "Sıfırla"
 }

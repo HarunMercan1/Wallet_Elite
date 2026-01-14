@@ -317,5 +317,47 @@
     "deleteDebtConfirm": "Are you sure you want to delete this record? This action cannot be undone.",
     "paymentHistory": "Payment History",
     "noPaymentsYet": "No payments yet",
-    "displayName": "Display Name"
+    "displayName": "Display Name",
+    "customDateRange": "Custom Range",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "selectDateRange": "Select Date Range",
+    "transactionSummary": "Transaction Summary",
+    "topSpendingCategory": "Top Spending",
+    "leastSpendingCategory": "Least Spending",
+    "averageTransaction": "Avg. Transaction",
+    "weekdaySpending": "Weekday Spending",
+    "weekendSpending": "Weekend Spending",
+    "vsLastMonth": "vs Last Month",
+    "thisWeek": "This Week",
+    "lastWeek": "Last Week",
+    "last3Months": "Last 3 Months",
+    "last6Months": "Last 6 Months",
+    "viewAllCategories": "View All Categories",
+    "viewTrendDetails": "View Trend Details",
+    "budgetTips": "Budget Tips",
+    "savingsGoal": "Savings Goal",
+    "potentialSavings": "Potential Savings",
+    "ifYouReduce": "If you reduce {category} by {percent}%, you could save {amount} monthly",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "All Categories",
+    "categoryDetails": "Category Details",
+    "trendDetails": "Trend Details",
+    "periodComparison": "Period Comparison",
+    "noExpenseData": "No expense data",
+    "spendingPatterns": "Spending Patterns",
+    "apply": "Apply",
+    "reset": "Reset"
 }

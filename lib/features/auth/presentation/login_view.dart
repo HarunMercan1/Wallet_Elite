@@ -137,11 +137,34 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                              ),
                               decoration: InputDecoration(
                                 labelText: l.fullName,
-                                prefixIcon: const Icon(Icons.person_outlined),
+                                labelStyle: TextStyle(color: Colors.grey[700]),
+                                prefixIcon: Icon(
+                                  Icons.person_outlined,
+                                  color: AppColors.primary,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey[400]!,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey[400]!,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.primary,
+                                    width: 2,
+                                  ),
                                 ),
                               ),
                               validator: (value) {
@@ -162,11 +185,34 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                            ),
                             decoration: InputDecoration(
                               labelText: l.email,
-                              prefixIcon: const Icon(Icons.email_outlined),
+                              labelStyle: TextStyle(color: Colors.grey[700]),
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: AppColors.primary,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[400]!,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[400]!,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                  width: 2,
+                                ),
                               ),
                             ),
                             validator: (value) {
@@ -186,14 +232,22 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                            ),
                             decoration: InputDecoration(
                               labelText: l.password,
-                              prefixIcon: const Icon(Icons.lock_outlined),
+                              labelStyle: TextStyle(color: Colors.grey[700]),
+                              prefixIcon: Icon(
+                                Icons.lock_outlined,
+                                color: AppColors.primary,
+                              ),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
+                                  color: Colors.grey[600],
                                 ),
                                 onPressed: () {
                                   setState(
@@ -203,6 +257,22 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[400]!,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[400]!,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                  width: 2,
+                                ),
                               ),
                             ),
                             validator: (value) {
@@ -239,6 +309,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
+                                disabledBackgroundColor: AppColors.primary
+                                    .withOpacity(0.7),
+                                disabledForegroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -306,18 +379,22 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   },
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 14),
+                              foregroundColor: AppColors.textPrimary,
+                              side: BorderSide(color: Colors.grey[400]!),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            icon: const FaIcon(
+                            icon: FaIcon(
                               FontAwesomeIcons.google,
                               size: 20,
+                              color: Colors.red[600],
                             ),
                             label: Text(
                               l.continueWithGoogle,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
                               ),
                             ),
                           ),

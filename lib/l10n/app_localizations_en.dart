@@ -858,4 +858,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get displayName => 'Display Name';
+
+  @override
+  String get customDateRange => 'Custom Range';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get selectDateRange => 'Select Date Range';
+
+  @override
+  String get transactionSummary => 'Transaction Summary';
+
+  @override
+  String get topSpendingCategory => 'Top Spending';
+
+  @override
+  String get leastSpendingCategory => 'Least Spending';
+
+  @override
+  String get averageTransaction => 'Avg. Transaction';
+
+  @override
+  String get weekdaySpending => 'Weekday Spending';
+
+  @override
+  String get weekendSpending => 'Weekend Spending';
+
+  @override
+  String get vsLastMonth => 'vs Last Month';
+
+  @override
+  String get thisWeek => 'This Week';
+
+  @override
+  String get lastWeek => 'Last Week';
+
+  @override
+  String get last3Months => 'Last 3 Months';
+
+  @override
+  String get last6Months => 'Last 6 Months';
+
+  @override
+  String get viewAllCategories => 'View All Categories';
+
+  @override
+  String get viewTrendDetails => 'View Trend Details';
+
+  @override
+  String get budgetTips => 'Budget Tips';
+
+  @override
+  String get savingsGoal => 'Savings Goal';
+
+  @override
+  String get potentialSavings => 'Potential Savings';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'Trend Details';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => 'No expense data';
+
+  @override
+  String get spendingPatterns => 'Spending Patterns';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get reset => 'Reset';
 }

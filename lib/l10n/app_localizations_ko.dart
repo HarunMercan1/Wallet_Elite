@@ -813,32 +813,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get budgets => 'Budgets';
 
   @override
-  String get history => 'History';
+  String get history => '기록';
 
   @override
-  String get sort => 'Sort';
+  String get sort => '정렬';
 
   @override
   String get payment => '결제';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => '완료된 채무';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => '완료된 채무 없음';
 
   @override
-  String get lent => 'Lent';
+  String get lent => '빌려줌';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => '빌림';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => '삭제';
 
   @override
-  String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+  String get deleteDebtConfirm => '이 기록을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.';
 
   @override
   String get paymentHistory => '결제 내역';
@@ -847,5 +846,94 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noPaymentsYet => '아직 결제 없음';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => '표시 이름';
+
+  @override
+  String get customDateRange => '사용자 지정 기간';
+
+  @override
+  String get startDate => '시작 날짜';
+
+  @override
+  String get endDate => '종료 날짜';
+
+  @override
+  String get selectDateRange => '기간 선택';
+
+  @override
+  String get transactionSummary => '거래 요약';
+
+  @override
+  String get topSpendingCategory => '최대 지출';
+
+  @override
+  String get leastSpendingCategory => '최소 지출';
+
+  @override
+  String get averageTransaction => '평균 거래';
+
+  @override
+  String get weekdaySpending => '평일 지출';
+
+  @override
+  String get weekendSpending => '주말 지출';
+
+  @override
+  String get vsLastMonth => 'vs 지난달';
+
+  @override
+  String get thisWeek => '이번 주';
+
+  @override
+  String get lastWeek => '지난 주';
+
+  @override
+  String get last3Months => '최근 3개월';
+
+  @override
+  String get last6Months => '최근 6개월';
+
+  @override
+  String get viewAllCategories => '모든 카테고리 보기';
+
+  @override
+  String get viewTrendDetails => '추세 상세 보기';
+
+  @override
+  String get budgetTips => '예산 팁';
+
+  @override
+  String get savingsGoal => '저축 목표';
+
+  @override
+  String get potentialSavings => '잠재 절약';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => '추세 상세';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => '지출 데이터 없음';
+
+  @override
+  String get spendingPatterns => '지출 패턴';
+
+  @override
+  String get apply => '적용';
+
+  @override
+  String get reset => '초기화';
 }

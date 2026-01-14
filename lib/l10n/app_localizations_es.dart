@@ -824,32 +824,32 @@ class AppLocalizationsEs extends AppLocalizations {
   String get budgets => 'Presupuestos';
 
   @override
-  String get history => 'History';
+  String get history => 'Historial';
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'Ordenar';
 
   @override
   String get payment => 'Pago';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => 'Deudas completadas';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => 'Sin deudas completadas';
 
   @override
-  String get lent => 'Lent';
+  String get lent => 'Prestado';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => 'Adeudado';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => 'Eliminar';
 
   @override
   String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+      '¿Desea eliminar este registro? Esta acción no se puede deshacer.';
 
   @override
   String get paymentHistory => 'Historial de pagos';
@@ -858,5 +858,94 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noPaymentsYet => 'Aún no hay pagos';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => 'Nombre visible';
+
+  @override
+  String get customDateRange => 'Rango personalizado';
+
+  @override
+  String get startDate => 'Fecha de inicio';
+
+  @override
+  String get endDate => 'Fecha de fin';
+
+  @override
+  String get selectDateRange => 'Seleccionar rango';
+
+  @override
+  String get transactionSummary => 'Resumen de transacciones';
+
+  @override
+  String get topSpendingCategory => 'Mayor gasto';
+
+  @override
+  String get leastSpendingCategory => 'Menor gasto';
+
+  @override
+  String get averageTransaction => 'Transacción promedio';
+
+  @override
+  String get weekdaySpending => 'Gasto entre semana';
+
+  @override
+  String get weekendSpending => 'Gasto fin de semana';
+
+  @override
+  String get vsLastMonth => 'vs Mes pasado';
+
+  @override
+  String get thisWeek => 'Esta semana';
+
+  @override
+  String get lastWeek => 'Semana pasada';
+
+  @override
+  String get last3Months => 'Últimos 3 meses';
+
+  @override
+  String get last6Months => 'Últimos 6 meses';
+
+  @override
+  String get viewAllCategories => 'Ver todas las categorías';
+
+  @override
+  String get viewTrendDetails => 'Ver detalles de tendencia';
+
+  @override
+  String get budgetTips => 'Consejos de presupuesto';
+
+  @override
+  String get savingsGoal => 'Meta de ahorro';
+
+  @override
+  String get potentialSavings => 'Ahorro potencial';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'Detalles de tendencia';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => 'Sin datos de gastos';
+
+  @override
+  String get spendingPatterns => 'Patrones de gasto';
+
+  @override
+  String get apply => 'Aplicar';
+
+  @override
+  String get reset => 'Restablecer';
 }

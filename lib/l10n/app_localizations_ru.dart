@@ -818,32 +818,32 @@ class AppLocalizationsRu extends AppLocalizations {
   String get budgets => 'Бюджеты';
 
   @override
-  String get history => 'History';
+  String get history => 'История';
 
   @override
-  String get sort => 'Sort';
+  String get sort => 'Сортировка';
 
   @override
   String get payment => 'Платеж';
 
   @override
-  String get completedDebts => 'Completed Debts';
+  String get completedDebts => 'Закрытые долги';
 
   @override
-  String get noCompletedDebts => 'No completed debt records';
+  String get noCompletedDebts => 'Нет закрытых долгов';
 
   @override
-  String get lent => 'Lent';
+  String get lent => 'Одолжено';
 
   @override
-  String get borrowed => 'Borrowed';
+  String get borrowed => 'Взято в долг';
 
   @override
-  String get deleteDebt => 'Delete Record';
+  String get deleteDebt => 'Удалить';
 
   @override
   String get deleteDebtConfirm =>
-      'Are you sure you want to delete this record? This action cannot be undone.';
+      'Удалить эту запись? Это действие необратимо.';
 
   @override
   String get paymentHistory => 'История платежей';
@@ -852,5 +852,94 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noPaymentsYet => 'Платежей пока нет';
 
   @override
-  String get displayName => 'Display Name';
+  String get displayName => 'Отображаемое имя';
+
+  @override
+  String get customDateRange => 'Свой период';
+
+  @override
+  String get startDate => 'Дата начала';
+
+  @override
+  String get endDate => 'Дата окончания';
+
+  @override
+  String get selectDateRange => 'Выбрать период';
+
+  @override
+  String get transactionSummary => 'Сводка транзакций';
+
+  @override
+  String get topSpendingCategory => 'Макс. расход';
+
+  @override
+  String get leastSpendingCategory => 'Мин. расход';
+
+  @override
+  String get averageTransaction => 'Средняя транзакция';
+
+  @override
+  String get weekdaySpending => 'Расходы в будни';
+
+  @override
+  String get weekendSpending => 'Расходы в выходные';
+
+  @override
+  String get vsLastMonth => 'vs Прошлый месяц';
+
+  @override
+  String get thisWeek => 'Эта неделя';
+
+  @override
+  String get lastWeek => 'Прошлая неделя';
+
+  @override
+  String get last3Months => 'Последние 3 месяца';
+
+  @override
+  String get last6Months => 'Последние 6 месяцев';
+
+  @override
+  String get viewAllCategories => 'Все категории';
+
+  @override
+  String get viewTrendDetails => 'Подробности тренда';
+
+  @override
+  String get budgetTips => 'Советы по бюджету';
+
+  @override
+  String get savingsGoal => 'Цель сбережений';
+
+  @override
+  String get potentialSavings => 'Потенциальная экономия';
+
+  @override
+  String ifYouReduce(String category, int percent, String amount) {
+    return 'If you reduce $category by $percent%, you could save $amount monthly';
+  }
+
+  @override
+  String get allCategories => 'All Categories';
+
+  @override
+  String get categoryDetails => 'Category Details';
+
+  @override
+  String get trendDetails => 'Детали тренда';
+
+  @override
+  String get periodComparison => 'Period Comparison';
+
+  @override
+  String get noExpenseData => 'Нет данных о расходах';
+
+  @override
+  String get spendingPatterns => 'Модели расходов';
+
+  @override
+  String get apply => 'Применить';
+
+  @override
+  String get reset => 'Сбросить';
 }
