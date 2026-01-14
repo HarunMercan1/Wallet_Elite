@@ -47,7 +47,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
 
   @override
   Widget build(BuildContext context) {
-    final transactionsAsync = ref.watch(transactionsProvider);
+    final transactionsAsync = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesProvider);
 
     final l = AppLocalizations.of(context)!;

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
+import '../../wallet/models/account_model.dart';
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -916,38 +918,155 @@ class SettingsView extends ConsumerWidget {
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final account = list[index];
-                      return ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
+                      return Dismissible(
+                        key: Key(account.id),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          margin: const EdgeInsets.symmetric(vertical: 4),
                           decoration: BoxDecoration(
-                            color: _getWalletColor(
-                              account.type,
-                            ).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            color: AppColors.error,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
-                            _getWalletIcon(account.type),
-                            color: _getWalletColor(account.type),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        confirmDismiss: (direction) async {
+                          return await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  backgroundColor: isDark
+                                      ? AppColors.surfaceDark
+                                      : Colors.white,
+                                  title: Text(
+                                    l.deleteWallet,
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    l.deleteWalletConfirm,
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.grey[300]
+                                          : Colors.grey[700],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(ctx, false),
+                                      child: Text(l.cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(ctx, true),
+                                      child: Text(
+                                        l.delete,
+                                        style: const TextStyle(
+                                          color: AppColors.error,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ) ??
+                              false;
+                        },
+                        onDismissed: (direction) async {
+                          await ref
+                              .read(walletControllerProvider)
+                              .deleteAccount(account.id);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(l.walletDeleted)),
+                            );
+                          }
+                        },
+                        child: GestureDetector(
+                          onTap: () => _showEditWalletDialog(
+                            context,
+                            ref,
+                            account,
+                            l,
+                            isDark,
                           ),
-                        ),
-                        title: Text(
-                          account.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        subtitle: Text(
-                          _getWalletTypeName(account.type, l),
-                          style: TextStyle(color: Colors.grey[500]),
-                        ),
-                        trailing: Text(
-                          '₺${account.balance.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? AppColors.accent
-                                : AppColors.primary,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.surfaceDark
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isDark
+                                    ? Colors.white10
+                                    : Colors.grey[200]!,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: _getWalletColor(
+                                      account.type,
+                                    ).withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    _getWalletIcon(account.type),
+                                    color: _getWalletColor(account.type),
+                                    size: 22,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        account.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        _getWalletTypeName(account.type, l),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[500],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  '₺${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: isDark
+                                        ? AppColors.accent
+                                        : AppColors.primary,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.edit_outlined,
+                                  size: 18,
+                                  color: Colors.grey[400],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -1114,6 +1233,73 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
+  void _showEditWalletDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AccountModel account,
+    AppLocalizations l,
+    bool isDark,
+  ) {
+    final nameController = TextEditingController(text: account.name);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        title: Text(
+          l.editWallet,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
+        content: TextField(
+          controller: nameController,
+          autofocus: true,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+          decoration: InputDecoration(
+            labelText: l.walletName,
+            labelStyle: TextStyle(
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+            border: const OutlineInputBorder(),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (nameController.text.trim().isEmpty) return;
+              Navigator.pop(dialogContext);
+
+              final success = await ref
+                  .read(walletControllerProvider)
+                  .updateAccountName(account.id, nameController.text.trim());
+
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success ? l.walletUpdated : l.error),
+                    backgroundColor: success
+                        ? AppColors.success
+                        : AppColors.error,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            child: Text(l.save),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTypeChip(
     String value,
     String label,
@@ -1166,9 +1352,11 @@ class SettingsView extends ConsumerWidget {
 
   void _showSignOutDialog(BuildContext context, AppLocalizations l) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final router = GoRouter.of(context); // Capture router before dialog
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
         title: Text(
           l.signOut,
@@ -1180,16 +1368,14 @@ class SettingsView extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(l.cancel),
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               await Supabase.instance.client.auth.signOut();
-              if (context.mounted) {
-                context.go('/auth');
-              }
+              router.go('/auth'); // Use captured router
             },
             child: Text(
               l.signOut,

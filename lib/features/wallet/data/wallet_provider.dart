@@ -170,6 +170,18 @@ class WalletController {
     return success;
   }
 
+  /// Cüzdan adını güncelle
+  Future<bool> updateAccountName(String accountId, String newName) async {
+    final walletRepo = ref.read(walletRepositoryProvider);
+    final success = await walletRepo.updateAccountName(accountId, newName);
+
+    if (success) {
+      ref.invalidate(accountsProvider);
+    }
+
+    return success;
+  }
+
   /// İşlem sil
   Future<bool> deleteTransaction(String transactionId) async {
     final walletRepo = ref.read(walletRepositoryProvider);

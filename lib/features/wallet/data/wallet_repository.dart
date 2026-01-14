@@ -70,13 +70,31 @@ class WalletRepository {
     }
   }
 
-  /// Cüzdan sil
+  /// Cüzdan sil (ilişkili işlemleri de siler)
   Future<bool> deleteAccount(String accountId) async {
     try {
+      // Önce bu cüzdana ait tüm işlemleri sil
+      await _supabase.from('transactions').delete().eq('account_id', accountId);
+
+      // Sonra cüzdanı sil
       await _supabase.from('accounts').delete().eq('id', accountId);
       return true;
     } catch (e) {
       print('Cüzdan silme hatası: $e');
+      return false;
+    }
+  }
+
+  /// Cüzdan adını güncelle
+  Future<bool> updateAccountName(String accountId, String newName) async {
+    try {
+      await _supabase
+          .from('accounts')
+          .update({'name': newName})
+          .eq('id', accountId);
+      return true;
+    } catch (e) {
+      print('Cüzdan güncelleme hatası: $e');
       return false;
     }
   }

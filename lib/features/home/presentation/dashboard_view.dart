@@ -14,6 +14,7 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
 import '../../debts/presentation/debts_view.dart';
 import '../../auth/presentation/profile_edit_sheet.dart';
+import '../../wallet/presentation/wallet_selection_sheet.dart';
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
@@ -22,7 +23,8 @@ class DashboardView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userProfile = ref.watch(userProfileProvider);
     final accounts = ref.watch(accountsProvider);
-    final transactions = ref.watch(transactionsProvider);
+    final transactions = ref.watch(filteredTransactionsProvider);
+    final selectedWalletId = ref.watch(selectedWalletIdProvider);
     final categories = ref.watch(categoriesProvider);
     final locale = ref.watch(localeProvider);
     final colorTheme = ref.watch(currentColorThemeProvider);
@@ -66,7 +68,9 @@ class DashboardView extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: _buildTotalBalanceCard(
                   context,
+                  ref,
                   accounts,
+                  selectedWalletId,
                   totalIncome,
                   totalExpense,
                   l,
@@ -402,7 +406,9 @@ class DashboardView extends ConsumerWidget {
 
   Widget _buildTotalBalanceCard(
     BuildContext context,
+    WidgetRef ref,
     AsyncValue<List<AccountModel>> accounts,
+    String? selectedWalletId,
     double totalIncome,
     double totalExpense,
     AppLocalizations l,
@@ -412,8 +418,30 @@ class DashboardView extends ConsumerWidget {
     return accounts.when(
       data: (List<AccountModel> accountsList) {
         double totalBalance = 0.0;
-        for (final account in accountsList) {
-          totalBalance += account.balance;
+        String walletLabel = l.allWallets;
+
+        if (selectedWalletId == null) {
+          // Sum all wallets
+          for (final account in accountsList) {
+            totalBalance += account.balance;
+          }
+        } else {
+          // Find the selected wallet
+          final selectedAccount = accountsList.firstWhere(
+            (a) => a.id == selectedWalletId,
+            orElse: () => accountsList.isNotEmpty
+                ? accountsList.first
+                : AccountModel(
+                    id: '',
+                    userId: '',
+                    name: '',
+                    type: '',
+                    balance: 0,
+                    createdAt: DateTime.now(),
+                  ),
+          );
+          totalBalance = selectedAccount.balance;
+          walletLabel = selectedAccount.name;
         }
 
         return Container(
@@ -436,9 +464,28 @@ class DashboardView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l.totalBalance,
-                style: TextStyle(color: colorTheme.accentLight, fontSize: 13),
+              // Wallet Selector Row
+              GestureDetector(
+                onTap: () => WalletSelectionSheet.show(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      walletLabel,
+                      style: TextStyle(
+                        color: colorTheme.accentLight,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      color: colorTheme.accentLight,
+                      size: 18,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 6),
               Text(
@@ -456,7 +503,7 @@ class DashboardView extends ConsumerWidget {
                     child: _buildBalanceStat(
                       l.income,
                       '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalIncome)}',
-                      Icons.arrow_downward,
+                      Icons.arrow_upward,
                       AppColors.success,
                     ),
                   ),
@@ -465,7 +512,7 @@ class DashboardView extends ConsumerWidget {
                     child: _buildBalanceStat(
                       l.expense,
                       '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
-                      Icons.arrow_upward,
+                      Icons.arrow_downward,
                       AppColors.error,
                     ),
                   ),

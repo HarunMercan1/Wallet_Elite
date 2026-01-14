@@ -224,6 +224,22 @@ class AppLocalizationsId extends AppLocalizations {
   String get walletAdded => 'Dompet ditambahkan';
 
   @override
+  String get walletDeleted => 'Wallet deleted';
+
+  @override
+  String get editWallet => 'Edit Wallet';
+
+  @override
+  String get walletUpdated => 'Wallet updated';
+
+  @override
+  String get deleteWallet => 'Delete Wallet';
+
+  @override
+  String get deleteWalletConfirm =>
+      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+
+  @override
   String get noWallets => 'Belum ada dompet';
 
   @override

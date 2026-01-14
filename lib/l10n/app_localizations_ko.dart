@@ -223,6 +223,22 @@ class AppLocalizationsKo extends AppLocalizations {
   String get walletAdded => '지갑이 추가되었습니다';
 
   @override
+  String get walletDeleted => 'Wallet deleted';
+
+  @override
+  String get editWallet => 'Edit Wallet';
+
+  @override
+  String get walletUpdated => 'Wallet updated';
+
+  @override
+  String get deleteWallet => 'Delete Wallet';
+
+  @override
+  String get deleteWalletConfirm =>
+      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+
+  @override
   String get noWallets => '지갑 없음';
 
   @override

@@ -224,6 +224,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get walletAdded => 'Cüzdan eklendi';
 
   @override
+  String get walletDeleted => 'Cüzdan silindi';
+
+  @override
+  String get editWallet => 'Cüzdanı Düzenle';
+
+  @override
+  String get walletUpdated => 'Cüzdan güncellendi';
+
+  @override
+  String get deleteWallet => 'Cüzdanı Sil';
+
+  @override
+  String get deleteWalletConfirm =>
+      'Bu cüzdanı silmek istediğinize emin misiniz? Bu cüzdandaki tüm işlemler de kalıcı olarak silinecektir.';
+
+  @override
   String get noWallets => 'Henüz cüzdan yok';
 
   @override

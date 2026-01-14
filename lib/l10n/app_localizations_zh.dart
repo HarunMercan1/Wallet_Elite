@@ -223,6 +223,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get walletAdded => '钱包已添加';
 
   @override
+  String get walletDeleted => 'Wallet deleted';
+
+  @override
+  String get editWallet => 'Edit Wallet';
+
+  @override
+  String get walletUpdated => 'Wallet updated';
+
+  @override
+  String get deleteWallet => 'Delete Wallet';
+
+  @override
+  String get deleteWalletConfirm =>
+      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+
+  @override
   String get noWallets => '暂无钱包';
 
   @override

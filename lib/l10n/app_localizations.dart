@@ -540,6 +540,36 @@ abstract class AppLocalizations {
   /// **'Wallet added'**
   String get walletAdded;
 
+  /// No description provided for @walletDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet deleted'**
+  String get walletDeleted;
+
+  /// No description provided for @editWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Wallet'**
+  String get editWallet;
+
+  /// No description provided for @walletUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet updated'**
+  String get walletUpdated;
+
+  /// No description provided for @deleteWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Wallet'**
+  String get deleteWallet;
+
+  /// No description provided for @deleteWalletConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.'**
+  String get deleteWalletConfirm;
+
   /// No description provided for @noWallets.
   ///
   /// In en, this message translates to:

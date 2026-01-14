@@ -29,7 +29,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
 
   @override
   Widget build(BuildContext context) {
-    final transactions = ref.watch(transactionsProvider);
+    final transactions = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesProvider);
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -111,34 +111,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                           color: isDark ? Colors.white : AppColors.textPrimary,
                         ),
                       ),
-                      Row(
-                        children: [
-                          // Borç takibi butonu
-                          Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              color: colorTheme.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.people,
-                                color: colorTheme.primary,
-                              ),
-                              tooltip: l.debtTracking,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const DebtsView(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          _buildPeriodSelector(l, isDark),
-                        ],
-                      ),
+                      _buildPeriodSelector(l, isDark),
                     ],
                   ),
 
