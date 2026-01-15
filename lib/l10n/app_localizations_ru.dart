@@ -9,7 +9,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => 'Кошелёк Элит';
 
   @override
   String get cancel => 'Отмена';
@@ -18,7 +18,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get save => 'Сохранить';
 
   @override
-  String get saved => 'Saved';
+  String get saved => 'Сохранено';
 
   @override
   String get delete => 'Удалить';
@@ -223,20 +223,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get walletAdded => 'Кошелек добавлен';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => 'Кошелек удален';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => 'Редактировать кошелек';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => 'Кошелек обновлен';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => 'Удалить кошелек';
 
   @override
   String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+      'Вы уверены? Все транзакции будут удалены навсегда.';
 
   @override
   String get noWallets => 'Нет кошельков';
@@ -932,20 +932,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return 'Если сократить $category на $percent%, вы сможете экономить $amount ежемесячно';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => 'Все категории';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => 'Детали категории';
 
   @override
   String get trendDetails => 'Детали тренда';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => 'Сравнение периодов';
 
   @override
   String get noExpenseData => 'Нет данных о расходах';

@@ -9,7 +9,7 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => 'Cartera Elite';
 
   @override
   String get cancel => 'Cancelar';
@@ -18,7 +18,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save => 'Guardar';
 
   @override
-  String get saved => 'Saved';
+  String get saved => 'Guardado';
 
   @override
   String get delete => 'Eliminar';
@@ -223,20 +223,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get walletAdded => 'Billetera agregada';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => 'Billetera eliminada';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => 'Editar Billetera';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => 'Billetera actualizada';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => 'Eliminar Billetera';
 
   @override
   String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+      '¿Está seguro? Todas las transacciones se eliminarán permanentemente.';
 
   @override
   String get noWallets => 'Sin billeteras';
@@ -938,20 +938,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return 'Si reduces $category en $percent%, podrías ahorrar $amount mensualmente';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => 'Todas las Categorías';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => 'Detalles de Categoría';
 
   @override
   String get trendDetails => 'Detalles de tendencia';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => 'Comparación de Períodos';
 
   @override
   String get noExpenseData => 'Sin datos de gastos';

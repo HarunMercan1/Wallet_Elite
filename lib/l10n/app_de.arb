@@ -1,8 +1,9 @@
 {
     "@@locale": "de",
-    "appName": "Wallet Elite",
+    "appName": "Geldbörse Elite",
     "cancel": "Abbrechen",
     "save": "Speichern",
+    "saved": "Gespeichert",
     "delete": "Löschen",
     "edit": "Bearbeiten",
     "add": "Hinzufügen",
@@ -69,6 +70,11 @@
     "creditCard": "Kreditkarte",
     "savings": "Ersparnisse",
     "walletAdded": "Geldbörse hinzugefügt",
+    "walletDeleted": "Geldbörse gelöscht",
+    "editWallet": "Geldbörse bearbeiten",
+    "walletUpdated": "Geldbörse aktualisiert",
+    "deleteWallet": "Geldbörse löschen",
+    "deleteWalletConfirm": "Sind Sie sicher? Alle Transaktionen werden dauerhaft gelöscht.",
     "noWallets": "Keine Geldbörsen",
     "manageWallets": "Geldbörsen verwalten",
     "categoryNotFound": "Kategorie nicht gefunden",
@@ -315,6 +321,23 @@
     "budgetTips": "Budget-Tipps",
     "savingsGoal": "Sparziel",
     "potentialSavings": "Mögliche Einsparungen",
+    "ifYouReduce": "Wenn Sie {category} um {percent}% reduzieren, könnten Sie monatlich {amount} sparen",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Alle Kategorien",
+    "categoryDetails": "Kategoriedetails",
+    "periodComparison": "Periodenvergleich",
     "noExpenseData": "Keine Ausgabedaten",
     "spendingPatterns": "Ausgabenmuster",
     "trendDetails": "Trenddetails",

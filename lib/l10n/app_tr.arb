@@ -1,6 +1,6 @@
 {
     "@@locale": "tr",
-    "appName": "Wallet Elite",
+    "appName": "Cüzdan Elite",
     "cancel": "İptal",
     "save": "Kaydet",
     "saved": "Kaydedildi",
@@ -59,7 +59,21 @@
     "noCategories": "Henüz kategori yok",
     "longPressToFavorite": "Uzun basarak favorilere ekle/çıkar",
     "addedToFavorites": "{name} favorilere eklendi",
+    "@addedToFavorites": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "removedFromFavorites": "{name} favorilerden çıkarıldı",
+    "@removedFromFavorites": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
     "wallets": "Cüzdanlar",
     "addWallet": "Cüzdan Ekle",
     "walletName": "Cüzdan Adı",

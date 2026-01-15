@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => 'المحفظة إيليت';
 
   @override
   String get cancel => 'إلغاء';
@@ -18,7 +18,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get save => 'حفظ';
 
   @override
-  String get saved => 'Saved';
+  String get saved => 'تم الحفظ';
 
   @override
   String get delete => 'حذف';
@@ -223,20 +223,20 @@ class AppLocalizationsAr extends AppLocalizations {
   String get walletAdded => 'تمت إضافة المحفظة';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => 'تم حذف المحفظة';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => 'تعديل المحفظة';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => 'تم تحديث المحفظة';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => 'حذف المحفظة';
 
   @override
   String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+      'هل أنت متأكد من حذف هذه المحفظة؟ سيتم حذف جميع المعاملات بشكل دائم.';
 
   @override
   String get noWallets => 'لا توجد محافظ';
@@ -930,20 +930,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return 'إذا قللت $category بنسبة $percent%، يمكنك توفير $amount شهرياً';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => 'جميع الفئات';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => 'تفاصيل الفئة';
 
   @override
   String get trendDetails => 'تفاصيل الاتجاه';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => 'مقارنة الفترات';
 
   @override
   String get noExpenseData => 'لا توجد بيانات مصروفات';

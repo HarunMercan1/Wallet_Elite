@@ -1,8 +1,9 @@
 {
     "@@locale": "ko",
-    "appName": "Wallet Elite",
+    "appName": "지갑 엘리트",
     "cancel": "취소",
     "save": "저장",
+    "saved": "저장됨",
     "delete": "삭제",
     "edit": "편집",
     "add": "추가",
@@ -83,6 +84,11 @@
     "creditCard": "신용카드",
     "savings": "저축",
     "walletAdded": "지갑이 추가되었습니다",
+    "walletDeleted": "지갑이 삭제되었습니다",
+    "editWallet": "지갑 편집",
+    "walletUpdated": "지갑이 업데이트되었습니다",
+    "deleteWallet": "지갑 삭제",
+    "deleteWalletConfirm": "정말 삭제하시겠습니까? 모든 거래가 영구적으로 삭제됩니다.",
     "noWallets": "지갑 없음",
     "manageWallets": "지갑 관리",
     "categoryNotFound": "카테고리를 찾을 수 없음",
@@ -329,6 +335,23 @@
     "budgetTips": "예산 팁",
     "savingsGoal": "저축 목표",
     "potentialSavings": "잠재 절약",
+    "ifYouReduce": "{category}을(를) {percent}% 줄이면 매월 {amount}를 절약할 수 있습니다",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "모든 카테고리",
+    "categoryDetails": "카테고리 세부 정보",
+    "periodComparison": "기간 비교",
     "noExpenseData": "지출 데이터 없음",
     "spendingPatterns": "지출 패턴",
     "trendDetails": "추세 상세",

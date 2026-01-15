@@ -1,8 +1,9 @@
 {
     "@@locale": "es",
-    "appName": "Wallet Elite",
+    "appName": "Cartera Elite",
     "cancel": "Cancelar",
     "save": "Guardar",
+    "saved": "Guardado",
     "delete": "Eliminar",
     "edit": "Editar",
     "add": "Agregar",
@@ -69,6 +70,11 @@
     "creditCard": "Tarjeta de Crédito",
     "savings": "Ahorros",
     "walletAdded": "Billetera agregada",
+    "walletDeleted": "Billetera eliminada",
+    "editWallet": "Editar Billetera",
+    "walletUpdated": "Billetera actualizada",
+    "deleteWallet": "Eliminar Billetera",
+    "deleteWalletConfirm": "¿Está seguro? Todas las transacciones se eliminarán permanentemente.",
     "noWallets": "Sin billeteras",
     "manageWallets": "Administrar Billeteras",
     "categoryNotFound": "Categoría no encontrada",
@@ -315,6 +321,23 @@
     "budgetTips": "Consejos de presupuesto",
     "savingsGoal": "Meta de ahorro",
     "potentialSavings": "Ahorro potencial",
+    "ifYouReduce": "Si reduces {category} en {percent}%, podrías ahorrar {amount} mensualmente",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Todas las Categorías",
+    "categoryDetails": "Detalles de Categoría",
+    "periodComparison": "Comparación de Períodos",
     "noExpenseData": "Sin datos de gastos",
     "spendingPatterns": "Patrones de gasto",
     "trendDetails": "Detalles de tendencia",

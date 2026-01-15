@@ -1,6 +1,6 @@
 {
     "@@locale": "it",
-    "appName": "Wallet Elite",
+    "appName": "Portafoglio Elite",
     "cancel": "Annulla",
     "save": "Salva",
     "delete": "Elimina",
@@ -9,6 +9,7 @@
     "ok": "OK",
     "error": "Errore",
     "success": "Successo",
+    "saved": "Salvato",
     "loading": "Caricamento...",
     "search": "Cerca...",
     "all": "Tutti",
@@ -83,6 +84,11 @@
     "creditCard": "Carta di Credito",
     "savings": "Risparmi",
     "walletAdded": "Portafoglio aggiunto",
+    "walletDeleted": "Portafoglio eliminato",
+    "editWallet": "Modifica Portafoglio",
+    "walletUpdated": "Portafoglio aggiornato",
+    "deleteWallet": "Elimina Portafoglio",
+    "deleteWalletConfirm": "Sei sicuro? Tutte le transazioni verranno eliminate definitivamente.",
     "noWallets": "Nessun portafoglio",
     "manageWallets": "Gestisci Portafogli",
     "categoryNotFound": "Nessuna categoria trovata",
@@ -329,6 +335,23 @@
     "budgetTips": "Consigli budget",
     "savingsGoal": "Obiettivo risparmio",
     "potentialSavings": "Risparmio potenziale",
+    "ifYouReduce": "Se riduci {category} del {percent}%, potresti risparmiare {amount} al mese",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Tutte le Categorie",
+    "categoryDetails": "Dettagli Categoria",
+    "periodComparison": "Confronto Periodi",
     "noExpenseData": "Nessun dato spese",
     "spendingPatterns": "Modelli di spesa",
     "trendDetails": "Dettagli trend",

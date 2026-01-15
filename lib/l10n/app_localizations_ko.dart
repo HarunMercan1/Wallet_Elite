@@ -9,7 +9,7 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => '지갑 엘리트';
 
   @override
   String get cancel => '취소';
@@ -18,7 +18,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get save => '저장';
 
   @override
-  String get saved => 'Saved';
+  String get saved => '저장됨';
 
   @override
   String get delete => '삭제';
@@ -223,20 +223,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get walletAdded => '지갑이 추가되었습니다';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => '지갑이 삭제되었습니다';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => '지갑 편집';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => '지갑이 업데이트되었습니다';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => '지갑 삭제';
 
   @override
-  String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+  String get deleteWalletConfirm => '정말 삭제하시겠습니까? 모든 거래가 영구적으로 삭제됩니다.';
 
   @override
   String get noWallets => '지갑 없음';
@@ -926,20 +925,20 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return '$category을(를) $percent% 줄이면 매월 $amount를 절약할 수 있습니다';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => '모든 카테고리';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => '카테고리 세부 정보';
 
   @override
   String get trendDetails => '추세 상세';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => '기간 비교';
 
   @override
   String get noExpenseData => '지출 데이터 없음';

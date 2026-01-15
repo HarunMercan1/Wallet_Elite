@@ -1,8 +1,9 @@
 {
     "@@locale": "ja",
-    "appName": "Wallet Elite",
+    "appName": "ウォレット エリート",
     "cancel": "キャンセル",
     "save": "保存",
+    "saved": "保存しました",
     "delete": "削除",
     "edit": "編集",
     "add": "追加",
@@ -69,6 +70,11 @@
     "creditCard": "クレジットカード",
     "savings": "貯蓄",
     "walletAdded": "ウォレットを追加しました",
+    "walletDeleted": "ウォレットを削除しました",
+    "editWallet": "ウォレットを編集",
+    "walletUpdated": "ウォレットを更新しました",
+    "deleteWallet": "ウォレットを削除",
+    "deleteWalletConfirm": "本当に削除しますか？すべての取引が完全に削除されます。",
     "noWallets": "ウォレットがありません",
     "manageWallets": "ウォレットを管理",
     "categoryNotFound": "カテゴリが見つかりません",
@@ -315,6 +321,23 @@
     "budgetTips": "予算のヒント",
     "savingsGoal": "貯蓄目標",
     "potentialSavings": "節約可能額",
+    "ifYouReduce": "{category}を{percent}%削減すれば、毎月{amount}節約できます",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "すべてのカテゴリ",
+    "categoryDetails": "カテゴリ詳細",
+    "periodComparison": "期間比較",
     "noExpenseData": "支出データなし",
     "spendingPatterns": "支出パターン",
     "trendDetails": "トレンド詳細",

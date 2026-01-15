@@ -1,8 +1,9 @@
 {
     "@@locale": "zh",
-    "appName": "Wallet Elite",
+    "appName": "钱包精英",
     "cancel": "取消",
     "save": "保存",
+    "saved": "已保存",
     "delete": "删除",
     "edit": "编辑",
     "add": "添加",
@@ -69,6 +70,11 @@
     "creditCard": "信用卡",
     "savings": "储蓄",
     "walletAdded": "钱包已添加",
+    "walletDeleted": "钱包已删除",
+    "editWallet": "编辑钱包",
+    "walletUpdated": "钱包已更新",
+    "deleteWallet": "删除钱包",
+    "deleteWalletConfirm": "确定要删除吗？所有交易将被永久删除。",
     "noWallets": "暂无钱包",
     "manageWallets": "管理钱包",
     "categoryNotFound": "未找到分类",
@@ -315,6 +321,23 @@
     "budgetTips": "预算建议",
     "savingsGoal": "储蓄目标",
     "potentialSavings": "潜在节省",
+    "ifYouReduce": "如果减少{category}{percent}%，您每月可节省{amount}",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "所有分类",
+    "categoryDetails": "分类详情",
+    "periodComparison": "期间对比",
     "noExpenseData": "无支出数据",
     "spendingPatterns": "消费模式",
     "trendDetails": "趋势详情",

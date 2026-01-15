@@ -1,6 +1,6 @@
 {
     "@@locale": "id",
-    "appName": "Wallet Elite",
+    "appName": "Dompet Elite",
     "cancel": "Batal",
     "save": "Simpan",
     "delete": "Hapus",
@@ -9,6 +9,7 @@
     "ok": "OK",
     "error": "Error",
     "success": "Berhasil",
+    "saved": "Tersimpan",
     "loading": "Memuat...",
     "search": "Cari...",
     "all": "Semua",
@@ -83,6 +84,11 @@
     "creditCard": "Kartu Kredit",
     "savings": "Tabungan",
     "walletAdded": "Dompet ditambahkan",
+    "walletDeleted": "Dompet dihapus",
+    "editWallet": "Edit Dompet",
+    "walletUpdated": "Dompet diperbarui",
+    "deleteWallet": "Hapus Dompet",
+    "deleteWalletConfirm": "Yakin ingin menghapus dompet ini? Semua transaksi akan dihapus secara permanen.",
     "noWallets": "Belum ada dompet",
     "manageWallets": "Kelola Dompet",
     "categoryNotFound": "Kategori tidak ditemukan",
@@ -329,6 +335,23 @@
     "budgetTips": "Tips Anggaran",
     "savingsGoal": "Target Tabungan",
     "potentialSavings": "Potensi Penghematan",
+    "ifYouReduce": "Jika Anda mengurangi {category} sebesar {percent}%, Anda bisa menghemat {amount} per bulan",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Semua Kategori",
+    "categoryDetails": "Detail Kategori",
+    "periodComparison": "Perbandingan Periode",
     "noExpenseData": "Tidak ada data pengeluaran",
     "spendingPatterns": "Pola Pengeluaran",
     "trendDetails": "Detail Tren",

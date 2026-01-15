@@ -9,7 +9,7 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => 'Dompet Elite';
 
   @override
   String get cancel => 'Batal';
@@ -18,7 +18,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get save => 'Simpan';
 
   @override
-  String get saved => 'Saved';
+  String get saved => 'Tersimpan';
 
   @override
   String get delete => 'Hapus';
@@ -224,20 +224,20 @@ class AppLocalizationsId extends AppLocalizations {
   String get walletAdded => 'Dompet ditambahkan';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => 'Dompet dihapus';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => 'Edit Dompet';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => 'Dompet diperbarui';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => 'Hapus Dompet';
 
   @override
   String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+      'Yakin ingin menghapus dompet ini? Semua transaksi akan dihapus secara permanen.';
 
   @override
   String get noWallets => 'Belum ada dompet';
@@ -937,20 +937,20 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return 'Jika Anda mengurangi $category sebesar $percent%, Anda bisa menghemat $amount per bulan';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => 'Semua Kategori';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => 'Detail Kategori';
 
   @override
   String get trendDetails => 'Detail Tren';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => 'Perbandingan Periode';
 
   @override
   String get noExpenseData => 'Tidak ada data pengeluaran';

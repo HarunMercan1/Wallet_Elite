@@ -1,8 +1,9 @@
 {
     "@@locale": "ar",
-    "appName": "Wallet Elite",
+    "appName": "المحفظة إيليت",
     "cancel": "إلغاء",
     "save": "حفظ",
+    "saved": "تم الحفظ",
     "delete": "حذف",
     "edit": "تعديل",
     "add": "إضافة",
@@ -69,6 +70,11 @@
     "creditCard": "بطاقة ائتمان",
     "savings": "ادخار",
     "walletAdded": "تمت إضافة المحفظة",
+    "walletDeleted": "تم حذف المحفظة",
+    "editWallet": "تعديل المحفظة",
+    "walletUpdated": "تم تحديث المحفظة",
+    "deleteWallet": "حذف المحفظة",
+    "deleteWalletConfirm": "هل أنت متأكد من حذف هذه المحفظة؟ سيتم حذف جميع المعاملات بشكل دائم.",
     "noWallets": "لا توجد محافظ",
     "manageWallets": "إدارة المحافظ",
     "categoryNotFound": "لم يتم العثور على فئة",
@@ -315,6 +321,23 @@
     "budgetTips": "نصائح الميزانية",
     "savingsGoal": "هدف التوفير",
     "potentialSavings": "التوفير المحتمل",
+    "ifYouReduce": "إذا قللت {category} بنسبة {percent}%، يمكنك توفير {amount} شهرياً",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "جميع الفئات",
+    "categoryDetails": "تفاصيل الفئة",
+    "periodComparison": "مقارنة الفترات",
     "noExpenseData": "لا توجد بيانات مصروفات",
     "spendingPatterns": "أنماط الإنفاق",
     "trendDetails": "تفاصيل الاتجاه",

@@ -1,8 +1,9 @@
 {
     "@@locale": "pt",
-    "appName": "Wallet Elite",
+    "appName": "Carteira Elite",
     "cancel": "Cancelar",
     "save": "Salvar",
+    "saved": "Salvo",
     "delete": "Excluir",
     "edit": "Editar",
     "add": "Adicionar",
@@ -69,6 +70,11 @@
     "creditCard": "Cartão de Crédito",
     "savings": "Poupança",
     "walletAdded": "Carteira adicionada",
+    "walletDeleted": "Carteira excluída",
+    "editWallet": "Editar Carteira",
+    "walletUpdated": "Carteira atualizada",
+    "deleteWallet": "Excluir Carteira",
+    "deleteWalletConfirm": "Tem certeza? Todas as transações serão excluídas permanentemente.",
     "noWallets": "Nenhuma carteira",
     "manageWallets": "Gerenciar Carteiras",
     "categoryNotFound": "Categoria não encontrada",
@@ -315,6 +321,23 @@
     "budgetTips": "Dicas de orçamento",
     "savingsGoal": "Meta de economia",
     "potentialSavings": "Economia potencial",
+    "ifYouReduce": "Se você reduzir {category} em {percent}%, poderá economizar {amount} mensalmente",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Todas as Categorias",
+    "categoryDetails": "Detalhes da Categoria",
+    "periodComparison": "Comparação de Períodos",
     "noExpenseData": "Sem dados de despesas",
     "spendingPatterns": "Padrões de gastos",
     "trendDetails": "Detalhes da tendência",

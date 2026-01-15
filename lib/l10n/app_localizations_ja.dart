@@ -9,7 +9,7 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => 'ウォレット エリート';
 
   @override
   String get cancel => 'キャンセル';
@@ -18,7 +18,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get save => '保存';
 
   @override
-  String get saved => 'Saved';
+  String get saved => '保存しました';
 
   @override
   String get delete => '削除';
@@ -223,20 +223,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get walletAdded => 'ウォレットを追加しました';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => 'ウォレットを削除しました';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => 'ウォレットを編集';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => 'ウォレットを更新しました';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => 'ウォレットを削除';
 
   @override
-  String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+  String get deleteWalletConfirm => '本当に削除しますか？すべての取引が完全に削除されます。';
 
   @override
   String get noWallets => 'ウォレットがありません';
@@ -926,20 +925,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return '$categoryを$percent%削減すれば、毎月$amount節約できます';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => 'すべてのカテゴリ';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => 'カテゴリ詳細';
 
   @override
   String get trendDetails => 'トレンド詳細';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => '期間比較';
 
   @override
   String get noExpenseData => '支出データなし';

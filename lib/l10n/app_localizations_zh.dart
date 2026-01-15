@@ -9,7 +9,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appName => 'Wallet Elite';
+  String get appName => '钱包精英';
 
   @override
   String get cancel => '取消';
@@ -18,7 +18,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save => '保存';
 
   @override
-  String get saved => 'Saved';
+  String get saved => '已保存';
 
   @override
   String get delete => '删除';
@@ -223,20 +223,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get walletAdded => '钱包已添加';
 
   @override
-  String get walletDeleted => 'Wallet deleted';
+  String get walletDeleted => '钱包已删除';
 
   @override
-  String get editWallet => 'Edit Wallet';
+  String get editWallet => '编辑钱包';
 
   @override
-  String get walletUpdated => 'Wallet updated';
+  String get walletUpdated => '钱包已更新';
 
   @override
-  String get deleteWallet => 'Delete Wallet';
+  String get deleteWallet => '删除钱包';
 
   @override
-  String get deleteWalletConfirm =>
-      'Are you sure you want to delete this wallet? All transactions in this wallet will also be permanently deleted.';
+  String get deleteWalletConfirm => '确定要删除吗？所有交易将被永久删除。';
 
   @override
   String get noWallets => '暂无钱包';
@@ -926,20 +925,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String ifYouReduce(String category, int percent, String amount) {
-    return 'If you reduce $category by $percent%, you could save $amount monthly';
+    return '如果减少$category$percent%，您每月可节省$amount';
   }
 
   @override
-  String get allCategories => 'All Categories';
+  String get allCategories => '所有分类';
 
   @override
-  String get categoryDetails => 'Category Details';
+  String get categoryDetails => '分类详情';
 
   @override
   String get trendDetails => '趋势详情';
 
   @override
-  String get periodComparison => 'Period Comparison';
+  String get periodComparison => '期间对比';
 
   @override
   String get noExpenseData => '无支出数据';

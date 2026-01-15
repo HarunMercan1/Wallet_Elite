@@ -1,8 +1,9 @@
 {
     "@@locale": "ru",
-    "appName": "Wallet Elite",
+    "appName": "Кошелёк Элит",
     "cancel": "Отмена",
     "save": "Сохранить",
+    "saved": "Сохранено",
     "delete": "Удалить",
     "edit": "Изменить",
     "add": "Добавить",
@@ -69,6 +70,11 @@
     "creditCard": "Кредитная карта",
     "savings": "Сбережения",
     "walletAdded": "Кошелек добавлен",
+    "walletDeleted": "Кошелек удален",
+    "editWallet": "Редактировать кошелек",
+    "walletUpdated": "Кошелек обновлен",
+    "deleteWallet": "Удалить кошелек",
+    "deleteWalletConfirm": "Вы уверены? Все транзакции будут удалены навсегда.",
     "noWallets": "Нет кошельков",
     "manageWallets": "Управление кошельками",
     "categoryNotFound": "Категория не найдена",
@@ -315,6 +321,23 @@
     "budgetTips": "Советы по бюджету",
     "savingsGoal": "Цель сбережений",
     "potentialSavings": "Потенциальная экономия",
+    "ifYouReduce": "Если сократить {category} на {percent}%, вы сможете экономить {amount} ежемесячно",
+    "@ifYouReduce": {
+        "placeholders": {
+            "category": {
+                "type": "String"
+            },
+            "percent": {
+                "type": "int"
+            },
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "allCategories": "Все категории",
+    "categoryDetails": "Детали категории",
+    "periodComparison": "Сравнение периодов",
     "noExpenseData": "Нет данных о расходах",
     "spendingPatterns": "Модели расходов",
     "trendDetails": "Детали тренда",
