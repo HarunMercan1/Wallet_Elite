@@ -23,11 +23,13 @@ class DebtsView extends ConsumerWidget {
     final filterType = ref.watch(debtFilterTypeProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       appBar: AppBar(
         title: Text(l.debtTracking),
         backgroundColor: Colors.transparent,
-        foregroundColor: isDark ? Colors.white : AppColors.textPrimary,
+        foregroundColor: isDark ? Colors.white : Colors.black87,
         elevation: 0,
         actions: [
           // Yeni kayıt ekle butonu
@@ -300,7 +302,7 @@ class DebtsView extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : AppColors.surface,
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -438,7 +440,7 @@ class DebtsView extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : AppColors.surface,
+          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: BorderRadius.circular(16),
           border: isOverdue
               ? Border.all(color: Colors.red.shade300, width: 2)
@@ -482,7 +484,7 @@ class DebtsView extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.textPrimary,
+                          color: isDark ? Colors.white : Colors.black87,
                           decoration: debt.isCompleted
                               ? TextDecoration.lineThrough
                               : null,
@@ -681,7 +683,7 @@ class DebtsView extends ConsumerWidget {
       builder: (ctx) => Container(
         height: MediaQuery.of(context).size.height * 0.75,
         decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
+          color: isDark ? colorTheme.backgroundDark : Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -769,7 +771,7 @@ class DebtsView extends ConsumerWidget {
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? AppColors.surfaceDark
+                                  ? colorTheme.surfaceDark
                                   : Colors.grey[50],
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(

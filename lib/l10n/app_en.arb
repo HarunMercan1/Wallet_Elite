@@ -15,6 +15,9 @@
     "all": "All",
     "today": "Today",
     "yesterday": "Yesterday",
+    "@yesterday": {
+        "description": "Label for the day before today"
+    },
     "notFound": "not found",
     "home": "Home",
     "transactions": "Transactions",

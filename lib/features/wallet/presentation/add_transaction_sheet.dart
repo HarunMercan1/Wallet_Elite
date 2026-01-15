@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../l10n/app_localizations.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
 import '../data/wallet_provider.dart';
 import '../models/category_model.dart';
@@ -171,11 +172,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final r = ResponsiveHelper.of(context);
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Container(
       height: r.hp(92),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.backgroundDark : Colors.white,
+        color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(r.radiusXL),
           topRight: Radius.circular(r.radiusXL),
@@ -294,6 +296,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildTabBar() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l = AppLocalizations.of(context)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 12, 20, 4),
@@ -306,14 +309,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         indicator: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: _transactionType == 'expense'
-              ? AppColors.error.withOpacity(0.9)
-              : AppColors.success.withOpacity(0.9),
+              ? colorTheme.error.withOpacity(0.9)
+              : colorTheme.success.withOpacity(0.9),
           boxShadow: [
             BoxShadow(
               color:
                   (_transactionType == 'expense'
-                          ? AppColors.error
-                          : AppColors.success)
+                          ? colorTheme.error
+                          : colorTheme.success)
                       .withOpacity(0.25),
               blurRadius: 6,
               offset: const Offset(0, 2),
@@ -355,8 +358,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   // _buildAmountInput remains mostly the same, just checking if l10n is used there (it's not, just numbers)
 
   Widget _buildAmountInput() {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final isExpense = _transactionType == 'expense';
-    final color = isExpense ? AppColors.error : AppColors.success;
+    final color = isExpense ? colorTheme.error : colorTheme.success;
     final l = AppLocalizations.of(
       context,
     )!; // Added mostly for completeness if needed later
@@ -432,9 +436,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildSectionTitle(String title, IconData icon) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppColors.primary),
+        Icon(icon, size: 18, color: colorTheme.primary),
         const SizedBox(width: 6),
         Text(
           title,
@@ -452,6 +457,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     AsyncValue<List<CategoryModel>> categories,
   ) {
     final l = AppLocalizations.of(context)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return categories.when(
       data: (categoriesList) {
@@ -491,7 +497,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 ...displayCategories.map(
                   (category) => _buildCategoryChip(category),
                 ),
-                if (hasMore) _buildMoreButton(categoriesList),
+                if (hasMore) _buildMoreButton(categoriesList, colorTheme),
               ],
             ),
           ],
@@ -511,6 +517,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     final isSelected = _selectedCategoryId == category.id;
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return GestureDetector(
       onTap: () => setState(() => _selectedCategoryId = category.id),
@@ -519,19 +526,19 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary
-              : (isDark ? AppColors.surfaceDark : Colors.white),
+              ? colorTheme.primary
+              : (isDark ? colorTheme.surfaceDark : Colors.white),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary
+                ? colorTheme.primary
                 : (isDark ? Colors.white24 : Colors.grey[200]!),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.2),
+                    color: colorTheme.primary.withOpacity(0.2),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -565,7 +572,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     );
   }
 
-  Widget _buildMoreButton(List<CategoryModel> allCategories) {
+  Widget _buildMoreButton(
+    List<CategoryModel> allCategories,
+    ColorTheme colorTheme,
+  ) {
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
@@ -573,7 +583,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.grey[50],
+          color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isDark ? Colors.white24 : Colors.grey[300]!,
@@ -605,6 +615,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   void _showAllCategoriesSheet(List<CategoryModel> allCategories) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -615,7 +626,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           builder: (ctx, setSheetState) => Container(
             height: MediaQuery.of(context).size.height * 0.7,
             decoration: BoxDecoration(
-              color: isDark ? AppColors.backgroundDark : Colors.white,
+              color: isDark ? colorTheme.backgroundDark : Colors.white,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24),
                 topRight: Radius.circular(24),
@@ -640,7 +651,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     children: [
                       const Icon(
                         Icons.category_outlined,
-                        color: AppColors.primary,
+                        color: AppColors
+                            .info, // Changed from primary to avoid confusion, or keep primary
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -661,7 +673,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                         icon: const Icon(Icons.add, size: 18),
                         label: Text(l.newCategory),
                         style: TextButton.styleFrom(
-                          foregroundColor: AppColors.primary,
+                          foregroundColor: colorTheme.primary,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 6,
@@ -678,7 +690,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  color: isDark ? AppColors.surfaceDark : Colors.grey[50],
+                  color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
                   child: Row(
                     children: [
                       Icon(
@@ -727,16 +739,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                             Container(
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? AppColors.primary
+                                    ? colorTheme.primary
                                     : (isDark
-                                          ? AppColors.surfaceDark
+                                          ? colorTheme.surfaceDark
                                           : Colors.grey[100]),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: isSelected
-                                      ? AppColors.primary
+                                      ? colorTheme.primary
                                       : (isFavorite
-                                            ? AppColors.accent
+                                            ? colorTheme.accent
                                             : (isDark
                                                   ? Colors.white24
                                                   : Colors.grey[200]!)),
@@ -789,7 +801,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                 child: Icon(
                                   Icons.star,
                                   size: 12,
-                                  color: AppColors.accent,
+                                  color: colorTheme.accent,
                                 ),
                               ),
                           ],
@@ -808,6 +820,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Future<void> _toggleFavorite(CategoryModel category) async {
     final l = AppLocalizations.of(context)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     try {
       final newValue = !category.isFavorite;
       await Supabase.instance.client
@@ -828,7 +841,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   ? l.addedToFavorites(category.name)
                   : l.removedFromFavorites(category.name),
             ),
-            backgroundColor: AppColors.success,
+            backgroundColor: colorTheme.success,
             duration: const Duration(seconds: 1),
           ),
         );
@@ -844,7 +857,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   ? l.networkError
                   : l.errorWithDetails(e.toString()),
             ),
-            backgroundColor: AppColors.error,
+            backgroundColor: colorTheme.error,
           ),
         );
       }
@@ -853,6 +866,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   void _showAddCategoryDialog(BuildContext parentContext) {
     final l = AppLocalizations.of(parentContext)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final nameController = TextEditingController();
     String? selectedIcon = 'category';
 
@@ -911,12 +925,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.primary
+                            ? colorTheme.primary
                             : Colors.grey[100],
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isSelected
-                              ? AppColors.primary
+                              ? colorTheme.primary
                               : Colors.grey[200]!,
                         ),
                       ),
@@ -963,7 +977,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(l.categoryAdded),
-                          backgroundColor: AppColors.success,
+                          backgroundColor: colorTheme.success,
                         ),
                       );
                     }
@@ -980,7 +994,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                 ? l.networkError
                                 : l.errorWithDetails(e.toString()),
                           ),
-                          backgroundColor: AppColors.error,
+                          backgroundColor: colorTheme.error,
                         ),
                       );
                     }
@@ -988,7 +1002,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: colorTheme.primary,
               ),
               child: Text(l.add),
             ),
@@ -1050,6 +1064,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildDescriptionInput() {
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     return TextFormField(
       controller: _descriptionController,
       maxLines: 1,
@@ -1058,7 +1073,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         hintText: l.addNote,
         hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         filled: true,
-        fillColor: isDark ? AppColors.surfaceDark : Colors.grey[50],
+        fillColor: isDark ? colorTheme.surfaceDark : Colors.grey[50],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
@@ -1073,7 +1088,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(color: colorTheme.primary, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
@@ -1087,6 +1102,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildDateSelector() {
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     return GestureDetector(
       onTap: () async {
         final date = await showDatePicker(
@@ -1098,8 +1114,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             return Theme(
               data: Theme.of(context).copyWith(
                 colorScheme: isDark
-                    ? const ColorScheme.dark(primary: AppColors.primary)
-                    : const ColorScheme.light(primary: AppColors.primary),
+                    ? ColorScheme.dark(primary: colorTheme.primary)
+                    : ColorScheme.light(primary: colorTheme.primary),
               ),
               child: child!,
             );
@@ -1110,7 +1126,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.grey[50],
+          color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isDark ? Colors.white24 : Colors.grey[200]!,
@@ -1120,7 +1136,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           children: [
             Icon(
               Icons.calendar_today_rounded,
-              color: AppColors.primary,
+              color: colorTheme.primary,
               size: 18,
             ),
             const SizedBox(width: 10),
@@ -1152,13 +1168,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildWalletSelector(AsyncValue<List<dynamic>> accounts) {
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     return accounts.when(
       data: (accountsList) {
         if (accountsList.isEmpty) {
           return Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.surfaceDark : Colors.grey[50],
+              color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isDark ? Colors.white24 : Colors.grey[200]!,
@@ -1193,19 +1210,19 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppColors.primary
-                        : (isDark ? AppColors.surfaceDark : Colors.white),
+                        ? colorTheme.primary
+                        : (isDark ? colorTheme.surfaceDark : Colors.white),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected
-                          ? AppColors.primary
+                          ? colorTheme.primary
                           : (isDark ? Colors.white24 : Colors.grey[200]!),
                       width: isSelected ? 2 : 1,
                     ),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppColors.primary.withOpacity(0.2),
+                              color: colorTheme.primary.withOpacity(0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 3),
                             ),
@@ -1216,7 +1233,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     children: [
                       Icon(
                         _getAccountIcon(account.type),
-                        color: isSelected ? Colors.white : AppColors.primary,
+                        color: isSelected ? Colors.white : colorTheme.primary,
                         size: 20,
                       ),
                       const SizedBox(width: 10),
@@ -1261,6 +1278,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildSaveButton() {
     final l = AppLocalizations.of(context)!;
     final isExpense = _transactionType == 'expense';
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return SizedBox(
       width: double.infinity,
@@ -1268,7 +1286,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       child: ElevatedButton(
         onPressed: _isLoading ? null : _saveTransaction,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isExpense ? AppColors.error : AppColors.success,
+          backgroundColor: isExpense ? colorTheme.error : colorTheme.success,
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -1366,13 +1384,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   void _saveTransaction() async {
     final l = AppLocalizations.of(context)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     if (!_formKey.currentState!.validate()) return;
 
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l.selectWallet),
-          backgroundColor: AppColors.error,
+          backgroundColor: colorTheme.error,
         ),
       );
       return;
@@ -1412,7 +1431,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 ),
               ],
             ),
-            backgroundColor: AppColors.success,
+            backgroundColor: colorTheme.success,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -1424,7 +1443,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(l.error),
-            backgroundColor: AppColors.error,
+            backgroundColor: colorTheme.error,
             behavior: SnackBarBehavior.floating,
           ),
         );

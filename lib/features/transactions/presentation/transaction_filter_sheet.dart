@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../../core/theme/app_colors.dart';
+
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/category_model.dart';
@@ -31,12 +32,13 @@ class _TransactionFilterSheetState
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.backgroundDark : Colors.white,
+        color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -68,7 +70,7 @@ class _TransactionFilterSheetState
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 TextButton(
@@ -79,7 +81,7 @@ class _TransactionFilterSheetState
                   },
                   child: Text(
                     'Sıfırla', // TODO: Localize
-                    style: TextStyle(color: AppColors.error),
+                    style: TextStyle(color: colorTheme.error),
                   ),
                 ),
               ],
@@ -229,7 +231,7 @@ class _TransactionFilterSheetState
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.surfaceDark : Colors.white,
+              color: isDark ? colorTheme.surfaceDark : Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -245,7 +247,7 @@ class _TransactionFilterSheetState
                   Navigator.pop(context, _state);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: colorTheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -273,12 +275,13 @@ class _TransactionFilterSheetState
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
-        color: isDark ? Colors.white : AppColors.textPrimary,
+        color: isDark ? Colors.white : Colors.black,
       ),
     );
   }
 
   Widget _buildSortChip(SortOption option, String label, bool isDark) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final isSelected = _state.sortOption == option;
     return FilterChip(
       selected: isSelected,
@@ -286,24 +289,25 @@ class _TransactionFilterSheetState
       onSelected: (bool selected) {
         setState(() => _state = _state.copyWith(sortOption: option));
       },
-      backgroundColor: isDark ? AppColors.surfaceDark : Colors.grey[100],
-      selectedColor: AppColors.primary.withOpacity(0.2),
+      backgroundColor: isDark ? colorTheme.surfaceDark : Colors.grey[100],
+      selectedColor: colorTheme.primary.withOpacity(0.2),
       labelStyle: TextStyle(
         color: isSelected
-            ? AppColors.primary
+            ? colorTheme.primary
             : (isDark ? Colors.white : Colors.black),
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? AppColors.primary : Colors.transparent,
+          color: isSelected ? colorTheme.primary : Colors.transparent,
         ),
       ),
     );
   }
 
   Widget _buildTypeChip(String value, String label, bool isDark) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final isSelected = _state.type == value;
     return GestureDetector(
       onTap: () => setState(() => _state = _state.copyWith(type: value)),
@@ -312,11 +316,11 @@ class _TransactionFilterSheetState
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary
-              : (isDark ? AppColors.surfaceDark : Colors.grey[100]),
+              ? colorTheme.primary
+              : (isDark ? colorTheme.surfaceDark : Colors.grey[100]),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : Colors.transparent,
+            color: isSelected ? colorTheme.primary : Colors.transparent,
           ),
         ),
         child: Center(
@@ -341,6 +345,7 @@ class _TransactionFilterSheetState
     Function(DateTime?) onChanged,
     bool isDark,
   ) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final isSelected = date != null;
     return GestureDetector(
       onTap: () async {
@@ -355,10 +360,10 @@ class _TransactionFilterSheetState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.grey[100],
+          color: isDark ? colorTheme.surfaceDark : Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : Colors.transparent,
+            color: isSelected ? colorTheme.primary : Colors.transparent,
           ),
         ),
         child: Row(
@@ -366,7 +371,7 @@ class _TransactionFilterSheetState
             Icon(
               Icons.calendar_today,
               size: 16,
-              color: isSelected ? AppColors.primary : Colors.grey[500],
+              color: isSelected ? colorTheme.primary : Colors.grey[500],
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -376,7 +381,7 @@ class _TransactionFilterSheetState
                     : placeholder,
                 style: TextStyle(
                   color: isSelected
-                      ? (isDark ? Colors.white : AppColors.textPrimary)
+                      ? (isDark ? Colors.white : Colors.black)
                       : Colors.grey[500],
                   fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
                   fontSize: 13,
@@ -396,6 +401,7 @@ class _TransactionFilterSheetState
   }
 
   Widget _buildCategoryChip(CategoryModel category, bool isDark) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final isSelected = _state.selectedCategoryIds.contains(category.id);
     return FilterChip(
       selected: isSelected,
@@ -411,12 +417,12 @@ class _TransactionFilterSheetState
         }
         setState(() => _state = _state.copyWith(selectedCategoryIds: ids));
       },
-      backgroundColor: isDark ? AppColors.surfaceDark : Colors.grey[100],
-      selectedColor: AppColors.primary.withOpacity(0.2),
-      checkmarkColor: AppColors.primary,
+      backgroundColor: isDark ? colorTheme.surfaceDark : Colors.grey[100],
+      selectedColor: colorTheme.primary.withOpacity(0.2),
+      checkmarkColor: colorTheme.primary,
       labelStyle: TextStyle(
         color: isSelected
-            ? AppColors.primary
+            ? colorTheme.primary
             : (isDark ? Colors.white : Colors.black),
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 12,
@@ -424,7 +430,7 @@ class _TransactionFilterSheetState
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? AppColors.primary : Colors.transparent,
+          color: isSelected ? colorTheme.primary : Colors.transparent,
         ),
       ),
     );

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../core/theme/app_colors.dart';
+
 import '../../../core/theme/color_theme_provider.dart';
 
 class DateRangeResult {
@@ -53,7 +53,9 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       appBar: AppBar(
         title: Text(l.selectDateRange),
         backgroundColor: Colors.transparent,
@@ -91,7 +93,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.textPrimary,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const SizedBox(height: 16),
@@ -105,7 +107,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.textPrimary,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const SizedBox(height: 16),
@@ -156,7 +158,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
           ? Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.surfaceDark : Colors.white,
+                color: isDark ? colorTheme.surfaceDark : Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -261,7 +263,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
             decoration: BoxDecoration(
               color: isSelected
                   ? colorTheme.primary
-                  : (isDark ? AppColors.surfaceDark : Colors.white),
+                  : (isDark ? colorTheme.surfaceDark : Colors.white),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
@@ -283,7 +285,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               style: TextStyle(
                 color: isSelected
                     ? Colors.white
-                    : (isDark ? Colors.white : AppColors.textPrimary),
+                    : (isDark ? Colors.white : Colors.black87),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 13,
               ),
@@ -306,7 +308,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isDark ? colorTheme.surfaceDark : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: date != null
@@ -346,7 +348,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: date != null
-                          ? (isDark ? Colors.white : AppColors.textPrimary)
+                          ? (isDark ? Colors.white : Colors.black87)
                           : Colors.grey[400],
                     ),
                   ),
@@ -387,7 +389,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 Text(
@@ -418,7 +420,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               primary: colorTheme.primary,
               onPrimary: Colors.white,
               surface: Colors.white,
-              onSurface: AppColors.textPrimary,
+              onSurface: Colors.black87,
             ),
           ),
           child: child!,

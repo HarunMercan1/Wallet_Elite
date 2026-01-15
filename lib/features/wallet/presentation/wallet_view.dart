@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../features/auth/data/auth_provider.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/wallet_provider.dart';
 
@@ -14,6 +16,8 @@ class WalletView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final transactionState = ref.watch(transactionsProvider);
+    final colorTheme = ref.watch(currentColorThemeProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     double totalBalance = 0;
     double totalIncome = 0;
@@ -33,127 +37,148 @@ class WalletView extends ConsumerWidget {
     }
 
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(ref, l),
+      child: Container(
+        color: isDark ? colorTheme.backgroundDark : colorTheme.backgroundLight,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context, ref, l),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            _buildBalanceCard(totalBalance, totalIncome, totalExpense, l),
-
-            const SizedBox(height: 30),
-
-            Text(
-              l.categories,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              _buildBalanceCard(
+                totalBalance,
+                totalIncome,
+                totalExpense,
+                l,
+                colorTheme,
+                isDark,
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _ActionBox(
-                  icon: FontAwesomeIcons.layerGroup,
-                  label: l.category,
-                  onTap: () {},
-                ),
-                _ActionBox(
-                  icon: FontAwesomeIcons.handHoldingDollar,
-                  label: l.debtBook,
-                  onTap: () {},
-                ),
-                _ActionBox(
-                  icon: FontAwesomeIcons.buildingColumns,
-                  label: l.wallets,
-                  onTap: () {},
-                ),
-                _ActionBox(
-                  icon: FontAwesomeIcons.moneyBillTransfer,
-                  label: l.more,
-                  onTap: () {},
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 30),
+              const SizedBox(height: 30),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l.recentTransactions,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+              Text(
+                l.categories,
+                style: TextStyle(
+                  color: isDark ? Colors.white : AppColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _ActionBox(
+                    icon: FontAwesomeIcons.layerGroup,
+                    label: l.category,
+                    onTap: () {},
+                    isDark: isDark,
+                    colorTheme: colorTheme,
                   ),
-                ),
-                TextButton(
-                  onPressed: () => ref.refresh(transactionsProvider),
-                  child: Text(
-                    l.loading.replaceAll('...', ''),
-                    style: const TextStyle(color: Colors.amber),
+                  _ActionBox(
+                    icon: FontAwesomeIcons.handHoldingDollar,
+                    label: l.debtBook,
+                    onTap: () {},
+                    isDark: isDark,
+                    colorTheme: colorTheme,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
+                  _ActionBox(
+                    icon: FontAwesomeIcons.buildingColumns,
+                    label: l.wallets,
+                    onTap: () {},
+                    isDark: isDark,
+                    colorTheme: colorTheme,
+                  ),
+                  _ActionBox(
+                    icon: FontAwesomeIcons.moneyBillTransfer,
+                    label: l.more,
+                    onTap: () {},
+                    isDark: isDark,
+                    colorTheme: colorTheme,
+                  ),
+                ],
+              ),
 
-            transactionState.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: Colors.amber),
-              ),
-              error: (err, stack) => Center(
-                child: Text(
-                  '${l.error}: $err',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-              data: (transactions) {
-                if (transactions.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        '${l.noTransactions}\n${l.addFirstTransaction}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
+              const SizedBox(height: 30),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l.recentTransactions,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                }
+                  ),
+                  TextButton(
+                    onPressed: () => ref.refresh(transactionsProvider),
+                    child: Text(
+                      l.loading.replaceAll('...', ''),
+                      style: const TextStyle(color: Colors.amber),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
 
-                final recentTransactions = transactions.take(10).toList();
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: recentTransactions.length,
-                  itemBuilder: (context, index) {
-                    return _TransactionTile(
-                      transaction: recentTransactions[index],
-                      l: l,
+              transactionState.when(
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: Colors.amber),
+                ),
+                error: (err, stack) => Center(
+                  child: Text(
+                    '${l.error}: $err',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+                data: (transactions) {
+                  if (transactions.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          '${l.noTransactions}\n${l.addFirstTransaction}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ),
                     );
-                  },
-                );
-              },
-            ),
+                  }
 
-            const SizedBox(height: 80),
-          ],
+                  final recentTransactions = transactions.take(10).toList();
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: recentTransactions.length,
+                    itemBuilder: (context, index) {
+                      return _TransactionTile(
+                        transaction: recentTransactions[index],
+                        l: l,
+                        isDark: isDark,
+                        colorTheme: colorTheme,
+                      );
+                    },
+                  );
+                },
+              ),
+
+              const SizedBox(height: 80),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(WidgetRef ref, AppLocalizations l) {
+  Widget _buildHeader(BuildContext context, WidgetRef ref, AppLocalizations l) {
     final authController = ref.read(authControllerProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,10 +199,10 @@ class WalletView extends ConsumerWidget {
                 ),
                 Text(
                   l.user,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
               ],
@@ -197,23 +222,24 @@ class WalletView extends ConsumerWidget {
     double income,
     double expense,
     AppLocalizations l,
+    ColorTheme colorTheme,
+    bool isDark,
   ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1A1F38), Color(0xFF2D3760)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(
+          color: colorTheme.primary.withValues(alpha: 0.15),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -222,16 +248,19 @@ class WalletView extends ConsumerWidget {
         children: [
           Text(
             l.totalBalance,
-            style: const TextStyle(color: Colors.grey, fontSize: 14),
+            style: TextStyle(
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+              fontSize: 14,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             '₺ ${total.toStringAsFixed(2)}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 32,
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+              fontSize: 36,
               fontWeight: FontWeight.bold,
-              letterSpacing: 1,
+              letterSpacing: -1,
             ),
           ),
           const SizedBox(height: 24),
@@ -241,14 +270,18 @@ class WalletView extends ConsumerWidget {
                 icon: Icons.arrow_downward,
                 text: l.income,
                 amount: '₺ ${income.toStringAsFixed(0)}',
-                color: Colors.greenAccent,
+                color: colorTheme.success,
+                isDark: isDark,
+                colorTheme: colorTheme,
               ),
               const SizedBox(width: 20),
               _BalanceBadge(
                 icon: Icons.arrow_upward,
                 text: l.expense,
                 amount: '₺ ${expense.toStringAsFixed(0)}',
-                color: Colors.redAccent,
+                color: colorTheme.error,
+                isDark: isDark,
+                colorTheme: colorTheme,
               ),
             ],
           ),
@@ -263,20 +296,28 @@ class _BalanceBadge extends StatelessWidget {
   final String text;
   final String amount;
   final Color color;
+  final bool isDark;
+  final ColorTheme colorTheme;
+
   const _BalanceBadge({
     required this.icon,
     required this.text,
     required this.amount,
     required this.color,
+    required this.isDark,
+    required this.colorTheme,
   });
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.2),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.1)
+                : colorTheme.primary.withValues(alpha: 0.05),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: color, size: 16),
@@ -287,13 +328,17 @@ class _BalanceBadge extends StatelessWidget {
           children: [
             Text(
               text,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                fontSize: 12,
+              ),
             ),
             Text(
               amount,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isDark ? Colors.white : AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
+                fontSize: 15,
               ),
             ),
           ],
@@ -307,10 +352,15 @@ class _ActionBox extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final bool isDark;
+  final ColorTheme colorTheme;
+
   const _ActionBox({
     required this.icon,
     required this.label,
     required this.onTap,
+    required this.isDark,
+    required this.colorTheme,
   });
   @override
   Widget build(BuildContext context) {
@@ -322,11 +372,25 @@ class _ActionBox extends StatelessWidget {
             height: 60,
             width: 60,
             decoration: BoxDecoration(
-              color: const Color(0xFF1A1F38),
+              color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white10),
+              border: Border.all(
+                color: isDark ? Colors.white10 : Colors.grey[300]!,
+              ),
+              boxShadow: [
+                if (!isDark)
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+              ],
             ),
-            child: Icon(icon, color: Colors.white, size: 24),
+            child: Icon(
+              icon,
+              color: isDark ? Colors.white : colorTheme.primary,
+              size: 24,
+            ),
           ),
           const SizedBox(height: 8),
           Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
@@ -339,15 +403,31 @@ class _ActionBox extends StatelessWidget {
 class _TransactionTile extends StatelessWidget {
   final dynamic transaction;
   final AppLocalizations l;
-  const _TransactionTile({required this.transaction, required this.l});
+  final bool isDark;
+  final ColorTheme colorTheme;
+
+  const _TransactionTile({
+    required this.transaction,
+    required this.l,
+    required this.isDark,
+    required this.colorTheme,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1F38),
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          if (!isDark)
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+        ],
       ),
       child: Row(
         children: [
@@ -377,8 +457,8 @@ class _TransactionTile extends StatelessWidget {
                 Text(
                   transaction.description ??
                       (transaction.isExpense ? l.expense : l.income),
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/color_theme_provider.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomButton extends ConsumerWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
@@ -14,21 +15,38 @@ class CustomButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
+
     return SizedBox(
       width: double.infinity,
       height: 56,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary, // Tek yerden renk yönetimi
+          backgroundColor: colorTheme.primary, // Tek yerden renk yönetimi
           foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           elevation: 0,
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2.5))
-            : Text(text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  strokeWidth: 2.5,
+                ),
+              )
+            : Text(
+                text,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
       ),
     );
   }

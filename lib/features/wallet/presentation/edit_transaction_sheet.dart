@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/wallet_provider.dart';
 import '../models/transaction_model.dart';
@@ -57,6 +58,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final accounts = ref.watch(accountsProvider);
     final categories = _transactionType == 'income'
         ? ref.watch(incomeCategoriesProvider)
@@ -65,7 +68,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -111,11 +114,10 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                           height: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Icon(
-                          Icons.delete_outline,
-                          color: AppColors.error,
-                        ),
-                  onPressed: _isDeleting ? null : () => _confirmDelete(l),
+                      : Icon(Icons.delete_outline, color: colorTheme.error),
+                  onPressed: _isDeleting
+                      ? null
+                      : () => _confirmDelete(l, colorTheme),
                 ),
               ],
             ),
@@ -139,7 +141,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                       decoration: BoxDecoration(
                         color:
                             (_transactionType == 'expense'
-                                    ? AppColors.error
+                                    ? colorTheme.error
                                     : AppColors.success)
                                 .withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
@@ -152,7 +154,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                 ? Icons.arrow_upward
                                 : Icons.arrow_downward,
                             color: _transactionType == 'expense'
-                                ? AppColors.error
+                                ? colorTheme.error
                                 : AppColors.success,
                             size: 18,
                           ),
@@ -163,7 +165,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                 : l.income,
                             style: TextStyle(
                               color: _transactionType == 'expense'
-                                  ? AppColors.error
+                                  ? colorTheme.error
                                   : AppColors.success,
                               fontWeight: FontWeight.bold,
                             ),
@@ -175,7 +177,11 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                     const SizedBox(height: 20),
 
                     // Amount
-                    _buildSectionTitle(l.amount, Icons.attach_money),
+                    _buildSectionTitle(
+                      l.amount,
+                      Icons.attach_money,
+                      colorTheme,
+                    ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _amountController,
@@ -193,7 +199,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: _transactionType == 'expense'
-                              ? AppColors.error
+                              ? colorTheme.error
                               : AppColors.success,
                         ),
                         border: OutlineInputBorder(
@@ -208,7 +214,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: _transactionType == 'expense'
-                            ? AppColors.error
+                            ? colorTheme.error
                             : AppColors.success,
                       ),
                       validator: (value) {
@@ -226,7 +232,11 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                     const SizedBox(height: 20),
 
                     // Category
-                    _buildSectionTitle(l.category, Icons.category_outlined),
+                    _buildSectionTitle(
+                      l.category,
+                      Icons.category_outlined,
+                      colorTheme,
+                    ),
                     const SizedBox(height: 8),
                     categories.when(
                       data: (categoriesList) {
@@ -245,12 +255,12 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? AppColors.primary
+                                      ? colorTheme.primary
                                       : Colors.grey[100],
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: isSelected
-                                        ? AppColors.primary
+                                        ? colorTheme.primary
                                         : Colors.grey[200]!,
                                   ),
                                 ),
@@ -278,7 +288,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                     const SizedBox(height: 20),
 
                     // Note
-                    _buildSectionTitle(l.note, Icons.note_outlined),
+                    _buildSectionTitle(l.note, Icons.note_outlined, colorTheme),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _descriptionController,
@@ -295,7 +305,11 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                     const SizedBox(height: 20),
 
                     // Date
-                    _buildSectionTitle(l.date, Icons.calendar_today),
+                    _buildSectionTitle(
+                      l.date,
+                      Icons.calendar_today,
+                      colorTheme,
+                    ),
                     const SizedBox(height: 8),
                     GestureDetector(
                       onTap: () async {
@@ -315,10 +329,10 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.calendar_today,
                               size: 18,
-                              color: AppColors.primary,
+                              color: colorTheme.primary,
                             ),
                             const SizedBox(width: 10),
                             Text(
@@ -339,6 +353,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                     _buildSectionTitle(
                       l.wallet,
                       Icons.account_balance_wallet_outlined,
+                      colorTheme,
                     ),
                     const SizedBox(height: 8),
                     accounts.when(
@@ -377,9 +392,9 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                       child: ElevatedButton(
                         onPressed: _isLoading
                             ? null
-                            : () => _updateTransaction(l),
+                            : () => _updateTransaction(l, colorTheme),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
+                          backgroundColor: colorTheme.primary,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -420,10 +435,14 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon) {
+  Widget _buildSectionTitle(
+    String title,
+    IconData icon,
+    ColorTheme colorTheme,
+  ) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: AppColors.primary),
+        Icon(icon, size: 16, color: colorTheme.primary),
         const SizedBox(width: 6),
         Text(
           title,
@@ -433,7 +452,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     );
   }
 
-  void _confirmDelete(AppLocalizations l) {
+  void _confirmDelete(AppLocalizations l, ColorTheme colorTheme) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -447,9 +466,9 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
-              _deleteTransaction(l);
+              _deleteTransaction(l, colorTheme);
             },
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            style: TextButton.styleFrom(foregroundColor: colorTheme.error),
             child: Text(l.delete),
           ),
         ],
@@ -457,7 +476,10 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     );
   }
 
-  Future<void> _deleteTransaction(AppLocalizations l) async {
+  Future<void> _deleteTransaction(
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) async {
     setState(() => _isDeleting = true);
 
     final walletController = ref.read(walletControllerProvider);
@@ -472,25 +494,28 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(l.transactionDeleted),
-            backgroundColor: AppColors.success,
+            backgroundColor: colorTheme.success,
           ),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l.error), backgroundColor: AppColors.error),
+          SnackBar(content: Text(l.error), backgroundColor: colorTheme.error),
         );
       }
     }
   }
 
-  Future<void> _updateTransaction(AppLocalizations l) async {
+  Future<void> _updateTransaction(
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l.selectWallet),
-          backgroundColor: AppColors.error,
+          backgroundColor: colorTheme.error,
         ),
       );
       return;
@@ -549,7 +574,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(l.transactionUpdated),
-            backgroundColor: AppColors.success,
+            backgroundColor: colorTheme.success,
           ),
         );
         Navigator.pop(context);
@@ -560,7 +585,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l.error}: $e'),
-            backgroundColor: AppColors.error,
+            backgroundColor: colorTheme.error,
           ),
         );
       }

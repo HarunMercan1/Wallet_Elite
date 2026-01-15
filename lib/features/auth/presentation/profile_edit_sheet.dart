@@ -72,7 +72,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
+          color: isDark ? colorTheme.backgroundDark : Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -102,7 +102,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   const Spacer(),
@@ -154,9 +154,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: isDark
-                                    ? Colors.white
-                                    : AppColors.textPrimary,
+                                color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
                             Text(
@@ -273,7 +271,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     if (_selectedImage != null) {
       return CircleAvatar(
         radius: 56,
-        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
         backgroundImage: FileImage(_selectedImage!),
       );
     }
@@ -297,7 +295,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
         // Regular image URL
         return CircleAvatar(
           radius: 56,
-          backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+          backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
           backgroundImage: NetworkImage(avatarUrl),
         );
       }
@@ -306,7 +304,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     // Default: show initial letter
     return CircleAvatar(
       radius: 56,
-      backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+      backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
       child: Text(
         widget.profile.fullName?.substring(0, 1).toUpperCase() ?? 'U',
         style: TextStyle(
@@ -400,7 +398,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.backgroundDark : Colors.white,
+        color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -431,7 +429,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 const Spacer(),
@@ -489,7 +487,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: isDark
-                                    ? AppColors.surfaceDark
+                                    ? colorTheme.surfaceDark
                                     : Colors.white,
                                 width: 3,
                               ),
@@ -529,7 +527,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                       prefixIcon: Icon(Icons.person, color: colorTheme.primary),
                       filled: true,
                       fillColor: isDark
-                          ? AppColors.surfaceDark
+                          ? colorTheme.surfaceDark
                           : Colors.grey[100],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -551,7 +549,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.surfaceDark : Colors.grey[100],
+                      color: isDark ? colorTheme.surfaceDark : Colors.grey[100],
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -596,7 +594,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.surfaceDark : Colors.white,
+              color: isDark ? colorTheme.surfaceDark : Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),

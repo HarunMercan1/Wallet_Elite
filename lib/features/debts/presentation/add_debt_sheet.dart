@@ -44,7 +44,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     return Container(
       margin: EdgeInsets.only(bottom: bottomPadding),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.backgroundDark : AppColors.background,
+        color: isDark ? colorTheme.backgroundDark : colorTheme.backgroundLight,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -71,7 +71,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 const Spacer(),
@@ -163,8 +163,8 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                         ),
                         decoration: BoxDecoration(
                           color: isDark
-                              ? AppColors.surfaceDark
-                              : AppColors.surface,
+                              ? colorTheme.surfaceDark
+                              : colorTheme.surfaceLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isDark
@@ -192,9 +192,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                                     : l.selectDueDate,
                                 style: TextStyle(
                                   color: _dueDate != null
-                                      ? (isDark
-                                            ? Colors.white
-                                            : AppColors.textPrimary)
+                                      ? (isDark ? Colors.white : Colors.black87)
                                       : (isDark ? Colors.white54 : Colors.grey),
                                   fontSize: 15,
                                 ),
@@ -287,6 +285,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
             isSelected: _selectedType == 'lend',
             color: Colors.green,
             isDark: isDark,
+            colorTheme: colorTheme,
             onTap: () => setState(() => _selectedType = 'lend'),
           ),
         ),
@@ -298,6 +297,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
             isSelected: _selectedType == 'borrow',
             color: Colors.red,
             isDark: isDark,
+            colorTheme: colorTheme,
             onTap: () => setState(() => _selectedType = 'borrow'),
           ),
         ),
@@ -311,6 +311,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     required bool isSelected,
     required Color color,
     required bool isDark,
+    required ColorTheme colorTheme,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -321,7 +322,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? color.withValues(alpha: 0.15)
-              : (isDark ? AppColors.surfaceDark : AppColors.surface),
+              : (isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,
@@ -343,7 +344,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
               style: TextStyle(
                 color: isSelected
                     ? color
-                    : (isDark ? Colors.white : AppColors.textPrimary),
+                    : (isDark ? Colors.white : Colors.black87),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 15,
               ),
@@ -360,7 +361,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: isDark ? Colors.white70 : AppColors.textSecondary,
+        color: isDark ? Colors.white70 : Colors.black54,
       ),
     );
   }
@@ -377,7 +378,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       prefixText: prefix,
       prefixIcon: Icon(icon, color: colorTheme.primary),
       filled: true,
-      fillColor: isDark ? AppColors.surfaceDark : AppColors.surface,
+      fillColor: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,

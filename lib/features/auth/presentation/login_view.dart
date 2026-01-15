@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../data/auth_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -37,16 +38,17 @@ class _LoginViewState extends ConsumerState<LoginView> {
   @override
   Widget build(BuildContext context) {
     final authController = ref.watch(authControllerProvider);
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final responsive = ResponsiveHelper(context);
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [AppColors.primary, AppColors.primaryDark],
+            colors: [colorTheme.primary, colorTheme.primaryDark],
           ),
         ),
         child: SafeArea(
@@ -60,7 +62,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   Icon(
                     Icons.account_balance_wallet_rounded,
                     size: responsive.largeIconSize,
-                    color: AppColors.accent,
+                    color: colorTheme.accent,
                   ),
                   SizedBox(height: responsive.hp(2)),
 
@@ -79,7 +81,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     l.tagline,
                     style: TextStyle(
                       fontSize: responsive.bodyFontSize,
-                      color: AppColors.accentLight,
+                      color: colorTheme.accentLight,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -115,6 +117,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   () {
                                     setState(() => _isLogin = true);
                                   },
+                                  colorTheme,
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -125,6 +128,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   () {
                                     setState(() => _isLogin = false);
                                   },
+                                  colorTheme,
                                 ),
                               ),
                             ],
@@ -137,15 +141,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
-                              style: const TextStyle(
-                                color: AppColors.textPrimary,
-                              ),
+                              style: const TextStyle(color: Colors.black87),
                               decoration: InputDecoration(
                                 labelText: l.fullName,
                                 labelStyle: TextStyle(color: Colors.grey[700]),
                                 prefixIcon: Icon(
                                   Icons.person_outlined,
-                                  color: AppColors.primary,
+                                  color: colorTheme.primary,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -161,8 +163,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.primary,
+                                  borderSide: BorderSide(
+                                    color: colorTheme.primary,
                                     width: 2,
                                   ),
                                 ),
@@ -185,15 +187,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
-                            ),
+                            style: const TextStyle(color: Colors.black87),
                             decoration: InputDecoration(
                               labelText: l.email,
                               labelStyle: TextStyle(color: Colors.grey[700]),
                               prefixIcon: Icon(
                                 Icons.email_outlined,
-                                color: AppColors.primary,
+                                color: colorTheme.primary,
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -209,8 +209,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: AppColors.primary,
+                                borderSide: BorderSide(
+                                  color: colorTheme.primary,
                                   width: 2,
                                 ),
                               ),
@@ -232,15 +232,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
-                            style: const TextStyle(
-                              color: AppColors.textPrimary,
-                            ),
+                            style: const TextStyle(color: Colors.black87),
                             decoration: InputDecoration(
                               labelText: l.password,
                               labelStyle: TextStyle(color: Colors.grey[700]),
                               prefixIcon: Icon(
                                 Icons.lock_outlined,
-                                color: AppColors.primary,
+                                color: colorTheme.primary,
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -269,8 +267,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: AppColors.primary,
+                                borderSide: BorderSide(
+                                  color: colorTheme.primary,
                                   width: 2,
                                 ),
                               ),
@@ -307,9 +305,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   ? null
                                   : () => _handleEmailAuth(l),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
+                                backgroundColor: colorTheme.primary,
                                 foregroundColor: Colors.white,
-                                disabledBackgroundColor: AppColors.primary
+                                disabledBackgroundColor: colorTheme.primary
                                     .withOpacity(0.7),
                                 disabledForegroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -372,14 +370,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(l.googleLoginFailed),
-                                          backgroundColor: AppColors.error,
+                                          backgroundColor: Colors.red,
                                         ),
                                       );
                                     }
                                   },
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 14),
-                              foregroundColor: AppColors.textPrimary,
+                              foregroundColor: Colors.black87,
                               side: BorderSide(color: Colors.grey[400]!),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -410,7 +408,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     l.privacyText,
                     style: TextStyle(
                       fontSize: responsive.subtitleFontSize,
-                      color: AppColors.accentLight,
+                      color: colorTheme.accentLight,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -423,13 +421,18 @@ class _LoginViewState extends ConsumerState<LoginView> {
     );
   }
 
-  Widget _buildTabButton(String label, bool isSelected, VoidCallback onTap) {
+  Widget _buildTabButton(
+    String label,
+    bool isSelected,
+    VoidCallback onTap,
+    ColorTheme colorTheme,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.grey[100],
+          color: isSelected ? colorTheme.primary : Colors.grey[100],
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -479,7 +482,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(l.onboardingSuccess),
-                backgroundColor: AppColors.success,
+                backgroundColor: Colors.green,
               ),
             );
             setState(() {
@@ -496,7 +499,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     : (errorMessage ??
                           (_isLogin ? l.loginFailed : l.registerFailed)),
               ),
-              backgroundColor: AppColors.error,
+              backgroundColor: Colors.red,
             ),
           );
         }
@@ -506,7 +509,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l.errorOccurred}: $e'),
-            backgroundColor: AppColors.error,
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -554,7 +557,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(l.passwordResetSent),
-                      backgroundColor: AppColors.success,
+                      backgroundColor: Colors.green,
                     ),
                   );
                 }

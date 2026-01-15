@@ -34,7 +34,7 @@ class WalletSelectionSheet extends ConsumerWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.backgroundDark : Colors.white,
+        color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -190,7 +190,7 @@ class WalletSelectionSheet extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? colorTheme.primary.withOpacity(0.1)
-              : (isDark ? AppColors.surfaceDark : Colors.white),
+              : (isDark ? colorTheme.surfaceDark : Colors.white),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -206,7 +206,10 @@ class WalletSelectionSheet extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: isAllWallets
                     ? colorTheme.primary.withOpacity(0.1)
-                    : _getWalletColor(account.type).withOpacity(0.1),
+                    : _getWalletColor(
+                        account.type,
+                        colorTheme,
+                      ).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -215,7 +218,7 @@ class WalletSelectionSheet extends ConsumerWidget {
                     : _getWalletIcon(account.type),
                 color: isAllWallets
                     ? colorTheme.primary
-                    : _getWalletColor(account.type),
+                    : _getWalletColor(account.type, colorTheme),
               ),
             ),
             const SizedBox(width: 12),
@@ -275,18 +278,18 @@ class WalletSelectionSheet extends ConsumerWidget {
     }
   }
 
-  Color _getWalletColor(String type) {
+  Color _getWalletColor(String type, ColorTheme colorTheme) {
     switch (type) {
       case 'bank':
-        return AppColors.info;
+        return Colors.blue;
       case 'cash':
-        return AppColors.success;
+        return colorTheme.success;
       case 'credit_card':
-        return AppColors.error;
+        return colorTheme.error;
       case 'savings':
-        return AppColors.warning;
+        return Colors.orange;
       default:
-        return AppColors.primary;
+        return colorTheme.primary;
     }
   }
 

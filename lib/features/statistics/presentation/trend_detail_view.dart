@@ -57,7 +57,9 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       appBar: AppBar(
         title: Text(l.trendDetails),
         backgroundColor: Colors.transparent,
@@ -141,7 +143,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.grey[200],
+        color: isDark ? colorTheme.surfaceDark : Colors.grey[200],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -156,7 +158,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: _showExpenses ? AppColors.error : Colors.transparent,
+                color: _showExpenses ? colorTheme.error : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -180,7 +182,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: !_showExpenses ? AppColors.success : Colors.transparent,
+                color: !_showExpenses ? colorTheme.success : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -214,7 +216,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.grey[100],
+        color: isDark ? colorTheme.surfaceDark : Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -262,7 +264,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -280,7 +282,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : AppColors.textPrimary,
+              color: isDark ? Colors.white : Colors.black87,
             ),
           ),
           const SizedBox(height: 8),
@@ -289,7 +291,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: _showExpenses ? AppColors.error : AppColors.success,
+              color: _showExpenses ? colorTheme.error : colorTheme.success,
             ),
           ),
           const SizedBox(height: 24),
@@ -333,12 +335,12 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                                 gradient: LinearGradient(
                                   colors: _showExpenses
                                       ? [
-                                          AppColors.error.withOpacity(0.6),
-                                          AppColors.error,
+                                          colorTheme.error.withOpacity(0.6),
+                                          colorTheme.error,
                                         ]
                                       : [
-                                          AppColors.success.withOpacity(0.6),
-                                          AppColors.success,
+                                          colorTheme.success.withOpacity(0.6),
+                                          colorTheme.success,
                                         ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -394,7 +396,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : AppColors.textPrimary,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         const SizedBox(height: 16),
@@ -407,6 +409,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 icon: Icons.receipt_long,
                 color: colorTheme.primary,
                 isDark: isDark,
+                colorTheme: colorTheme,
               ),
             ),
             const SizedBox(width: 12),
@@ -417,6 +420,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 icon: Icons.calculate,
                 color: Colors.orange,
                 isDark: isDark,
+                colorTheme: colorTheme,
               ),
             ),
           ],
@@ -431,8 +435,9 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     ? '₺${NumberFormat('#,##0', 'tr_TR').format(maxTx.amount)}'
                     : '-',
                 icon: Icons.arrow_upward,
-                color: _showExpenses ? AppColors.error : AppColors.success,
+                color: _showExpenses ? colorTheme.error : colorTheme.success,
                 isDark: isDark,
+                colorTheme: colorTheme,
               ),
             ),
             const SizedBox(width: 12),
@@ -445,6 +450,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 icon: Icons.arrow_downward,
                 color: Colors.teal,
                 isDark: isDark,
+                colorTheme: colorTheme,
               ),
             ),
           ],
@@ -459,11 +465,12 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     required IconData icon,
     required Color color,
     required bool isDark,
+    required ColorTheme colorTheme,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -499,7 +506,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.textPrimary,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
           ),
@@ -539,7 +546,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -561,7 +568,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : AppColors.textPrimary,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ],
@@ -573,6 +580,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             maxValue: maxAvg,
             color: colorTheme.primary,
             isDark: isDark,
+            colorTheme: colorTheme,
           ),
           const SizedBox(height: 16),
           _buildPatternBar(
@@ -581,6 +589,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             maxValue: maxAvg,
             color: Colors.purple,
             isDark: isDark,
+            colorTheme: colorTheme,
           ),
         ],
       ),
@@ -593,6 +602,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     required double maxValue,
     required Color color,
     required bool isDark,
+    required ColorTheme colorTheme,
   }) {
     final percent = maxValue > 0 ? value / maxValue : 0.0;
 
@@ -614,7 +624,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.textPrimary,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
           ],
@@ -665,7 +675,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -687,7 +697,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : AppColors.textPrimary,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ],
@@ -709,7 +719,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : AppColors.textPrimary,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                   ],
@@ -744,11 +754,11 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               color:
                   (isPositive
                           ? (_showExpenses
-                                ? AppColors.error
-                                : AppColors.success)
+                                ? colorTheme.error
+                                : colorTheme.success)
                           : (_showExpenses
-                                ? AppColors.success
-                                : AppColors.error))
+                                ? colorTheme.success
+                                : colorTheme.error))
                       .withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -757,8 +767,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 Icon(
                   isPositive ? Icons.trending_up : Icons.trending_down,
                   color: isPositive
-                      ? (_showExpenses ? AppColors.error : AppColors.success)
-                      : (_showExpenses ? AppColors.success : AppColors.error),
+                      ? (_showExpenses ? colorTheme.error : colorTheme.success)
+                      : (_showExpenses ? colorTheme.success : colorTheme.error),
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -770,11 +780,11 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                       fontWeight: FontWeight.w600,
                       color: isPositive
                           ? (_showExpenses
-                                ? AppColors.error
-                                : AppColors.success)
+                                ? colorTheme.error
+                                : colorTheme.success)
                           : (_showExpenses
-                                ? AppColors.success
-                                : AppColors.error),
+                                ? colorTheme.success
+                                : colorTheme.error),
                     ),
                   ),
                 ),

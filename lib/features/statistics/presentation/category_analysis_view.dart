@@ -94,7 +94,9 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
         : 0.0;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       appBar: AppBar(
         title: Text(l.categoryDetails),
         backgroundColor: Colors.transparent,
@@ -161,8 +163,9 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                           value:
                               '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
                           icon: Icons.trending_down,
-                          color: AppColors.error,
+                          color: colorTheme.error,
                           isDark: isDark,
+                          colorTheme: colorTheme,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -174,6 +177,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                           icon: Icons.calculate,
                           color: colorTheme.primary,
                           isDark: isDark,
+                          colorTheme: colorTheme,
                         ),
                       ),
                     ],
@@ -202,9 +206,10 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                       percent: totalExpense > 0
                           ? sortedCategories.first.value / totalExpense * 100
                           : 0,
-                      color: AppColors.error,
+                      color: colorTheme.error,
                       l: l,
                       isDark: isDark,
+                      colorTheme: colorTheme,
                     ),
                     const SizedBox(height: 12),
                     if (sortedCategories.length > 1)
@@ -215,9 +220,10 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         percent: totalExpense > 0
                             ? sortedCategories.last.value / totalExpense * 100
                             : 0,
-                        color: AppColors.success,
+                        color: colorTheme.success,
                         l: l,
                         isDark: isDark,
+                        colorTheme: colorTheme,
                       ),
                   ],
 
@@ -229,7 +235,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -288,11 +294,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     required IconData icon,
     required Color color,
     required bool isDark,
+    required ColorTheme colorTheme,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -324,7 +331,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.textPrimary,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
           ),
@@ -339,12 +346,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     double total,
     AppLocalizations l,
     bool isDark,
-    dynamic colorTheme,
+    ColorTheme colorTheme,
   ) {
     final List<Color> colors = [
-      colorTheme.primary as Color,
-      AppColors.error,
-      AppColors.success,
+      colorTheme.primary,
+      colorTheme.error,
+      colorTheme.success,
       Colors.orange,
       Colors.purple,
       Colors.teal,
@@ -357,7 +364,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -392,6 +399,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                               colors: colors,
                               progress: _animation.value,
                               isDark: isDark,
+                              colorTheme: colorTheme,
                             ),
                           );
                         },
@@ -405,9 +413,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? Colors.white
-                                  : AppColors.textPrimary,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                           Text(
@@ -470,7 +476,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                                           fontWeight: FontWeight.w500,
                                           color: isDark
                                               ? Colors.white
-                                              : AppColors.textPrimary,
+                                              : Colors.black87,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -539,7 +545,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   icon: Icons.trending_down,
                   value: '₺${NumberFormat('#,##0', 'tr_TR').format(total)}',
                   label: l.totalExpense,
-                  color: AppColors.error,
+                  color: colorTheme.error,
                   isDark: isDark,
                 ),
                 Container(
@@ -553,7 +559,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                       ? '${(categories.first.value / total * 100).toStringAsFixed(0)}%'
                       : '0%',
                   label: l.topSpendingCategory,
-                  color: AppColors.success,
+                  color: colorTheme.success,
                   isDark: isDark,
                 ),
               ],
@@ -580,7 +586,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : AppColors.textPrimary,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         Text(
@@ -601,11 +607,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     required Color color,
     required AppLocalizations l,
     required bool isDark,
+    required ColorTheme colorTheme,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(0.3), width: 1),
         boxShadow: [
@@ -646,7 +653,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
               ],
@@ -682,7 +689,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     required int index,
     required AppLocalizations l,
     required bool isDark,
-    required dynamic colorTheme,
+    required ColorTheme colorTheme,
   }) {
     final delay = index * 0.1;
     final itemProgress = ((_animation.value - delay) / (1 - delay)).clamp(
@@ -698,7 +705,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.surfaceDark : Colors.white,
+            color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -735,9 +742,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: isDark
-                                ? Colors.white
-                                : AppColors.textPrimary,
+                            color: isDark ? Colors.white : Colors.black87,
                           ),
                         ),
                         Text(
@@ -758,7 +763,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.textPrimary,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       Text(
@@ -792,7 +797,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     double totalExpense,
     AppLocalizations l,
     bool isDark,
-    dynamic colorTheme,
+    ColorTheme colorTheme,
   ) {
     // Generate tips based on top spending categories
     final topCategory = categories.first;
@@ -986,6 +991,7 @@ class PieChartPainter extends CustomPainter {
   final List<Color> colors;
   final double progress;
   final bool isDark;
+  final ColorTheme colorTheme;
 
   PieChartPainter({
     required this.categories,
@@ -993,6 +999,7 @@ class PieChartPainter extends CustomPainter {
     required this.colors,
     required this.progress,
     required this.isDark,
+    required this.colorTheme,
   });
 
   @override
@@ -1022,7 +1029,7 @@ class PieChartPainter extends CustomPainter {
 
     // Draw center hole with theme-aware color
     final holePaint = Paint()
-      ..color = isDark ? AppColors.surfaceDark : Colors.white
+      ..color = isDark ? colorTheme.surfaceDark : Colors.white
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius * 0.55, holePaint);
   }

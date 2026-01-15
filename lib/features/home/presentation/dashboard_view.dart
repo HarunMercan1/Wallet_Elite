@@ -46,7 +46,9 @@ class DashboardView extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(accountsProvider);
@@ -95,7 +97,9 @@ class DashboardView extends ConsumerWidget {
                       vertical: 14,
                     ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.surfaceDark : Colors.white,
+                      color: isDark
+                          ? colorTheme.surfaceDark
+                          : colorTheme.surfaceLight,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
@@ -168,6 +172,7 @@ class DashboardView extends ConsumerWidget {
                 categories,
                 l,
                 isDark,
+                colorTheme,
               ),
 
               const SizedBox(height: 100),
@@ -203,9 +208,9 @@ class DashboardView extends ConsumerWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: colorTheme.primary.withOpacity(0.4),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -447,17 +452,19 @@ class DashboardView extends ConsumerWidget {
         return Container(
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [colorTheme.primaryLight, colorTheme.primary],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: colorTheme.primary.withValues(alpha: 0.15),
+              width: 1,
             ),
-            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: colorTheme.primary.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+                color: colorTheme.primary.withValues(
+                  alpha: isDark ? 0.08 : 0.05,
+                ),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -473,7 +480,7 @@ class DashboardView extends ConsumerWidget {
                     Text(
                       walletLabel,
                       style: TextStyle(
-                        color: colorTheme.accentLight,
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -481,7 +488,7 @@ class DashboardView extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Icon(
                       Icons.keyboard_arrow_down,
-                      color: colorTheme.accentLight,
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
                       size: 18,
                     ),
                   ],
@@ -490,10 +497,11 @@ class DashboardView extends ConsumerWidget {
               const SizedBox(height: 6),
               Text(
                 '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
+                style: TextStyle(
+                  color: isDark ? Colors.white : AppColors.textPrimary,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
+                  letterSpacing: -1,
                 ),
               ),
               const SizedBox(height: 18),
@@ -504,7 +512,9 @@ class DashboardView extends ConsumerWidget {
                       l.income,
                       '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalIncome)}',
                       Icons.arrow_upward,
-                      AppColors.success,
+                      colorTheme.success,
+                      isDark,
+                      colorTheme,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -513,7 +523,9 @@ class DashboardView extends ConsumerWidget {
                       l.expense,
                       '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
                       Icons.arrow_downward,
-                      AppColors.error,
+                      colorTheme.error,
+                      isDark,
+                      colorTheme,
                     ),
                   ),
                 ],
@@ -532,11 +544,15 @@ class DashboardView extends ConsumerWidget {
     String value,
     IconData icon,
     Color color,
+    bool isDark,
+    ColorTheme colorTheme,
   ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.05)
+            : colorTheme.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -549,15 +565,15 @@ class DashboardView extends ConsumerWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    color: AppColors.accentLight,
+                  style: TextStyle(
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
                     fontSize: 11,
                   ),
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : AppColors.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
@@ -578,6 +594,7 @@ class DashboardView extends ConsumerWidget {
     AsyncValue<List<CategoryModel>> categories,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     return transactions.when(
       data: (List<TransactionModel> transactionsList) {
@@ -634,6 +651,7 @@ class DashboardView extends ConsumerWidget {
               category,
               l,
               isDark,
+              colorTheme,
             );
           },
         );
@@ -655,9 +673,10 @@ class DashboardView extends ConsumerWidget {
     CategoryModel? category,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final isIncome = transaction.type == 'income';
-    final color = isIncome ? AppColors.success : AppColors.error;
+    final color = isIncome ? colorTheme.success : colorTheme.error;
 
     IconData categoryIcon = isIncome
         ? Icons.arrow_downward
@@ -679,7 +698,7 @@ class DashboardView extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(

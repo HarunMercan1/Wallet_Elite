@@ -56,7 +56,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.backgroundDark : AppColors.background,
+        color: isDark ? colorTheme.backgroundDark : colorTheme.backgroundLight,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -103,7 +103,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.textPrimary,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       Text(
@@ -231,8 +231,14 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
 
                   // Açıklama (düzenlenebilir)
                   GestureDetector(
-                    onTap: () =>
-                        _editDescription(context, ref, debt, l, isDark),
+                    onTap: () => _editDescription(
+                      context,
+                      ref,
+                      debt,
+                      l,
+                      isDark,
+                      colorTheme,
+                    ),
                     child: _buildInfoRow(
                       icon: Icons.notes,
                       label: l.note,
@@ -254,7 +260,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : AppColors.textPrimary,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -282,8 +288,8 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                               ),
                               filled: true,
                               fillColor: isDark
-                                  ? AppColors.surfaceDark
-                                  : AppColors.surface,
+                                  ? colorTheme.surfaceDark
+                                  : colorTheme.surfaceLight,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -437,7 +443,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                           style: TextStyle(
                                             color: isDark
                                                 ? Colors.white
-                                                : AppColors.textPrimary,
+                                                : Colors.black87,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -463,7 +469,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                         fontWeight: FontWeight.bold,
                                         color: isDark
                                             ? Colors.white
-                                            : AppColors.textPrimary,
+                                            : Colors.black87,
                                       ),
                                     ),
                                   ],
@@ -541,7 +547,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                           fontSize: 15,
                           color: isWarning
                               ? Colors.red
-                              : (isDark ? Colors.white : AppColors.textPrimary),
+                              : (isDark ? Colors.white : Colors.black87),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -610,12 +616,13 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     DebtModel debt,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) async {
     final textController = TextEditingController(text: debt.description ?? '');
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
         title: Text(l.note),
         content: TextField(
           controller: textController,
@@ -653,10 +660,11 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     AppLocalizations l,
   ) async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorTheme = ref.read(currentColorThemeProvider);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
         title: Text(
           l.deleteDebt,
           style: TextStyle(color: isDark ? Colors.white : Colors.black),

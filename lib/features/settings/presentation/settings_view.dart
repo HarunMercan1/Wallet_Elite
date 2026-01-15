@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
+import '../../../core/theme/premium_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
@@ -27,7 +28,9 @@ class SettingsView extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -42,18 +45,19 @@ class SettingsView extends ConsumerWidget {
             const SizedBox(height: 8),
             _buildSettingsCard(
               isDark: isDark,
+              colorTheme: colorTheme,
               children: [
-                _buildThemeTile(context, ref, themeMode, l, isDark),
+                _buildThemeTile(context, ref, themeMode, l, isDark, colorTheme),
                 Divider(
                   height: 1,
                   color: isDark ? Colors.white10 : Colors.grey[200],
                 ),
-                _buildColorSchemeTile(context, ref, l, isDark),
+                _buildColorSchemeTile(context, ref, l, isDark, colorTheme),
                 Divider(
                   height: 1,
                   color: isDark ? Colors.white10 : Colors.grey[200],
                 ),
-                _buildLanguageTile(context, ref, locale, l, isDark),
+                _buildLanguageTile(context, ref, locale, l, isDark, colorTheme),
               ],
             ),
 
@@ -64,11 +68,12 @@ class SettingsView extends ConsumerWidget {
             const SizedBox(height: 8),
             _buildSettingsCard(
               isDark: isDark,
+              colorTheme: colorTheme,
               children: [
                 ListTile(
                   leading: Icon(
                     Icons.account_balance_wallet,
-                    color: isDark ? AppColors.accent : AppColors.primary,
+                    color: isDark ? colorTheme.accent : colorTheme.primary,
                   ),
                   title: Text(
                     l.manageWallets,
@@ -96,7 +101,8 @@ class SettingsView extends ConsumerWidget {
                     Icons.chevron_right,
                     color: isDark ? Colors.grey[600] : Colors.grey[400],
                   ),
-                  onTap: () => _showWalletsSheet(context, ref, l, isDark),
+                  onTap: () =>
+                      _showWalletsSheet(context, ref, l, isDark, colorTheme),
                 ),
                 Divider(
                   height: 1,
@@ -105,7 +111,7 @@ class SettingsView extends ConsumerWidget {
                 ListTile(
                   leading: Icon(
                     Icons.add_circle_outline,
-                    color: isDark ? AppColors.accent : AppColors.success,
+                    color: isDark ? colorTheme.accent : Colors.green,
                   ),
                   title: Text(
                     l.addWallet,
@@ -117,7 +123,8 @@ class SettingsView extends ConsumerWidget {
                     Icons.chevron_right,
                     color: isDark ? Colors.grey[600] : Colors.grey[400],
                   ),
-                  onTap: () => _showAddWalletDialog(context, ref, l, isDark),
+                  onTap: () =>
+                      _showAddWalletDialog(context, ref, l, isDark, colorTheme),
                 ),
               ],
             ),
@@ -129,14 +136,15 @@ class SettingsView extends ConsumerWidget {
             const SizedBox(height: 8),
             _buildSettingsCard(
               isDark: isDark,
+              colorTheme: colorTheme,
               children: [
                 ListTile(
-                  leading: const Icon(Icons.logout, color: AppColors.error),
+                  leading: const Icon(Icons.logout, color: Colors.red),
                   title: Text(
                     l.signOut,
-                    style: const TextStyle(color: AppColors.error),
+                    style: const TextStyle(color: Colors.red),
                   ),
-                  onTap: () => _showSignOutDialog(context, l),
+                  onTap: () => _showSignOutDialog(context, l, colorTheme),
                 ),
               ],
             ),
@@ -165,17 +173,17 @@ class SettingsView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colorTheme.primary, colorTheme.primaryLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorTheme.primary.withValues(alpha: 0.15),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: colorTheme.primary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -207,10 +215,10 @@ class SettingsView extends ConsumerWidget {
                   user?.userMetadata?['full_name'] ??
                       user?.email?.split('@').first ??
                       l.user,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -218,7 +226,7 @@ class SettingsView extends ConsumerWidget {
                   user?.email ?? '',
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.8),
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
                   ),
                 ),
               ],
@@ -237,7 +245,7 @@ class SettingsView extends ConsumerWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: isDark ? Colors.grey[400] : AppColors.textSecondary,
+          color: isDark ? Colors.grey[400] : Colors.grey[600],
         ),
       ),
     );
@@ -246,10 +254,11 @@ class SettingsView extends ConsumerWidget {
   Widget _buildSettingsCard({
     required List<Widget> children,
     required bool isDark,
+    required ColorTheme colorTheme,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : Colors.white,
+        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -269,6 +278,7 @@ class SettingsView extends ConsumerWidget {
     ThemeMode themeMode,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     String themeName;
     IconData themeIcon;
@@ -291,7 +301,7 @@ class SettingsView extends ConsumerWidget {
     return ListTile(
       leading: Icon(
         themeIcon,
-        color: isDark ? AppColors.accent : AppColors.primary,
+        color: isDark ? colorTheme.accent : colorTheme.primary,
       ),
       title: Text(
         l.theme,
@@ -305,7 +315,8 @@ class SettingsView extends ConsumerWidget {
         Icons.chevron_right,
         color: isDark ? Colors.grey[600] : Colors.grey[400],
       ),
-      onTap: () => _showThemeDialog(context, ref, themeMode, l, isDark),
+      onTap: () =>
+          _showThemeDialog(context, ref, themeMode, l, isDark, colorTheme),
     );
   }
 
@@ -314,6 +325,7 @@ class SettingsView extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final colorScheme = ref.watch(colorSchemeProvider);
     final theme = ColorTheme.fromString(colorScheme);
@@ -343,7 +355,14 @@ class SettingsView extends ConsumerWidget {
         Icons.chevron_right,
         color: isDark ? Colors.grey[600] : Colors.grey[400],
       ),
-      onTap: () => _showColorSchemeDialog(context, ref, colorScheme, l, isDark),
+      onTap: () => _showColorSchemeDialog(
+        context,
+        ref,
+        colorScheme,
+        l,
+        isDark,
+        colorTheme,
+      ),
     );
   }
 
@@ -362,6 +381,7 @@ class SettingsView extends ConsumerWidget {
     String current,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     showModalBottomSheet(
       context: context,
@@ -369,11 +389,11 @@ class SettingsView extends ConsumerWidget {
       isScrollControlled: true,
       builder: (context) => Container(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.5,
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
         ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isDark ? colorTheme.surfaceDark : Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -433,10 +453,18 @@ class SettingsView extends ConsumerWidget {
     bool isDark,
   ) {
     final isSelected = theme.id == current;
+    final isUnlocked = ref.watch(canUseThemeProvider(theme.id));
+    final isLocked = theme.isPremium && !isUnlocked;
+
     return GestureDetector(
       onTap: () {
-        ref.read(colorSchemeProvider.notifier).setColorScheme(theme.id);
-        Navigator.pop(context);
+        if (isLocked) {
+          // Show unlock dialog for premium themes
+          _showUnlockThemeDialog(context, ref, theme, isDark);
+        } else {
+          ref.read(colorSchemeProvider.notifier).setColorScheme(theme.id);
+          Navigator.pop(context);
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -454,6 +482,7 @@ class SettingsView extends ConsumerWidget {
         ),
         child: Row(
           children: [
+            // Theme color preview
             Container(
               width: 40,
               height: 40,
@@ -465,22 +494,150 @@ class SettingsView extends ConsumerWidget {
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
+              child: isLocked
+                  ? Center(
+                      child: Icon(
+                        Icons.lock,
+                        color: Colors.white.withOpacity(0.9),
+                        size: 18,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 14),
             Expanded(
-              child: Text(
-                theme.name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        theme.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w500,
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      if (theme.isPremium) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.amber, Colors.orange],
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'PRO',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  if (isLocked)
+                    Text(
+                      'Reklam izle ve aç',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      ),
+                    ),
+                ],
               ),
             ),
             if (isSelected)
-              Icon(Icons.check_circle, color: theme.primary, size: 24),
+              Icon(Icons.check_circle, color: theme.primary, size: 24)
+            else if (isLocked)
+              Icon(Icons.play_circle_outline, color: theme.primary, size: 24),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showUnlockThemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    ColorTheme theme,
+    bool isDark,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? theme.surfaceDark : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [theme.primary, theme.accent]),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '${theme.name} Temasını Aç',
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'Bu premium temayı kalıcı olarak açmak için kısa bir reklam izleyin.',
+          style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Vazgeç', style: TextStyle(color: Colors.grey[500])),
+          ),
+          ElevatedButton.icon(
+            onPressed: () async {
+              Navigator.pop(context); // Close dialog
+
+              // TODO: Show rewarded ad here
+              // For now, unlock directly for testing
+              await ref
+                  .read(unlockedThemesProvider.notifier)
+                  .unlockTheme(theme.id);
+
+              // Set as current theme
+              ref.read(colorSchemeProvider.notifier).setColorScheme(theme.id);
+
+              // Close the color scheme sheet
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            icon: const Icon(Icons.play_arrow, size: 18),
+            label: const Text('Reklam İzle'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -491,11 +648,12 @@ class SettingsView extends ConsumerWidget {
     String locale,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     return ListTile(
       leading: Icon(
         Icons.language,
-        color: isDark ? AppColors.accent : AppColors.primary,
+        color: isDark ? colorTheme.accent : colorTheme.primary,
       ),
       title: Text(
         l.language,
@@ -509,7 +667,8 @@ class SettingsView extends ConsumerWidget {
         Icons.chevron_right,
         color: isDark ? Colors.grey[600] : Colors.grey[400],
       ),
-      onTap: () => _showLanguageDialog(context, ref, locale, l, isDark),
+      onTap: () =>
+          _showLanguageDialog(context, ref, locale, l, isDark, colorTheme),
     );
   }
 
@@ -552,6 +711,7 @@ class SettingsView extends ConsumerWidget {
     ThemeMode current,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     showModalBottomSheet(
       context: context,
@@ -563,7 +723,7 @@ class SettingsView extends ConsumerWidget {
         ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isDark ? colorTheme.surfaceDark : Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -626,7 +786,7 @@ class SettingsView extends ConsumerWidget {
                     ThemeMode.system,
                     current,
                     isDark,
-                    color: AppColors.primary,
+                    color: colorTheme.primary,
                   ),
                 ],
               ),
@@ -701,6 +861,7 @@ class SettingsView extends ConsumerWidget {
     String current,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final languages = [
       {'code': 'en', 'name': 'English', 'flag': '🇺🇸'},
@@ -726,7 +887,7 @@ class SettingsView extends ConsumerWidget {
         height: MediaQuery.of(context).size.height * 0.7,
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isDark ? colorTheme.surfaceDark : Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -767,6 +928,7 @@ class SettingsView extends ConsumerWidget {
                     lang['code']!,
                     current,
                     isDark,
+                    colorTheme,
                   );
                 },
               ),
@@ -785,6 +947,7 @@ class SettingsView extends ConsumerWidget {
     String localeCode,
     String current,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final isSelected = localeCode == current;
     return GestureDetector(
@@ -796,12 +959,12 @@ class SettingsView extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
+              ? colorTheme.primary.withOpacity(0.1)
               : (isDark ? Colors.grey[850] : Colors.grey[50]),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary
+                ? colorTheme.primary
                 : (isDark ? Colors.grey[700]! : Colors.grey[200]!),
             width: isSelected ? 2 : 1,
           ),
@@ -821,7 +984,7 @@ class SettingsView extends ConsumerWidget {
               ),
             ),
             if (isSelected)
-              Icon(Icons.check_circle, color: AppColors.primary, size: 24),
+              Icon(Icons.check_circle, color: colorTheme.primary, size: 24),
           ],
         ),
       ),
@@ -833,6 +996,7 @@ class SettingsView extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final accounts = ref.watch(accountsProvider);
 
@@ -843,7 +1007,7 @@ class SettingsView extends ConsumerWidget {
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
-          color: isDark ? AppColors.backgroundDark : Colors.white,
+          color: isDark ? colorTheme.backgroundDark : Colors.white,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -866,7 +1030,7 @@ class SettingsView extends ConsumerWidget {
                 children: [
                   Icon(
                     Icons.account_balance_wallet,
-                    color: isDark ? AppColors.accent : AppColors.primary,
+                    color: isDark ? colorTheme.accent : colorTheme.primary,
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -881,11 +1045,11 @@ class SettingsView extends ConsumerWidget {
                   IconButton(
                     icon: Icon(
                       Icons.add_circle,
-                      color: isDark ? AppColors.accent : AppColors.success,
+                      color: isDark ? colorTheme.accent : Colors.green,
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      _showAddWalletDialog(context, ref, l, isDark);
+                      _showAddWalletDialog(context, ref, l, isDark, colorTheme);
                     },
                   ),
                 ],
@@ -926,7 +1090,7 @@ class SettingsView extends ConsumerWidget {
                           padding: const EdgeInsets.only(right: 20),
                           margin: const EdgeInsets.symmetric(vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.error,
+                            color: Colors.red,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(Icons.delete, color: Colors.white),
@@ -936,7 +1100,7 @@ class SettingsView extends ConsumerWidget {
                                 context: context,
                                 builder: (ctx) => AlertDialog(
                                   backgroundColor: isDark
-                                      ? AppColors.surfaceDark
+                                      ? colorTheme.surfaceDark
                                       : Colors.white,
                                   title: Text(
                                     l.deleteWallet,
@@ -965,7 +1129,7 @@ class SettingsView extends ConsumerWidget {
                                       child: Text(
                                         l.delete,
                                         style: const TextStyle(
-                                          color: AppColors.error,
+                                          color: Colors.red,
                                         ),
                                       ),
                                     ),
@@ -991,13 +1155,14 @@ class SettingsView extends ConsumerWidget {
                             account,
                             l,
                             isDark,
+                            colorTheme,
                           ),
                           child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 4),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? AppColors.surfaceDark
+                                  ? colorTheme.surfaceDark
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
@@ -1055,8 +1220,8 @@ class SettingsView extends ConsumerWidget {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                     color: isDark
-                                        ? AppColors.accent
-                                        : AppColors.primary,
+                                        ? colorTheme.accent
+                                        : colorTheme.primary,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -1088,6 +1253,7 @@ class SettingsView extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final nameController = TextEditingController();
     final balanceController = TextEditingController(text: '0');
@@ -1097,7 +1263,7 @@ class SettingsView extends ConsumerWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+          backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
           title: Text(
             l.addWallet,
             style: TextStyle(color: isDark ? Colors.white : Colors.black),
@@ -1142,6 +1308,7 @@ class SettingsView extends ConsumerWidget {
                       Icons.payments,
                       selectedType,
                       isDark,
+                      colorTheme,
                       (v) => setState(() => selectedType = v),
                     ),
                     _buildTypeChip(
@@ -1150,6 +1317,7 @@ class SettingsView extends ConsumerWidget {
                       Icons.account_balance,
                       selectedType,
                       isDark,
+                      colorTheme,
                       (v) => setState(() => selectedType = v),
                     ),
                     _buildTypeChip(
@@ -1158,6 +1326,7 @@ class SettingsView extends ConsumerWidget {
                       Icons.credit_card,
                       selectedType,
                       isDark,
+                      colorTheme,
                       (v) => setState(() => selectedType = v),
                     ),
                     _buildTypeChip(
@@ -1166,6 +1335,7 @@ class SettingsView extends ConsumerWidget {
                       Icons.savings,
                       selectedType,
                       isDark,
+                      colorTheme,
                       (v) => setState(() => selectedType = v),
                     ),
                   ],
@@ -1215,15 +1385,13 @@ class SettingsView extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(success ? l.walletAdded : l.error),
-                      backgroundColor: success
-                          ? AppColors.success
-                          : AppColors.error,
+                      backgroundColor: success ? Colors.green : Colors.red,
                     ),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: colorTheme.primary,
               ),
               child: Text(l.add),
             ),
@@ -1239,13 +1407,14 @@ class SettingsView extends ConsumerWidget {
     AccountModel account,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final nameController = TextEditingController(text: account.name);
 
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
         title: Text(
           l.editWallet,
           style: TextStyle(color: isDark ? Colors.white : Colors.black),
@@ -1285,14 +1454,14 @@ class SettingsView extends ConsumerWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(success ? l.walletUpdated : l.error),
-                    backgroundColor: success
-                        ? AppColors.success
-                        : AppColors.error,
+                    backgroundColor: success ? Colors.green : Colors.red,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorTheme.primary,
+            ),
             child: Text(l.save),
           ),
         ],
@@ -1306,6 +1475,7 @@ class SettingsView extends ConsumerWidget {
     IconData icon,
     String selected,
     bool isDark,
+    ColorTheme colorTheme,
     Function(String) onTap,
   ) {
     final isSelected = value == selected;
@@ -1315,12 +1485,12 @@ class SettingsView extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary
+              ? colorTheme.primary
               : (isDark ? Colors.grey[800] : Colors.grey[100]),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary
+                ? colorTheme.primary
                 : (isDark ? Colors.grey[700]! : Colors.grey[300]!),
           ),
         ),
@@ -1350,14 +1520,18 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
-  void _showSignOutDialog(BuildContext context, AppLocalizations l) {
+  void _showSignOutDialog(
+    BuildContext context,
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final router = GoRouter.of(context); // Capture router before dialog
 
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
         title: Text(
           l.signOut,
           style: TextStyle(color: isDark ? Colors.white : Colors.black),
@@ -1377,10 +1551,7 @@ class SettingsView extends ConsumerWidget {
               await Supabase.instance.client.auth.signOut();
               router.go('/auth'); // Use captured router
             },
-            child: Text(
-              l.signOut,
-              style: const TextStyle(color: AppColors.error),
-            ),
+            child: Text(l.signOut, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -1405,15 +1576,15 @@ class SettingsView extends ConsumerWidget {
   Color _getWalletColor(String type) {
     switch (type) {
       case 'bank':
-        return AppColors.info;
+        return Colors.blue;
       case 'cash':
-        return AppColors.success;
+        return Colors.green;
       case 'credit_card':
-        return AppColors.error;
+        return Colors.red;
       case 'savings':
-        return AppColors.warning;
+        return Colors.orange;
       default:
-        return AppColors.primary;
+        return Colors.blue;
     }
   }
 

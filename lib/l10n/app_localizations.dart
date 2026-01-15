@@ -214,7 +214,7 @@ abstract class AppLocalizations {
   /// **'Today'**
   String get today;
 
-  /// No description provided for @yesterday.
+  /// Label for the day before today
   ///
   /// In en, this message translates to:
   /// **'Yesterday'**

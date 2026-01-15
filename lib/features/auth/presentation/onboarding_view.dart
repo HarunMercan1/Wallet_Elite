@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../data/auth_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../../l10n/app_localizations.dart';
@@ -37,6 +38,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -46,9 +48,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
             LinearProgressIndicator(
               value: (_currentPage + 1) / 3,
               backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                AppColors.primary,
-              ),
+              valueColor: AlwaysStoppedAnimation<Color>(colorTheme.primary),
             ),
 
             Expanded(
@@ -61,7 +61,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 children: [
                   _buildWelcomePage(l),
                   _buildCurrencyPage(l),
-                  _buildAccountPage(l),
+                  _buildAccountPage(l, colorTheme),
                 ],
               ),
             ),
@@ -86,7 +86,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                         ? () => _completeOnboarding(l)
                         : _nextPage,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: colorTheme.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 48,
@@ -115,6 +115,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
 
   Widget _buildWelcomePage(AppLocalizations l) {
     final responsive = ResponsiveHelper(context);
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(responsive.paddingL),
@@ -125,7 +126,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           Icon(
             Icons.account_balance_wallet_rounded,
             size: responsive.largeIconSize,
-            color: AppColors.accent,
+            color: colorTheme.accent,
           ),
           SizedBox(height: responsive.hp(3)),
           Text(
@@ -133,7 +134,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
             style: TextStyle(
               fontSize: responsive.titleFontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: Colors.black87,
             ),
             textAlign: TextAlign.center,
           ),
@@ -168,15 +169,16 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   }
 
   Widget _buildFeatureItem(IconData icon, String title, String subtitle) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: colorTheme.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: AppColors.primary),
+          child: Icon(icon, color: colorTheme.primary),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -202,9 +204,10 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   }
 
   Widget _buildCurrencyPage(AppLocalizations l) {
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final currencies = [
       {'code': 'TRY', 'name': l.turkishLira, 'symbol': '₺'},
-      {'code': 'USD', 'name': l.usDollar, 'symbol': '\$'},
+      {'code': 'USD', 'name': l.usDollar, 'symbol': r'$'},
       {'code': 'EUR', 'name': l.euro, 'symbol': '€'},
       {'code': 'GBP', 'name': l.britishPound, 'symbol': '£'},
     ];
@@ -236,7 +239,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: isSelected ? AppColors.primary : Colors.grey[300]!,
+                      color: isSelected
+                          ? colorTheme.primary
+                          : Colors.grey[300]!,
                       width: 2,
                     ),
                     borderRadius: BorderRadius.circular(12),
@@ -247,7 +252,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.primary
+                            ? colorTheme.primary
                             : Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -269,10 +274,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                     ),
                     subtitle: Text(currency['code']!),
                     trailing: isSelected
-                        ? const Icon(
-                            Icons.check_circle,
-                            color: AppColors.primary,
-                          )
+                        ? Icon(Icons.check_circle, color: colorTheme.primary)
                         : null,
                     onTap: () {
                       setState(() => _selectedCurrency = currency['code']!);
@@ -287,7 +289,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
     );
   }
 
-  Widget _buildAccountPage(AppLocalizations l) {
+  Widget _buildAccountPage(AppLocalizations l, ColorTheme colorTheme) {
     final accountTypes = [
       {'type': 'cash', 'name': l.cashType, 'icon': Icons.payments},
       {'type': 'bank', 'name': l.bankAccount, 'icon': Icons.account_balance},
@@ -355,10 +357,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : Colors.grey[100],
+                    color: isSelected ? colorTheme.primary : Colors.grey[100],
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isSelected ? AppColors.primary : Colors.grey[300]!,
+                      color: isSelected
+                          ? colorTheme.primary
+                          : Colors.grey[300]!,
                       width: 2,
                     ),
                   ),
@@ -407,12 +411,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.info.withOpacity(0.1),
+              color: colorTheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(Icons.info_outline, color: AppColors.info),
+                Icon(Icons.info_outline, color: colorTheme.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -436,11 +440,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
   }
 
   void _completeOnboarding(AppLocalizations l) async {
+    final colorTheme = ref.read(currentColorThemeProvider);
     if (_accountNameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l.enterWalletName),
-          backgroundColor: AppColors.error,
+          backgroundColor: colorTheme.error,
         ),
       );
       return;
@@ -491,7 +496,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l.error}: $e'),
-            backgroundColor: AppColors.error,
+            backgroundColor: colorTheme.error,
             duration: const Duration(seconds: 5),
           ),
         );

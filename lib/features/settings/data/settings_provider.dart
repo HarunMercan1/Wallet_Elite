@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// SharedPreferences instance provider
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((
-  ref,
-) async {
-  return await SharedPreferences.getInstance();
+/// SharedPreferences instance provider (initialized in main.dart)
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError(
+    'SharedPreferences must be initialized in main.dart',
+  );
 });
 
 /// Tema modu provider'ı (kalıcı)
@@ -16,7 +16,7 @@ final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((
   ref,
 ) {
   final prefs = ref.watch(sharedPreferencesProvider);
-  return ThemeModeNotifier(prefs.asData?.value);
+  return ThemeModeNotifier(prefs);
 });
 
 class ThemeModeNotifier extends StateNotifier<ThemeMode> {
@@ -63,7 +63,7 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
 /// Dil provider'ı (kalıcı)
 final localeProvider = StateNotifierProvider<LocaleNotifier, String>((ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
-  return LocaleNotifier(prefs.asData?.value);
+  return LocaleNotifier(prefs);
 });
 
 class LocaleNotifier extends StateNotifier<String> {
@@ -93,7 +93,7 @@ final colorSchemeProvider = StateNotifierProvider<ColorSchemeNotifier, String>((
   ref,
 ) {
   final prefs = ref.watch(sharedPreferencesProvider);
-  return ColorSchemeNotifier(prefs.asData?.value);
+  return ColorSchemeNotifier(prefs);
 });
 
 class ColorSchemeNotifier extends StateNotifier<String> {

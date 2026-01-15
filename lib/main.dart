@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -17,6 +18,9 @@ import 'features/settings/data/settings_provider.dart';
 void main() async {
   // Flutter Engine başlatma
   WidgetsFlutterBinding.ensureInitialized();
+
+  // SharedPreferences başlatma
+  final sharedPrefs = await SharedPreferences.getInstance();
 
   // Supabase başlatma
   try {
@@ -33,7 +37,12 @@ void main() async {
   await initializeDateFormatting(null, null);
 
   // Uygulamayı başlat
-  runApp(const ProviderScope(child: WalletEliteApp()));
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(sharedPrefs)],
+      child: const WalletEliteApp(),
+    ),
+  );
 }
 
 class WalletEliteApp extends ConsumerWidget {

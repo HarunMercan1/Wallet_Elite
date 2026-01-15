@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
@@ -50,11 +51,14 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     final transactionsAsync = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesProvider);
 
+    final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      backgroundColor: isDark
+          ? colorTheme.backgroundDark
+          : colorTheme.backgroundLight,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +74,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   GestureDetector(
@@ -82,12 +86,14 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                       ),
                       decoration: BoxDecoration(
                         color: _filterState.hasFilters
-                            ? AppColors.primary
-                            : (isDark ? AppColors.surfaceDark : Colors.white),
+                            ? colorTheme.primary
+                            : (isDark
+                                  ? colorTheme.surfaceDark
+                                  : colorTheme.surfaceLight),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: _filterState.hasFilters
-                              ? AppColors.primary
+                              ? colorTheme.primary
                               : (isDark ? Colors.white10 : Colors.grey[300]!),
                         ),
                         boxShadow: [
@@ -160,6 +166,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                               _filterState = _filterState.copyWith(type: 'all'),
                         ),
                         isDark,
+                        colorTheme,
                       ),
                     if (_filterState.startDate != null ||
                         _filterState.endDate != null)
@@ -172,6 +179,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           ),
                         ), // Sıfırlama mantığı daha detaylı olabilir
                         isDark,
+                        colorTheme,
                       ),
                     // Kategori sayısı kadar chip veya "X Kategori" eklenebilir
                   ],
@@ -199,7 +207,9 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                         )
                       : null,
                   filled: true,
-                  fillColor: isDark ? AppColors.surfaceDark : Colors.white,
+                  fillColor: isDark
+                      ? colorTheme.surfaceDark
+                      : colorTheme.surfaceLight,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
                     borderSide: BorderSide.none,
@@ -309,6 +319,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           categoryMap[tx.categoryId],
                           l,
                           isDark,
+                          colorTheme,
                         );
                       },
                     );
@@ -338,7 +349,9 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.surfaceDark : Colors.white,
+                          color: isDark
+                              ? colorTheme.surfaceDark
+                              : colorTheme.surfaceLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isDark ? Colors.white10 : Colors.grey[200]!,
@@ -359,8 +372,8 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: totalFiltered >= 0
-                                    ? AppColors.success
-                                    : AppColors.error,
+                                    ? colorTheme.success
+                                    : colorTheme.error,
                               ),
                             ),
                           ],
@@ -401,6 +414,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                                     categoryMap[tx.categoryId],
                                     l,
                                     isDark,
+                                    colorTheme,
                                   ),
                                 ),
                               ],
@@ -425,6 +439,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     String label,
     VoidCallback onRemove,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     return Container(
       margin: const EdgeInsets.only(right: 8),
@@ -433,16 +448,16 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: isDark ? Colors.white : AppColors.primary,
+            color: isDark ? Colors.white : colorTheme.primary,
           ),
         ),
         backgroundColor: isDark
-            ? AppColors.surfaceDark
-            : AppColors.primary.withOpacity(0.1),
+            ? colorTheme.surfaceDark
+            : colorTheme.primary.withOpacity(0.1),
         deleteIcon: Icon(
           Icons.close,
           size: 14,
-          color: isDark ? Colors.white70 : AppColors.primary,
+          color: isDark ? Colors.white70 : colorTheme.primary,
         ),
         onDeleted: onRemove,
         side: BorderSide.none,
@@ -509,9 +524,10 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     CategoryModel? category,
     AppLocalizations l,
     bool isDark,
+    ColorTheme colorTheme,
   ) {
     final isIncome = tx.type == 'income';
-    final color = isIncome ? AppColors.success : AppColors.error;
+    final color = isIncome ? colorTheme.success : colorTheme.error;
 
     IconData categoryIcon = isIncome
         ? Icons.arrow_downward
@@ -533,7 +549,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
@@ -565,7 +581,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
