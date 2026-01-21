@@ -1,11 +1,18 @@
 // lib/features/auth/data/auth_repository.dart
 
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../wallet/models/profile_model.dart';
 
 /// Auth işlemlerini yöneten repository
 class AuthRepository {
   final SupabaseClient _supabase = Supabase.instance.client;
+
+  // Google Sign In objesini tek bir yerde, doğru config ile oluşturuyoruz
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    serverClientId:
+        '124406936709-pbknseqqe0hvcpbg4jehm97ulauigf05.apps.googleusercontent.com',
+  );
 
   /// Mevcut kullanıcı var mı?
   User? get currentUser => _supabase.auth.currentUser;
@@ -127,16 +134,69 @@ class AuthRepository {
   }
 
   /// Google ile giriş yap
-  Future<bool> signInWithGoogle() async {
+  /// Google ile giriş yap (Hata varsa mesaj döner, yoksa null)
+  Future<String?> signInWithGoogle() async {
     try {
-      await _supabase.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'io.supabase.walletelite://login-callback',
+      // Önceki oturum kalıntılarını temizle (Hesap seçiciyi zorlamak için)
+      await _googleSignIn.signOut();
+
+      // 3. Kullanıcıya Google giriş ekranını göster
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        // Kullanıcı girişi iptal etti
+        return 'Giriş iptal edildi';
+      }
+
+      // 4. Authentication detaylarını al
+      final googleAuth = await googleUser.authentication;
+      final accessToken = googleAuth.accessToken;
+      final idToken = googleAuth.idToken;
+
+      if (accessToken == null) {
+        return 'Google Access Token bulunamadı.';
+      }
+      if (idToken == null) {
+        return 'Google ID Token bulunamadı.';
+      }
+
+      // 5. Supabase'e giriş yap
+      final response = await _supabase.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+        accessToken: accessToken,
       );
-      return true;
+
+      // 6. Profil kontrolü yap (yoksa oluştur)
+      if (response.user != null) {
+        final userId = response.user!.id;
+        final fullName = googleUser.displayName ?? 'Google User';
+        final avatarUrl = googleUser.photoUrl;
+
+        // Mevcut profili kontrol et
+        final existingProfile = await getProfile(userId);
+
+        if (existingProfile == null) {
+          // Yeni profil oluştur
+          await _supabase.from('profiles').upsert({
+            'id': userId,
+            'full_name': fullName,
+            'avatar_url': avatarUrl,
+            'is_premium': false,
+            'onboarding_completed': true,
+          });
+        }
+      }
+
+      return null; // Başarılı, hata yok
     } catch (e) {
       print('Google giriş hatası: $e');
-      return false;
+      if (e.toString().contains('ApiException: 10')) {
+        return 'Google Yapılandırma Hatası (Hata: 10).\nLütfen SHA-1 ve Paket Adını kontrol edin.';
+      }
+      if (e.toString().contains('ApiException: 12500')) {
+        return 'Google Play Servisleri güncel değil veya cihaz desteklemiyor (Hata: 12500).';
+      }
+      return 'Giriş hatası: $e';
     }
   }
 
@@ -150,6 +210,18 @@ class AuthRepository {
   /// Çıkış yap
   Future<void> signOut() async {
     await _supabase.auth.signOut();
+    try {
+      await _googleSignIn
+          .disconnect(); // Disconnect önemli, hesabı unutmasını sağlar
+    } catch (e) {
+      print('Google çıkış hatası (disconnect): $e');
+    }
+
+    try {
+      await _googleSignIn.signOut();
+    } catch (e) {
+      print('Google çıkış hatası (signOut): $e');
+    }
   }
 
   /// Kullanıcı profilini getir (yoksa oluştur)

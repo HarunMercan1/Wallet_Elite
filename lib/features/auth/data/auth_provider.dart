@@ -81,13 +81,13 @@ class AuthController {
   }
 
   /// Google ile giriş
-  Future<bool> signInWithGoogle() async {
+  Future<String?> signInWithGoogle() async {
     try {
       final authRepo = ref.read(authRepositoryProvider);
       return await authRepo.signInWithGoogle();
     } catch (e) {
       print('Google giriş hatası: $e');
-      return false;
+      return 'Bilinmeyen bir hata oluştu: $e';
     }
   }
 

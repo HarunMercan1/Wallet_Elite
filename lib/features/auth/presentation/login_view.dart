@@ -26,6 +26,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   bool _isLogin = true;
   bool _isLoading = false;
   bool _obscurePassword = true;
+  bool _isGoogleLoading = false;
 
   @override
   void dispose() {
@@ -90,10 +91,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                   // Form Card
                   Container(
-                    padding: const EdgeInsets.all(24),
+                    padding: responsive.allPadding,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: responsive.borderRadiusL,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
@@ -118,9 +119,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     setState(() => _isLogin = true);
                                   },
                                   colorTheme,
+                                  responsive,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: responsive.paddingS),
                               Expanded(
                                 child: _buildTabButton(
                                   l.registerTab,
@@ -129,12 +131,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     setState(() => _isLogin = false);
                                   },
                                   colorTheme,
+                                  responsive,
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(height: 24),
+                          responsive.verticalSpaceXL,
 
                           // Name field (only for registration)
                           if (!_isLogin) ...[
@@ -148,21 +151,22 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 prefixIcon: Icon(
                                   Icons.person_outlined,
                                   color: colorTheme.primary,
+                                  size: responsive.iconL,
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: responsive.borderRadiusM,
                                   borderSide: BorderSide(
                                     color: Colors.grey[400]!,
                                   ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: responsive.borderRadiusM,
                                   borderSide: BorderSide(
                                     color: Colors.grey[400]!,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: responsive.borderRadiusM,
                                   borderSide: BorderSide(
                                     color: colorTheme.primary,
                                     width: 2,
@@ -180,7 +184,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 return null;
                               },
                             ),
-                            const SizedBox(height: 16),
+                            responsive.verticalSpaceL,
                           ],
 
                           // Email
@@ -194,21 +198,22 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               prefixIcon: Icon(
                                 Icons.email_outlined,
                                 color: colorTheme.primary,
+                                size: responsive.iconL,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
                                   color: Colors.grey[400]!,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
                                   color: Colors.grey[400]!,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
                                   color: colorTheme.primary,
                                   width: 2,
@@ -226,7 +231,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             },
                           ),
 
-                          const SizedBox(height: 16),
+                          responsive.verticalSpaceL,
 
                           // Password
                           TextFormField(
@@ -239,6 +244,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               prefixIcon: Icon(
                                 Icons.lock_outlined,
                                 color: colorTheme.primary,
+                                size: responsive.iconL,
                               ),
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -246,6 +252,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
                                   color: Colors.grey[600],
+                                  size: responsive.iconL,
                                 ),
                                 onPressed: () {
                                   setState(
@@ -254,19 +261,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 },
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
                                   color: Colors.grey[400]!,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
                                   color: Colors.grey[400]!,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
                                   color: colorTheme.primary,
                                   width: 2,
@@ -285,7 +292,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           ),
 
                           if (_isLogin) ...[
-                            const SizedBox(height: 8),
+                            responsive.verticalSpaceS,
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
@@ -295,11 +302,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ),
                           ],
 
-                          const SizedBox(height: 16),
+                          responsive.verticalSpaceL,
 
                           // Login/Register Button
                           SizedBox(
-                            height: 50,
+                            height: responsive.buttonHeight,
                             child: ElevatedButton(
                               onPressed: _isLoading
                                   ? null
@@ -311,7 +318,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     .withOpacity(0.7),
                                 disabledForegroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: responsive.borderRadiusM,
                                 ),
                               ),
                               child: _isLoading
@@ -325,15 +332,15 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     )
                                   : Text(
                                       _isLogin ? l.loginTab : l.registerTab,
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style: TextStyle(
+                                        fontSize: responsive.fontL,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                             ),
                           ),
 
-                          const SizedBox(height: 24),
+                          responsive.verticalSpaceXL,
 
                           // Or divider
                           Row(
@@ -352,47 +359,69 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             ],
                           ),
 
-                          const SizedBox(height: 24),
+                          responsive.verticalSpaceXL,
 
                           // Google sign-in
                           OutlinedButton.icon(
-                            onPressed: _isLoading
+                            onPressed: (_isLoading || _isGoogleLoading)
                                 ? null
                                 : () async {
-                                    setState(() => _isLoading = true);
-                                    final success = await authController
+                                    setState(() => _isGoogleLoading = true);
+                                    final errorMessage = await authController
                                         .signInWithGoogle();
-                                    setState(() => _isLoading = false);
 
-                                    if (!success && mounted) {
+                                    if (!mounted) return;
+                                    setState(() => _isGoogleLoading = false);
+
+                                    if (errorMessage != null &&
+                                        errorMessage != 'Giriş iptal edildi') {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
                                         SnackBar(
-                                          content: Text(l.googleLoginFailed),
+                                          content: Text(
+                                            errorMessage,
+                                          ), // Gerçek hatayı göster
                                           backgroundColor: Colors.red,
+                                          duration: const Duration(seconds: 4),
                                         ),
                                       );
+                                    } else if (errorMessage == null) {
+                                      // Başarılı giriş
+                                      context.go('/home');
                                     }
                                   },
                             style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: EdgeInsets.symmetric(
+                                vertical: responsive.hp(1.5),
+                              ),
                               foregroundColor: Colors.black87,
                               side: BorderSide(color: Colors.grey[400]!),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: responsive.borderRadiusM,
                               ),
                             ),
-                            icon: FaIcon(
-                              FontAwesomeIcons.google,
-                              size: 20,
-                              color: Colors.red[600],
-                            ),
+                            icon: _isGoogleLoading
+                                ? SizedBox(
+                                    width: responsive.iconM,
+                                    height: responsive.iconM,
+                                    child: const CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : FaIcon(
+                                    FontAwesomeIcons.google,
+                                    size: responsive.iconM,
+                                    color: Colors.red[600],
+                                  ),
                             label: Text(
-                              l.continueWithGoogle,
-                              style: const TextStyle(
+                              _isGoogleLoading
+                                  ? 'Giriş Yapılıyor...'
+                                  : l.continueWithGoogle,
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textPrimary,
+                                fontSize: responsive.fontM,
                               ),
                             ),
                           ),
@@ -426,6 +455,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     bool isSelected,
     VoidCallback onTap,
     ColorTheme colorTheme,
+    ResponsiveHelper responsive,
   ) {
     return GestureDetector(
       onTap: onTap,
@@ -433,7 +463,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? colorTheme.primary : Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: responsive.borderRadiusS,
         ),
         child: Text(
           label,
@@ -441,6 +471,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: isSelected ? Colors.white : Colors.grey[600],
+            fontSize: responsive.fontM,
           ),
         ),
       ),
