@@ -958,4 +958,149 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get reset => 'Сбросить';
+
+  @override
+  String get recurringTransactions => 'Recurring Transactions';
+
+  @override
+  String get addRecurringTransaction => 'Add Recurring Transaction';
+
+  @override
+  String get editRecurringTransaction => 'Edit Recurring Transaction';
+
+  @override
+  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+
+  @override
+  String get deleteRecurringConfirmation =>
+      'Are you sure you want to delete this recurring transaction?';
+
+  @override
+  String get noRecurringTransactions => 'No recurring transactions yet';
+
+  @override
+  String get addRecurringTransactionHint =>
+      'Save time by adding regular transactions like salary and bills';
+
+  @override
+  String get frequency => 'Frequency';
+
+  @override
+  String get yearly => 'Yearly';
+
+  @override
+  String get dayOfMonth => 'Day of Month';
+
+  @override
+  String get dayOfWeek => 'Day of Week';
+
+  @override
+  String get nextExecution => 'Next Execution';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get descriptionHint => 'e.g. Netflix subscription';
+
+  @override
+  String get selectAccount => 'Select Account';
+
+  @override
+  String get selectCategory => 'Select Category';
+
+  @override
+  String get pleaseEnterAmount => 'Please enter amount';
+
+  @override
+  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+
+  @override
+  String get pleaseSelectAccount => 'Please select an account';
+
+  @override
+  String get budget => 'Budget';
+
+  @override
+  String get addBudget => 'Add Budget';
+
+  @override
+  String get editBudget => 'Edit Budget';
+
+  @override
+  String get deleteBudget => 'Delete Budget';
+
+  @override
+  String get deleteBudgetConfirmation =>
+      'Are you sure you want to delete this budget?';
+
+  @override
+  String get noBudgets => 'No budgets yet';
+
+  @override
+  String get addBudgetHint =>
+      'Create a budget to keep your expenses under control';
+
+  @override
+  String get budgetName => 'Budget Name';
+
+  @override
+  String get budgetNameHint => 'e.g. Monthly Food Budget';
+
+  @override
+  String get pleaseEnterBudgetName => 'Please enter budget name';
+
+  @override
+  String get budgetAmount => 'Budget Limit';
+
+  @override
+  String get budgetPeriod => 'Budget Period';
+
+  @override
+  String get budgetStartDay => 'Period Start Day';
+
+  @override
+  String get allExpenses => 'All Expenses';
+
+  @override
+  String get notifyAtPercent => 'Warning Percentage';
+
+  @override
+  String get notifyWhenExceeded => 'Notify when exceeded';
+
+  @override
+  String get used => 'used';
+
+  @override
+  String get exceeded => 'exceeded';
 }

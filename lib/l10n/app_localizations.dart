@@ -1989,6 +1989,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset'**
   String get reset;
+
+  /// No description provided for @recurringTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Transactions'**
+  String get recurringTransactions;
+
+  /// No description provided for @addRecurringTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Recurring Transaction'**
+  String get addRecurringTransaction;
+
+  /// No description provided for @editRecurringTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Recurring Transaction'**
+  String get editRecurringTransaction;
+
+  /// No description provided for @deleteRecurringTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Recurring Transaction'**
+  String get deleteRecurringTransaction;
+
+  /// No description provided for @deleteRecurringConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this recurring transaction?'**
+  String get deleteRecurringConfirmation;
+
+  /// No description provided for @noRecurringTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No recurring transactions yet'**
+  String get noRecurringTransactions;
+
+  /// No description provided for @addRecurringTransactionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Save time by adding regular transactions like salary and bills'**
+  String get addRecurringTransactionHint;
+
+  /// No description provided for @frequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get frequency;
+
+  /// No description provided for @yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get yearly;
+
+  /// No description provided for @dayOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of Month'**
+  String get dayOfMonth;
+
+  /// No description provided for @dayOfWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of Week'**
+  String get dayOfWeek;
+
+  /// No description provided for @nextExecution.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Execution'**
+  String get nextExecution;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @descriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Netflix subscription'**
+  String get descriptionHint;
+
+  /// No description provided for @selectAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Account'**
+  String get selectAccount;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @pleaseEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter amount'**
+  String get pleaseEnterAmount;
+
+  /// No description provided for @pleaseEnterValidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get pleaseEnterValidAmount;
+
+  /// No description provided for @pleaseSelectAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an account'**
+  String get pleaseSelectAccount;
+
+  /// No description provided for @budget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get budget;
+
+  /// No description provided for @addBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Budget'**
+  String get addBudget;
+
+  /// No description provided for @editBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Budget'**
+  String get editBudget;
+
+  /// No description provided for @deleteBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Budget'**
+  String get deleteBudget;
+
+  /// No description provided for @deleteBudgetConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this budget?'**
+  String get deleteBudgetConfirmation;
+
+  /// No description provided for @noBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'No budgets yet'**
+  String get noBudgets;
+
+  /// No description provided for @addBudgetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a budget to keep your expenses under control'**
+  String get addBudgetHint;
+
+  /// No description provided for @budgetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Name'**
+  String get budgetName;
+
+  /// No description provided for @budgetNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Monthly Food Budget'**
+  String get budgetNameHint;
+
+  /// No description provided for @pleaseEnterBudgetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter budget name'**
+  String get pleaseEnterBudgetName;
+
+  /// No description provided for @budgetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Limit'**
+  String get budgetAmount;
+
+  /// No description provided for @budgetPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Period'**
+  String get budgetPeriod;
+
+  /// No description provided for @budgetStartDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Period Start Day'**
+  String get budgetStartDay;
+
+  /// No description provided for @allExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'All Expenses'**
+  String get allExpenses;
+
+  /// No description provided for @notifyAtPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning Percentage'**
+  String get notifyAtPercent;
+
+  /// No description provided for @notifyWhenExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when exceeded'**
+  String get notifyWhenExceeded;
+
+  /// No description provided for @used.
+  ///
+  /// In en, this message translates to:
+  /// **'used'**
+  String get used;
+
+  /// No description provided for @exceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'exceeded'**
+  String get exceeded;
 }
 
 class _AppLocalizationsDelegate

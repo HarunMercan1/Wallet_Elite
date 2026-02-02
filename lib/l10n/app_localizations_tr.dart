@@ -963,4 +963,149 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get reset => 'Sıfırla';
+
+  @override
+  String get recurringTransactions => 'Tekrarlayan İşlemler';
+
+  @override
+  String get addRecurringTransaction => 'Tekrarlayan İşlem Ekle';
+
+  @override
+  String get editRecurringTransaction => 'Tekrarlayan İşlemi Düzenle';
+
+  @override
+  String get deleteRecurringTransaction => 'Tekrarlayan İşlemi Sil';
+
+  @override
+  String get deleteRecurringConfirmation =>
+      'Bu tekrarlayan işlemi silmek istediğinize emin misiniz?';
+
+  @override
+  String get noRecurringTransactions => 'Henüz tekrarlayan işlem yok';
+
+  @override
+  String get addRecurringTransactionHint =>
+      'Maaş, fatura gibi düzenli işlemler ekleyerek zaman kazanın';
+
+  @override
+  String get frequency => 'Tekrar Sıklığı';
+
+  @override
+  String get yearly => 'Yıllık';
+
+  @override
+  String get dayOfMonth => 'Ayın Günü';
+
+  @override
+  String get dayOfWeek => 'Haftanın Günü';
+
+  @override
+  String get nextExecution => 'Sonraki Çalışma';
+
+  @override
+  String get active => 'Aktif';
+
+  @override
+  String get inactive => 'Pasif';
+
+  @override
+  String get optional => 'Opsiyonel';
+
+  @override
+  String get monday => 'Pazartesi';
+
+  @override
+  String get tuesday => 'Salı';
+
+  @override
+  String get wednesday => 'Çarşamba';
+
+  @override
+  String get thursday => 'Perşembe';
+
+  @override
+  String get friday => 'Cuma';
+
+  @override
+  String get saturday => 'Cumartesi';
+
+  @override
+  String get sunday => 'Pazar';
+
+  @override
+  String get description => 'Açıklama';
+
+  @override
+  String get descriptionHint => 'örn: Netflix aboneliği';
+
+  @override
+  String get selectAccount => 'Hesap Seç';
+
+  @override
+  String get selectCategory => 'Kategori Seç';
+
+  @override
+  String get pleaseEnterAmount => 'Lütfen tutar giriniz';
+
+  @override
+  String get pleaseEnterValidAmount => 'Geçerli bir tutar giriniz';
+
+  @override
+  String get pleaseSelectAccount => 'Lütfen hesap seçiniz';
+
+  @override
+  String get budget => 'Bütçe';
+
+  @override
+  String get addBudget => 'Bütçe Ekle';
+
+  @override
+  String get editBudget => 'Bütçeyi Düzenle';
+
+  @override
+  String get deleteBudget => 'Bütçeyi Sil';
+
+  @override
+  String get deleteBudgetConfirmation =>
+      'Bu bütçeyi silmek istediğinizden emin misiniz?';
+
+  @override
+  String get noBudgets => 'Henüz bütçe yok';
+
+  @override
+  String get addBudgetHint =>
+      'Harcamalarınızı kontrol altında tutmak için bütçe oluşturun';
+
+  @override
+  String get budgetName => 'Bütçe Adı';
+
+  @override
+  String get budgetNameHint => 'örn: Aylık Yemek Bütçesi';
+
+  @override
+  String get pleaseEnterBudgetName => 'Lütfen bütçe adı giriniz';
+
+  @override
+  String get budgetAmount => 'Bütçe Limiti';
+
+  @override
+  String get budgetPeriod => 'Bütçe Periyodu';
+
+  @override
+  String get budgetStartDay => 'Dönem Başlangıç Günü';
+
+  @override
+  String get allExpenses => 'Tüm Harcamalar';
+
+  @override
+  String get notifyAtPercent => 'Uyarı Yüzdesi';
+
+  @override
+  String get notifyWhenExceeded => 'Aşıldığında bildir';
+
+  @override
+  String get used => 'kullanıldı';
+
+  @override
+  String get exceeded => 'aşıldı';
 }

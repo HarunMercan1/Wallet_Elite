@@ -278,6 +278,12 @@ class ColorTheme {
   static List<ColorTheme> get premiumThemes =>
       all.where((t) => t.isPremium).toList();
 
+  // Helper getters for transaction colors
+  Color get income => success;
+  Color get expense => error;
+  Color get cardDark => surfaceDark;
+  Color get cardLight => surfaceLight;
+
   String get id {
     if (this == midnight) return 'midnight';
     if (this == amethyst) return 'amethyst';

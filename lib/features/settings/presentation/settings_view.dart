@@ -12,6 +12,8 @@ import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/account_model.dart';
+import '../../recurring/presentation/recurring_transactions_view.dart';
+import '../../budgets/presentation/budgets_view.dart';
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -125,6 +127,62 @@ class SettingsView extends ConsumerWidget {
                   ),
                   onTap: () =>
                       _showAddWalletDialog(context, ref, l, isDark, colorTheme),
+                ),
+                Divider(
+                  height: 1,
+                  color: isDark ? Colors.white10 : Colors.grey[200],
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.repeat,
+                    color: isDark ? colorTheme.accent : Colors.purple,
+                  ),
+                  title: Text(
+                    l.recurringTransactions,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: isDark ? Colors.grey[600] : Colors.grey[400],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RecurringTransactionsView(),
+                      ),
+                    );
+                  },
+                ),
+                Divider(
+                  height: 1,
+                  color: isDark ? Colors.white10 : Colors.grey[200],
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.pie_chart,
+                    color: isDark ? colorTheme.accent : Colors.teal,
+                  ),
+                  title: Text(
+                    l.budgets,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: isDark ? Colors.grey[600] : Colors.grey[400],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BudgetsView(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

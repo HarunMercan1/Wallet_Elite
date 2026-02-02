@@ -103,8 +103,8 @@ class ColorSchemeNotifier extends StateNotifier<String> {
   ColorSchemeNotifier(this._prefs) : super(_loadInitial(_prefs));
 
   static String _loadInitial(SharedPreferences? prefs) {
-    if (prefs == null) return 'elite';
-    return prefs.getString(_key) ?? 'elite';
+    if (prefs == null) return 'midnight';
+    return prefs.getString(_key) ?? 'midnight';
   }
 
   void setColorScheme(String scheme) {
