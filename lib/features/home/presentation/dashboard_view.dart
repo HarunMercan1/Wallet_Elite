@@ -15,6 +15,9 @@ import '../../wallet/presentation/edit_transaction_sheet.dart';
 import '../../debts/presentation/debts_view.dart';
 import '../../auth/presentation/profile_edit_sheet.dart';
 import '../../wallet/presentation/wallet_selection_sheet.dart';
+import '../../budgets/presentation/budgets_view.dart';
+import '../../recurring/presentation/recurring_transactions_view.dart';
+import '../../../core/utils/responsive_helper.dart';
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
@@ -83,67 +86,60 @@ class DashboardView extends ConsumerWidget {
 
               const SizedBox(height: 16),
 
-              // Borç Takibi Butonu
+              // Hızlı Erişim Butonları (Borç Takibi, Bütçeler, Tekrarlayan İşlemler)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const DebtsView()),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? colorTheme.surfaceDark
-                          : colorTheme.surfaceLight,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
+                child: Row(
+                  children: [
+                    // Borç Takibi
+                    Expanded(
+                      child: _buildQuickAccessCard(
+                        context,
+                        icon: Icons.people,
+                        label: l.debtTracking,
+                        colorTheme: colorTheme,
+                        isDark: isDark,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const DebtsView()),
                         ),
-                      ],
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: colorTheme.primary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            Icons.people,
-                            color: colorTheme.primary,
-                            size: 22,
+                    const SizedBox(width: 10),
+                    // Bütçeler
+                    Expanded(
+                      child: _buildQuickAccessCard(
+                        context,
+                        icon: Icons.pie_chart,
+                        label: l.budgets,
+                        colorTheme: colorTheme,
+                        isDark: isDark,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const BudgetsView(),
                           ),
                         ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Text(
-                            l.debtTracking,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? Colors.white
-                                  : AppColors.textPrimary,
-                            ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    // Tekrarlayan İşlemler
+                    Expanded(
+                      child: _buildQuickAccessCard(
+                        context,
+                        icon: Icons.repeat,
+                        label: l.recurringTransactions,
+                        colorTheme: colorTheme,
+                        isDark: isDark,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RecurringTransactionsView(),
                           ),
                         ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: isDark ? Colors.grey[400] : Colors.grey[500],
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
 
@@ -205,15 +201,7 @@ class DashboardView extends ConsumerWidget {
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        ),),
       child: SafeArea(
         bottom: false,
         child: Padding(
@@ -252,15 +240,7 @@ class DashboardView extends ConsumerWidget {
                             border: Border.all(
                               color: Colors.white.withOpacity(0.4),
                               width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                blurRadius: 15,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
+                            ),),
                           child: _buildDashboardAvatar(profile, colorTheme),
                         ),
                         // Edit badge
@@ -271,15 +251,7 @@ class DashboardView extends ConsumerWidget {
                             padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
+                              shape: BoxShape.circle,),
                             child: Icon(
                               Icons.edit,
                               size: 14,
@@ -327,15 +299,7 @@ class DashboardView extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: colorTheme.accent,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorTheme.accent.withOpacity(0.4),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
+                        borderRadius: BorderRadius.circular(20),),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -457,17 +421,7 @@ class DashboardView extends ConsumerWidget {
             border: Border.all(
               color: colorTheme.primary.withValues(alpha: 0.15),
               width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: colorTheme.primary.withValues(
-                  alpha: isDark ? 0.08 : 0.05,
-                ),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
+            ),),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -699,15 +653,7 @@ class DashboardView extends ConsumerWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+          borderRadius: BorderRadius.circular(14),),
         child: Row(
           children: [
             Container(
@@ -895,5 +841,56 @@ class DashboardView extends ConsumerWidget {
       default:
         return Icons.category;
     }
+  }
+
+  Widget _buildQuickAccessCard(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required ColorTheme colorTheme,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    final r = ResponsiveHelper.of(context);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: r.hp(11), // Dinamik yükseklik (~90px on 800px screen)
+        padding: EdgeInsets.symmetric(
+          vertical: r.paddingS,
+          horizontal: r.paddingXS,
+        ),
+        decoration: BoxDecoration(
+          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          borderRadius: r.borderRadiusM,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(r.paddingS),
+              decoration: BoxDecoration(
+                color: colorTheme.primary.withOpacity(0.1),
+                borderRadius: r.borderRadiusS,
+              ),
+              child: Icon(icon, color: colorTheme.primary, size: r.iconM),
+            ),
+            SizedBox(height: r.spaceXS),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: r.fontXS,
+                fontWeight: FontWeight.w600,
+                color: isDark ? Colors.white : AppColors.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

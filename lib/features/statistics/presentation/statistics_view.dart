@@ -486,15 +486,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         border: Border.all(
           color: colorTheme.primary.withOpacity(0.15),
           width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: colorTheme.primary.withOpacity(isDark ? 0.08 : 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
+        ),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -643,15 +635,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -691,15 +675,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -777,15 +753,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+          border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -876,15 +844,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -946,15 +906,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1077,15 +1029,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         children: categories.map((entry) {
           final category = categoryMap[entry.key];
@@ -1183,15 +1127,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1257,15 +1193,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,

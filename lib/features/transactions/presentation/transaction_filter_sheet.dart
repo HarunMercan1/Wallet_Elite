@@ -231,15 +231,7 @@ class _TransactionFilterSheetState
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? colorTheme.surfaceDark : Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -4),
-                ),
-              ],
-            ),
+              color: isDark ? colorTheme.surfaceDark : Colors.white,),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(

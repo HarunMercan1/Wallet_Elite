@@ -265,15 +265,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(20),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -471,15 +463,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.1 : 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -547,15 +531,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(20),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -676,15 +652,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(20),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

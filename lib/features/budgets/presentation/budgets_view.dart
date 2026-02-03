@@ -72,12 +72,17 @@ class BudgetsView extends ConsumerWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddSheet(context),
-        backgroundColor: colorTheme.primary,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.add),
-        label: Text(l.addBudget),
+      floatingActionButton: budgetsAsync.maybeWhen(
+        data: (budgets) => budgets.isEmpty
+            ? null
+            : FloatingActionButton.extended(
+                onPressed: () => _showAddSheet(context),
+                backgroundColor: colorTheme.primary,
+                foregroundColor: Colors.white,
+                icon: const Icon(Icons.add),
+                label: Text(l.addBudget),
+              ),
+        orElse: () => null,
       ),
     );
   }
@@ -154,15 +159,7 @@ class BudgetsView extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           border: budget.isExceeded
               ? Border.all(color: Colors.red.withOpacity(0.5), width: 2)
-              : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+              : null,),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

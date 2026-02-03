@@ -311,17 +311,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           color: _transactionType == 'expense'
               ? colorTheme.error.withOpacity(0.9)
               : colorTheme.success.withOpacity(0.9),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  (_transactionType == 'expense'
-                          ? colorTheme.error
-                          : colorTheme.success)
-                      .withOpacity(0.25),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
@@ -535,15 +524,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 : (isDark ? Colors.white24 : Colors.grey[200]!),
             width: isSelected ? 2 : 1,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: colorTheme.primary.withOpacity(0.2),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1219,15 +1199,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                           : (isDark ? Colors.white24 : Colors.grey[200]!),
                       width: isSelected ? 2 : 1,
                     ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: colorTheme.primary.withOpacity(0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 3),
-                            ),
-                          ]
-                        : null,
                   ),
                   child: Row(
                     children: [

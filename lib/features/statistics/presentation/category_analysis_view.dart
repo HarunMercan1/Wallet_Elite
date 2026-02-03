@@ -300,15 +300,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -365,15 +357,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(20),),
       child: Column(
         children: [
           // Main chart area with side stats
@@ -614,15 +598,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),),
       child: Row(
         children: [
           Container(
@@ -706,15 +682,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(isDark ? 0.1 : 0.03),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
+            borderRadius: BorderRadius.circular(12),),
           child: Column(
             children: [
               Row(

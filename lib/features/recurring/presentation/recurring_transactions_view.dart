@@ -108,10 +108,15 @@ class RecurringTransactionsView extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(child: Text('${l.error}: $error')),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddSheet(context),
-        backgroundColor: colorTheme.primary,
-        child: const Icon(Icons.add, color: Colors.white),
+      floatingActionButton: transactionsAsync.maybeWhen(
+        data: (transactions) => transactions.isEmpty
+            ? null
+            : FloatingActionButton(
+                onPressed: () => _showAddSheet(context),
+                backgroundColor: colorTheme.primary,
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+        orElse: () => null,
       ),
     );
   }

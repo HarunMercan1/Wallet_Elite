@@ -234,15 +234,7 @@ class WalletView extends ConsumerWidget {
         border: Border.all(
           color: colorTheme.primary.withValues(alpha: 0.15),
           width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        ),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -376,16 +368,7 @@ class _ActionBox extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isDark ? Colors.white10 : Colors.grey[300]!,
-              ),
-              boxShadow: [
-                if (!isDark)
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-              ],
-            ),
+              ),),
             child: Icon(
               icon,
               color: isDark ? Colors.white : colorTheme.primary,
@@ -419,16 +402,7 @@ class _TransactionTile extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          if (!isDark)
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(16),),
       child: Row(
         children: [
           Container(

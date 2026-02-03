@@ -121,15 +121,7 @@ class DebtsView extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: colorTheme.primary.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(20),),
       child: Column(
         children: [
           Row(
@@ -444,15 +436,7 @@ class DebtsView extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           border: isOverdue
               ? Border.all(color: Colors.red.shade300, width: 2)
-              : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+              : null,),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

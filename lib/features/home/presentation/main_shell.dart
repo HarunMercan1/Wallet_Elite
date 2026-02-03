@@ -212,13 +212,6 @@ class _AddButton extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: primaryColor.withOpacity(0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Icon(Icons.add, color: Colors.white, size: r.iconXL),
       ),

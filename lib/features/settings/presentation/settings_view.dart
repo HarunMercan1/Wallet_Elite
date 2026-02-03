@@ -236,15 +236,7 @@ class SettingsView extends ConsumerWidget {
         border: Border.all(
           color: colorTheme.primary.withValues(alpha: 0.15),
           width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+        ),),
       child: Row(
         children: [
           CircleAvatar(
@@ -317,15 +309,7 @@ class SettingsView extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+        borderRadius: BorderRadius.circular(12),),
       child: Column(children: children),
     );
   }

@@ -95,16 +95,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           color: _filterState.hasFilters
                               ? colorTheme.primary
                               : (isDark ? Colors.white10 : Colors.grey[300]!),
-                        ),
-                        boxShadow: [
-                          if (!_filterState.hasFilters)
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                        ],
-                      ),
+                        ),),
                       child: Row(
                         children: [
                           Icon(
@@ -550,15 +541,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+          borderRadius: BorderRadius.circular(14),),
         child: Row(
           children: [
             Container(

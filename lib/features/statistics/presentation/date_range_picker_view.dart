@@ -159,13 +159,6 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: isDark ? colorTheme.surfaceDark : Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
               ),
               child: SafeArea(
                 child: ElevatedButton(
@@ -270,15 +263,6 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                     ? colorTheme.primary
                     : (isDark ? Colors.white24 : Colors.grey[300]!),
               ),
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: colorTheme.primary.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ]
-                  : null,
             ),
             child: Text(
               preset['label'] as String,
