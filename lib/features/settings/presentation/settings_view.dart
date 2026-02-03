@@ -65,6 +65,41 @@ class SettingsView extends ConsumerWidget {
 
             const SizedBox(height: 24),
 
+            // Uygulama Ayarları
+            _buildSectionTitle('Uygulama', isDark),
+            const SizedBox(height: 8),
+            _buildSettingsCard(
+              isDark: isDark,
+              colorTheme: colorTheme,
+              children: [
+                ListTile(
+                  leading: Icon(
+                    Icons.play_circle_outline,
+                    color: isDark ? colorTheme.accent : colorTheme.primary,
+                  ),
+                  title: Text(
+                    'Tanıtım Turunu Tekrar İzle',
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Uygulamanın özelliklerini keşfet',
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: isDark ? Colors.grey[600] : Colors.grey[400],
+                  ),
+                  onTap: () => context.push('/onboarding-preview'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
             // Cüzdan Ayarları
             _buildSectionTitle(l.wallets, isDark),
             const SizedBox(height: 8),
@@ -236,7 +271,8 @@ class SettingsView extends ConsumerWidget {
         border: Border.all(
           color: colorTheme.primary.withValues(alpha: 0.15),
           width: 1,
-        ),),
+        ),
+      ),
       child: Row(
         children: [
           CircleAvatar(
@@ -309,7 +345,8 @@ class SettingsView extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(12),),
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Column(children: children),
     );
   }

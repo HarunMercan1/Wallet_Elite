@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/auth/presentation/login_view.dart';
 import '../../features/auth/presentation/onboarding_view.dart';
+import '../../features/auth/presentation/onboarding_preview_view.dart';
 import '../../features/home/presentation/main_shell.dart';
 
 /// Router Provider
@@ -91,6 +92,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/home',
         name: 'home',
         builder: (context, state) => const MainShell(),
+      ),
+
+      // Onboarding Preview - Ayarlardan erişilebilir
+      GoRoute(
+        path: '/onboarding-preview',
+        name: 'onboarding-preview',
+        builder: (context, state) => const OnboardingPreviewView(),
       ),
     ],
   );

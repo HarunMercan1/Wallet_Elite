@@ -117,3 +117,34 @@ class ColorSchemeNotifier extends StateNotifier<String> {
     await prefs.setString(_key, scheme);
   }
 }
+
+/// Para birimi provider'ı (kalıcı)
+final currencyProvider = StateNotifierProvider<CurrencyNotifier, String>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return CurrencyNotifier(prefs);
+});
+
+class CurrencyNotifier extends StateNotifier<String> {
+  final SharedPreferences? _prefs;
+  static const String _key = 'currency';
+
+  CurrencyNotifier(this._prefs) : super(_loadInitial(_prefs));
+
+  static String _loadInitial(SharedPreferences? prefs) {
+    if (prefs == null) return 'TRY';
+    return prefs.getString(_key) ?? 'TRY';
+  }
+
+  void setCurrency(String currency) {
+    state = currency;
+    _saveCurrency(currency);
+  }
+
+  Future<void> _saveCurrency(String currency) async {
+    final prefs = _prefs ?? await SharedPreferences.getInstance();
+    await prefs.setString(_key, currency);
+  }
+}
+
+/// Language provider alias for compatibility
+final languageProvider = localeProvider;

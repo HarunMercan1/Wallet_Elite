@@ -2271,6 +2271,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'exceeded'**
   String get exceeded;
+
+  /// No description provided for @secureData.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is secure and encrypted'**
+  String get secureData;
+
+  /// No description provided for @cloudSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync across all your devices'**
+  String get cloudSync;
+
+  /// No description provided for @smartInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart insights about your finances'**
+  String get smartInsights;
+
+  /// No description provided for @discoverFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Features'**
+  String get discoverFeatures;
+
+  /// No description provided for @discoverFeaturesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you need to manage your finances'**
+  String get discoverFeaturesDesc;
+
+  /// No description provided for @budgetTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Tracking'**
+  String get budgetTracking;
+
+  /// No description provided for @budgetTrackingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set spending limits and stay on track'**
+  String get budgetTrackingDesc;
+
+  /// No description provided for @recurringTransactionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automate your regular payments'**
+  String get recurringTransactionsDesc;
+
+  /// No description provided for @selectLanguageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get selectLanguageDesc;
+
+  /// No description provided for @selectThemeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalize your app experience'**
+  String get selectThemeDesc;
+
+  /// No description provided for @themeOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean'**
+  String get themeOcean;
+
+  /// No description provided for @themeSunset.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunset'**
+  String get themeSunset;
+
+  /// No description provided for @themeForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get themeForest;
+
+  /// No description provided for @themeLavender.
+  ///
+  /// In en, this message translates to:
+  /// **'Lavender'**
+  String get themeLavender;
+
+  /// No description provided for @themeMidnight.
+  ///
+  /// In en, this message translates to:
+  /// **'Midnight'**
+  String get themeMidnight;
+
+  /// No description provided for @themeRose.
+  ///
+  /// In en, this message translates to:
+  /// **'Rose'**
+  String get themeRose;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @japaneseYen.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese Yen'**
+  String get japaneseYen;
+
+  /// No description provided for @russianRuble.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian Ruble'**
+  String get russianRuble;
 }
 
 class _AppLocalizationsDelegate

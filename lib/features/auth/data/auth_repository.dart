@@ -341,4 +341,50 @@ class AuthRepository {
       return false;
     }
   }
+
+  /// Kullanıcı tercihlerini güncelle (Supabase'e kaydet)
+  Future<bool> updateUserPreferences({
+    required String userId,
+    String? language,
+    String? theme,
+    String? currency,
+    bool? isDarkMode,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{};
+
+      if (language != null) updateData['preferred_language'] = language;
+      if (theme != null) updateData['preferred_theme'] = theme;
+      if (currency != null) updateData['preferred_currency'] = currency;
+      if (isDarkMode != null) updateData['is_dark_mode'] = isDarkMode;
+
+      if (updateData.isEmpty) return true;
+
+      await _supabase.from('profiles').update(updateData).eq('id', userId);
+
+      print('✅ Kullanıcı tercihleri güncellendi: $updateData');
+      return true;
+    } catch (e) {
+      print('❌ Tercih güncelleme hatası: $e');
+      return false;
+    }
+  }
+
+  /// Kullanıcı tercihlerini getir (Supabase'den)
+  Future<Map<String, dynamic>?> getUserPreferences(String userId) async {
+    try {
+      final response = await _supabase
+          .from('profiles')
+          .select(
+            'preferred_language, preferred_theme, preferred_currency, is_dark_mode',
+          )
+          .eq('id', userId)
+          .maybeSingle();
+
+      return response;
+    } catch (e) {
+      print('❌ Tercih getirme hatası: $e');
+      return null;
+    }
+  }
 }

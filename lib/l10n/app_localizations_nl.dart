@@ -1106,4 +1106,62 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get exceeded => 'exceeded';
+
+  @override
+  String get secureData => 'Your data is secure and encrypted';
+
+  @override
+  String get cloudSync => 'Sync across all your devices';
+
+  @override
+  String get smartInsights => 'Smart insights about your finances';
+
+  @override
+  String get discoverFeatures => 'Discover Features';
+
+  @override
+  String get discoverFeaturesDesc =>
+      'Everything you need to manage your finances';
+
+  @override
+  String get budgetTracking => 'Budget Tracking';
+
+  @override
+  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+
+  @override
+  String get recurringTransactionsDesc => 'Automate your regular payments';
+
+  @override
+  String get selectLanguageDesc => 'Choose your preferred language';
+
+  @override
+  String get selectThemeDesc => 'Personalize your app experience';
+
+  @override
+  String get themeOcean => 'Ocean';
+
+  @override
+  String get themeSunset => 'Sunset';
+
+  @override
+  String get themeForest => 'Forest';
+
+  @override
+  String get themeLavender => 'Lavender';
+
+  @override
+  String get themeMidnight => 'Midnight';
+
+  @override
+  String get themeRose => 'Rose';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get japaneseYen => 'Japanese Yen';
+
+  @override
+  String get russianRuble => 'Russian Ruble';
 }

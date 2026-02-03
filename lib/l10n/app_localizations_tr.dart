@@ -1108,4 +1108,63 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get exceeded => 'aşıldı';
+
+  @override
+  String get secureData => 'Verileriniz güvenli ve şifrelenmiş';
+
+  @override
+  String get cloudSync => 'Tüm cihazlarınızda senkronize edin';
+
+  @override
+  String get smartInsights => 'Finanslarınız hakkında akıllı öneriler';
+
+  @override
+  String get discoverFeatures => 'Özellikleri Keşfet';
+
+  @override
+  String get discoverFeaturesDesc =>
+      'Finanslarınızı yönetmek için ihtiyacınız olan her şey';
+
+  @override
+  String get budgetTracking => 'Bütçe Takibi';
+
+  @override
+  String get budgetTrackingDesc => 'Harcama limitleri belirle ve takip et';
+
+  @override
+  String get recurringTransactionsDesc =>
+      'Düzenli ödemelerinizi otomatikleştirin';
+
+  @override
+  String get selectLanguageDesc => 'Tercih ettiğiniz dili seçin';
+
+  @override
+  String get selectThemeDesc => 'Uygulama deneyiminizi kişiselleştirin';
+
+  @override
+  String get themeOcean => 'Okyanus';
+
+  @override
+  String get themeSunset => 'Gün Batımı';
+
+  @override
+  String get themeForest => 'Orman';
+
+  @override
+  String get themeLavender => 'Lavanta';
+
+  @override
+  String get themeMidnight => 'Gece Yarısı';
+
+  @override
+  String get themeRose => 'Gül';
+
+  @override
+  String get darkMode => 'Karanlık Mod';
+
+  @override
+  String get japaneseYen => 'Japon Yeni';
+
+  @override
+  String get russianRuble => 'Rus Rublesi';
 }
