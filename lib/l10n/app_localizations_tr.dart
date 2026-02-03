@@ -821,7 +821,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get poor => 'Zayıf';
 
   @override
-  String get comparedToLastMonth => 'Geçen aya göre';
+  String get comparedToLastMonth => 'Geçen Aya Göre';
 
   @override
   String get youSpentLess => 'daha az harcadın';
@@ -1167,4 +1167,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get russianRuble => 'Rus Rublesi';
+
+  @override
+  String get categoryDistribution => 'Kategori Dağılımı';
+
+  @override
+  String get other => 'Diğer';
+
+  @override
+  String get last7DaysSpending => 'Son 7 Gün Harcama';
 }

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'dart:math' as math;
 import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../wallet/data/wallet_provider.dart';
@@ -12,6 +14,7 @@ import '../../../core/theme/color_theme_provider.dart';
 import 'category_analysis_view.dart';
 import 'trend_detail_view.dart';
 import 'date_range_picker_view.dart';
+import 'month_comparison_view.dart';
 
 class StatisticsView extends ConsumerStatefulWidget {
   const StatisticsView({super.key});
@@ -212,7 +215,56 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
 
                   const SizedBox(height: 24),
 
-                  // Income vs Expense Chart
+                  // YENİ: Kategori Pasta Grafiği
+                  _buildCategoryPieChart(
+                    categoryExpenses,
+                    categoryMap,
+                    totalExpense,
+                    l,
+                    isDark,
+                    colorTheme,
+                    filteredTx,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // YENİ: Haftalık Trend Çizgi Grafiği
+                  _buildWeeklyLineChart(filteredTx, l, isDark, colorTheme),
+
+                  const SizedBox(height: 16),
+
+                  // YENİ: Geçen Ay Karşılaştırma Kartı
+                  Builder(
+                    builder: (context) {
+                      final lastMonthStats = _calculateLastMonthStats(txList);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MonthComparisonView(
+                                allTransactions: txList,
+                                categoryMap: categoryMap,
+                              ),
+                            ),
+                          );
+                        },
+                        child: _buildComparisonCard(
+                          totalExpense,
+                          lastMonthStats['expense']!,
+                          totalIncome,
+                          lastMonthStats['income']!,
+                          l,
+                          isDark,
+                          colorTheme,
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Gelir vs Gider Basit Bar
                   _buildIncomeVsExpenseChart(
                     totalIncome,
                     totalExpense,
@@ -486,7 +538,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         border: Border.all(
           color: colorTheme.primary.withOpacity(0.15),
           width: 1,
-        ),),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -635,19 +688,27 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: color, size: 18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: 18),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
+          const Spacer(),
           Text(title, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
           const SizedBox(height: 4),
           Text(
@@ -675,7 +736,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -753,7 +815,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),),
+          border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -844,7 +907,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -906,7 +970,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1029,7 +1094,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         children: categories.map((entry) {
           final category = categoryMap[entry.key];
@@ -1127,7 +1193,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1193,7 +1260,8 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -1424,5 +1492,421 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       default:
         return Icons.category;
     }
+  }
+
+  // ============ YENİ: Pasta Grafik Widget ============
+  Widget _buildCategoryPieChart(
+    Map<String, double> categoryExpenses,
+    Map<String, CategoryModel> categoryMap,
+    double totalExpense,
+    AppLocalizations l,
+    bool isDark,
+    ColorTheme colorTheme,
+    List<TransactionModel> filteredTx,
+  ) {
+    if (categoryExpenses.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isDark ? colorTheme.surfaceDark : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Center(
+          child: Text(
+            l.noExpenseData,
+            style: TextStyle(
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+          ),
+        ),
+      );
+    }
+
+    final sortedCategories = categoryExpenses.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final topCategories = sortedCategories.take(5).toList();
+
+    final colors = [
+      colorTheme.primary,
+      colorTheme.success,
+      AppColors.warning,
+      colorTheme.error,
+      Colors.purple,
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.categoryDistribution,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 180,
+            child: Row(
+              children: [
+                Expanded(
+                  child: PieChart(
+                    PieChartData(
+                      sectionsSpace: 2,
+                      centerSpaceRadius: 40,
+                      sections: topCategories.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final cat = entry.value;
+                        final percent = (cat.value / totalExpense * 100);
+                        return PieChartSectionData(
+                          color: colors[idx % colors.length],
+                          value: cat.value,
+                          title: '${percent.toStringAsFixed(0)}%',
+                          radius: 35,
+                          titleStyle: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: topCategories.asMap().entries.map((entry) {
+                    final idx = entry.key;
+                    final cat = entry.value;
+                    final categoryModel = categoryMap[cat.key];
+                    final name = _getCategoryName(categoryModel, l) ?? l.other;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: colors[idx % colors.length],
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          SizedBox(
+                            width: 80,
+                            child: Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: isDark
+                                    ? Colors.grey[300]
+                                    : Colors.grey[700],
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============ YENİ: Geçen Ay Karşılaştırma Hesaplama ============
+  Map<String, double> _calculateLastMonthStats(List<TransactionModel> allTx) {
+    final now = DateTime.now();
+    final lastMonthStart = DateTime(now.year, now.month - 1, 1);
+    final lastMonthEnd = DateTime(now.year, now.month, 0);
+
+    double lastMonthIncome = 0;
+    double lastMonthExpense = 0;
+
+    for (final tx in allTx) {
+      if (tx.date.isAfter(lastMonthStart.subtract(const Duration(days: 1))) &&
+          tx.date.isBefore(lastMonthEnd.add(const Duration(days: 1)))) {
+        if (tx.type == 'income') {
+          lastMonthIncome += tx.amount;
+        } else {
+          lastMonthExpense += tx.amount;
+        }
+      }
+    }
+
+    return {'income': lastMonthIncome, 'expense': lastMonthExpense};
+  }
+
+  // ============ YENİ: Karşılaştırma Kartı ============
+  Widget _buildComparisonCard(
+    double thisMonthExpense,
+    double lastMonthExpense,
+    double thisMonthIncome,
+    double lastMonthIncome,
+    AppLocalizations l,
+    bool isDark,
+    ColorTheme colorTheme,
+  ) {
+    final expenseChange = lastMonthExpense > 0
+        ? ((thisMonthExpense - lastMonthExpense) / lastMonthExpense * 100)
+        : 0.0;
+    final incomeChange = lastMonthIncome > 0
+        ? ((thisMonthIncome - lastMonthIncome) / lastMonthIncome * 100)
+        : 0.0;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorTheme.primary.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l.comparedToLastMonth,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildComparisonItem(
+                  l.expense,
+                  expenseChange,
+                  expenseChange > 0, // artış kötü
+                  isDark,
+                  colorTheme,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildComparisonItem(
+                  l.income,
+                  incomeChange,
+                  incomeChange < 0, // azalış kötü
+                  isDark,
+                  colorTheme,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildComparisonItem(
+    String label,
+    double changePercent,
+    bool isNegative,
+    bool isDark,
+    ColorTheme colorTheme,
+  ) {
+    final color = isNegative ? colorTheme.error : colorTheme.success;
+    final icon = changePercent >= 0 ? Icons.arrow_upward : Icons.arrow_downward;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  '${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(1)}%',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============ YENİ: Haftalık Trend Line Chart ============
+  Widget _buildWeeklyLineChart(
+    List<TransactionModel> txList,
+    AppLocalizations l,
+    bool isDark,
+    ColorTheme colorTheme,
+  ) {
+    final now = DateTime.now();
+    final spots = <FlSpot>[];
+    final labels = <String>[];
+
+    for (int i = 6; i >= 0; i--) {
+      final day = now.subtract(Duration(days: i));
+      final dayStart = DateTime(day.year, day.month, day.day);
+      final dayEnd = dayStart.add(const Duration(days: 1));
+
+      double dayExpense = 0;
+      for (final tx in txList) {
+        if (tx.type == 'expense' &&
+            tx.date.isAfter(dayStart.subtract(const Duration(seconds: 1))) &&
+            tx.date.isBefore(dayEnd)) {
+          dayExpense += tx.amount;
+        }
+      }
+
+      spots.add(FlSpot((6 - i).toDouble(), dayExpense));
+      labels.add(DateFormat('E', 'tr').format(day).substring(0, 2));
+    }
+
+    final maxY = spots.map((s) => s.y).reduce(math.max);
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TrendDetailView(
+              transactions: txList,
+              periodLabel: _getPeriodLabel(_selectedPeriod, l),
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isDark ? colorTheme.surfaceDark : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l.last7DaysSpending,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: Colors.grey[400],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 150,
+              child: LineChart(
+                LineChartData(
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          final idx = value.toInt();
+                          if (idx >= 0 && idx < labels.length) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                labels[idx],
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: isDark
+                                      ? Colors.grey[400]
+                                      : Colors.grey[600],
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                    ),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  minX: 0,
+                  maxX: 6,
+                  minY: 0,
+                  maxY: maxY > 0 ? maxY * 1.2 : 100,
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: spots,
+                      isCurved: true,
+                      color: colorTheme.primary,
+                      barWidth: 3,
+                      isStrokeCapRound: true,
+                      dotData: FlDotData(
+                        show: true,
+                        getDotPainter: (spot, percent, bar, index) {
+                          return FlDotCirclePainter(
+                            radius: 4,
+                            color: colorTheme.primary,
+                            strokeWidth: 2,
+                            strokeColor: Colors.white,
+                          );
+                        },
+                      ),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        color: colorTheme.primary.withOpacity(0.2),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

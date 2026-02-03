@@ -433,5 +433,11 @@
     "themeRose": "Gül",
     "darkMode": "Karanlık Mod",
     "japaneseYen": "Japon Yeni",
-    "russianRuble": "Rus Rublesi"
+    "russianRuble": "Rus Rublesi",
+    "categoryDistribution": "Kategori Dağılımı",
+    "other": "Diğer",
+    "last7DaysSpending": "Son 7 Gün Harcama",
+    "comparedToLastMonth": "Geçen Aya Göre",
+    "lastMonth": "Geçen Ay",
+    "thisMonth": "Bu Ay"
 }

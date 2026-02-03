@@ -1711,7 +1711,7 @@ abstract class AppLocalizations {
   /// No description provided for @comparedToLastMonth.
   ///
   /// In en, this message translates to:
-  /// **'Compared to last month'**
+  /// **'Compared to Last Month'**
   String get comparedToLastMonth;
 
   /// No description provided for @youSpentLess.
@@ -2385,6 +2385,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Russian Ruble'**
   String get russianRuble;
+
+  /// No description provided for @categoryDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Distribution'**
+  String get categoryDistribution;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @last7DaysSpending.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 Days Spending'**
+  String get last7DaysSpending;
 }
 
 class _AppLocalizationsDelegate

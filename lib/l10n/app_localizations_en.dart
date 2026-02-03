@@ -821,7 +821,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get poor => 'Poor';
 
   @override
-  String get comparedToLastMonth => 'Compared to last month';
+  String get comparedToLastMonth => 'Compared to Last Month';
 
   @override
   String get youSpentLess => 'you spent less';
@@ -1166,4 +1166,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get russianRuble => 'Russian Ruble';
+
+  @override
+  String get categoryDistribution => 'Category Distribution';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get last7DaysSpending => 'Last 7 Days Spending';
 }

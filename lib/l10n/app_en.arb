@@ -436,5 +436,11 @@
     "themeRose": "Rose",
     "darkMode": "Dark Mode",
     "japaneseYen": "Japanese Yen",
-    "russianRuble": "Russian Ruble"
+    "russianRuble": "Russian Ruble",
+    "categoryDistribution": "Category Distribution",
+    "other": "Other",
+    "last7DaysSpending": "Last 7 Days Spending",
+    "comparedToLastMonth": "Compared to Last Month",
+    "lastMonth": "Last Month",
+    "thisMonth": "This Month"
 }

@@ -1162,4 +1162,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get russianRuble => 'Russian Ruble';
+
+  @override
+  String get categoryDistribution => 'Category Distribution';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get last7DaysSpending => 'Last 7 Days Spending';
 }
