@@ -13,7 +13,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
 import '../../debts/presentation/debts_view.dart';
-import '../../auth/presentation/profile_edit_sheet.dart';
+
 import '../../wallet/presentation/wallet_selection_sheet.dart';
 import '../../budgets/presentation/budgets_view.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
@@ -201,7 +201,8 @@ class DashboardView extends ConsumerWidget {
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
-        ),),
+        ),
+      ),
       child: SafeArea(
         bottom: false,
         child: Padding(
@@ -210,57 +211,25 @@ class DashboardView extends ConsumerWidget {
             data: (profile) {
               return Row(
                 children: [
-                  // Tappable Avatar with Edit Badge
-                  GestureDetector(
-                    onTap: () {
-                      if (profile != null) {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (_) => ProfileEditSheet(profile: profile),
-                        );
-                      }
-                    },
-                    child: Stack(
-                      children: [
-                        // Glassmorphism container
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.white.withOpacity(0.3),
-                                Colors.white.withOpacity(0.1),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.4),
-                              width: 2,
-                            ),),
-                          child: _buildDashboardAvatar(profile, colorTheme),
-                        ),
-                        // Edit badge
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,),
-                            child: Icon(
-                              Icons.edit,
-                              size: 14,
-                              color: colorTheme.primary,
-                            ),
-                          ),
-                        ),
-                      ],
+                  // Avatar (Read-only)
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withOpacity(0.3),
+                          Colors.white.withOpacity(0.1),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.4),
+                        width: 2,
+                      ),
                     ),
+                    child: _buildDashboardAvatar(profile, colorTheme),
                   ),
                   const SizedBox(width: 16),
                   // User info
@@ -299,7 +268,8 @@ class DashboardView extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: colorTheme.accent,
-                        borderRadius: BorderRadius.circular(20),),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -421,7 +391,8 @@ class DashboardView extends ConsumerWidget {
             border: Border.all(
               color: colorTheme.primary.withValues(alpha: 0.15),
               width: 1,
-            ),),
+            ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -653,7 +624,8 @@ class DashboardView extends ConsumerWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-          borderRadius: BorderRadius.circular(14),),
+          borderRadius: BorderRadius.circular(14),
+        ),
         child: Row(
           children: [
             Container(
@@ -858,12 +830,16 @@ class DashboardView extends ConsumerWidget {
       child: Container(
         height: r.hp(11), // Dinamik yükseklik (~90px on 800px screen)
         padding: EdgeInsets.symmetric(
-          vertical: r.paddingS,
+          vertical: r.paddingXS,
           horizontal: r.paddingXS,
         ),
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: r.borderRadiusM,
+          border: Border.all(
+            color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+            width: 1,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -871,12 +847,14 @@ class DashboardView extends ConsumerWidget {
             Container(
               padding: EdgeInsets.all(r.paddingS),
               decoration: BoxDecoration(
-                color: colorTheme.primary.withOpacity(0.1),
+                color: isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.black.withOpacity(0.05),
                 borderRadius: r.borderRadiusS,
               ),
-              child: Icon(icon, color: colorTheme.primary, size: r.iconM),
+              child: Icon(icon, color: colorTheme.accent, size: r.iconM),
             ),
-            SizedBox(height: r.spaceXS),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(

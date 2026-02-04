@@ -14,6 +14,9 @@ import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/account_model.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
 import '../../budgets/presentation/budgets_view.dart';
+import '../../auth/presentation/profile_edit_sheet.dart';
+import '../../auth/data/auth_provider.dart';
+import '../../wallet/models/profile_model.dart';
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -22,7 +25,7 @@ class SettingsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
-    final user = Supabase.instance.client.auth.currentUser;
+    final userProfile = ref.watch(userProfileProvider);
     final accounts = ref.watch(accountsProvider);
     final colorTheme = ref.watch(currentColorThemeProvider);
 
@@ -38,7 +41,7 @@ class SettingsView extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           children: [
             // Profil Kartı
-            _buildProfileCard(context, user, l, isDark, colorTheme),
+            _buildProfileCard(context, userProfile, l, isDark, colorTheme),
 
             const SizedBox(height: 24),
 
@@ -258,67 +261,124 @@ class SettingsView extends ConsumerWidget {
 
   Widget _buildProfileCard(
     BuildContext context,
-    User? user,
+    AsyncValue<ProfileModel?> userProfile,
     AppLocalizations l,
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorTheme.primary.withValues(alpha: 0.15),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: colorTheme.accent,
-            backgroundImage: user?.userMetadata?['avatar_url'] != null
-                ? NetworkImage(user!.userMetadata!['avatar_url'])
-                : null,
-            child: user?.userMetadata?['avatar_url'] == null
-                ? Text(
-                    (user?.email?.substring(0, 1) ?? 'U').toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  )
-                : null,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return userProfile.when(
+      data: (profile) {
+        final user = Supabase.instance.client.auth.currentUser;
+        final displayEmail = user?.email ?? '';
+
+        return GestureDetector(
+          onTap: () {
+            if (profile != null) {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => ProfileEditSheet(profile: profile),
+              );
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: colorTheme.primary.withOpacity(0.15),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorTheme.primary.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
               children: [
-                Text(
-                  user?.userMetadata?['full_name'] ??
-                      user?.email?.split('@').first ??
-                      l.user,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                _buildSettingsAvatar(profile, colorTheme),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        profile?.fullName ?? l.user,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        displayEmail,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  user?.email ?? '',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorTheme.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
+                  child: Icon(Icons.edit, size: 16, color: colorTheme.primary),
                 ),
               ],
             ),
           ),
-        ],
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => const SizedBox(),
+    );
+  }
+
+  Widget _buildSettingsAvatar(ProfileModel? profile, ColorTheme colorTheme) {
+    final avatarUrl = profile?.avatarUrl;
+
+    if (avatarUrl != null) {
+      if (avatarUrl.startsWith('preset:')) {
+        final presetData = avatarUrl.substring(7);
+        final parts = presetData.split(':');
+        if (parts.length >= 2) {
+          final emoji = parts[0];
+          final colorValue = int.tryParse(parts[1]) ?? 0xFF2196F3;
+          return CircleAvatar(
+            radius: 30,
+            backgroundColor: Color(colorValue),
+            child: Text(emoji, style: const TextStyle(fontSize: 28)),
+          );
+        }
+      } else {
+        return CircleAvatar(
+          radius: 30,
+          backgroundColor: colorTheme.accent,
+          backgroundImage: NetworkImage(avatarUrl),
+        );
+      }
+    }
+
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: colorTheme.accent,
+      child: Text(
+        profile?.fullName?.substring(0, 1).toUpperCase() ?? 'U',
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
       ),
     );
   }
