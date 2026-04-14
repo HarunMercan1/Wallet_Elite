@@ -40,8 +40,8 @@ class UnlockedThemesNotifier extends StateNotifier<Set<String>> {
 
   /// Check if a theme is unlocked
   bool isThemeUnlocked(String themeId) {
-    // Elite theme is always free
-    if (themeId == 'elite') return true;
+    // Midnight theme is always free
+    if (themeId == 'midnight') return true;
     return state.contains(themeId);
   }
 
