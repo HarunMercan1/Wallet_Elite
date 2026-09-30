@@ -1,9 +1,12 @@
 // lib/features/recurring/data/recurring_provider.dart
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/recurring_transaction_model.dart';
 import 'recurring_repository.dart';
 import '../../auth/data/auth_provider.dart';
+import '../../wallet/data/wallet_provider.dart';
 
 /// Repository provider
 final recurringRepositoryProvider = Provider<RecurringRepository>((ref) {
@@ -175,21 +178,40 @@ class RecurringController extends StateNotifier<AsyncValue<void>> {
 
   /// Vadesi gelen işlemleri çalıştır
   Future<int> executeDueTransactions() async {
-    final user = _ref.read(currentUserProvider).value;
-    if (user == null) return 0;
+    if (Supabase.instance.client.auth.currentUser == null) return 0;
 
     try {
-      final count = await _repository.executeDueTransactions(user.id);
+      final count = await _repository.executeDueTransactions();
 
-      // İşlemler oluşturulduğu için wallet provider'ını da yenile
-      _ref.invalidate(recurringTransactionsProvider);
+      if (count > 0) {
+        // Yeni işlemler ve bakiyeler için ilgili provider'ları yenile
+        _ref.invalidate(recurringTransactionsProvider);
+        _ref.invalidate(activeRecurringTransactionsProvider);
+        _ref.invalidate(dueTransactionsProvider);
+        _ref.invalidate(transactionsProvider);
+        _ref.invalidate(accountsProvider);
+      }
 
       return count;
     } catch (e) {
+      debugPrint('Tekrarlayan işlem çalıştırma hatası: $e');
       return 0;
     }
   }
 }
+
+/// Uygulama açılışında vadesi gelen tekrarlayan işlemleri bir kez çalıştırır.
+/// (Sunucu tarafında pg_cron da saat başı çalıştırır; bu, kullanıcının
+/// uygulamayı açtığı anda güncel veriyi görmesini sağlar.)
+final recurringStartupRunProvider = FutureProvider<int>((ref) async {
+  // Kullanıcı değişince (çıkış/giriş) tekrar çalışsın
+  final user = ref.watch(currentUserProvider).value;
+  if (user == null) return 0;
+
+  return ref
+      .read(recurringControllerProvider.notifier)
+      .executeDueTransactions();
+});
 
 /// Controller provider
 final recurringControllerProvider =

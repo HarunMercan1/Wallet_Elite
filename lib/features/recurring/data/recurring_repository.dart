@@ -2,7 +2,6 @@
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/recurring_transaction_model.dart';
-import '../../wallet/data/wallet_repository.dart';
 
 /// Tekrarlayan işlemler repository
 class RecurringRepository {
@@ -148,57 +147,13 @@ class RecurringRepository {
         .eq('id', id);
   }
 
-  /// Tekrarlayan işlemi çalıştır (gerçek işlem oluştur)
-  Future<void> executeRecurringTransaction(
-    RecurringTransactionModel recurring,
-  ) async {
-    final walletRepo = WalletRepository();
-
-    // Gerçek işlemi oluştur
-    await walletRepo.createTransaction(
-      userId: recurring.userId,
-      accountId: recurring.accountId,
-      categoryId: recurring.categoryId,
-      amount: recurring.amount,
-      type: recurring.type,
-      description: recurring.description,
-      date: DateTime.now(),
-    );
-
-    // Sonraki çalışma tarihini hesapla ve güncelle
-    final nextDate = _calculateNextDate(
-      frequency: recurring.frequency,
-      dayOfMonth: recurring.dayOfMonth,
-      dayOfWeek: recurring.dayOfWeek,
-      startDate: recurring.startDate,
-      lastExecutionDate: DateTime.now(),
-    );
-
-    // Bitiş tarihi kontrolü
-    final shouldDeactivate =
-        recurring.endDate != null && nextDate.isAfter(recurring.endDate!);
-
-    await _supabase
-        .from('recurring_transactions')
-        .update({
-          'next_execution_date': nextDate.toIso8601String().split('T')[0],
-          'last_execution_date': DateTime.now().toIso8601String().split('T')[0],
-          'is_active': !shouldDeactivate,
-        })
-        .eq('id', recurring.id);
-  }
-
-  /// Tüm vadesi gelen işlemleri çalıştır
-  Future<int> executeDueTransactions(String userId) async {
-    final dueTransactions = await getDueTransactions(userId);
-    int executedCount = 0;
-
-    for (final recurring in dueTransactions) {
-      await executeRecurringTransaction(recurring);
-      executedCount++;
-    }
-
-    return executedCount;
+  /// Vadesi gelen tüm işlemleri çalıştır (kullanıcının kendi kayıtları).
+  /// İşlemler DB'deki process_due_recurring_transactions() ile atomik olarak
+  /// oluşturulur; kaçırılan her dönem için ayrı işlem yazılır ve aynı kayıt iki
+  /// kez işlenmez. Aynı fonksiyon pg_cron ile saat başı da çalışır.
+  Future<int> executeDueTransactions() async {
+    final result = await _supabase.rpc('process_due_recurring_transactions');
+    return (result as num?)?.toInt() ?? 0;
   }
 
   /// Sonraki çalışma tarihini hesapla

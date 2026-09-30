@@ -11,6 +11,7 @@ import '../../wallet/presentation/add_transaction_sheet.dart';
 import '../../settings/presentation/settings_view.dart';
 import '../../transactions/presentation/transactions_view.dart';
 import '../../statistics/presentation/statistics_view.dart';
+import '../../recurring/data/recurring_provider.dart';
 
 /// Bottom navigation için seçili sekme provider'ı
 final selectedTabProvider = StateProvider<int>((ref) => 0);
@@ -21,6 +22,8 @@ class MainShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedTab = ref.watch(selectedTabProvider);
+    // Açılışta vadesi gelen tekrarlayan işlemleri çalıştır (bir kez)
+    ref.watch(recurringStartupRunProvider);
     final locale = ref.watch(localeProvider);
     final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
