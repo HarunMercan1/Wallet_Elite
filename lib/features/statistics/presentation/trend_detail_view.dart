@@ -267,7 +267,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -329,11 +330,15 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                                 gradient: LinearGradient(
                                   colors: _showExpenses
                                       ? [
-                                          colorTheme.error.withValues(alpha: 0.6),
+                                          colorTheme.error.withValues(
+                                            alpha: 0.6,
+                                          ),
                                           colorTheme.error,
                                         ]
                                       : [
-                                          colorTheme.success.withValues(alpha: 0.6),
+                                          colorTheme.success.withValues(
+                                            alpha: 0.6,
+                                          ),
                                           colorTheme.success,
                                         ],
                                   begin: Alignment.topCenter,
@@ -410,7 +415,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             Expanded(
               child: _buildStatCard(
                 title: l.averageTransaction,
-                value: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(avg)}',
+                value:
+                    '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(avg)}',
                 icon: Icons.calculate,
                 color: Colors.orange,
                 isDark: isDark,
@@ -465,7 +471,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -533,7 +540,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -654,7 +662,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

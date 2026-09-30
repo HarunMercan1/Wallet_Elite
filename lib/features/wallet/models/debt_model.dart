@@ -1,4 +1,5 @@
 // lib/features/wallet/models/debt_model.dart
+import '../../../core/utils/date_utils.dart';
 
 /// Borç/Alacak modeli (debts tablosu)
 class DebtModel {
@@ -35,12 +36,12 @@ class DebtModel {
       amount: (json['amount'] as num).toDouble(),
       remainingAmount: (json['remaining_amount'] as num).toDouble(),
       dueDate: json['due_date'] != null
-          ? DateTime.parse(json['due_date'] as String)
+          ? parseWallClock(json['due_date'] as String)
           : null,
       type: json['type'] as String,
       isCompleted: json['is_completed'] as bool? ?? false,
       description: json['description'] as String?,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
     );
   }
 
@@ -78,6 +79,7 @@ class DebtModel {
     bool? isCompleted,
     String? description,
     DateTime? createdAt,
+    bool clearDescription = false,
   }) {
     return DebtModel(
       id: id ?? this.id,
@@ -88,7 +90,7 @@ class DebtModel {
       dueDate: dueDate ?? this.dueDate,
       type: type ?? this.type,
       isCompleted: isCompleted ?? this.isCompleted,
-      description: description ?? this.description,
+      description: clearDescription ? null : (description ?? this.description),
       createdAt: createdAt ?? this.createdAt,
     );
   }

@@ -10,16 +10,18 @@ class AppTheme {
     final isDark = brightness == Brightness.dark;
 
     // Adapt colorTheme for light mode automatically
-    final activeTheme = isDark ? colorTheme : colorTheme.copyWith(
-      textPrimary: const Color(0xFF0F172A),     // Dark slate text
-      textSecondary: const Color(0xFF64748B),   // Medium slate text
-      cardColor: Colors.white,                  // White cards
-      subtleCardColor: const Color(0xFFF8FAFC), // Very light slate
-      surfaceVariant: const Color(0xFFF1F5F9),  // Light slate background
-      onSurfaceVariant: const Color(0xFF0F172A),
-      borderColor: const Color(0xFFE2E8F0),     // Light borders
-      outline: const Color(0xFFCBD5E1),
-    );
+    final activeTheme = isDark
+        ? colorTheme
+        : colorTheme.copyWith(
+            textPrimary: const Color(0xFF0F172A), // Dark slate text
+            textSecondary: const Color(0xFF64748B), // Medium slate text
+            cardColor: Colors.white, // White cards
+            subtleCardColor: const Color(0xFFF8FAFC), // Very light slate
+            surfaceVariant: const Color(0xFFF1F5F9), // Light slate background
+            onSurfaceVariant: const Color(0xFF0F172A),
+            borderColor: const Color(0xFFE2E8F0), // Light borders
+            outline: const Color(0xFFCBD5E1),
+          );
 
     // Determine background and surface colors based on brightness
     final backgroundColor = isDark
@@ -31,10 +33,11 @@ class AppTheme {
     final textColor = activeTheme.textPrimary;
 
     // Base theme data
-    final baseTheme = isDark ? ThemeData.dark() : ThemeData.light();
+    final baseTheme = isDark
+        ? ThemeData.dark(useMaterial3: true)
+        : ThemeData.light(useMaterial3: true);
 
     return baseTheme.copyWith(
-      useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
         seedColor: activeTheme.primary,
         brightness: brightness,

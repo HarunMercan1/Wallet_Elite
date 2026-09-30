@@ -150,7 +150,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Galeriden Seç',
+                              l.chooseFromGallery,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -158,7 +158,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                               ),
                             ),
                             Text(
-                              'Kendi fotoğrafını yükle',
+                              l.uploadYourPhoto,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey[500],
@@ -184,7 +184,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'veya bir avatar seç',
+                  l.orPickAvatar,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[500],
@@ -422,7 +422,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
             child: Row(
               children: [
                 Text(
-                  l.editProfile ?? 'Profili Düzenle',
+                  l.editProfile,
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -504,7 +504,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
 
                   const SizedBox(height: 8),
                   Text(
-                    l.changePhoto ?? 'Fotoğrafı Değiştir',
+                    l.changePhoto,
                     style: TextStyle(
                       color: colorTheme.primary,
                       fontWeight: FontWeight.w500,
@@ -521,7 +521,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText: l.displayName ?? 'Görünen İsim',
+                      labelText: l.displayName,
                       labelStyle: TextStyle(color: Colors.grey[500]),
                       prefixIcon: Icon(Icons.person, color: colorTheme.primary),
                       filled: true,

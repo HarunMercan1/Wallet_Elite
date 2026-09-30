@@ -1,4 +1,3 @@
-import '../../features/settings/data/settings_provider.dart';
 // lib/core/utils/currency_utils.dart
 
 class CurrencyUtils {

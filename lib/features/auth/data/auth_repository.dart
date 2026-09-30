@@ -61,20 +61,12 @@ class AuthRepository {
         return {'success': true};
       } else {
         debugPrint('⚠️ Kayıt response geldi ama user null');
-        return {'success': false, 'error': 'Kayıt işlemi başarısız oldu'};
+        return {'success': false, 'error': null};
       }
     } on AuthException catch (e) {
       debugPrint('❌ AuthException: ${e.message}');
       debugPrint('   Status Code: ${e.statusCode}');
-      String errorMessage = 'Kayıt başarısız';
-      if (e.message.contains('already registered')) {
-        errorMessage = 'Bu e-posta adresi zaten kullanılıyor';
-      } else if (e.message.contains('weak password')) {
-        errorMessage = 'Şifre çok zayıf';
-      } else if (e.message.contains('invalid email')) {
-        errorMessage = 'Geçersiz e-posta adresi';
-      }
-      return {'success': false, 'error': errorMessage};
+      return {'success': false, 'error': _authErrorCode(e)};
     } catch (e) {
       debugPrint('❌ Email kayıt hatası: $e');
       debugPrint('   Hata tipi: ${e.runtimeType}');
@@ -83,8 +75,45 @@ class AuthRepository {
           e.toString().contains('Network is unreachable')) {
         return {'success': false, 'error': 'network_error'};
       }
-      return {'success': false, 'error': 'Bir hata oluştu: $e'};
+      return {'success': false, 'error': null};
     }
+  }
+
+  /// Supabase AuthException'ı ekranda çevrilecek bir hata koduna dönüştür.
+  /// Kodlar: invalid_credentials, email_not_confirmed, too_many_requests,
+  /// email_in_use, weak_password, invalid_email; null = genel hata.
+  String? _authErrorCode(AuthException e) {
+    final code = e.code ?? '';
+    final msg = e.message.toLowerCase();
+    if (code == 'invalid_credentials' ||
+        msg.contains('invalid login credentials')) {
+      return 'invalid_credentials';
+    }
+    if (code == 'email_not_confirmed' || msg.contains('email not confirmed')) {
+      return 'email_not_confirmed';
+    }
+    if (code == 'over_request_rate_limit' ||
+        code == 'over_email_send_rate_limit' ||
+        e.statusCode == '429' ||
+        msg.contains('too many requests')) {
+      return 'too_many_requests';
+    }
+    if (code == 'user_already_exists' ||
+        code == 'email_exists' ||
+        msg.contains('already registered')) {
+      return 'email_in_use';
+    }
+    if (code == 'weak_password' ||
+        msg.contains('weak password') ||
+        msg.contains('password should be')) {
+      return 'weak_password';
+    }
+    if (code == 'email_address_invalid' ||
+        msg.contains('invalid email') ||
+        msg.contains('invalid format')) {
+      return 'invalid_email';
+    }
+    return null;
   }
 
   /// Email ile giriş yap
@@ -102,18 +131,10 @@ class AuthRepository {
         debugPrint('✅ Giriş başarılı! User ID: ${response.user!.id}');
         return {'success': true};
       }
-      return {'success': false, 'error': 'Giriş başarısız'};
+      return {'success': false, 'error': null};
     } on AuthException catch (e) {
       debugPrint('❌ AuthException: ${e.message}');
-      String errorMessage = 'Giriş başarısız';
-      if (e.message.contains('Invalid login credentials')) {
-        errorMessage = 'E-posta veya şifre hatalı';
-      } else if (e.message.contains('Email not confirmed')) {
-        errorMessage = 'E-posta adresinizi doğrulayın';
-      } else if (e.message.contains('Too many requests')) {
-        errorMessage = 'Çok fazla deneme yaptınız, lütfen bekleyin';
-      }
-      return {'success': false, 'error': errorMessage};
+      return {'success': false, 'error': _authErrorCode(e)};
     } catch (e) {
       debugPrint('Email giriş hatası: $e');
       if (e.toString().contains('SocketException') ||
@@ -121,7 +142,7 @@ class AuthRepository {
           e.toString().contains('Network is unreachable')) {
         return {'success': false, 'error': 'network_error'};
       }
-      return {'success': false, 'error': 'Bir hata oluştu'};
+      return {'success': false, 'error': null};
     }
   }
 
@@ -136,8 +157,8 @@ class AuthRepository {
     }
   }
 
-  /// Google ile giriş yap
-  /// Google ile giriş yap (Hata varsa mesaj döner, yoksa null)
+  /// Google ile giriş yap. Başarılıysa null, değilse hata kodu döner:
+  /// cancelled, google_config, play_services, network_error, google_failed
   Future<String?> signInWithGoogle() async {
     try {
       // Önceki oturum kalıntılarını temizle (Hesap seçiciyi zorlamak için)
@@ -147,7 +168,7 @@ class AuthRepository {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         // Kullanıcı girişi iptal etti
-        return 'Giriş iptal edildi';
+        return 'cancelled';
       }
 
       // 4. Authentication detaylarını al
@@ -156,10 +177,10 @@ class AuthRepository {
       final idToken = googleAuth.idToken;
 
       if (accessToken == null) {
-        return 'Google Access Token bulunamadı.';
+        return 'google_failed';
       }
       if (idToken == null) {
-        return 'Google ID Token bulunamadı.';
+        return 'google_failed';
       }
 
       // 5. Supabase'e giriş yap
@@ -174,13 +195,15 @@ class AuthRepository {
       return null; // Başarılı, hata yok
     } catch (e) {
       debugPrint('Google giriş hatası: $e');
-      if (e.toString().contains('ApiException: 10')) {
-        return 'Google Yapılandırma Hatası (Hata: 10).\nLütfen SHA-1 ve Paket Adını kontrol edin.';
+      final err = e.toString();
+      if (err.contains('ApiException: 10')) return 'google_config';
+      if (err.contains('ApiException: 12500')) return 'play_services';
+      if (err.contains('SocketException') ||
+          err.contains('host lookup') ||
+          err.contains('Network is unreachable')) {
+        return 'network_error';
       }
-      if (e.toString().contains('ApiException: 12500')) {
-        return 'Google Play Servisleri güncel değil veya cihaz desteklemiyor (Hata: 12500).';
-      }
-      return 'Giriş hatası: $e';
+      return 'google_failed';
     }
   }
 

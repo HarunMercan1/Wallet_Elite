@@ -1,4 +1,5 @@
 // lib/features/recurring/models/recurring_transaction_model.dart
+import '../../../core/utils/date_utils.dart';
 
 /// Tekrarlama sıklığı
 enum RecurringFrequency {
@@ -80,8 +81,8 @@ class RecurringTransactionModel {
           ? DateTime.parse(json['last_execution_date'] as String)
           : null,
       isActive: json['is_active'] as bool? ?? true,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
+      updatedAt: parseServerTimestamp(json['updated_at'] as String),
     );
   }
 

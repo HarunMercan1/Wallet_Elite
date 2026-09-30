@@ -196,7 +196,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         ),
                       ],
                       decoration: InputDecoration(
-                        prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
+                        prefixText:
+                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                         prefixStyle: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

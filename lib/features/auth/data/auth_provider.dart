@@ -64,7 +64,7 @@ class AuthController {
       );
     } catch (e) {
       debugPrint('Email kayıt hatası: $e');
-      return {'success': false, 'error': 'Bir hata oluştu: $e'};
+      return {'success': false, 'error': null};
     }
   }
 
@@ -78,7 +78,7 @@ class AuthController {
       return await authRepo.signInWithEmail(email, password);
     } catch (e) {
       debugPrint('Email giriş hatası: $e');
-      return {'success': false, 'error': 'Bir hata oluştu: $e'};
+      return {'success': false, 'error': null};
     }
   }
 
@@ -100,7 +100,7 @@ class AuthController {
       return await authRepo.signInWithGoogle();
     } catch (e) {
       debugPrint('Google giriş hatası: $e');
-      return 'Bilinmeyen bir hata oluştu: $e';
+      return 'google_failed';
     }
   }
 

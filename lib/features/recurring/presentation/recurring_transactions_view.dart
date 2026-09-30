@@ -182,7 +182,7 @@ class RecurringTransactionsView extends ConsumerWidget {
   ) {
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).languageCode,
-      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
+      symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
       decimalDigits: 2,
     );
 

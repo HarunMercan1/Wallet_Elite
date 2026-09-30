@@ -1,4 +1,5 @@
 // lib/features/budgets/models/budget_model.dart
+import '../../../core/utils/date_utils.dart';
 
 /// Bütçe periyodu enum'u
 enum BudgetPeriod {
@@ -93,48 +94,57 @@ class BudgetModel {
   /// Güvenli bölgede mi?
   bool get isSafe => usagePercent < notifyAtPercent;
 
-  /// Dönem başlangıç tarihini hesapla
-  DateTime getPeriodStartDate() {
-    final now = DateTime.now();
+  /// Dönem başlangıç tarihini hesapla. [now] testler içindir.
+  DateTime getPeriodStartDate({DateTime? now}) {
+    final today = now ?? DateTime.now();
 
     switch (period) {
       case BudgetPeriod.weekly:
         // Haftanın başlangıcı (Pazartesi)
-        final weekday = now.weekday;
-        return DateTime(now.year, now.month, now.day - (weekday - 1));
+        return DateTime(
+          today.year,
+          today.month,
+          today.day - (today.weekday - 1),
+        );
 
       case BudgetPeriod.monthly:
-        // Ayın belirli günü
-        if (now.day >= startDay) {
-          return DateTime(now.year, now.month, startDay);
-        } else {
-          // Önceki ay
-          final prevMonth = DateTime(now.year, now.month - 1, 1);
-          return DateTime(prevMonth.year, prevMonth.month, startDay);
-        }
+        // Bu ayın başlangıç günü (kısa aylarda ayın son günü) geldiyse bu ay,
+        // gelmediyse önceki ay
+        final thisMonthStart = _monthDay(today.year, today.month, startDay);
+        if (!today.isBefore(thisMonthStart)) return thisMonthStart;
+        return _monthDay(today.year, today.month - 1, startDay);
 
       case BudgetPeriod.yearly:
-        // Yılın başlangıcı
-        if (now.month > 1 || now.day >= startDay) {
-          return DateTime(now.year, 1, startDay);
-        } else {
-          return DateTime(now.year - 1, 1, startDay);
-        }
+        final thisYearStart = _monthDay(today.year, 1, startDay);
+        if (!today.isBefore(thisYearStart)) return thisYearStart;
+        return _monthDay(today.year - 1, 1, startDay);
     }
   }
 
-  /// Dönem bitiş tarihini hesapla
-  DateTime getPeriodEndDate() {
-    final start = getPeriodStartDate();
+  /// Dönem bitiş tarihini (hariç) hesapla = bir sonraki dönemin başlangıcı
+  DateTime getPeriodEndDate({DateTime? now}) {
+    final start = getPeriodStartDate(now: now);
 
     switch (period) {
       case BudgetPeriod.weekly:
-        return start.add(const Duration(days: 7));
+        return DateTime(start.year, start.month, start.day + 7);
       case BudgetPeriod.monthly:
-        return DateTime(start.year, start.month + 1, start.day);
+        return _monthDay(start.year, start.month + 1, startDay);
       case BudgetPeriod.yearly:
-        return DateTime(start.year + 1, start.month, start.day);
+        return _monthDay(start.year + 1, 1, startDay);
     }
+  }
+
+  /// [year]/[month] için [day]. gün; ay daha kısaysa ayın son günü
+  /// (ör. başlangıç günü 31 → Şubat'ta 28/29). Ay taşmalarını normalize eder.
+  static DateTime _monthDay(int year, int month, int day) {
+    final firstOfMonth = DateTime(year, month, 1);
+    final lastDay = DateTime(firstOfMonth.year, firstOfMonth.month + 1, 0).day;
+    return DateTime(
+      firstOfMonth.year,
+      firstOfMonth.month,
+      day > lastDay ? lastDay : day,
+    );
   }
 
   /// JSON'dan model oluştur
@@ -150,8 +160,8 @@ class BudgetModel {
       isActive: json['is_active'] as bool? ?? true,
       notifyAtPercent: json['notify_at_percent'] as int? ?? 80,
       notifyWhenExceeded: json['notify_when_exceeded'] as bool? ?? true,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
+      updatedAt: parseServerTimestamp(json['updated_at'] as String),
       categoryName: json['categories']?['name'] as String?,
       categoryIcon: json['categories']?['icon'] as String?,
     );

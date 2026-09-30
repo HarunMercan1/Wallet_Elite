@@ -1,4 +1,5 @@
 // lib/features/wallet/models/debt_payment_model.dart
+import '../../../core/utils/date_utils.dart';
 
 class DebtPaymentModel {
   final String id;
@@ -20,8 +21,8 @@ class DebtPaymentModel {
       id: json['id'] as String,
       debtId: json['debt_id'] as String,
       amount: (json['amount'] as num).toDouble(),
-      paymentDate: DateTime.parse(json['payment_date'] as String),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      paymentDate: parseWallClock(json['payment_date'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
     );
   }
 

@@ -9,7 +9,7 @@ class IconHelper {
     if (iconName == null) return FontAwesomeIcons.circleQuestion;
 
     switch (iconName) {
-    // Gider İkonları
+      // Gider İkonları
       case 'cartShopping':
         return FontAwesomeIcons.cartShopping;
       case 'utensils':
@@ -27,7 +27,7 @@ class IconHelper {
       case 'shirt':
         return FontAwesomeIcons.shirt;
 
-    // Gelir İkonları
+      // Gelir İkonları
       case 'moneyBillWave':
         return FontAwesomeIcons.moneyBillWave;
       case 'laptopCode':

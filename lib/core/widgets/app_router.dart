@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 // lib/core/widgets/app_router.dart
 
@@ -14,9 +16,15 @@ import '../../features/home/presentation/main_shell.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   final supabase = Supabase.instance.client;
 
+  // Oturum açılınca/kapanınca (süre dolması, hesap silme, başka ekrandan çıkış)
+  // yönlendirme kurallarını yeniden çalıştır.
+  final authRefresh = _AuthRefreshNotifier(supabase.auth.onAuthStateChange);
+  ref.onDispose(authRefresh.dispose);
+
   return GoRouter(
     initialLocation: '/auth',
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode,
+    refreshListenable: authRefresh,
 
     redirect: (context, state) async {
       // Kullanıcının auth durumunu kontrol et
@@ -104,3 +112,24 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// Yalnızca oturum açma/kapama olaylarında router'ı tetikler
+/// (saatlik token yenilemesinde gereksiz yönlendirme kontrolü yapılmaz).
+class _AuthRefreshNotifier extends ChangeNotifier {
+  _AuthRefreshNotifier(Stream<AuthState> stream) {
+    _subscription = stream.listen((state) {
+      if (state.event == AuthChangeEvent.signedIn ||
+          state.event == AuthChangeEvent.signedOut) {
+        notifyListeners();
+      }
+    });
+  }
+
+  late final StreamSubscription<AuthState> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}

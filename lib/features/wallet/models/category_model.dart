@@ -1,3 +1,5 @@
+import '../../../core/utils/date_utils.dart';
+
 class CategoryModel {
   final String id;
   final String userId;
@@ -35,7 +37,7 @@ class CategoryModel {
       type: json['type'] as String,
       isFavorite: json['is_favorite'] as bool? ?? false,
       isCustom: json['is_custom'] as bool? ?? false,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
     );
   }
 

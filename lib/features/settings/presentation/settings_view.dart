@@ -69,7 +69,7 @@ class SettingsView extends ConsumerWidget {
             const SizedBox(height: 24),
 
             // Uygulama Ayarları
-            _buildSectionTitle('Uygulama', isDark),
+            _buildSectionTitle(l.appSettingsSection, isDark),
             const SizedBox(height: 8),
             _buildSettingsCard(
               isDark: isDark,
@@ -81,13 +81,13 @@ class SettingsView extends ConsumerWidget {
                     color: isDark ? colorTheme.accent : colorTheme.primary,
                   ),
                   title: Text(
-                    'Tanıtım Turunu Tekrar İzle',
+                    l.replayAppTour,
                     style: TextStyle(
                       color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   subtitle: Text(
-                    'Uygulamanın özelliklerini keşfet',
+                    l.replayAppTourDesc,
                     style: TextStyle(
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
                     ),
@@ -603,6 +603,7 @@ class SettingsView extends ConsumerWidget {
     String current,
     bool isDark,
   ) {
+    final l = AppLocalizations.of(context)!;
     final isSelected = theme.id == current;
     final isUnlocked = ref.watch(canUseThemeProvider(theme.id));
     final isLocked = theme.isPremium && !isUnlocked;
@@ -699,7 +700,7 @@ class SettingsView extends ConsumerWidget {
                   ),
                   if (isLocked)
                     Text(
-                      'Reklam izle ve aç',
+                      l.watchAdToUnlock,
                       style: TextStyle(
                         fontSize: 12,
                         color: isDark ? Colors.grey[500] : Colors.grey[600],
@@ -724,6 +725,7 @@ class SettingsView extends ConsumerWidget {
     ColorTheme theme,
     bool isDark,
   ) {
+    final l = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -752,13 +754,13 @@ class SettingsView extends ConsumerWidget {
           ],
         ),
         content: Text(
-          'Bu premium temayı kalıcı olarak açmak için kısa bir reklam izleyin.',
+          l.premiumThemeUnlockMessage,
           style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Vazgeç', style: TextStyle(color: Colors.grey[500])),
+            child: Text(l.cancel, style: TextStyle(color: Colors.grey[500])),
           ),
           ElevatedButton.icon(
             onPressed: () async {
@@ -779,7 +781,7 @@ class SettingsView extends ConsumerWidget {
               }
             },
             icon: const Icon(Icons.play_arrow, size: 18),
-            label: const Text('Reklam İzle'),
+            label: Text(l.watchAd),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primary,
               foregroundColor: Colors.white,

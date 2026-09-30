@@ -155,7 +155,8 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                       ),
                       decoration: InputDecoration(
                         labelText: l.budgetAmount,
-                        prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
+                        prefixText:
+                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                         prefixStyle: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,

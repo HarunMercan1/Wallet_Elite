@@ -181,9 +181,16 @@ class DebtRepository {
   /// Borç/alacak güncelle
   Future<DebtModel?> updateDebt(DebtModel debt) async {
     try {
+      // Yalnızca kullanıcının düzenleyebildiği alanlar gönderilir; tutar ve
+      // kalan tutar ödemelerle (DB trigger) yönetilir, ekrandaki eski kopyayla
+      // üzerine yazılmamalı.
       final response = await _supabase
           .from('debts')
-          .update(debt.toJson())
+          .update({
+            'person_name': debt.personName,
+            'due_date': debt.dueDate?.toIso8601String(),
+            'description': debt.description,
+          })
           .eq('id', debt.id)
           .select()
           .single();
@@ -201,35 +208,18 @@ class DebtRepository {
     required double paymentAmount,
   }) async {
     try {
-      // Mevcut borcu al
-      final debtResponse = await _supabase
-          .from('debts')
-          .select()
-          .eq('id', debtId)
-          .single();
-
-      final debt = DebtModel.fromJson(debtResponse);
-
-      // Yeni kalan tutarı hesapla
-      final newRemaining = debt.remainingAmount - paymentAmount;
-      final isCompleted = newRemaining <= 0;
-
-      // 1. Ödemeyi 'debt_payments' tablosuna kaydet
+      // Ödemeyi kaydet; kalan tutar ve tamamlanma durumu DB'deki
+      // trigger_apply_debt_payment ile aynı işlem içinde güncellenir.
       await _supabase.from('debt_payments').insert({
         'debt_id': debtId,
         'amount': paymentAmount,
         'payment_date': DateTime.now().toIso8601String(),
       });
 
-      // 2. 'debts' tablosunu güncelle
       final response = await _supabase
           .from('debts')
-          .update({
-            'remaining_amount': isCompleted ? 0 : newRemaining,
-            'is_completed': isCompleted,
-          })
-          .eq('id', debtId)
           .select()
+          .eq('id', debtId)
           .single();
 
       return DebtModel.fromJson(response);

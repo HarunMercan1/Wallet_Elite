@@ -302,7 +302,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(16),),
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -359,7 +360,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(20),),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         children: [
           // Main chart area with side stats
@@ -509,7 +511,9 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.grey[50],
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -529,7 +533,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 ),
                 _buildMiniStat(
                   icon: Icons.trending_down,
-                  value: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(total)}',
+                  value:
+                      '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(total)}',
                   label: l.totalExpense,
                   color: colorTheme.error,
                   isDark: isDark,
@@ -600,7 +605,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+      ),
       child: Row(
         children: [
           Container(
@@ -684,7 +690,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-            borderRadius: BorderRadius.circular(12),),
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Column(
             children: [
               Row(

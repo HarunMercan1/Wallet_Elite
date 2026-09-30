@@ -1,6 +1,7 @@
 // lib/features/wallet/models/account_model.dart
 
 import '../../../core/utils/currency_utils.dart';
+import '../../../core/utils/date_utils.dart';
 
 /// Cüzdan hesabı modeli (accounts tablosu)
 class AccountModel {
@@ -44,7 +45,7 @@ class AccountModel {
       type: json['type'] as String,
       balance: (json['balance'] as num).toDouble(),
       currency: json['currency'] as String? ?? 'TRY',
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
     );
   }
 

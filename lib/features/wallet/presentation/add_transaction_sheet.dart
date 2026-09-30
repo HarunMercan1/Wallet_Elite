@@ -34,23 +34,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
 
-  // Favori kategoriler (varsayılan popüler olanlar)
-  final List<String> _defaultFavoriteExpenseCategories = [
-    'Market',
-    'Yemek',
-    'Ulaşım',
-    'Faturalar',
-    'Eğlence',
-    'Sağlık',
-  ];
-  final List<String> _defaultFavoriteIncomeCategories = [
-    'Maaş',
-    'Freelance',
-    'Yatırım',
-    'Hediye',
-    'Diğer Gelir',
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -362,7 +345,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [color.withValues(alpha: 0.08), color.withValues(alpha: 0.03)],
+          colors: [
+            color.withValues(alpha: 0.08),
+            color.withValues(alpha: 0.03),
+          ],
         ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: color.withValues(alpha: 0.15), width: 1),
@@ -371,7 +357,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
+            CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -447,7 +433,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildFavoriteCategoryGrid(
     AsyncValue<List<CategoryModel>> categories,
   ) {
-    final l = AppLocalizations.of(context)!;
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return categories.when(
@@ -936,6 +921,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               onPressed: () async {
                 if (nameController.text.trim().isEmpty) return;
 
+                // Async işlemden önce al; sheet kapanınca context geçersizleşebilir
+                final messenger = ScaffoldMessenger.of(context);
                 Navigator.pop(ctx); // Dialog kapat
 
                 // Kategori oluştur
@@ -947,6 +934,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                       'name': nameController.text.trim(),
                       'type': _transactionType,
                       'icon': selectedIcon,
+                      'is_custom': true,
                     });
 
                     // Provider'ları yenile
@@ -955,31 +943,28 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     ref.invalidate(expenseCategoriesProvider);
 
                     if (!parentContext.mounted) return;
-                    if (!context.mounted) return;
                     Navigator.pop(parentContext); // Sheet kapat
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messenger.showSnackBar(
                       SnackBar(
                         content: Text(l.categoryAdded),
                         backgroundColor: colorTheme.success,
                       ),
                     );
                   } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            (e.toString().contains('SocketException') ||
-                                    e.toString().contains('host lookup') ||
-                                    e.toString().contains(
-                                      'Network is unreachable',
-                                    ))
-                                ? l.networkError
-                                : l.errorWithDetails(e.toString()),
-                          ),
-                          backgroundColor: colorTheme.error,
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          (e.toString().contains('SocketException') ||
+                                  e.toString().contains('host lookup') ||
+                                  e.toString().contains(
+                                    'Network is unreachable',
+                                  ))
+                              ? l.networkError
+                              : l.errorWithDetails(e.toString()),
                         ),
-                      );
-                    }
+                        backgroundColor: colorTheme.error,
+                      ),
+                    );
                   }
                 }
               },
@@ -1034,7 +1019,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   )
                 : const Icon(Icons.add_circle_outline, size: 16),
             label: Text(
-              _isLoading ? 'Oluşturuluyor...' : 'Kategorileri Oluştur',
+              _isLoading ? l.loading : l.createCategories,
               style: const TextStyle(fontSize: 13),
             ),
           ),

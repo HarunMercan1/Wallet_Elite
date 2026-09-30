@@ -28,7 +28,7 @@ class MainShell extends ConsumerWidget {
     final selectedTab = ref.watch(selectedTabProvider);
     // Açılışta vadesi gelen tekrarlayan işlemleri çalıştır (bir kez)
     ref.watch(recurringStartupRunProvider);
-    final locale = ref.watch(localeProvider);
+    ref.watch(localeProvider); // dil değişince yeniden çiz
     final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;

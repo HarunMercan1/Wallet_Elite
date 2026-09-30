@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../data/auth_provider.dart';
@@ -367,14 +368,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     setState(() => _isGoogleLoading = false);
 
                                     if (errorMessage != null &&
-                                        errorMessage != 'Giriş iptal edildi') {
+                                        errorMessage != 'cancelled') {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            errorMessage,
-                                          ), // Gerçek hatayı göster
+                                            _authErrorText(errorMessage, l),
+                                          ),
                                           backgroundColor: Colors.red,
                                           duration: const Duration(seconds: 4),
                                         ),
@@ -409,7 +410,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   ),
                             label: Text(
                               _isGoogleLoading
-                                  ? 'Giriş Yapılıyor...'
+                                  ? l.signingIn
                                   : l.continueWithGoogle,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -471,6 +472,34 @@ class _LoginViewState extends ConsumerState<LoginView> {
     );
   }
 
+  /// Repository'den gelen hata kodunu kullanıcının dilinde metne çevir
+  String _authErrorText(String? code, AppLocalizations l, {String? fallback}) {
+    switch (code) {
+      case 'network_error':
+        return l.networkError;
+      case 'invalid_credentials':
+        return l.errInvalidCredentials;
+      case 'email_not_confirmed':
+        return l.errEmailNotConfirmed;
+      case 'too_many_requests':
+        return l.errTooManyRequests;
+      case 'email_in_use':
+        return l.errEmailInUse;
+      case 'weak_password':
+        return l.errWeakPassword;
+      case 'invalid_email':
+        return l.errInvalidEmail;
+      case 'google_config':
+        return l.errGoogleConfig;
+      case 'play_services':
+        return l.errPlayServices;
+      case 'google_failed':
+        return l.googleLoginFailed;
+      default:
+        return fallback ?? l.errorOccurred;
+    }
+  }
+
   Future<void> _handleEmailAuth(AppLocalizations l) async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -500,7 +529,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
       if (mounted) {
         if (success) {
-          if (_isLogin) {
+          // Kayıtta e-posta onayı kapalıysa oturum hemen açılır; router
+          // yeni kullanıcıyı onboarding'e yönlendirir.
+          if (_isLogin ||
+              Supabase.instance.client.auth.currentSession != null) {
             context.go('/home');
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -518,10 +550,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                errorMessage == 'network_error'
-                    ? l.networkError
-                    : (errorMessage ??
-                          (_isLogin ? l.loginFailed : l.registerFailed)),
+                _authErrorText(
+                  errorMessage,
+                  l,
+                  fallback: _isLogin ? l.loginFailed : l.registerFailed,
+                ),
               ),
               backgroundColor: Colors.red,
             ),

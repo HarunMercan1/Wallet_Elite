@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Onboarding Preview - Ayarlardan erişilebilen demo modu
 class OnboardingPreviewView extends ConsumerStatefulWidget {
@@ -21,52 +22,14 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  AppLocalizations get _l => AppLocalizations.of(context)!;
+
   // Her sayfa değiştiğinde animasyonları yeniden tetiklemek için key
   int _animationKey = 0;
-
-  // Animation controllers
-  late AnimationController _logoAnimController;
-  late AnimationController _fadeInController;
-  late Animation<double> _logoScale;
-  late Animation<double> _fadeIn;
-
-  @override
-  void initState() {
-    super.initState();
-    _initAnimations();
-  }
-
-  void _initAnimations() {
-    _logoAnimController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-
-    _fadeInController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _logoAnimController, curve: Curves.elasticOut),
-    );
-
-    _fadeIn = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeInController, curve: Curves.easeIn));
-
-    _logoAnimController.forward();
-    Future.delayed(const Duration(milliseconds: 400), () {
-      if (mounted) _fadeInController.forward();
-    });
-  }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _logoAnimController.dispose();
-    _fadeInController.dispose();
     super.dispose();
   }
 
@@ -104,7 +67,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Tanıtım Turu',
+          _l.appTour,
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black,
             fontSize: r.fontL,
@@ -271,7 +234,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                 delay: 300,
                 direction: SlideDirection.up,
                 child: Text(
-                  'Finansal özgürlüğünüz, elinizde',
+                  _l.tagline,
                   style: TextStyle(
                     fontSize: r.fontM,
                     color: isDark ? Colors.white70 : Colors.grey[600],
@@ -292,7 +255,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   colorTheme,
                   isDark,
                   Icons.security,
-                  'Verileriniz güvenli ve şifrelenmiş',
+                  _l.secureData,
                 ),
               ),
               SizedBox(height: r.hp(2)),
@@ -304,7 +267,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   colorTheme,
                   isDark,
                   Icons.cloud_sync,
-                  'Tüm cihazlarınızda senkronize',
+                  _l.cloudSync,
                 ),
               ),
               SizedBox(height: r.hp(2)),
@@ -316,7 +279,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   colorTheme,
                   isDark,
                   Icons.insights,
-                  'Akıllı finansal öneriler',
+                  _l.smartInsights,
                 ),
               ),
             ],
@@ -398,32 +361,32 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     final features = [
       {
         'icon': Icons.account_balance_wallet,
-        'title': 'Cüzdan Yönetimi',
-        'desc': 'Tüm hesaplarınızı tek yerden takip edin',
+        'title': _l.wallet,
+        'desc': _l.manageWalletsDesc,
         'color': colorTheme.primary,
       },
       {
         'icon': Icons.pie_chart,
-        'title': 'Bütçe Takibi',
-        'desc': 'Harcama limitleri belirleyin',
+        'title': _l.budgetTracking,
+        'desc': _l.budgetTrackingDesc,
         'color': colorTheme.accent,
       },
       {
         'icon': Icons.repeat,
-        'title': 'Tekrarlayan İşlemler',
-        'desc': 'Düzenli ödemelerinizi otomatikleştirin',
+        'title': _l.recurringTransactions,
+        'desc': _l.recurringTransactionsDesc,
         'color': colorTheme.success,
       },
       {
         'icon': Icons.people,
-        'title': 'Borç Defteri',
-        'desc': 'Alacak ve borçlarınızı takip edin',
+        'title': _l.debtBook,
+        'desc': _l.debtBookDesc,
         'color': Colors.orange,
       },
       {
         'icon': Icons.analytics,
-        'title': 'Detaylı İstatistikler',
-        'desc': 'Paranızın nereye gittiğini görün',
+        'title': _l.statisticsTitle,
+        'desc': _l.analyzeSpendingDesc,
         'color': Colors.purple,
       },
     ];
@@ -439,7 +402,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 0,
             direction: SlideDirection.down,
             child: Text(
-              'Özellikleri Keşfet',
+              _l.discoverFeatures,
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
@@ -454,7 +417,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 100,
             direction: SlideDirection.down,
             child: Text(
-              'Finanslarınızı yönetmek için ihtiyacınız olan her şey',
+              _l.discoverFeaturesDesc,
               style: TextStyle(
                 fontSize: r.fontM,
                 color: isDark ? Colors.white70 : Colors.grey[600],
@@ -579,7 +542,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 0,
             direction: SlideDirection.down,
             child: Text(
-              '18 Dil Desteği 🌍',
+              _l.languageSupportTitle,
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
@@ -594,7 +557,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 100,
             direction: SlideDirection.down,
             child: Text(
-              'Kendi dilinizde kullanın',
+              _l.languageSupportDesc,
               style: TextStyle(
                 fontSize: r.fontM,
                 color: isDark ? Colors.white70 : Colors.grey[600],
@@ -672,37 +635,37 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
   ) {
     final themes = [
       {
-        'name': 'Okyanus',
+        'name': _l.themeOcean,
         'primary': const Color(0xFF2196F3),
         'accent': const Color(0xFF00BCD4),
         'icon': Icons.water,
       },
       {
-        'name': 'Gün Batımı',
+        'name': _l.themeSunset,
         'primary': const Color(0xFFFF6B35),
         'accent': const Color(0xFFFFD93D),
         'icon': Icons.wb_twilight,
       },
       {
-        'name': 'Orman',
+        'name': _l.themeForest,
         'primary': const Color(0xFF4CAF50),
         'accent': const Color(0xFF8BC34A),
         'icon': Icons.park,
       },
       {
-        'name': 'Lavanta',
+        'name': _l.themeLavender,
         'primary': const Color(0xFF9C27B0),
         'accent': const Color(0xFFE91E63),
         'icon': Icons.local_florist,
       },
       {
-        'name': 'Gece Yarısı',
+        'name': _l.themeMidnight,
         'primary': const Color(0xFF3F51B5),
         'accent': const Color(0xFF7C4DFF),
         'icon': Icons.nightlight,
       },
       {
-        'name': 'Gül',
+        'name': _l.themeRose,
         'primary': const Color(0xFFE91E63),
         'accent': const Color(0xFFFF4081),
         'icon': Icons.favorite,
@@ -720,7 +683,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 0,
             direction: SlideDirection.down,
             child: Text(
-              '6 Renk Teması 🎨',
+              _l.colorThemesTitle,
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
@@ -735,7 +698,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 100,
             direction: SlideDirection.down,
             child: Text(
-              'Kendi tarzınızı seçin + Karanlık Mod',
+              _l.colorThemesDesc,
               style: TextStyle(
                 fontSize: r.fontM,
                 color: isDark ? Colors.white70 : Colors.grey[600],
@@ -828,7 +791,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   ),
                   SizedBox(width: r.spaceM),
                   Text(
-                    'Karanlık mod da mevcut!',
+                    _l.darkModeAvailable,
                     style: TextStyle(
                       fontSize: r.fontM,
                       fontWeight: FontWeight.w600,
@@ -859,32 +822,32 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     final currencies = [
       {
         'code': 'TRY',
-        'name': 'Türk Lirası',
+        'name': _l.turkishLira,
         'symbol': '₺',
         'color': Colors.red,
       },
       {
         'code': 'USD',
-        'name': 'ABD Doları',
+        'name': _l.usDollar,
         'symbol': r'$',
         'color': Colors.green,
       },
-      {'code': 'EUR', 'name': 'Euro', 'symbol': '€', 'color': Colors.blue},
+      {'code': 'EUR', 'name': _l.euro, 'symbol': '€', 'color': Colors.blue},
       {
         'code': 'GBP',
-        'name': 'İngiliz Sterlini',
+        'name': _l.britishPound,
         'symbol': '£',
         'color': Colors.purple,
       },
       {
         'code': 'JPY',
-        'name': 'Japon Yeni',
+        'name': _l.japaneseYen,
         'symbol': '¥',
         'color': Colors.orange,
       },
       {
         'code': 'RUB',
-        'name': 'Rus Rublesi',
+        'name': _l.russianRuble,
         'symbol': '₽',
         'color': Colors.teal,
       },
@@ -901,7 +864,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 0,
             direction: SlideDirection.down,
             child: Text(
-              'Çoklu Para Birimi 💰',
+              _l.multiCurrencyTitle,
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
@@ -916,7 +879,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             delay: 100,
             direction: SlideDirection.down,
             child: Text(
-              'Tüm dünya para birimlerini destekliyoruz',
+              _l.multiCurrencyDesc,
               style: TextStyle(
                 fontSize: r.fontM,
                 color: isDark ? Colors.white70 : Colors.grey[600],
@@ -1036,7 +999,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             TextButton.icon(
               onPressed: _previousPage,
               icon: Icon(Icons.arrow_back, size: r.iconS),
-              label: const Text('Geri'),
+              label: Text(_l.backButton),
               style: TextButton.styleFrom(
                 foregroundColor: isDark ? Colors.white70 : Colors.grey[700],
               ),
@@ -1084,7 +1047,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'İleri',
+                    _l.nextButton,
                     style: TextStyle(
                       fontSize: r.fontS,
                       fontWeight: FontWeight.bold,

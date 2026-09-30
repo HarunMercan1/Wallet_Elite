@@ -453,7 +453,6 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
 
   static ColorTheme fromString(String scheme) {
     switch (scheme) {
-
       case 'amethyst':
         return amethyst;
       case 'forest':

@@ -16,7 +16,6 @@ import '../../debts/presentation/debts_view.dart';
 import '../../wallet/presentation/wallet_selection_sheet.dart';
 import '../../budgets/presentation/budgets_view.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
-import '../../settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 import '../../../core/utils/responsive_helper.dart';
 
@@ -30,7 +29,7 @@ class DashboardView extends ConsumerWidget {
     final transactions = ref.watch(filteredTransactionsProvider);
     final selectedWalletId = ref.watch(selectedWalletIdProvider);
     final categories = ref.watch(categoriesProvider);
-    final locale = ref.watch(localeProvider);
+    ref.watch(localeProvider); // dil değişince yeniden çiz
 
     // Theme setup
     final themeData = Theme.of(context);
@@ -342,7 +341,9 @@ class DashboardView extends ConsumerWidget {
       data: (List<AccountModel> accountsList) {
         double totalBalance = 0.0;
         String walletLabel = l.allWallets;
-        String currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+        String currencySymbol = CurrencyUtils.getSymbol(
+          ref.watch(currencyProvider),
+        );
 
         if (selectedWalletId == null) {
           // Sum all wallets
@@ -354,14 +355,14 @@ class DashboardView extends ConsumerWidget {
           final selectedAccount = accountsList.firstWhere(
             (a) => a.id == selectedWalletId,
             orElse: () => AccountModel(
-                    id: '',
-                    userId: '',
-                    name: '',
-                    type: '',
-                    balance: 0,
-                    currency: 'TRY',
-                    createdAt: DateTime.now(),
-                  ),
+              id: '',
+              userId: '',
+              name: '',
+              type: '',
+              balance: 0,
+              currency: 'TRY',
+              createdAt: DateTime.now(),
+            ),
           );
           totalBalance = selectedAccount.balance;
           walletLabel = selectedAccount.name;
@@ -838,8 +839,8 @@ class DashboardView extends ConsumerWidget {
               color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 10,
               offset: const Offset(0, 4),
-            )
-          ]
+            ),
+          ],
         ),
         child: Stack(
           children: [
@@ -852,15 +853,14 @@ class DashboardView extends ConsumerWidget {
                 height: 4,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      accentColor,
-                      accentColor.withValues(alpha: 0.5),
-                    ],
+                    colors: [accentColor, accentColor.withValues(alpha: 0.5)],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16), // Match r.borderRadiusM roughly
+                    topLeft: Radius.circular(
+                      16,
+                    ), // Match r.borderRadiusM roughly
                     topRight: Radius.circular(16),
                   ),
                 ),
@@ -868,7 +868,12 @@ class DashboardView extends ConsumerWidget {
             ),
             // Content
             Padding(
-              padding: EdgeInsets.fromLTRB(r.paddingM, r.paddingM, r.paddingS, r.paddingM),
+              padding: EdgeInsets.fromLTRB(
+                r.paddingM,
+                r.paddingM,
+                r.paddingS,
+                r.paddingM,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -887,7 +892,7 @@ class DashboardView extends ConsumerWidget {
                     Icons.arrow_forward_ios,
                     size: 14,
                     color: colorTheme.textSecondary.withValues(alpha: 0.5),
-                  )
+                  ),
                 ],
               ),
             ),

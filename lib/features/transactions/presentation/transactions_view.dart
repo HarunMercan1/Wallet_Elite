@@ -97,7 +97,8 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           color: _filterState.hasFilters
                               ? colorTheme.primary
                               : (isDark ? Colors.white10 : Colors.grey[300]!),
-                        ),),
+                        ),
+                      ),
                       child: Row(
                         children: [
                           Icon(
@@ -543,7 +544,8 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-          borderRadius: BorderRadius.circular(14),),
+          borderRadius: BorderRadius.circular(14),
+        ),
         child: Row(
           children: [
             Container(

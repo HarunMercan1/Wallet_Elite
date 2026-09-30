@@ -38,7 +38,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     final colorTheme = ref.watch(currentColorThemeProvider);
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
+      symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
       decimalDigits: 2,
     );
     final dateFormat = DateFormat(
@@ -283,7 +283,8 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                               hintText: currencyFormat.format(
                                 debt.remainingAmount,
                               ),
-                              prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
+                              prefixText:
+                                  '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                               prefixIcon: Icon(
                                 Icons.payment,
                                 color: colorTheme.primary,
@@ -650,6 +651,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
       final controller = ref.read(debtControllerProvider);
       final updatedDebt = debt.copyWith(
         description: result.isEmpty ? null : result,
+        clearDescription: result.isEmpty,
       );
       await controller.updateDebt(updatedDebt);
     }

@@ -9,7 +9,6 @@ import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/auth_provider.dart';
-import '../data/auth_repository.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../settings/data/settings_provider.dart';
 
@@ -38,51 +37,11 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
   bool _isDarkMode = false;
   bool _isLoading = false;
 
-  // Animation controllers
-  late AnimationController _logoAnimController;
-  late AnimationController _fadeInController;
-  late Animation<double> _logoScale;
-  late Animation<double> _fadeIn;
-
-  @override
-  void initState() {
-    super.initState();
-    _initAnimations();
-  }
-
-  void _initAnimations() {
-    _logoAnimController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-
-    _fadeInController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _logoAnimController, curve: Curves.elasticOut),
-    );
-
-    _fadeIn = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeInController, curve: Curves.easeIn));
-
-    _logoAnimController.forward();
-    Future.delayed(const Duration(milliseconds: 400), () {
-      if (mounted) _fadeInController.forward();
-    });
-  }
-
   @override
   void dispose() {
     _pageController.dispose();
     _accountNameController.dispose();
     _initialBalanceController.dispose();
-    _logoAnimController.dispose();
-    _fadeInController.dispose();
     super.dispose();
   }
 

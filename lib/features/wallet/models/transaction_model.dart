@@ -1,4 +1,5 @@
 // lib/features/wallet/models/transaction_model.dart
+import '../../../core/utils/date_utils.dart';
 
 /// İşlem modeli (transactions tablosu)
 class TransactionModel {
@@ -34,8 +35,8 @@ class TransactionModel {
       amount: (json['amount'] as num).toDouble(),
       type: json['type'] as String,
       description: json['description'] as String?,
-      date: DateTime.parse(json['date'] as String),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      date: parseWallClock(json['date'] as String),
+      createdAt: parseServerTimestamp(json['created_at'] as String),
     );
   }
 

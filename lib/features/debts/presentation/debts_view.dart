@@ -110,7 +110,7 @@ class DebtsView extends ConsumerWidget {
     final peopleCount = ref.watch(debtPeopleCountProvider);
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
+      symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
       decimalDigits: 2,
     );
 
@@ -123,7 +123,8 @@ class DebtsView extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         children: [
           Row(
@@ -135,7 +136,8 @@ class DebtsView extends ConsumerWidget {
                   value: totalLent.when(
                     data: (v) => currencyFormat.format(v),
                     loading: () => '...',
-                    error: (_, __) => '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
+                    error: (_, __) =>
+                        '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
                   ),
                   icon: Icons.arrow_upward,
                   color: Colors.green.shade300,
@@ -149,7 +151,8 @@ class DebtsView extends ConsumerWidget {
                   value: totalBorrowed.when(
                     data: (v) => currencyFormat.format(v),
                     loading: () => '...',
-                    error: (_, __) => '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
+                    error: (_, __) =>
+                        '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
                   ),
                   icon: Icons.arrow_downward,
                   color: Colors.red.shade300,
@@ -408,7 +411,7 @@ class DebtsView extends ConsumerWidget {
   ) {
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
+      symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
       decimalDigits: 2,
     );
     final dateFormat = DateFormat(
@@ -438,7 +441,8 @@ class DebtsView extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           border: isOverdue
               ? Border.all(color: Colors.red.shade300, width: 2)
-              : null,),
+              : null,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -658,7 +662,7 @@ class DebtsView extends ConsumerWidget {
         [];
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
+      symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
       decimalDigits: 2,
     );
 

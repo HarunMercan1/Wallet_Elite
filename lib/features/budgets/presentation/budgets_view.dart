@@ -145,7 +145,10 @@ class BudgetsView extends ConsumerWidget {
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    final currencyFormat = NumberFormat.currency(symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}', decimalDigits: 2);
+    final currencyFormat = NumberFormat.currency(
+      symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
+      decimalDigits: 2,
+    );
     final progressColor = budget.isExceeded
         ? Colors.red
         : budget.isWarning
@@ -161,7 +164,8 @@ class BudgetsView extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           border: budget.isExceeded
               ? Border.all(color: Colors.red.withValues(alpha: 0.5), width: 2)
-              : null,),
+              : null,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

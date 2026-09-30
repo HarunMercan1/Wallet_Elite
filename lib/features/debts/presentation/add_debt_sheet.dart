@@ -138,7 +138,8 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                         icon: Icons.attach_money,
                         isDark: isDark,
                         colorTheme: colorTheme,
-                        prefix: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
+                        prefix:
+                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
