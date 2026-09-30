@@ -34,7 +34,7 @@ android {
         applicationId = "com.mercansoftware.wallet_elite"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23 // RevenueCat (purchases_flutter) en az 23 istiyor
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
