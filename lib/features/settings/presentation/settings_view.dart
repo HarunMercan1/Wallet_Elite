@@ -10,6 +10,12 @@ import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/theme/premium_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
+import '../../../core/ads/ads_providers.dart';
+import '../../premium/data/premium_provider.dart';
+import '../../premium/data/premium_constants.dart';
+import '../../premium/presentation/paywall_view.dart';
+import '../../premium/presentation/premium_gate.dart';
+import '../../premium/data/export_service.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/account_model.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
@@ -42,6 +48,11 @@ class SettingsView extends ConsumerWidget {
           children: [
             // Profil Kartı
             _buildProfileCard(context, userProfile, l, isDark, colorTheme),
+
+            const SizedBox(height: 16),
+
+            // Premium Kartı
+            _buildPremiumCard(context, ref, l, isDark, colorTheme),
 
             const SizedBox(height: 24),
 
@@ -98,6 +109,61 @@ class SettingsView extends ConsumerWidget {
                   ),
                   onTap: () => context.push('/onboarding-preview'),
                 ),
+                Divider(
+                  height: 1,
+                  color: isDark ? Colors.white10 : Colors.grey[200],
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.file_download_outlined,
+                    color: isDark ? colorTheme.accent : colorTheme.primary,
+                  ),
+                  title: Text(
+                    l.exportData,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  subtitle: Text(
+                    l.exportDataDesc,
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                  trailing: ref.watch(isPremiumProvider)
+                      ? Icon(
+                          Icons.chevron_right,
+                          color: isDark ? Colors.grey[600] : Colors.grey[400],
+                        )
+                      : const Icon(Icons.lock_outline, size: 20),
+                  onTap: () => _exportData(context, ref, l),
+                ),
+                if (ref.watch(
+                  adConsentProvider.select((c) => c.isPrivacyOptionsRequired),
+                )) ...[
+                  Divider(
+                    height: 1,
+                    color: isDark ? Colors.white10 : Colors.grey[200],
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.privacy_tip_outlined,
+                      color: isDark ? colorTheme.accent : colorTheme.primary,
+                    ),
+                    title: Text(
+                      l.adPrivacySettings,
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: isDark ? Colors.grey[600] : Colors.grey[400],
+                    ),
+                    onTap: () =>
+                        ref.read(adConsentProvider).showPrivacyOptionsForm(),
+                  ),
+                ],
               ],
             ),
 
@@ -395,6 +461,98 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
+  Widget _buildPremiumCard(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    bool isDark,
+    ColorTheme colorTheme,
+  ) {
+    final isPremium = ref.watch(isPremiumProvider);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => showPaywall(context),
+        child: Ink(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              colors: [colorTheme.primary, colorTheme.accent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                isPremium ? Icons.verified : Icons.workspace_premium,
+                color: Colors.white,
+                size: 32,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isPremium ? l.premiumActive : l.goPremium,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      isPremium ? l.premiumActiveDesc : l.goPremiumDesc,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (!isPremium)
+                const Icon(Icons.chevron_right, color: Colors.white),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _exportData(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+  ) async {
+    if (!ref.read(isPremiumProvider)) {
+      showPaywall(context);
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final transactions = await ref.read(transactionsProvider.future);
+      if (transactions.isEmpty) {
+        messenger.showSnackBar(SnackBar(content: Text(l.exportNoData)));
+        return;
+      }
+      await ExportService.shareTransactionsCsv(
+        transactions: transactions,
+        accounts: await ref.read(accountsProvider.future),
+        categories: await ref.read(categoriesProvider.future),
+        l: l,
+        localeCode: ref.read(localeProvider),
+      );
+    } catch (e) {
+      debugPrint('Dışa aktarma hatası: $e');
+      messenger.showSnackBar(SnackBar(content: Text(l.exportFailed)));
+    }
+  }
+
   Widget _buildSectionTitle(String title, bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(left: 4),
@@ -478,8 +636,8 @@ class SettingsView extends ConsumerWidget {
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    final colorScheme = ref.watch(colorSchemeProvider);
-    final theme = ColorTheme.fromString(colorScheme);
+    // Etkin tema (kilitli bir tema seçiliyse ücretsiz tema gösterilir)
+    final theme = ref.watch(currentColorThemeProvider);
 
     return ListTile(
       leading: Container(
@@ -506,14 +664,8 @@ class SettingsView extends ConsumerWidget {
         Icons.chevron_right,
         color: isDark ? Colors.grey[600] : Colors.grey[400],
       ),
-      onTap: () => _showColorSchemeDialog(
-        context,
-        ref,
-        colorScheme,
-        l,
-        isDark,
-        colorTheme,
-      ),
+      onTap: () =>
+          _showColorSchemeDialog(context, ref, theme.id, l, isDark, colorTheme),
     );
   }
 
@@ -720,15 +872,18 @@ class SettingsView extends ConsumerWidget {
   }
 
   void _showUnlockThemeDialog(
-    BuildContext context,
+    BuildContext sheetContext,
     WidgetRef ref,
     ColorTheme theme,
     bool isDark,
   ) {
-    final l = AppLocalizations.of(context)!;
+    final l = AppLocalizations.of(sheetContext)!;
+    final sheetNavigator = Navigator.of(sheetContext);
+    final messenger = ScaffoldMessenger.of(sheetContext);
+
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
+      context: sheetContext,
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: isDark ? theme.surfaceDark : Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
@@ -744,7 +899,7 @@ class SettingsView extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                '${theme.name} Temasını Aç',
+                l.unlockThemeTitle(theme.name),
                 style: TextStyle(
                   color: isDark ? Colors.white : Colors.black,
                   fontSize: 18,
@@ -754,31 +909,38 @@ class SettingsView extends ConsumerWidget {
           ],
         ),
         content: Text(
-          l.premiumThemeUnlockMessage,
+          l.rewardedThemeUnlockMessage,
           style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600]),
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l.cancel, style: TextStyle(color: Colors.grey[500])),
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              sheetNavigator.pop(); // tema listesini kapat
+              showPaywall(sheetNavigator.context);
+            },
+            child: Text(l.goPremium),
           ),
           ElevatedButton.icon(
             onPressed: () async {
-              Navigator.pop(context); // Close dialog
+              Navigator.pop(dialogContext);
+              final rewarded = ref.read(rewardedAdServiceProvider);
+              if (!rewarded.isReady) {
+                rewarded.load();
+                messenger.showSnackBar(SnackBar(content: Text(l.adNotReady)));
+                return;
+              }
+              final earned = await rewarded.show();
+              if (!earned) return;
 
-              // TODO: Show rewarded ad here
-              // For now, unlock directly for testing
               await ref
                   .read(unlockedThemesProvider.notifier)
                   .unlockTheme(theme.id);
-
-              // Set as current theme
               ref.read(colorSchemeProvider.notifier).setColorScheme(theme.id);
-
-              // Close the color scheme sheet
-              if (context.mounted) {
-                Navigator.pop(context);
-              }
+              if (sheetNavigator.canPop()) sheetNavigator.pop();
+              messenger.showSnackBar(
+                SnackBar(content: Text(l.themeUnlocked24h)),
+              );
             },
             icon: const Icon(Icons.play_arrow, size: 18),
             label: Text(l.watchAd),
@@ -1408,6 +1570,17 @@ class SettingsView extends ConsumerWidget {
     bool isDark,
     ColorTheme colorTheme,
   ) {
+    // Ücretsiz sürüm cüzdan sınırı
+    final walletCount = ref.read(accountsProvider).valueOrNull?.length ?? 0;
+    if (!ref.read(isPremiumProvider) &&
+        walletCount >= PremiumConstants.freeWalletLimit) {
+      showPremiumRequiredDialog(
+        context,
+        l.walletLimitReached(PremiumConstants.freeWalletLimit),
+      );
+      return;
+    }
+
     final nameController = TextEditingController();
     final balanceController = TextEditingController(text: '0');
     String selectedType = 'cash';

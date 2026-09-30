@@ -1282,4 +1282,117 @@ class AppLocalizationsKo extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return '확인하려면 $word을(를) 입력하세요';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => '모든 기능을 잠금 해제하세요';
+
+  @override
+  String get premiumFeatureNoAds => '광고 없음';
+
+  @override
+  String get premiumFeatureThemes => '모든 프리미엄 테마';
+
+  @override
+  String get premiumFeatureUnlimited => '무제한 지갑 및 예산';
+
+  @override
+  String get premiumFeatureExport => '데이터 내보내기 (CSV / Excel)';
+
+  @override
+  String get planMonthly => '월간';
+
+  @override
+  String get planYearly => '연간';
+
+  @override
+  String get planLifetime => '평생';
+
+  @override
+  String get perMonth => '/ 월';
+
+  @override
+  String get perYear => '/ 년';
+
+  @override
+  String get oneTimePayment => '일회성 결제';
+
+  @override
+  String get bestValue => '가장 저렴';
+
+  @override
+  String get restorePurchases => '구매 복원';
+
+  @override
+  String get purchaseSuccess => 'Premium에 오신 것을 환영합니다! 🎉';
+
+  @override
+  String get restoreSuccess => '구매가 복원되었습니다.';
+
+  @override
+  String get purchasePending => '결제가 대기 중입니다. 확인되면 Premium이 활성화됩니다.';
+
+  @override
+  String get restoreNothing => '이 계정의 이전 구매 내역을 찾을 수 없습니다.';
+
+  @override
+  String get purchaseNotAvailable => '지금은 구매할 수 없습니다. 나중에 다시 시도해 주세요.';
+
+  @override
+  String get subscriptionTerms =>
+      '구독은 해지할 때까지 자동으로 갱신됩니다. Google Play > 결제 및 구독에서 언제든지 해지할 수 있습니다.';
+
+  @override
+  String get premiumActive => 'Premium 활성화됨';
+
+  @override
+  String get premiumActiveDesc => 'Wallet Elite를 응원해 주셔서 감사합니다!';
+
+  @override
+  String get goPremium => 'Premium으로 업그레이드';
+
+  @override
+  String get goPremiumDesc => '광고 없음, 모든 테마, 무제한 지갑 및 예산';
+
+  @override
+  String walletLimitReached(int count) {
+    return '무료 플랜에서는 지갑을 최대 $count개까지 만들 수 있습니다. 무제한으로 사용하려면 Premium으로 업그레이드하세요.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return '무료 플랜에서는 활성 예산을 최대 $count개까지 만들 수 있습니다. 무제한으로 사용하려면 Premium으로 업그레이드하세요.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '$name 잠금 해제';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      '짧은 광고를 보고 이 테마를 24시간 사용하거나, Premium으로 업그레이드해 모든 테마를 영구적으로 잠금 해제하세요.';
+
+  @override
+  String get adNotReady => '광고가 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.';
+
+  @override
+  String get themeUnlocked24h => '테마가 24시간 동안 잠금 해제되었습니다';
+
+  @override
+  String get adPrivacySettings => '광고 개인정보 설정';
+
+  @override
+  String get exportData => '데이터 내보내기';
+
+  @override
+  String get exportDataDesc => '거래 내역을 CSV 파일로 공유 (Excel에서 열림)';
+
+  @override
+  String get exportFailed => '내보내기 실패';
+
+  @override
+  String get exportNoData => '내보낼 거래가 없습니다.';
 }

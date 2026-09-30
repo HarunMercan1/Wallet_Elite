@@ -13,6 +13,9 @@ import '../../transactions/presentation/transactions_view.dart';
 import '../../statistics/presentation/statistics_view.dart';
 import '../../recurring/data/recurring_provider.dart';
 import '../../auth/data/auth_provider.dart';
+import '../../../core/ads/ads_providers.dart';
+import '../../../core/ads/banner_ad_widget.dart';
+import '../../premium/data/premium_provider.dart';
 
 /// Bottom navigation için seçili sekme provider'ı
 final selectedTabProvider = StateProvider<int>((ref) {
@@ -28,6 +31,9 @@ class MainShell extends ConsumerWidget {
     final selectedTab = ref.watch(selectedTabProvider);
     // Açılışta vadesi gelen tekrarlayan işlemleri çalıştır (bir kez)
     ref.watch(recurringStartupRunProvider);
+    // Açılışta reklam iznini (GDPR) topla ve premium durumunu yükle
+    ref.watch(adConsentStartupProvider);
+    ref.watch(isPremiumProvider);
     ref.watch(localeProvider); // dil değişince yeniden çiz
     final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
@@ -45,80 +51,96 @@ class MainShell extends ConsumerWidget {
           SettingsView(),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
-          border: Border(
-            top: BorderSide(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.black.withValues(alpha: 0.05),
-              width: 0.5,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Banner yalnızca Ana Sayfa ve İstatistikler'de görünür; tek örnek
+          // canlı tutulur, sekme değişince yeniden yüklenmez.
+          Visibility(
+            visible: selectedTab == 0 || selectedTab == 3,
+            maintainState: true,
+            child: const AdaptiveBannerAd(),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+              border: Border(
+                top: BorderSide(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.05)
+                      : Colors.black.withValues(alpha: 0.05),
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: r.paddingS,
+                  vertical: r.paddingS,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _NavItem(
+                      icon: Icons.home_outlined,
+                      selectedIcon: Icons.home,
+                      label: l.home,
+                      isSelected: selectedTab == 0,
+                      isDark: isDark,
+                      primaryColor: colorTheme.primary,
+                      onTap: () =>
+                          ref.read(selectedTabProvider.notifier).state = 0,
+                    ),
+                    _NavItem(
+                      icon: Icons.receipt_long_outlined,
+                      selectedIcon: Icons.receipt_long,
+                      label: l.transactions,
+                      isSelected: selectedTab == 1,
+                      isDark: isDark,
+                      primaryColor: colorTheme.primary,
+                      onTap: () =>
+                          ref.read(selectedTabProvider.notifier).state = 1,
+                    ),
+                    // Ortadaki büyük + butonu
+                    _AddButton(
+                      primaryColor: colorTheme.primary,
+                      primaryLightColor: colorTheme.primaryLight,
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => const AddTransactionSheet(),
+                        );
+                      },
+                    ),
+                    _NavItem(
+                      icon: Icons.bar_chart_outlined,
+                      selectedIcon: Icons.bar_chart,
+                      label: l.statistics,
+                      isSelected: selectedTab == 3,
+                      isDark: isDark,
+                      primaryColor: colorTheme.primary,
+                      onTap: () =>
+                          ref.read(selectedTabProvider.notifier).state = 3,
+                    ),
+                    _NavItem(
+                      icon: Icons.settings_outlined,
+                      selectedIcon: Icons.settings,
+                      label: l.settings,
+                      isSelected: selectedTab == 4,
+                      isDark: isDark,
+                      primaryColor: colorTheme.primary,
+                      onTap: () =>
+                          ref.read(selectedTabProvider.notifier).state = 4,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: r.paddingS,
-              vertical: r.paddingS,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _NavItem(
-                  icon: Icons.home_outlined,
-                  selectedIcon: Icons.home,
-                  label: l.home,
-                  isSelected: selectedTab == 0,
-                  isDark: isDark,
-                  primaryColor: colorTheme.primary,
-                  onTap: () => ref.read(selectedTabProvider.notifier).state = 0,
-                ),
-                _NavItem(
-                  icon: Icons.receipt_long_outlined,
-                  selectedIcon: Icons.receipt_long,
-                  label: l.transactions,
-                  isSelected: selectedTab == 1,
-                  isDark: isDark,
-                  primaryColor: colorTheme.primary,
-                  onTap: () => ref.read(selectedTabProvider.notifier).state = 1,
-                ),
-                // Ortadaki büyük + butonu
-                _AddButton(
-                  primaryColor: colorTheme.primary,
-                  primaryLightColor: colorTheme.primaryLight,
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => const AddTransactionSheet(),
-                    );
-                  },
-                ),
-                _NavItem(
-                  icon: Icons.bar_chart_outlined,
-                  selectedIcon: Icons.bar_chart,
-                  label: l.statistics,
-                  isSelected: selectedTab == 3,
-                  isDark: isDark,
-                  primaryColor: colorTheme.primary,
-                  onTap: () => ref.read(selectedTabProvider.notifier).state = 3,
-                ),
-                _NavItem(
-                  icon: Icons.settings_outlined,
-                  selectedIcon: Icons.settings,
-                  label: l.settings,
-                  isSelected: selectedTab == 4,
-                  isDark: isDark,
-                  primaryColor: colorTheme.primary,
-                  onTap: () => ref.read(selectedTabProvider.notifier).state = 4,
-                ),
-              ],
-            ),
-          ),
-        ),
+        ],
       ),
     );
   }

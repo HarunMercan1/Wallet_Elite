@@ -1298,4 +1298,121 @@ class AppLocalizationsHi extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'पुष्टि करने के लिए $word लिखें';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'पूरा अनुभव अनलॉक करें';
+
+  @override
+  String get premiumFeatureNoAds => 'कोई विज्ञापन नहीं';
+
+  @override
+  String get premiumFeatureThemes => 'सभी प्रीमियम थीम';
+
+  @override
+  String get premiumFeatureUnlimited => 'असीमित वॉलेट और बजट';
+
+  @override
+  String get premiumFeatureExport => 'अपना डेटा निर्यात करें (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'मासिक';
+
+  @override
+  String get planYearly => 'वार्षिक';
+
+  @override
+  String get planLifetime => 'आजीवन';
+
+  @override
+  String get perMonth => 'प्रति माह';
+
+  @override
+  String get perYear => 'प्रति वर्ष';
+
+  @override
+  String get oneTimePayment => 'एकमुश्त भुगतान';
+
+  @override
+  String get bestValue => 'सबसे किफ़ायती';
+
+  @override
+  String get restorePurchases => 'खरीदारी पुनर्स्थापित करें';
+
+  @override
+  String get purchaseSuccess => 'Premium में आपका स्वागत है! 🎉';
+
+  @override
+  String get restoreSuccess => 'खरीदारी पुनर्स्थापित हो गई।';
+
+  @override
+  String get purchasePending =>
+      'भुगतान लंबित है। पुष्टि होने पर Premium सक्रिय हो जाएगा।';
+
+  @override
+  String get restoreNothing => 'इस खाते के लिए कोई पिछली खरीदारी नहीं मिली।';
+
+  @override
+  String get purchaseNotAvailable =>
+      'खरीदारी अभी उपलब्ध नहीं है। कृपया बाद में पुनः प्रयास करें।';
+
+  @override
+  String get subscriptionTerms =>
+      'सदस्यताएँ रद्द होने तक अपने आप नवीनीकृत होती हैं। आप Google Play > भुगतान और सदस्यताएँ में कभी भी रद्द कर सकते हैं।';
+
+  @override
+  String get premiumActive => 'Premium सक्रिय';
+
+  @override
+  String get premiumActiveDesc => 'Wallet Elite का समर्थन करने के लिए धन्यवाद!';
+
+  @override
+  String get goPremium => 'Premium लें';
+
+  @override
+  String get goPremiumDesc => 'कोई विज्ञापन नहीं, सभी थीम, असीमित वॉलेट और बजट';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'मुफ़्त प्लान में अधिकतम $count वॉलेट बनाए जा सकते हैं। असीमित वॉलेट के लिए Premium लें।';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'मुफ़्त प्लान में अधिकतम $count सक्रिय बजट बनाए जा सकते हैं। असीमित बजट के लिए Premium लें।';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '$name अनलॉक करें';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'इस थीम को 24 घंटे इस्तेमाल करने के लिए एक छोटा विज्ञापन देखें, या सभी थीम हमेशा के लिए अनलॉक करने के लिए Premium लें।';
+
+  @override
+  String get adNotReady =>
+      'विज्ञापन अभी तैयार नहीं है। कृपया थोड़ी देर में पुनः प्रयास करें।';
+
+  @override
+  String get themeUnlocked24h => 'थीम 24 घंटे के लिए अनलॉक हो गई';
+
+  @override
+  String get adPrivacySettings => 'विज्ञापन गोपनीयता सेटिंग्स';
+
+  @override
+  String get exportData => 'डेटा निर्यात करें';
+
+  @override
+  String get exportDataDesc =>
+      'अपने लेनदेन CSV फ़ाइल के रूप में साझा करें (Excel में खुलती है)';
+
+  @override
+  String get exportFailed => 'निर्यात विफल रहा';
+
+  @override
+  String get exportNoData => 'निर्यात करने के लिए कोई लेनदेन नहीं है।';
 }

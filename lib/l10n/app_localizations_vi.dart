@@ -1296,4 +1296,123 @@ class AppLocalizationsVi extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'Nhập $word để xác nhận';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'Mở khóa trải nghiệm đầy đủ';
+
+  @override
+  String get premiumFeatureNoAds => 'Không quảng cáo';
+
+  @override
+  String get premiumFeatureThemes => 'Tất cả giao diện cao cấp';
+
+  @override
+  String get premiumFeatureUnlimited => 'Ví và ngân sách không giới hạn';
+
+  @override
+  String get premiumFeatureExport => 'Xuất dữ liệu của bạn (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'Hàng tháng';
+
+  @override
+  String get planYearly => 'Hàng năm';
+
+  @override
+  String get planLifetime => 'Trọn đời';
+
+  @override
+  String get perMonth => 'mỗi tháng';
+
+  @override
+  String get perYear => 'mỗi năm';
+
+  @override
+  String get oneTimePayment => 'Thanh toán một lần';
+
+  @override
+  String get bestValue => 'Tiết kiệm nhất';
+
+  @override
+  String get restorePurchases => 'Khôi phục giao dịch mua';
+
+  @override
+  String get purchaseSuccess => 'Chào mừng đến với Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'Đã khôi phục giao dịch mua.';
+
+  @override
+  String get purchasePending =>
+      'Thanh toán đang chờ xử lý. Premium sẽ được kích hoạt sau khi xác nhận.';
+
+  @override
+  String get restoreNothing =>
+      'Không tìm thấy giao dịch mua trước đó cho tài khoản này.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'Hiện không thể mua. Vui lòng thử lại sau.';
+
+  @override
+  String get subscriptionTerms =>
+      'Gói đăng ký tự động gia hạn cho đến khi bị hủy. Bạn có thể hủy bất cứ lúc nào trong Google Play > Thanh toán và gói đăng ký.';
+
+  @override
+  String get premiumActive => 'Premium đang hoạt động';
+
+  @override
+  String get premiumActiveDesc => 'Cảm ơn bạn đã ủng hộ Wallet Elite!';
+
+  @override
+  String get goPremium => 'Nâng cấp Premium';
+
+  @override
+  String get goPremiumDesc =>
+      'Không quảng cáo, tất cả giao diện, ví và ngân sách không giới hạn';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'Gói miễn phí cho phép tối đa $count ví. Nâng cấp Premium để có ví không giới hạn.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'Gói miễn phí cho phép tối đa $count ngân sách đang hoạt động. Nâng cấp Premium để có ngân sách không giới hạn.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return 'Mở khóa $name';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'Xem một quảng cáo ngắn để dùng giao diện này trong 24 giờ, hoặc nâng cấp Premium để mở khóa vĩnh viễn tất cả giao diện.';
+
+  @override
+  String get adNotReady =>
+      'Quảng cáo chưa sẵn sàng. Vui lòng thử lại sau giây lát.';
+
+  @override
+  String get themeUnlocked24h => 'Đã mở khóa giao diện trong 24 giờ';
+
+  @override
+  String get adPrivacySettings => 'Cài đặt quyền riêng tư quảng cáo';
+
+  @override
+  String get exportData => 'Xuất dữ liệu';
+
+  @override
+  String get exportDataDesc =>
+      'Chia sẻ giao dịch dưới dạng tệp CSV (mở được bằng Excel)';
+
+  @override
+  String get exportFailed => 'Xuất dữ liệu thất bại';
+
+  @override
+  String get exportNoData => 'Không có giao dịch nào để xuất.';
 }

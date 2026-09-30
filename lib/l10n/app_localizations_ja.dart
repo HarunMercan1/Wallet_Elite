@@ -1281,4 +1281,117 @@ class AppLocalizationsJa extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return '確認のため $word と入力してください';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'すべての機能を解放';
+
+  @override
+  String get premiumFeatureNoAds => '広告なし';
+
+  @override
+  String get premiumFeatureThemes => 'すべてのプレミアムテーマ';
+
+  @override
+  String get premiumFeatureUnlimited => 'ウォレットと予算が無制限';
+
+  @override
+  String get premiumFeatureExport => 'データをエクスポート（CSV / Excel）';
+
+  @override
+  String get planMonthly => '月額';
+
+  @override
+  String get planYearly => '年額';
+
+  @override
+  String get planLifetime => '買い切り';
+
+  @override
+  String get perMonth => '/ 月';
+
+  @override
+  String get perYear => '/ 年';
+
+  @override
+  String get oneTimePayment => '1回限りのお支払い';
+
+  @override
+  String get bestValue => 'いちばんお得';
+
+  @override
+  String get restorePurchases => '購入を復元';
+
+  @override
+  String get purchaseSuccess => 'Premium へようこそ！🎉';
+
+  @override
+  String get restoreSuccess => '購入を復元しました。';
+
+  @override
+  String get purchasePending => '支払いが保留中です。確認後に Premium が有効になります。';
+
+  @override
+  String get restoreNothing => 'このアカウントでは以前の購入が見つかりませんでした。';
+
+  @override
+  String get purchaseNotAvailable => '現在購入できません。しばらくしてからもう一度お試しください。';
+
+  @override
+  String get subscriptionTerms =>
+      '定期購入は解約するまで自動更新されます。Google Play > お支払いと定期購入からいつでも解約できます。';
+
+  @override
+  String get premiumActive => 'Premium 有効';
+
+  @override
+  String get premiumActiveDesc => 'Wallet Elite を応援していただきありがとうございます！';
+
+  @override
+  String get goPremium => 'Premium にアップグレード';
+
+  @override
+  String get goPremiumDesc => '広告なし・全テーマ・ウォレットと予算が無制限';
+
+  @override
+  String walletLimitReached(int count) {
+    return '無料プランではウォレットは最大 $count 個までです。無制限にするには Premium にアップグレードしてください。';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return '無料プランでは有効な予算は最大 $count 個までです。無制限にするには Premium にアップグレードしてください。';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '$name をロック解除';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      '短い広告を見るとこのテーマを24時間使えます。Premium にするとすべてのテーマが永久に使えます。';
+
+  @override
+  String get adNotReady => '広告の準備ができていません。少ししてからもう一度お試しください。';
+
+  @override
+  String get themeUnlocked24h => 'テーマを24時間ロック解除しました';
+
+  @override
+  String get adPrivacySettings => '広告のプライバシー設定';
+
+  @override
+  String get exportData => 'データをエクスポート';
+
+  @override
+  String get exportDataDesc => '取引を CSV ファイルで共有（Excel で開けます）';
+
+  @override
+  String get exportFailed => 'エクスポートに失敗しました';
+
+  @override
+  String get exportNoData => 'エクスポートする取引がありません。';
 }

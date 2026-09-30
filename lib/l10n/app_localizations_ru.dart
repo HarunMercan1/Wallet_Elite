@@ -1295,4 +1295,123 @@ class AppLocalizationsRu extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'Введите $word для подтверждения';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'Откройте все возможности';
+
+  @override
+  String get premiumFeatureNoAds => 'Без рекламы';
+
+  @override
+  String get premiumFeatureThemes => 'Все премиум-темы';
+
+  @override
+  String get premiumFeatureUnlimited => 'Неограниченные кошельки и бюджеты';
+
+  @override
+  String get premiumFeatureExport => 'Экспорт данных (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'Ежемесячно';
+
+  @override
+  String get planYearly => 'Ежегодно';
+
+  @override
+  String get planLifetime => 'Навсегда';
+
+  @override
+  String get perMonth => 'в месяц';
+
+  @override
+  String get perYear => 'в год';
+
+  @override
+  String get oneTimePayment => 'Разовый платёж';
+
+  @override
+  String get bestValue => 'Выгоднее всего';
+
+  @override
+  String get restorePurchases => 'Восстановить покупки';
+
+  @override
+  String get purchaseSuccess => 'Добро пожаловать в Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'Покупки восстановлены.';
+
+  @override
+  String get purchasePending =>
+      'Платёж ожидает подтверждения. Premium активируется после подтверждения.';
+
+  @override
+  String get restoreNothing =>
+      'Для этого аккаунта не найдено предыдущих покупок.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'Покупки сейчас недоступны. Попробуйте позже.';
+
+  @override
+  String get subscriptionTerms =>
+      'Подписки продлеваются автоматически до отмены. Отменить можно в любое время в Google Play > Платежи и подписки.';
+
+  @override
+  String get premiumActive => 'Premium активен';
+
+  @override
+  String get premiumActiveDesc => 'Спасибо, что поддерживаете Wallet Elite!';
+
+  @override
+  String get goPremium => 'Перейти на Premium';
+
+  @override
+  String get goPremiumDesc =>
+      'Без рекламы, все темы, неограниченные кошельки и бюджеты';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'В бесплатном тарифе можно создать до $count кошельков. Перейдите на Premium для неограниченного количества.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'В бесплатном тарифе можно создать до $count активных бюджетов. Перейдите на Premium для неограниченного количества.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return 'Открыть $name';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'Посмотрите короткую рекламу, чтобы пользоваться этой темой 24 часа, или перейдите на Premium, чтобы навсегда открыть все темы.';
+
+  @override
+  String get adNotReady =>
+      'Реклама ещё не готова. Попробуйте ещё раз через минуту.';
+
+  @override
+  String get themeUnlocked24h => 'Тема открыта на 24 часа';
+
+  @override
+  String get adPrivacySettings => 'Настройки конфиденциальности рекламы';
+
+  @override
+  String get exportData => 'Экспорт данных';
+
+  @override
+  String get exportDataDesc =>
+      'Поделитесь операциями в виде CSV-файла (открывается в Excel)';
+
+  @override
+  String get exportFailed => 'Не удалось выполнить экспорт';
+
+  @override
+  String get exportNoData => 'Нет операций для экспорта.';
 }

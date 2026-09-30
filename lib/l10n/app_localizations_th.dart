@@ -1296,4 +1296,121 @@ class AppLocalizationsTh extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'พิมพ์ $word เพื่อยืนยัน';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'ปลดล็อกประสบการณ์เต็มรูปแบบ';
+
+  @override
+  String get premiumFeatureNoAds => 'ไม่มีโฆษณา';
+
+  @override
+  String get premiumFeatureThemes => 'ธีมพรีเมียมทั้งหมด';
+
+  @override
+  String get premiumFeatureUnlimited => 'กระเป๋าเงินและงบประมาณไม่จำกัด';
+
+  @override
+  String get premiumFeatureExport => 'ส่งออกข้อมูลของคุณ (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'รายเดือน';
+
+  @override
+  String get planYearly => 'รายปี';
+
+  @override
+  String get planLifetime => 'ตลอดชีพ';
+
+  @override
+  String get perMonth => 'ต่อเดือน';
+
+  @override
+  String get perYear => 'ต่อปี';
+
+  @override
+  String get oneTimePayment => 'ชำระครั้งเดียว';
+
+  @override
+  String get bestValue => 'คุ้มที่สุด';
+
+  @override
+  String get restorePurchases => 'กู้คืนการซื้อ';
+
+  @override
+  String get purchaseSuccess => 'ยินดีต้อนรับสู่ Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'กู้คืนการซื้อแล้ว';
+
+  @override
+  String get purchasePending =>
+      'การชำระเงินรอดำเนินการ Premium จะเปิดใช้งานเมื่อได้รับการยืนยัน';
+
+  @override
+  String get restoreNothing => 'ไม่พบการซื้อก่อนหน้าสำหรับบัญชีนี้';
+
+  @override
+  String get purchaseNotAvailable =>
+      'ไม่สามารถซื้อได้ในขณะนี้ โปรดลองอีกครั้งในภายหลัง';
+
+  @override
+  String get subscriptionTerms =>
+      'การสมัครสมาชิกจะต่ออายุอัตโนมัติจนกว่าจะยกเลิก คุณยกเลิกได้ทุกเมื่อที่ Google Play > การชำระเงินและการสมัครใช้บริการ';
+
+  @override
+  String get premiumActive => 'Premium ใช้งานอยู่';
+
+  @override
+  String get premiumActiveDesc => 'ขอบคุณที่สนับสนุน Wallet Elite!';
+
+  @override
+  String get goPremium => 'อัปเกรดเป็น Premium';
+
+  @override
+  String get goPremiumDesc =>
+      'ไม่มีโฆษณา ธีมทั้งหมด กระเป๋าเงินและงบประมาณไม่จำกัด';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'แพ็กเกจฟรีสร้างกระเป๋าเงินได้สูงสุด $count ใบ อัปเกรดเป็น Premium เพื่อสร้างได้ไม่จำกัด';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'แพ็กเกจฟรีสร้างงบประมาณที่ใช้งานได้สูงสุด $count รายการ อัปเกรดเป็น Premium เพื่อสร้างได้ไม่จำกัด';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return 'ปลดล็อก $name';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'ดูโฆษณาสั้น ๆ เพื่อใช้ธีมนี้ 24 ชั่วโมง หรืออัปเกรดเป็น Premium เพื่อปลดล็อกธีมทั้งหมดอย่างถาวร';
+
+  @override
+  String get adNotReady => 'โฆษณายังไม่พร้อม โปรดลองอีกครั้งในอีกสักครู่';
+
+  @override
+  String get themeUnlocked24h => 'ปลดล็อกธีมเป็นเวลา 24 ชั่วโมงแล้ว';
+
+  @override
+  String get adPrivacySettings => 'การตั้งค่าความเป็นส่วนตัวของโฆษณา';
+
+  @override
+  String get exportData => 'ส่งออกข้อมูล';
+
+  @override
+  String get exportDataDesc =>
+      'แชร์ธุรกรรมของคุณเป็นไฟล์ CSV (เปิดใน Excel ได้)';
+
+  @override
+  String get exportFailed => 'ส่งออกไม่สำเร็จ';
+
+  @override
+  String get exportNoData => 'ไม่มีธุรกรรมให้ส่งออก';
 }

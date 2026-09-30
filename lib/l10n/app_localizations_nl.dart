@@ -1301,4 +1301,123 @@ class AppLocalizationsNl extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'Typ $word om te bevestigen';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'Ontgrendel de volledige ervaring';
+
+  @override
+  String get premiumFeatureNoAds => 'Geen advertenties';
+
+  @override
+  String get premiumFeatureThemes => 'Alle premiumthema\'s';
+
+  @override
+  String get premiumFeatureUnlimited => 'Onbeperkt portemonnees en budgetten';
+
+  @override
+  String get premiumFeatureExport => 'Exporteer je gegevens (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'Maandelijks';
+
+  @override
+  String get planYearly => 'Jaarlijks';
+
+  @override
+  String get planLifetime => 'Levenslang';
+
+  @override
+  String get perMonth => 'per maand';
+
+  @override
+  String get perYear => 'per jaar';
+
+  @override
+  String get oneTimePayment => 'Eenmalige betaling';
+
+  @override
+  String get bestValue => 'Beste deal';
+
+  @override
+  String get restorePurchases => 'Aankopen herstellen';
+
+  @override
+  String get purchaseSuccess => 'Welkom bij Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'Aankopen hersteld.';
+
+  @override
+  String get purchasePending =>
+      'Betaling in behandeling. Premium wordt geactiveerd zodra deze is bevestigd.';
+
+  @override
+  String get restoreNothing =>
+      'Geen eerdere aankoop gevonden voor dit account.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'Aankopen zijn nu niet beschikbaar. Probeer het later opnieuw.';
+
+  @override
+  String get subscriptionTerms =>
+      'Abonnementen worden automatisch verlengd tot je opzegt. Je kunt altijd opzeggen via Google Play > Betalingen en abonnementen.';
+
+  @override
+  String get premiumActive => 'Premium actief';
+
+  @override
+  String get premiumActiveDesc => 'Bedankt voor je steun aan Wallet Elite!';
+
+  @override
+  String get goPremium => 'Word Premium';
+
+  @override
+  String get goPremiumDesc =>
+      'Geen advertenties, alle thema\'s, onbeperkt portemonnees en budgetten';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'Met het gratis abonnement kun je maximaal $count portemonnees maken. Word Premium voor onbeperkte portemonnees.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'Met het gratis abonnement kun je maximaal $count actieve budgetten maken. Word Premium voor onbeperkte budgetten.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '$name ontgrendelen';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'Bekijk een korte advertentie om dit thema 24 uur te gebruiken, of word Premium om alle thema\'s permanent te ontgrendelen.';
+
+  @override
+  String get adNotReady =>
+      'De advertentie is nog niet klaar. Probeer het zo opnieuw.';
+
+  @override
+  String get themeUnlocked24h => 'Thema 24 uur ontgrendeld';
+
+  @override
+  String get adPrivacySettings => 'Privacyinstellingen voor advertenties';
+
+  @override
+  String get exportData => 'Gegevens exporteren';
+
+  @override
+  String get exportDataDesc =>
+      'Deel je transacties als CSV-bestand (opent in Excel)';
+
+  @override
+  String get exportFailed => 'Exporteren mislukt';
+
+  @override
+  String get exportNoData => 'Er zijn geen transacties om te exporteren.';
 }

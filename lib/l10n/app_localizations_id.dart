@@ -1300,4 +1300,121 @@ class AppLocalizationsId extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'Ketik $word untuk mengonfirmasi';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'Buka pengalaman lengkap';
+
+  @override
+  String get premiumFeatureNoAds => 'Tanpa iklan';
+
+  @override
+  String get premiumFeatureThemes => 'Semua tema premium';
+
+  @override
+  String get premiumFeatureUnlimited => 'Dompet dan anggaran tanpa batas';
+
+  @override
+  String get premiumFeatureExport => 'Ekspor data Anda (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'Bulanan';
+
+  @override
+  String get planYearly => 'Tahunan';
+
+  @override
+  String get planLifetime => 'Seumur hidup';
+
+  @override
+  String get perMonth => 'per bulan';
+
+  @override
+  String get perYear => 'per tahun';
+
+  @override
+  String get oneTimePayment => 'Pembayaran sekali';
+
+  @override
+  String get bestValue => 'Paling hemat';
+
+  @override
+  String get restorePurchases => 'Pulihkan Pembelian';
+
+  @override
+  String get purchaseSuccess => 'Selamat datang di Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'Pembelian dipulihkan.';
+
+  @override
+  String get purchasePending =>
+      'Pembayaran tertunda. Premium akan aktif setelah dikonfirmasi.';
+
+  @override
+  String get restoreNothing => 'Tidak ada pembelian sebelumnya untuk akun ini.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'Pembelian tidak tersedia saat ini. Silakan coba lagi nanti.';
+
+  @override
+  String get subscriptionTerms =>
+      'Langganan diperpanjang otomatis hingga dibatalkan. Anda dapat membatalkan kapan saja di Google Play > Pembayaran & langganan.';
+
+  @override
+  String get premiumActive => 'Premium aktif';
+
+  @override
+  String get premiumActiveDesc => 'Terima kasih telah mendukung Wallet Elite!';
+
+  @override
+  String get goPremium => 'Beralih ke Premium';
+
+  @override
+  String get goPremiumDesc =>
+      'Tanpa iklan, semua tema, dompet & anggaran tanpa batas';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'Paket gratis hanya mengizinkan hingga $count dompet. Beralih ke Premium untuk dompet tanpa batas.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'Paket gratis hanya mengizinkan hingga $count anggaran aktif. Beralih ke Premium untuk anggaran tanpa batas.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return 'Buka $name';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'Tonton iklan singkat untuk memakai tema ini selama 24 jam, atau beralih ke Premium untuk membuka semua tema selamanya.';
+
+  @override
+  String get adNotReady => 'Iklan belum siap. Silakan coba lagi sebentar lagi.';
+
+  @override
+  String get themeUnlocked24h => 'Tema terbuka selama 24 jam';
+
+  @override
+  String get adPrivacySettings => 'Pengaturan privasi iklan';
+
+  @override
+  String get exportData => 'Ekspor data';
+
+  @override
+  String get exportDataDesc =>
+      'Bagikan transaksi Anda sebagai file CSV (terbuka di Excel)';
+
+  @override
+  String get exportFailed => 'Ekspor gagal';
+
+  @override
+  String get exportNoData => 'Tidak ada transaksi untuk diekspor.';
 }

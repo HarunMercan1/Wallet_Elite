@@ -11,6 +11,9 @@ import '../../../core/theme/color_theme_provider.dart';
 import '../data/budget_provider.dart';
 import '../models/budget_model.dart';
 import 'add_budget_sheet.dart';
+import '../../premium/data/premium_constants.dart';
+import '../../premium/data/premium_provider.dart';
+import '../../premium/presentation/premium_gate.dart';
 
 class BudgetsView extends ConsumerWidget {
   const BudgetsView({super.key});
@@ -320,6 +323,23 @@ class BudgetsView extends ConsumerWidget {
   }
 
   void _showAddSheet(BuildContext context, {BudgetModel? budget}) {
+    // Ücretsiz sürümde yeni bütçe sınırı (düzenleme serbest)
+    if (budget == null) {
+      final container = ProviderScope.containerOf(context, listen: false);
+      final activeCount =
+          container.read(activeBudgetsProvider).valueOrNull?.length ?? 0;
+      if (!container.read(isPremiumProvider) &&
+          activeCount >= PremiumConstants.freeBudgetLimit) {
+        showPremiumRequiredDialog(
+          context,
+          AppLocalizations.of(
+            context,
+          )!.budgetLimitReached(PremiumConstants.freeBudgetLimit),
+        );
+        return;
+      }
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

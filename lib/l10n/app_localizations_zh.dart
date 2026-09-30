@@ -1281,4 +1281,116 @@ class AppLocalizationsZh extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return '输入 $word 以确认';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => '解锁完整体验';
+
+  @override
+  String get premiumFeatureNoAds => '无广告';
+
+  @override
+  String get premiumFeatureThemes => '所有高级主题';
+
+  @override
+  String get premiumFeatureUnlimited => '无限钱包和预算';
+
+  @override
+  String get premiumFeatureExport => '导出你的数据（CSV / Excel）';
+
+  @override
+  String get planMonthly => '按月';
+
+  @override
+  String get planYearly => '按年';
+
+  @override
+  String get planLifetime => '终身';
+
+  @override
+  String get perMonth => '每月';
+
+  @override
+  String get perYear => '每年';
+
+  @override
+  String get oneTimePayment => '一次性付款';
+
+  @override
+  String get bestValue => '最超值';
+
+  @override
+  String get restorePurchases => '恢复购买';
+
+  @override
+  String get purchaseSuccess => '欢迎加入 Premium！🎉';
+
+  @override
+  String get restoreSuccess => '已恢复购买。';
+
+  @override
+  String get purchasePending => '付款待确认，确认后将激活 Premium。';
+
+  @override
+  String get restoreNothing => '未找到此账户的历史购买记录。';
+
+  @override
+  String get purchaseNotAvailable => '暂时无法购买，请稍后重试。';
+
+  @override
+  String get subscriptionTerms => '订阅会自动续订，直到取消。你可以随时在 Google Play > 付款和订阅中取消。';
+
+  @override
+  String get premiumActive => 'Premium 已激活';
+
+  @override
+  String get premiumActiveDesc => '感谢你支持 Wallet Elite！';
+
+  @override
+  String get goPremium => '升级到 Premium';
+
+  @override
+  String get goPremiumDesc => '无广告、所有主题、无限钱包和预算';
+
+  @override
+  String walletLimitReached(int count) {
+    return '免费版最多可创建 $count 个钱包。升级到 Premium 即可无限创建。';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return '免费版最多可创建 $count 个有效预算。升级到 Premium 即可无限创建。';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '解锁 $name';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      '观看一段简短广告即可使用此主题 24 小时，或升级到 Premium 永久解锁所有主题。';
+
+  @override
+  String get adNotReady => '广告尚未准备好，请稍后再试。';
+
+  @override
+  String get themeUnlocked24h => '主题已解锁 24 小时';
+
+  @override
+  String get adPrivacySettings => '广告隐私设置';
+
+  @override
+  String get exportData => '导出数据';
+
+  @override
+  String get exportDataDesc => '以 CSV 文件分享你的交易（可用 Excel 打开）';
+
+  @override
+  String get exportFailed => '导出失败';
+
+  @override
+  String get exportNoData => '没有可导出的交易。';
 }

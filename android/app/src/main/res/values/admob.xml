@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AdMob uygulama kimliği (Wallet Elite). Reklam birimi kimlikleri lib/core/ads/ad_helper.dart içinde. -->
+    <string name="admob_app_id" translatable="false">ca-app-pub-3820038977003119~4058734232</string>
+</resources>

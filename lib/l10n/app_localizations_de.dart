@@ -1304,4 +1304,123 @@ class AppLocalizationsDe extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'Gib $word ein, um zu bestätigen';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'Schalte das volle Erlebnis frei';
+
+  @override
+  String get premiumFeatureNoAds => 'Keine Werbung';
+
+  @override
+  String get premiumFeatureThemes => 'Alle Premium-Designs';
+
+  @override
+  String get premiumFeatureUnlimited => 'Unbegrenzte Wallets und Budgets';
+
+  @override
+  String get premiumFeatureExport => 'Daten exportieren (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'Monatlich';
+
+  @override
+  String get planYearly => 'Jährlich';
+
+  @override
+  String get planLifetime => 'Lebenslang';
+
+  @override
+  String get perMonth => 'pro Monat';
+
+  @override
+  String get perYear => 'pro Jahr';
+
+  @override
+  String get oneTimePayment => 'Einmalzahlung';
+
+  @override
+  String get bestValue => 'Bestes Angebot';
+
+  @override
+  String get restorePurchases => 'Käufe wiederherstellen';
+
+  @override
+  String get purchaseSuccess => 'Willkommen bei Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'Käufe wiederhergestellt.';
+
+  @override
+  String get purchasePending =>
+      'Zahlung ausstehend. Premium wird nach der Bestätigung aktiviert.';
+
+  @override
+  String get restoreNothing =>
+      'Für dieses Konto wurde kein früherer Kauf gefunden.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'Käufe sind derzeit nicht verfügbar. Bitte versuche es später erneut.';
+
+  @override
+  String get subscriptionTerms =>
+      'Abos verlängern sich automatisch bis zur Kündigung. Du kannst jederzeit in Google Play > Zahlungen & Abos kündigen.';
+
+  @override
+  String get premiumActive => 'Premium aktiv';
+
+  @override
+  String get premiumActiveDesc => 'Danke, dass du Wallet Elite unterstützt!';
+
+  @override
+  String get goPremium => 'Premium holen';
+
+  @override
+  String get goPremiumDesc =>
+      'Keine Werbung, alle Designs, unbegrenzte Wallets & Budgets';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'Im kostenlosen Plan sind bis zu $count Wallets möglich. Hol dir Premium für unbegrenzte Wallets.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'Im kostenlosen Plan sind bis zu $count aktive Budgets möglich. Hol dir Premium für unbegrenzte Budgets.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '$name freischalten';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'Sieh dir eine kurze Werbung an, um dieses Design 24 Stunden zu nutzen, oder hol dir Premium für alle Designs dauerhaft.';
+
+  @override
+  String get adNotReady =>
+      'Die Werbung ist noch nicht bereit. Bitte versuche es gleich noch einmal.';
+
+  @override
+  String get themeUnlocked24h => 'Design für 24 Stunden freigeschaltet';
+
+  @override
+  String get adPrivacySettings => 'Datenschutzeinstellungen für Werbung';
+
+  @override
+  String get exportData => 'Daten exportieren';
+
+  @override
+  String get exportDataDesc =>
+      'Teile deine Transaktionen als CSV-Datei (öffnet in Excel)';
+
+  @override
+  String get exportFailed => 'Export fehlgeschlagen';
+
+  @override
+  String get exportNoData => 'Es gibt keine Transaktionen zum Exportieren.';
 }

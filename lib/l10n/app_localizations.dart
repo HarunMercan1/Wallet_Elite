@@ -2643,6 +2643,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type {word} to confirm'**
   String deleteAccountTypeToConfirm(String word);
+
+  /// No description provided for @premiumTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet Elite Premium'**
+  String get premiumTitle;
+
+  /// No description provided for @premiumSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock the full experience'**
+  String get premiumSubtitle;
+
+  /// No description provided for @premiumFeatureNoAds.
+  ///
+  /// In en, this message translates to:
+  /// **'No ads'**
+  String get premiumFeatureNoAds;
+
+  /// No description provided for @premiumFeatureThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'All premium themes'**
+  String get premiumFeatureThemes;
+
+  /// No description provided for @premiumFeatureUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited wallets and budgets'**
+  String get premiumFeatureUnlimited;
+
+  /// No description provided for @premiumFeatureExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your data (CSV / Excel)'**
+  String get premiumFeatureExport;
+
+  /// No description provided for @planMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get planMonthly;
+
+  /// No description provided for @planYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get planYearly;
+
+  /// No description provided for @planLifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get planLifetime;
+
+  /// No description provided for @perMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'per month'**
+  String get perMonth;
+
+  /// No description provided for @perYear.
+  ///
+  /// In en, this message translates to:
+  /// **'per year'**
+  String get perYear;
+
+  /// No description provided for @oneTimePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'One-time payment'**
+  String get oneTimePayment;
+
+  /// No description provided for @bestValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Best value'**
+  String get bestValue;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @purchaseSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Premium! 🎉'**
+  String get purchaseSuccess;
+
+  /// No description provided for @restoreSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases restored.'**
+  String get restoreSuccess;
+
+  /// No description provided for @purchasePending.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment is pending. Premium will activate once it\'s confirmed.'**
+  String get purchasePending;
+
+  /// No description provided for @restoreNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No previous purchase found for this account.'**
+  String get restoreNothing;
+
+  /// No description provided for @purchaseNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases aren\'t available right now. Please try again later.'**
+  String get purchaseNotAvailable;
+
+  /// No description provided for @subscriptionTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions renew automatically until cancelled. You can cancel anytime in Google Play > Payments & subscriptions.'**
+  String get subscriptionTerms;
+
+  /// No description provided for @premiumActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium active'**
+  String get premiumActive;
+
+  /// No description provided for @premiumActiveDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for supporting Wallet Elite!'**
+  String get premiumActiveDesc;
+
+  /// No description provided for @goPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Premium'**
+  String get goPremium;
+
+  /// No description provided for @goPremiumDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'No ads, all themes, unlimited wallets & budgets'**
+  String get goPremiumDesc;
+
+  /// No description provided for @walletLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'The free plan allows up to {count} wallets. Go Premium for unlimited wallets.'**
+  String walletLimitReached(int count);
+
+  /// No description provided for @budgetLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'The free plan allows up to {count} active budgets. Go Premium for unlimited budgets.'**
+  String budgetLimitReached(int count);
+
+  /// No description provided for @unlockThemeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock {name}'**
+  String unlockThemeTitle(String name);
+
+  /// No description provided for @rewardedThemeUnlockMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch a short ad to use this theme for 24 hours, or go Premium to unlock all themes permanently.'**
+  String get rewardedThemeUnlockMessage;
+
+  /// No description provided for @adNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'The ad isn\'t ready yet. Please try again in a moment.'**
+  String get adNotReady;
+
+  /// No description provided for @themeUnlocked24h.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme unlocked for 24 hours'**
+  String get themeUnlocked24h;
+
+  /// No description provided for @adPrivacySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad privacy settings'**
+  String get adPrivacySettings;
+
+  /// No description provided for @exportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export data'**
+  String get exportData;
+
+  /// No description provided for @exportDataDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your transactions as a CSV file (opens in Excel)'**
+  String get exportDataDesc;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed'**
+  String get exportFailed;
+
+  /// No description provided for @exportNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no transactions to export.'**
+  String get exportNoData;
 }
 
 class _AppLocalizationsDelegate

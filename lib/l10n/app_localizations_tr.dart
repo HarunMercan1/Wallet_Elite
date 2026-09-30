@@ -1302,4 +1302,124 @@ class AppLocalizationsTr extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'Onaylamak için $word yazın';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'Tüm özelliklerin kilidini açın';
+
+  @override
+  String get premiumFeatureNoAds => 'Reklamsız kullanım';
+
+  @override
+  String get premiumFeatureThemes => 'Tüm premium temalar';
+
+  @override
+  String get premiumFeatureUnlimited => 'Sınırsız cüzdan ve bütçe';
+
+  @override
+  String get premiumFeatureExport => 'Verilerini dışa aktar (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'Aylık';
+
+  @override
+  String get planYearly => 'Yıllık';
+
+  @override
+  String get planLifetime => 'Ömür boyu';
+
+  @override
+  String get perMonth => 'aylık';
+
+  @override
+  String get perYear => 'yıllık';
+
+  @override
+  String get oneTimePayment => 'Tek seferlik ödeme';
+
+  @override
+  String get bestValue => 'En avantajlı';
+
+  @override
+  String get restorePurchases => 'Satın Alımları Geri Yükle';
+
+  @override
+  String get purchaseSuccess => 'Premium\'a hoş geldiniz! 🎉';
+
+  @override
+  String get restoreSuccess => 'Satın alımlar geri yüklendi.';
+
+  @override
+  String get purchasePending =>
+      'Ödeme onay bekliyor. Onaylanınca Premium etkinleşecek.';
+
+  @override
+  String get restoreNothing =>
+      'Bu hesap için önceki bir satın alım bulunamadı.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'Satın alma şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.';
+
+  @override
+  String get subscriptionTerms =>
+      'Abonelikler iptal edilene kadar otomatik yenilenir. Dilediğiniz zaman Google Play > Ödemeler ve abonelikler bölümünden iptal edebilirsiniz.';
+
+  @override
+  String get premiumActive => 'Premium etkin';
+
+  @override
+  String get premiumActiveDesc =>
+      'Wallet Elite\'i desteklediğiniz için teşekkürler!';
+
+  @override
+  String get goPremium => 'Premium\'a Geç';
+
+  @override
+  String get goPremiumDesc =>
+      'Reklamsız, tüm temalar, sınırsız cüzdan ve bütçe';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'Ücretsiz planda en fazla $count cüzdan oluşturabilirsiniz. Sınırsız cüzdan için Premium\'a geçin.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'Ücretsiz planda en fazla $count aktif bütçe oluşturabilirsiniz. Sınırsız bütçe için Premium\'a geçin.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return '$name temasını aç';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'Bu temayı 24 saat kullanmak için kısa bir reklam izleyin ya da tüm temaları kalıcı açmak için Premium\'a geçin.';
+
+  @override
+  String get adNotReady =>
+      'Reklam henüz hazır değil. Lütfen biraz sonra tekrar deneyin.';
+
+  @override
+  String get themeUnlocked24h => 'Tema 24 saatliğine açıldı';
+
+  @override
+  String get adPrivacySettings => 'Reklam gizlilik ayarları';
+
+  @override
+  String get exportData => 'Verileri dışa aktar';
+
+  @override
+  String get exportDataDesc =>
+      'İşlemlerinizi CSV dosyası olarak paylaşın (Excel\'de açılır)';
+
+  @override
+  String get exportFailed => 'Dışa aktarma başarısız oldu';
+
+  @override
+  String get exportNoData => 'Dışa aktarılacak işlem yok.';
 }

@@ -10,7 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 
 import 'core/constants/supabase_config.dart';
-import 'core/theme/app_colors.dart';
+import 'core/theme/color_theme_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_router.dart';
 import 'features/settings/data/settings_provider.dart';
@@ -53,10 +53,8 @@ class WalletEliteApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final localeCode = ref.watch(localeProvider);
-    final colorSchemeId = ref.watch(colorSchemeProvider);
-
-    // Get the selected color theme
-    final colorTheme = ColorTheme.fromString(colorSchemeId);
+    // Seçili tema (premium hakkı yoksa ücretsiz temaya düşer)
+    final colorTheme = ref.watch(currentColorThemeProvider);
 
     return MaterialApp.router(
       title: 'Wallet Elite',

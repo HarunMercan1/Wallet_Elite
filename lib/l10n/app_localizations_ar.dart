@@ -1292,4 +1292,121 @@ class AppLocalizationsAr extends AppLocalizations {
   String deleteAccountTypeToConfirm(String word) {
     return 'اكتب $word للتأكيد';
   }
+
+  @override
+  String get premiumTitle => 'Wallet Elite Premium';
+
+  @override
+  String get premiumSubtitle => 'افتح التجربة الكاملة';
+
+  @override
+  String get premiumFeatureNoAds => 'بدون إعلانات';
+
+  @override
+  String get premiumFeatureThemes => 'جميع السمات المميزة';
+
+  @override
+  String get premiumFeatureUnlimited => 'محافظ وميزانيات غير محدودة';
+
+  @override
+  String get premiumFeatureExport => 'تصدير بياناتك (CSV / Excel)';
+
+  @override
+  String get planMonthly => 'شهري';
+
+  @override
+  String get planYearly => 'سنوي';
+
+  @override
+  String get planLifetime => 'مدى الحياة';
+
+  @override
+  String get perMonth => 'شهريًا';
+
+  @override
+  String get perYear => 'سنويًا';
+
+  @override
+  String get oneTimePayment => 'دفعة واحدة';
+
+  @override
+  String get bestValue => 'أفضل قيمة';
+
+  @override
+  String get restorePurchases => 'استعادة المشتريات';
+
+  @override
+  String get purchaseSuccess => 'مرحبًا بك في Premium! 🎉';
+
+  @override
+  String get restoreSuccess => 'تمت استعادة المشتريات.';
+
+  @override
+  String get purchasePending =>
+      'الدفع قيد الانتظار. سيتم تفعيل Premium بعد التأكيد.';
+
+  @override
+  String get restoreNothing =>
+      'لم يتم العثور على عملية شراء سابقة لهذا الحساب.';
+
+  @override
+  String get purchaseNotAvailable =>
+      'عمليات الشراء غير متاحة الآن. يرجى المحاولة لاحقًا.';
+
+  @override
+  String get subscriptionTerms =>
+      'تتجدد الاشتراكات تلقائيًا حتى يتم إلغاؤها. يمكنك الإلغاء في أي وقت من Google Play > المدفوعات والاشتراكات.';
+
+  @override
+  String get premiumActive => 'Premium مفعّل';
+
+  @override
+  String get premiumActiveDesc => 'شكرًا لدعمك Wallet Elite!';
+
+  @override
+  String get goPremium => 'اشترك في Premium';
+
+  @override
+  String get goPremiumDesc =>
+      'بدون إعلانات، جميع السمات، محافظ وميزانيات غير محدودة';
+
+  @override
+  String walletLimitReached(int count) {
+    return 'تتيح الخطة المجانية ما يصل إلى $count محافظ. اشترك في Premium للحصول على محافظ غير محدودة.';
+  }
+
+  @override
+  String budgetLimitReached(int count) {
+    return 'تتيح الخطة المجانية ما يصل إلى $count ميزانيات نشطة. اشترك في Premium للحصول على ميزانيات غير محدودة.';
+  }
+
+  @override
+  String unlockThemeTitle(String name) {
+    return 'فتح $name';
+  }
+
+  @override
+  String get rewardedThemeUnlockMessage =>
+      'شاهد إعلانًا قصيرًا لاستخدام هذه السمة لمدة 24 ساعة، أو اشترك في Premium لفتح جميع السمات بشكل دائم.';
+
+  @override
+  String get adNotReady => 'الإعلان غير جاهز بعد. يرجى المحاولة بعد قليل.';
+
+  @override
+  String get themeUnlocked24h => 'تم فتح السمة لمدة 24 ساعة';
+
+  @override
+  String get adPrivacySettings => 'إعدادات خصوصية الإعلانات';
+
+  @override
+  String get exportData => 'تصدير البيانات';
+
+  @override
+  String get exportDataDesc => 'شارك معاملاتك كملف CSV (يفتح في Excel)';
+
+  @override
+  String get exportFailed => 'فشل التصدير';
+
+  @override
+  String get exportNoData => 'لا توجد معاملات لتصديرها.';
 }
