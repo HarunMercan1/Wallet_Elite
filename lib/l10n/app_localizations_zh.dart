@@ -1161,4 +1161,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get currencyLabel => '货币';
+
+  @override
+  String get deleteAccount => '删除账户';
+
+  @override
+  String get deleteAccountConfirmTitle => '要删除您的账户吗？';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      '您的账户及所有数据（钱包、交易、分类、预算和债务）将被永久删除。此操作无法撤销。';
+
+  @override
+  String get deleteAccountConfirmButton => '永久删除';
+
+  @override
+  String get deleteAccountSuccess => '您的账户已删除。';
 }

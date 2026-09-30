@@ -434,5 +434,10 @@
     "used": "wykorzystano",
     "wednesday": "Środa",
     "yearly": "Roczny",
-    "currencyLabel": "Waluta"
+    "currencyLabel": "Waluta",
+    "deleteAccount": "Usuń konto",
+    "deleteAccountConfirmTitle": "Usunąć konto?",
+    "deleteAccountConfirmMessage": "Twoje konto i wszystkie dane (portfele, transakcje, kategorie, budżety i długi) zostaną trwale usunięte. Tej operacji nie można cofnąć.",
+    "deleteAccountConfirmButton": "Usuń trwale",
+    "deleteAccountSuccess": "Twoje konto zostało usunięte."
 }

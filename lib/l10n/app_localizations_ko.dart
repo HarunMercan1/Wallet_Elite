@@ -1161,4 +1161,20 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get currencyLabel => '통화';
+
+  @override
+  String get deleteAccount => '계정 삭제';
+
+  @override
+  String get deleteAccountConfirmTitle => '계정을 삭제하시겠습니까?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      '계정과 모든 데이터(지갑, 거래, 카테고리, 예산, 부채)가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.';
+
+  @override
+  String get deleteAccountConfirmButton => '영구 삭제';
+
+  @override
+  String get deleteAccountSuccess => '계정이 삭제되었습니다.';
 }

@@ -1177,4 +1177,20 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Waluta';
+
+  @override
+  String get deleteAccount => 'Usuń konto';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Usunąć konto?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Twoje konto i wszystkie dane (portfele, transakcje, kategorie, budżety i długi) zostaną trwale usunięte. Tej operacji nie można cofnąć.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Usuń trwale';
+
+  @override
+  String get deleteAccountSuccess => 'Twoje konto zostało usunięte.';
 }

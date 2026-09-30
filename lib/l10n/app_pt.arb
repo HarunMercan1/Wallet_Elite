@@ -420,5 +420,10 @@
     "used": "usado",
     "wednesday": "Quarta-feira",
     "yearly": "Anual",
-    "currencyLabel": "Moeda"
+    "currencyLabel": "Moeda",
+    "deleteAccount": "Excluir conta",
+    "deleteAccountConfirmTitle": "Excluir sua conta?",
+    "deleteAccountConfirmMessage": "Sua conta e todos os seus dados (carteiras, transações, categorias, orçamentos e dívidas) serão excluídos permanentemente. Esta ação não pode ser desfeita.",
+    "deleteAccountConfirmButton": "Excluir permanentemente",
+    "deleteAccountSuccess": "Sua conta foi excluída."
 }

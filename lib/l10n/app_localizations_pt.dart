@@ -1174,4 +1174,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Moeda';
+
+  @override
+  String get deleteAccount => 'Excluir conta';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Excluir sua conta?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Sua conta e todos os seus dados (carteiras, transações, categorias, orçamentos e dívidas) serão excluídos permanentemente. Esta ação não pode ser desfeita.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Excluir permanentemente';
+
+  @override
+  String get deleteAccountSuccess => 'Sua conta foi excluída.';
 }

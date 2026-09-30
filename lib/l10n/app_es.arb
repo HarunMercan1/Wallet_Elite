@@ -420,5 +420,10 @@
     "used": "usado",
     "wednesday": "Miércoles",
     "yearly": "Anual",
-    "currencyLabel": "Moneda"
+    "currencyLabel": "Moneda",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccountConfirmTitle": "¿Eliminar tu cuenta?",
+    "deleteAccountConfirmMessage": "Tu cuenta y todos tus datos (billeteras, transacciones, categorías, presupuestos y deudas) se eliminarán de forma permanente. Esta acción no se puede deshacer.",
+    "deleteAccountConfirmButton": "Eliminar definitivamente",
+    "deleteAccountSuccess": "Tu cuenta ha sido eliminada."
 }

@@ -242,6 +242,18 @@ class SettingsView extends ConsumerWidget {
                   ),
                   onTap: () => _showSignOutDialog(context, l, colorTheme),
                 ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.delete_forever_outlined,
+                    color: Colors.red,
+                  ),
+                  title: Text(
+                    l.deleteAccount,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  onTap: () =>
+                      _showDeleteAccountDialog(context, ref, l, colorTheme),
+                ),
               ],
             ),
 
@@ -1495,15 +1507,15 @@ class SettingsView extends ConsumerWidget {
                         color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
                       ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                   ),
                   dropdownColor: isDark ? colorTheme.surfaceDark : Colors.white,
                   style: TextStyle(color: isDark ? Colors.white : Colors.black),
                   items: currencies.map((c) {
-                    return DropdownMenuItem(
-                      value: c,
-                      child: Text(c),
-                    );
+                    return DropdownMenuItem(value: c, child: Text(c));
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
@@ -1726,6 +1738,83 @@ class SettingsView extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showDeleteAccountDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final router = GoRouter.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        var isDeleting = false;
+        return StatefulBuilder(
+          builder: (dialogContext, setDialogState) => AlertDialog(
+            backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
+            title: Text(
+              l.deleteAccountConfirmTitle,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+            ),
+            content: Text(
+              l.deleteAccountConfirmMessage,
+              style: TextStyle(
+                color: isDark ? Colors.grey[300] : Colors.grey[700],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: isDeleting
+                    ? null
+                    : () => Navigator.pop(dialogContext),
+                child: Text(l.cancel),
+              ),
+              TextButton(
+                onPressed: isDeleting
+                    ? null
+                    : () async {
+                        setDialogState(() => isDeleting = true);
+                        final success = await ref
+                            .read(authControllerProvider)
+                            .deleteAccount();
+                        if (dialogContext.mounted) {
+                          Navigator.pop(dialogContext);
+                        }
+                        if (success) {
+                          messenger.showSnackBar(
+                            SnackBar(content: Text(l.deleteAccountSuccess)),
+                          );
+                          router.go('/auth');
+                        } else {
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(l.errorOccurred),
+                              backgroundColor: colorTheme.error,
+                            ),
+                          );
+                        }
+                      },
+                child: isDeleting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        l.deleteAccountConfirmButton,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

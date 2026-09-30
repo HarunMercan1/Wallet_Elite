@@ -1177,4 +1177,20 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Mata Uang';
+
+  @override
+  String get deleteAccount => 'Hapus Akun';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Hapus akun Anda?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Akun dan semua data Anda (dompet, transaksi, kategori, anggaran, dan utang) akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Hapus permanen';
+
+  @override
+  String get deleteAccountSuccess => 'Akun Anda telah dihapus.';
 }

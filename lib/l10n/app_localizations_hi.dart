@@ -1176,4 +1176,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get currencyLabel => 'मुद्रा';
+
+  @override
+  String get deleteAccount => 'खाता हटाएं';
+
+  @override
+  String get deleteAccountConfirmTitle => 'क्या आप अपना खाता हटाना चाहते हैं?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'आपका खाता और आपका सारा डेटा (वॉलेट, लेनदेन, श्रेणियाँ, बजट और कर्ज़) स्थायी रूप से हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।';
+
+  @override
+  String get deleteAccountConfirmButton => 'स्थायी रूप से हटाएं';
+
+  @override
+  String get deleteAccountSuccess => 'आपका खाता हटा दिया गया है।';
 }

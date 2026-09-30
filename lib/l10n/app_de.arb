@@ -420,5 +420,10 @@
     "used": "verwendet",
     "wednesday": "Mittwoch",
     "yearly": "Jährlich",
-    "currencyLabel": "Währung"
+    "currencyLabel": "Währung",
+    "deleteAccount": "Konto löschen",
+    "deleteAccountConfirmTitle": "Konto löschen?",
+    "deleteAccountConfirmMessage": "Dein Konto und alle deine Daten (Wallets, Transaktionen, Kategorien, Budgets und Schulden) werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+    "deleteAccountConfirmButton": "Endgültig löschen",
+    "deleteAccountSuccess": "Dein Konto wurde gelöscht."
 }

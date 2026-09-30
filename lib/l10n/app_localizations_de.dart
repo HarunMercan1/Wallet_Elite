@@ -1180,4 +1180,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Währung';
+
+  @override
+  String get deleteAccount => 'Konto löschen';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Konto löschen?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Dein Konto und alle deine Daten (Wallets, Transaktionen, Kategorien, Budgets und Schulden) werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Endgültig löschen';
+
+  @override
+  String get deleteAccountSuccess => 'Dein Konto wurde gelöscht.';
 }

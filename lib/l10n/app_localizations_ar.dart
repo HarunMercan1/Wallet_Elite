@@ -1168,4 +1168,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get currencyLabel => 'العملة';
+
+  @override
+  String get deleteAccount => 'حذف الحساب';
+
+  @override
+  String get deleteAccountConfirmTitle => 'هل تريد حذف حسابك؟';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'سيتم حذف حسابك وجميع بياناتك (المحافظ والمعاملات والفئات والميزانيات والديون) نهائيًا. لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get deleteAccountConfirmButton => 'حذف نهائيًا';
+
+  @override
+  String get deleteAccountSuccess => 'تم حذف حسابك.';
 }

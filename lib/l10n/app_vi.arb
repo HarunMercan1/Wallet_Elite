@@ -434,5 +434,10 @@
     "used": "đã dùng",
     "wednesday": "Thứ Tư",
     "yearly": "Hàng năm",
-    "currencyLabel": "Tiền tệ"
+    "currencyLabel": "Tiền tệ",
+    "deleteAccount": "Xóa tài khoản",
+    "deleteAccountConfirmTitle": "Xóa tài khoản của bạn?",
+    "deleteAccountConfirmMessage": "Tài khoản và toàn bộ dữ liệu của bạn (ví, giao dịch, danh mục, ngân sách và khoản nợ) sẽ bị xóa vĩnh viễn. Không thể hoàn tác thao tác này.",
+    "deleteAccountConfirmButton": "Xóa vĩnh viễn",
+    "deleteAccountSuccess": "Tài khoản của bạn đã bị xóa."
 }

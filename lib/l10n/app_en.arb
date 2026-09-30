@@ -437,5 +437,10 @@
     "categoryDistribution": "Category Distribution",
     "other": "Other",
     "last7DaysSpending": "Last 7 Days Spending",
-    "currencyLabel": "Currency"
+    "currencyLabel": "Currency",
+    "deleteAccount": "Delete Account",
+    "deleteAccountConfirmTitle": "Delete your account?",
+    "deleteAccountConfirmMessage": "Your account and all of your data (wallets, transactions, categories, budgets and debts) will be permanently deleted. This cannot be undone.",
+    "deleteAccountConfirmButton": "Delete permanently",
+    "deleteAccountSuccess": "Your account has been deleted."
 }

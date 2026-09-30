@@ -434,5 +434,10 @@
     "used": "ใช้แล้ว",
     "wednesday": "วันพุธ",
     "yearly": "รายปี",
-    "currencyLabel": "สกุลเงิน"
+    "currencyLabel": "สกุลเงิน",
+    "deleteAccount": "ลบบัญชี",
+    "deleteAccountConfirmTitle": "ต้องการลบบัญชีของคุณหรือไม่?",
+    "deleteAccountConfirmMessage": "บัญชีและข้อมูลทั้งหมดของคุณ (กระเป๋าเงิน ธุรกรรม หมวดหมู่ งบประมาณ และหนี้) จะถูกลบอย่างถาวร ไม่สามารถยกเลิกได้",
+    "deleteAccountConfirmButton": "ลบอย่างถาวร",
+    "deleteAccountSuccess": "ลบบัญชีของคุณแล้ว"
 }

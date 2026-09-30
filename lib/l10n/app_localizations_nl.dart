@@ -1177,4 +1177,20 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Valuta';
+
+  @override
+  String get deleteAccount => 'Account verwijderen';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Je account verwijderen?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Je account en al je gegevens (portemonnees, transacties, categorieën, budgetten en schulden) worden permanent verwijderd. Dit kan niet ongedaan worden gemaakt.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Definitief verwijderen';
+
+  @override
+  String get deleteAccountSuccess => 'Je account is verwijderd.';
 }

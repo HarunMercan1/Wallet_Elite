@@ -1173,4 +1173,20 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get currencyLabel => 'สกุลเงิน';
+
+  @override
+  String get deleteAccount => 'ลบบัญชี';
+
+  @override
+  String get deleteAccountConfirmTitle => 'ต้องการลบบัญชีของคุณหรือไม่?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'บัญชีและข้อมูลทั้งหมดของคุณ (กระเป๋าเงิน ธุรกรรม หมวดหมู่ งบประมาณ และหนี้) จะถูกลบอย่างถาวร ไม่สามารถยกเลิกได้';
+
+  @override
+  String get deleteAccountConfirmButton => 'ลบอย่างถาวร';
+
+  @override
+  String get deleteAccountSuccess => 'ลบบัญชีของคุณแล้ว';
 }

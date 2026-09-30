@@ -434,5 +434,10 @@
     "used": "terpakai",
     "wednesday": "Rabu",
     "yearly": "Tahunan",
-    "currencyLabel": "Mata Uang"
+    "currencyLabel": "Mata Uang",
+    "deleteAccount": "Hapus Akun",
+    "deleteAccountConfirmTitle": "Hapus akun Anda?",
+    "deleteAccountConfirmMessage": "Akun dan semua data Anda (dompet, transaksi, kategori, anggaran, dan utang) akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.",
+    "deleteAccountConfirmButton": "Hapus permanen",
+    "deleteAccountSuccess": "Akun Anda telah dihapus."
 }

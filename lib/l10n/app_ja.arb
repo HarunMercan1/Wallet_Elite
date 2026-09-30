@@ -420,5 +420,10 @@
     "used": "使用済み",
     "wednesday": "水曜日",
     "yearly": "年間",
-    "currencyLabel": "通貨"
+    "currencyLabel": "通貨",
+    "deleteAccount": "アカウントを削除",
+    "deleteAccountConfirmTitle": "アカウントを削除しますか？",
+    "deleteAccountConfirmMessage": "アカウントとすべてのデータ（ウォレット、取引、カテゴリ、予算、借金）が完全に削除されます。この操作は元に戻せません。",
+    "deleteAccountConfirmButton": "完全に削除",
+    "deleteAccountSuccess": "アカウントを削除しました。"
 }

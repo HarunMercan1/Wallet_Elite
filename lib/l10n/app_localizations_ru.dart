@@ -1173,4 +1173,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Валюта';
+
+  @override
+  String get deleteAccount => 'Удалить аккаунт';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Удалить аккаунт?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Ваш аккаунт и все данные (кошельки, транзакции, категории, бюджеты и долги) будут удалены навсегда. Это действие нельзя отменить.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Удалить навсегда';
+
+  @override
+  String get deleteAccountSuccess => 'Ваш аккаунт удалён.';
 }

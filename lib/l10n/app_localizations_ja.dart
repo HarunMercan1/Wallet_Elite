@@ -1161,4 +1161,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get currencyLabel => '通貨';
+
+  @override
+  String get deleteAccount => 'アカウントを削除';
+
+  @override
+  String get deleteAccountConfirmTitle => 'アカウントを削除しますか？';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'アカウントとすべてのデータ（ウォレット、取引、カテゴリ、予算、借金）が完全に削除されます。この操作は元に戻せません。';
+
+  @override
+  String get deleteAccountConfirmButton => '完全に削除';
+
+  @override
+  String get deleteAccountSuccess => 'アカウントを削除しました。';
 }

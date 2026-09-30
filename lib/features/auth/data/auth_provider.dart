@@ -109,6 +109,12 @@ class AuthController {
     await authRepo.signOut();
   }
 
+  /// Hesabı ve tüm verileri kalıcı olarak sil
+  Future<bool> deleteAccount() async {
+    final authRepo = ref.read(authRepositoryProvider);
+    return await authRepo.deleteAccount();
+  }
+
   /// Onboarding'i tamamla
   Future<bool> completeOnboarding() async {
     final user = Supabase.instance.client.auth.currentUser;

@@ -1179,4 +1179,20 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Para Birimi';
+
+  @override
+  String get deleteAccount => 'Hesabı Sil';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Hesabınız silinsin mi?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Hesabınız ve tüm verileriniz (cüzdanlar, işlemler, kategoriler, bütçeler ve borçlar) kalıcı olarak silinecek. Bu işlem geri alınamaz.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Kalıcı olarak sil';
+
+  @override
+  String get deleteAccountSuccess => 'Hesabınız silindi.';
 }

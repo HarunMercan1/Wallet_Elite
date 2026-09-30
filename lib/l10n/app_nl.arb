@@ -434,5 +434,10 @@
     "used": "gebruikt",
     "wednesday": "Woensdag",
     "yearly": "Jaarlijks",
-    "currencyLabel": "Valuta"
+    "currencyLabel": "Valuta",
+    "deleteAccount": "Account verwijderen",
+    "deleteAccountConfirmTitle": "Je account verwijderen?",
+    "deleteAccountConfirmMessage": "Je account en al je gegevens (portemonnees, transacties, categorieën, budgetten en schulden) worden permanent verwijderd. Dit kan niet ongedaan worden gemaakt.",
+    "deleteAccountConfirmButton": "Definitief verwijderen",
+    "deleteAccountSuccess": "Je account is verwijderd."
 }

@@ -420,5 +420,10 @@
     "used": "utilisé",
     "wednesday": "Mercredi",
     "yearly": "Annuel",
-    "currencyLabel": "Devise"
+    "currencyLabel": "Devise",
+    "deleteAccount": "Supprimer le compte",
+    "deleteAccountConfirmTitle": "Supprimer votre compte ?",
+    "deleteAccountConfirmMessage": "Votre compte et toutes vos données (portefeuilles, transactions, catégories, budgets et dettes) seront définitivement supprimés. Cette action est irréversible.",
+    "deleteAccountConfirmButton": "Supprimer définitivement",
+    "deleteAccountSuccess": "Votre compte a été supprimé."
 }

@@ -420,5 +420,10 @@
     "used": "مستخدم",
     "wednesday": "الأربعاء",
     "yearly": "سنوي",
-    "currencyLabel": "العملة"
+    "currencyLabel": "العملة",
+    "deleteAccount": "حذف الحساب",
+    "deleteAccountConfirmTitle": "هل تريد حذف حسابك؟",
+    "deleteAccountConfirmMessage": "سيتم حذف حسابك وجميع بياناتك (المحافظ والمعاملات والفئات والميزانيات والديون) نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
+    "deleteAccountConfirmButton": "حذف نهائيًا",
+    "deleteAccountSuccess": "تم حذف حسابك."
 }

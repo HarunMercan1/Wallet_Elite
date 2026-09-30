@@ -208,6 +208,30 @@ class AuthRepository {
     }
   }
 
+  /// Hesabı ve tüm verileri kalıcı olarak sil (delete_my_account RPC)
+  Future<bool> deleteAccount() async {
+    try {
+      await _supabase.rpc('delete_my_account');
+    } catch (e) {
+      debugPrint('❌ Hesap silme hatası: $e');
+      return false;
+    }
+
+    // Kullanıcı sunucuda silindi; oturumu yalnızca yerelde kapat
+    // (sunucuya logout isteği artık geçersiz token ile hata verir).
+    try {
+      await _supabase.auth.signOut(scope: SignOutScope.local);
+    } catch (e) {
+      debugPrint('Yerel oturum kapatma hatası: $e');
+    }
+    try {
+      await _googleSignIn.disconnect();
+    } catch (e) {
+      debugPrint('Google disconnect hatası: $e');
+    }
+    return true;
+  }
+
   /// Kullanıcı profilini getir (yoksa oluştur)
   Future<ProfileModel?> getProfile(String userId) async {
     try {

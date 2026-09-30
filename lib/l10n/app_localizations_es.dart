@@ -1179,4 +1179,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Moneda';
+
+  @override
+  String get deleteAccount => 'Eliminar cuenta';
+
+  @override
+  String get deleteAccountConfirmTitle => '¿Eliminar tu cuenta?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Tu cuenta y todos tus datos (billeteras, transacciones, categorías, presupuestos y deudas) se eliminarán de forma permanente. Esta acción no se puede deshacer.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Eliminar definitivamente';
+
+  @override
+  String get deleteAccountSuccess => 'Tu cuenta ha sido eliminada.';
 }

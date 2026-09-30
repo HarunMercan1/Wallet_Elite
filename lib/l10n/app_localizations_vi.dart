@@ -1174,4 +1174,20 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get currencyLabel => 'Tiền tệ';
+
+  @override
+  String get deleteAccount => 'Xóa tài khoản';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Xóa tài khoản của bạn?';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Tài khoản và toàn bộ dữ liệu của bạn (ví, giao dịch, danh mục, ngân sách và khoản nợ) sẽ bị xóa vĩnh viễn. Không thể hoàn tác thao tác này.';
+
+  @override
+  String get deleteAccountConfirmButton => 'Xóa vĩnh viễn';
+
+  @override
+  String get deleteAccountSuccess => 'Tài khoản của bạn đã bị xóa.';
 }
