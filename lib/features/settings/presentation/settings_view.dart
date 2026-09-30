@@ -240,7 +240,7 @@ class SettingsView extends ConsumerWidget {
                     l.signOut,
                     style: const TextStyle(color: Colors.red),
                   ),
-                  onTap: () => _showSignOutDialog(context, l, colorTheme),
+                  onTap: () => _showSignOutDialog(context, ref, l, colorTheme),
                 ),
                 ListTile(
                   leading: const Icon(
@@ -1705,6 +1705,7 @@ class SettingsView extends ConsumerWidget {
 
   void _showSignOutDialog(
     BuildContext context,
+    WidgetRef ref,
     AppLocalizations l,
     ColorTheme colorTheme,
   ) {
@@ -1731,7 +1732,9 @@ class SettingsView extends ConsumerWidget {
           TextButton(
             onPressed: () async {
               Navigator.pop(dialogContext);
-              await Supabase.instance.client.auth.signOut();
+              // Supabase + Google oturumunu kapatır; kullanıcıya bağlı
+              // provider'lar currentUserIdProvider üzerinden sıfırlanır.
+              await ref.read(authControllerProvider).signOut();
               router.go('/auth'); // Use captured router
             },
             child: Text(l.signOut, style: const TextStyle(color: Colors.red)),

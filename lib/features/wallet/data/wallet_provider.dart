@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../auth/data/auth_provider.dart';
 import 'wallet_repository.dart';
 import '../models/account_model.dart';
 import '../models/category_model.dart';
@@ -15,47 +16,50 @@ final walletRepositoryProvider = Provider<WalletRepository>((ref) {
 
 /// Kullanıcının cüzdanlarını getir
 final accountsProvider = FutureProvider<List<AccountModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final walletRepo = ref.watch(walletRepositoryProvider);
-  return await walletRepo.getAccounts(user.id);
+  return await walletRepo.getAccounts(userId);
 });
 
 /// Kullanıcının kategorilerini getir (user_id ile)
 final categoriesProvider = FutureProvider<List<CategoryModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final walletRepo = ref.watch(walletRepositoryProvider);
-  return await walletRepo.getCategories(user.id);
+  return await walletRepo.getCategories(userId);
 });
 
 /// Gelir kategorileri (user_id ile)
 final incomeCategoriesProvider = FutureProvider<List<CategoryModel>>((
   ref,
 ) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final walletRepo = ref.watch(walletRepositoryProvider);
-  return await walletRepo.getIncomeCategories(user.id);
+  return await walletRepo.getIncomeCategories(userId);
 });
 
 /// Gider kategorileri (user_id ile)
 final expenseCategoriesProvider = FutureProvider<List<CategoryModel>>((
   ref,
 ) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final walletRepo = ref.watch(walletRepositoryProvider);
-  return await walletRepo.getExpenseCategories(user.id);
+  return await walletRepo.getExpenseCategories(userId);
 });
 
 /// Seçili Cüzdan ID'si (Global State)
 /// Null ise "Tüm Cüzdanlar" seçili demektir.
-final selectedWalletIdProvider = StateProvider<String?>((ref) => null);
+final selectedWalletIdProvider = StateProvider<String?>((ref) {
+  ref.watch(currentUserIdProvider); // kullanıcı değişince sıfırla
+  return null;
+});
 
 /// Filtrelenmiş İşlemler (Seçili cüzdana göre)
 final filteredTransactionsProvider =
@@ -77,11 +81,11 @@ final filteredTransactionsProvider =
 final transactionsProvider = FutureProvider<List<TransactionModel>>((
   ref,
 ) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final walletRepo = ref.watch(walletRepositoryProvider);
-  return await walletRepo.getTransactions(user.id);
+  return await walletRepo.getTransactions(userId);
 });
 
 /// Wallet Controller (İşlemleri yöneten)

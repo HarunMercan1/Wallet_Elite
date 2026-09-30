@@ -12,32 +12,32 @@ final budgetRepositoryProvider = Provider<BudgetRepository>((ref) {
 
 /// Tüm bütçeler provider'ı
 final budgetsProvider = FutureProvider<List<BudgetModel>>((ref) async {
-  final user = ref.watch(currentUserProvider).value;
+  final userId = ref.watch(currentUserIdProvider);
 
-  if (user == null) return [];
+  if (userId == null) return [];
 
   final repo = ref.read(budgetRepositoryProvider);
-  return repo.getBudgets(user.id);
+  return repo.getBudgets(userId);
 });
 
 /// Aktif bütçeler provider'ı
 final activeBudgetsProvider = FutureProvider<List<BudgetModel>>((ref) async {
-  final user = ref.watch(currentUserProvider).value;
+  final userId = ref.watch(currentUserIdProvider);
 
-  if (user == null) return [];
+  if (userId == null) return [];
 
   final repo = ref.read(budgetRepositoryProvider);
-  return repo.getActiveBudgets(user.id);
+  return repo.getActiveBudgets(userId);
 });
 
 /// Uyarı/aşılmış bütçeler provider'ı
 final warningBudgetsProvider = FutureProvider<List<BudgetModel>>((ref) async {
-  final user = ref.watch(currentUserProvider).value;
+  final userId = ref.watch(currentUserIdProvider);
 
-  if (user == null) return [];
+  if (userId == null) return [];
 
   final repo = ref.read(budgetRepositoryProvider);
-  return repo.getWarningBudgets(user.id);
+  return repo.getWarningBudgets(userId);
 });
 
 /// Bütçe detayı provider'ı

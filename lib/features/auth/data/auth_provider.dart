@@ -17,14 +17,26 @@ final currentUserProvider = StreamProvider<User?>((ref) {
   return authRepo.authStateChanges.map((state) => state.session?.user);
 });
 
+/// Aktif kullanıcının ID'si. Kullanıcıya ait veri provider'ları bunu `watch`
+/// eder; böylece çıkış yapılıp başka hesapla girildiğinde önceki kullanıcının
+/// verisi ekranda kalmaz, hepsi yeniden yüklenir. Token yenilemesi gibi aynı
+/// kullanıcı için gelen olaylarda ID değişmediği için gereksiz yenileme olmaz.
+final currentUserIdProvider = Provider<String?>((ref) {
+  final authState = ref.watch(currentUserProvider);
+  // Stream ilk değerini verene kadar mevcut oturumu kullan
+  return authState.hasValue
+      ? authState.value?.id
+      : Supabase.instance.client.auth.currentUser?.id;
+});
+
 /// Kullanıcı profili provider'ı
 final userProfileProvider = FutureProvider<ProfileModel?>((ref) async {
-  final user = ref.watch(currentUserProvider).value;
+  final userId = ref.watch(currentUserIdProvider);
 
-  if (user == null) return null;
+  if (userId == null) return null;
 
   final authRepo = ref.watch(authRepositoryProvider);
-  return await authRepo.getProfile(user.id);
+  return await authRepo.getProfile(userId);
 });
 
 /// Auth Controller (İşlemleri yöneten)

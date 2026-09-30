@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../auth/data/auth_provider.dart';
 import '../models/debt_model.dart';
 import '../models/debt_payment_model.dart';
 import 'debt_repository.dart';
@@ -13,90 +14,96 @@ final debtRepositoryProvider = Provider<DebtRepository>((ref) {
 
 /// Kullanıcının tüm borç/alacaklarını getir
 final debtsProvider = FutureProvider<List<DebtModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getDebts(user.id);
+  return await debtRepo.getDebts(userId);
 });
 
 /// Sadece alacakları getir (lend)
 final lendsProvider = FutureProvider<List<DebtModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getLends(user.id);
+  return await debtRepo.getLends(userId);
 });
 
 /// Sadece borçları getir (borrow)
 final borrowsProvider = FutureProvider<List<DebtModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getBorrows(user.id);
+  return await debtRepo.getBorrows(userId);
 });
 
 /// Aktif (tamamlanmamış) borçları getir
 final activeDebtsProvider = FutureProvider<List<DebtModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getActiveDebts(user.id);
+  return await debtRepo.getActiveDebts(userId);
 });
 
 /// Yaklaşan vadeli borçları getir (gelecek 7 gün)
 final upcomingDebtsProvider = FutureProvider<List<DebtModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getUpcomingDebts(user.id);
+  return await debtRepo.getUpcomingDebts(userId);
 });
 
 /// Vadesi geçmiş borçları getir
 final overdueDebtsProvider = FutureProvider<List<DebtModel>>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return [];
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return [];
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getOverdueDebts(user.id);
+  return await debtRepo.getOverdueDebts(userId);
 });
 
 /// Toplam alacak miktarı
 final totalLentProvider = FutureProvider<double>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return 0;
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return 0;
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getTotalLentAmount(user.id);
+  return await debtRepo.getTotalLentAmount(userId);
 });
 
 /// Toplam borç miktarı
 final totalBorrowedProvider = FutureProvider<double>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return 0;
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return 0;
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getTotalBorrowedAmount(user.id);
+  return await debtRepo.getTotalBorrowedAmount(userId);
 });
 
 /// Benzersiz kişi sayısı
 final debtPeopleCountProvider = FutureProvider<int>((ref) async {
-  final user = Supabase.instance.client.auth.currentUser;
-  if (user == null) return 0;
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return 0;
 
   final debtRepo = ref.watch(debtRepositoryProvider);
-  return await debtRepo.getUniquePersonCount(user.id);
+  return await debtRepo.getUniquePersonCount(userId);
 });
 
 /// Tamamlananları göster/gizle durumu
-final showCompletedDebtsProvider = StateProvider<bool>((ref) => false);
+final showCompletedDebtsProvider = StateProvider<bool>((ref) {
+  ref.watch(currentUserIdProvider); // kullanıcı değişince sıfırla
+  return false;
+});
 
 /// Filtre tipi (all, lend, borrow)
-final debtFilterTypeProvider = StateProvider<String>((ref) => 'all');
+final debtFilterTypeProvider = StateProvider<String>((ref) {
+  ref.watch(currentUserIdProvider); // kullanıcı değişince sıfırla
+  return 'all';
+});
 
 /// Filtrelenmiş borç listesi
 final filteredDebtsProvider = Provider<AsyncValue<List<DebtModel>>>((ref) {

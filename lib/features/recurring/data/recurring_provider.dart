@@ -16,34 +16,34 @@ final recurringRepositoryProvider = Provider<RecurringRepository>((ref) {
 /// Tüm tekrarlayan işlemler provider'ı
 final recurringTransactionsProvider =
     FutureProvider<List<RecurringTransactionModel>>((ref) async {
-      final user = ref.watch(currentUserProvider).value;
+      final userId = ref.watch(currentUserIdProvider);
 
-      if (user == null) return [];
+      if (userId == null) return [];
 
       final repo = ref.read(recurringRepositoryProvider);
-      return repo.getRecurringTransactions(user.id);
+      return repo.getRecurringTransactions(userId);
     });
 
 /// Aktif tekrarlayan işlemler provider'ı
 final activeRecurringTransactionsProvider =
     FutureProvider<List<RecurringTransactionModel>>((ref) async {
-      final user = ref.watch(currentUserProvider).value;
+      final userId = ref.watch(currentUserIdProvider);
 
-      if (user == null) return [];
+      if (userId == null) return [];
 
       final repo = ref.read(recurringRepositoryProvider);
-      return repo.getActiveRecurringTransactions(user.id);
+      return repo.getActiveRecurringTransactions(userId);
     });
 
 /// Bugün vadesi gelen işlemler provider'ı
 final dueTransactionsProvider = FutureProvider<List<RecurringTransactionModel>>(
   (ref) async {
-    final user = ref.watch(currentUserProvider).value;
+    final userId = ref.watch(currentUserIdProvider);
 
-    if (user == null) return [];
+    if (userId == null) return [];
 
     final repo = ref.read(recurringRepositoryProvider);
-    return repo.getDueTransactions(user.id);
+    return repo.getDueTransactions(userId);
   },
 );
 
@@ -52,6 +52,7 @@ enum RecurringFilter { all, active, inactive }
 
 /// Filtre provider'ı
 final recurringFilterProvider = StateProvider<RecurringFilter>((ref) {
+  ref.watch(currentUserIdProvider); // kullanıcı değişince sıfırla
   return RecurringFilter.all;
 });
 
@@ -205,8 +206,8 @@ class RecurringController extends StateNotifier<AsyncValue<void>> {
 /// uygulamayı açtığı anda güncel veriyi görmesini sağlar.)
 final recurringStartupRunProvider = FutureProvider<int>((ref) async {
   // Kullanıcı değişince (çıkış/giriş) tekrar çalışsın
-  final user = ref.watch(currentUserProvider).value;
-  if (user == null) return 0;
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return 0;
 
   return ref
       .read(recurringControllerProvider.notifier)

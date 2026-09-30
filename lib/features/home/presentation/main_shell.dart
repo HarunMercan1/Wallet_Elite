@@ -12,9 +12,13 @@ import '../../settings/presentation/settings_view.dart';
 import '../../transactions/presentation/transactions_view.dart';
 import '../../statistics/presentation/statistics_view.dart';
 import '../../recurring/data/recurring_provider.dart';
+import '../../auth/data/auth_provider.dart';
 
 /// Bottom navigation için seçili sekme provider'ı
-final selectedTabProvider = StateProvider<int>((ref) => 0);
+final selectedTabProvider = StateProvider<int>((ref) {
+  ref.watch(currentUserIdProvider); // kullanıcı değişince ana sayfaya dön
+  return 0;
+});
 
 class MainShell extends ConsumerWidget {
   const MainShell({super.key});
