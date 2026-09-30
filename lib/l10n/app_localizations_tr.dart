@@ -1195,4 +1195,111 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Hesabınız silindi.';
+
+  @override
+  String get filter => 'Filtrele';
+
+  @override
+  String get transactionTypeLabel => 'İşlem Tipi';
+
+  @override
+  String get highestAmount => 'En Yüksek Tutar';
+
+  @override
+  String get lowestAmount => 'En Düşük Tutar';
+
+  @override
+  String get appSettingsSection => 'Uygulama';
+
+  @override
+  String get replayAppTour => 'Tanıtım Turunu Tekrar İzle';
+
+  @override
+  String get replayAppTourDesc => 'Uygulamanın özelliklerini keşfet';
+
+  @override
+  String get watchAdToUnlock => 'Reklam izle ve aç';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Bu premium temayı kalıcı olarak açmak için kısa bir reklam izleyin.';
+
+  @override
+  String get watchAd => 'Reklam İzle';
+
+  @override
+  String get uploadYourPhoto => 'Kendi fotoğrafını yükle';
+
+  @override
+  String get orPickAvatar => 'veya bir avatar seç';
+
+  @override
+  String get signingIn => 'Giriş yapılıyor...';
+
+  @override
+  String get appTour => 'Tanıtım Turu';
+
+  @override
+  String get languageSupportTitle => '18 Dil Desteği 🌍';
+
+  @override
+  String get languageSupportDesc => 'Kendi dilinizde kullanın';
+
+  @override
+  String get colorThemesTitle => 'Renk Temaları 🎨';
+
+  @override
+  String get colorThemesDesc => 'Kendi tarzınızı seçin + Karanlık Mod';
+
+  @override
+  String get darkModeAvailable => 'Karanlık mod da mevcut!';
+
+  @override
+  String get multiCurrencyTitle => 'Çoklu Para Birimi 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Tüm dünya para birimlerini destekliyoruz';
+
+  @override
+  String get nextButton => 'İleri';
+
+  @override
+  String get errInvalidCredentials => 'E-posta veya şifre hatalı';
+
+  @override
+  String get errEmailNotConfirmed => 'Lütfen e-posta adresinizi doğrulayın';
+
+  @override
+  String get errTooManyRequests =>
+      'Çok fazla deneme yaptınız, lütfen biraz bekleyin';
+
+  @override
+  String get errEmailInUse => 'Bu e-posta adresi zaten kullanılıyor';
+
+  @override
+  String get errWeakPassword => 'Şifre çok zayıf';
+
+  @override
+  String get errInvalidEmail => 'Geçersiz e-posta adresi';
+
+  @override
+  String get errGoogleConfig => 'Google giriş yapılandırma hatası (kod 10).';
+
+  @override
+  String get errPlayServices =>
+      'Google Play Hizmetleri güncel değil veya bu cihaz desteklenmiyor.';
+
+  @override
+  String get newestFirst => 'En Yeni';
+
+  @override
+  String get oldestFirst => 'En Eski';
+
+  @override
+  String get deleteAccountConfirmWord => 'SİL';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Onaylamak için $word yazın';
+  }
 }

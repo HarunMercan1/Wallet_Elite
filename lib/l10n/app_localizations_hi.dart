@@ -1192,4 +1192,110 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'आपका खाता हटा दिया गया है।';
+
+  @override
+  String get filter => 'फ़िल्टर';
+
+  @override
+  String get transactionTypeLabel => 'लेनदेन का प्रकार';
+
+  @override
+  String get highestAmount => 'सबसे अधिक राशि';
+
+  @override
+  String get lowestAmount => 'सबसे कम राशि';
+
+  @override
+  String get appSettingsSection => 'ऐप';
+
+  @override
+  String get replayAppTour => 'ऐप टूर फिर से देखें';
+
+  @override
+  String get replayAppTourDesc => 'ऐप की सुविधाएँ जानें';
+
+  @override
+  String get watchAdToUnlock => 'अनलॉक करने के लिए विज्ञापन देखें';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'इस प्रीमियम थीम को हमेशा के लिए अनलॉक करने के लिए एक छोटा विज्ञापन देखें।';
+
+  @override
+  String get watchAd => 'विज्ञापन देखें';
+
+  @override
+  String get uploadYourPhoto => 'अपनी फ़ोटो अपलोड करें';
+
+  @override
+  String get orPickAvatar => 'या एक अवतार चुनें';
+
+  @override
+  String get signingIn => 'साइन इन हो रहा है...';
+
+  @override
+  String get appTour => 'ऐप टूर';
+
+  @override
+  String get languageSupportTitle => '18 भाषाएँ 🌍';
+
+  @override
+  String get languageSupportDesc => 'अपनी भाषा में इस्तेमाल करें';
+
+  @override
+  String get colorThemesTitle => 'रंग थीम 🎨';
+
+  @override
+  String get colorThemesDesc => 'अपनी शैली चुनें + डार्क मोड';
+
+  @override
+  String get darkModeAvailable => 'डार्क मोड भी उपलब्ध है!';
+
+  @override
+  String get multiCurrencyTitle => 'कई मुद्राएँ 💰';
+
+  @override
+  String get multiCurrencyDesc => 'हम दुनिया भर की मुद्राओं का समर्थन करते हैं';
+
+  @override
+  String get nextButton => 'आगे';
+
+  @override
+  String get errInvalidCredentials => 'ईमेल या पासवर्ड गलत है';
+
+  @override
+  String get errEmailNotConfirmed => 'कृपया अपना ईमेल पता सत्यापित करें';
+
+  @override
+  String get errTooManyRequests => 'बहुत अधिक प्रयास, कृपया थोड़ा रुकें';
+
+  @override
+  String get errEmailInUse => 'यह ईमेल पता पहले से उपयोग में है';
+
+  @override
+  String get errWeakPassword => 'पासवर्ड बहुत कमज़ोर है';
+
+  @override
+  String get errInvalidEmail => 'अमान्य ईमेल पता';
+
+  @override
+  String get errGoogleConfig => 'Google साइन-इन कॉन्फ़िगरेशन त्रुटि (कोड 10)।';
+
+  @override
+  String get errPlayServices =>
+      'Google Play सेवाएँ पुरानी हैं या इस डिवाइस पर समर्थित नहीं हैं।';
+
+  @override
+  String get newestFirst => 'सबसे नया';
+
+  @override
+  String get oldestFirst => 'सबसे पुराना';
+
+  @override
+  String get deleteAccountConfirmWord => 'हटाएं';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'पुष्टि करने के लिए $word लिखें';
+  }
 }

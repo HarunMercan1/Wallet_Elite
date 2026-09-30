@@ -1190,4 +1190,111 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Sua conta foi excluída.';
+
+  @override
+  String get filter => 'Filtrar';
+
+  @override
+  String get transactionTypeLabel => 'Tipo de transação';
+
+  @override
+  String get highestAmount => 'Maior valor';
+
+  @override
+  String get lowestAmount => 'Menor valor';
+
+  @override
+  String get appSettingsSection => 'Aplicativo';
+
+  @override
+  String get replayAppTour => 'Rever o tour do app';
+
+  @override
+  String get replayAppTourDesc => 'Descubra os recursos do app';
+
+  @override
+  String get watchAdToUnlock => 'Assista a um anúncio para desbloquear';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Assista a um anúncio curto para desbloquear este tema premium permanentemente.';
+
+  @override
+  String get watchAd => 'Assistir anúncio';
+
+  @override
+  String get uploadYourPhoto => 'Envie sua própria foto';
+
+  @override
+  String get orPickAvatar => 'ou escolha um avatar';
+
+  @override
+  String get signingIn => 'Entrando...';
+
+  @override
+  String get appTour => 'Tour do app';
+
+  @override
+  String get languageSupportTitle => '18 idiomas 🌍';
+
+  @override
+  String get languageSupportDesc => 'Use no seu idioma';
+
+  @override
+  String get colorThemesTitle => 'Temas de cores 🎨';
+
+  @override
+  String get colorThemesDesc => 'Escolha seu estilo + Modo escuro';
+
+  @override
+  String get darkModeAvailable => 'O modo escuro também está disponível!';
+
+  @override
+  String get multiCurrencyTitle => 'Várias moedas 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Suportamos moedas do mundo todo';
+
+  @override
+  String get nextButton => 'Próximo';
+
+  @override
+  String get errInvalidCredentials => 'E-mail ou senha incorretos';
+
+  @override
+  String get errEmailNotConfirmed => 'Verifique seu endereço de e-mail';
+
+  @override
+  String get errTooManyRequests => 'Muitas tentativas, aguarde um momento';
+
+  @override
+  String get errEmailInUse => 'Este endereço de e-mail já está em uso';
+
+  @override
+  String get errWeakPassword => 'A senha é muito fraca';
+
+  @override
+  String get errInvalidEmail => 'Endereço de e-mail inválido';
+
+  @override
+  String get errGoogleConfig =>
+      'Erro de configuração do login com Google (código 10).';
+
+  @override
+  String get errPlayServices =>
+      'Os serviços do Google Play estão desatualizados ou não são compatíveis com este dispositivo.';
+
+  @override
+  String get newestFirst => 'Mais recentes';
+
+  @override
+  String get oldestFirst => 'Mais antigas';
+
+  @override
+  String get deleteAccountConfirmWord => 'EXCLUIR';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Digite $word para confirmar';
+  }
 }

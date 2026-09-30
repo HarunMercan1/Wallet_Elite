@@ -2439,6 +2439,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your account has been deleted.'**
   String get deleteAccountSuccess;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @transactionTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Type'**
+  String get transactionTypeLabel;
+
+  /// No description provided for @highestAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Highest Amount'**
+  String get highestAmount;
+
+  /// No description provided for @lowestAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowest Amount'**
+  String get lowestAmount;
+
+  /// No description provided for @appSettingsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get appSettingsSection;
+
+  /// No description provided for @replayAppTour.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay App Tour'**
+  String get replayAppTour;
+
+  /// No description provided for @replayAppTourDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover the app\'s features'**
+  String get replayAppTourDesc;
+
+  /// No description provided for @watchAdToUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch an ad to unlock'**
+  String get watchAdToUnlock;
+
+  /// No description provided for @premiumThemeUnlockMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch a short ad to permanently unlock this premium theme.'**
+  String get premiumThemeUnlockMessage;
+
+  /// No description provided for @watchAd.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad'**
+  String get watchAd;
+
+  /// No description provided for @uploadYourPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your own photo'**
+  String get uploadYourPhoto;
+
+  /// No description provided for @orPickAvatar.
+  ///
+  /// In en, this message translates to:
+  /// **'or pick an avatar'**
+  String get orPickAvatar;
+
+  /// No description provided for @signingIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in...'**
+  String get signingIn;
+
+  /// No description provided for @appTour.
+  ///
+  /// In en, this message translates to:
+  /// **'App Tour'**
+  String get appTour;
+
+  /// No description provided for @languageSupportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'18 Languages 🌍'**
+  String get languageSupportTitle;
+
+  /// No description provided for @languageSupportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use it in your own language'**
+  String get languageSupportDesc;
+
+  /// No description provided for @colorThemesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Color Themes 🎨'**
+  String get colorThemesTitle;
+
+  /// No description provided for @colorThemesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your style + Dark Mode'**
+  String get colorThemesDesc;
+
+  /// No description provided for @darkModeAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode is available too!'**
+  String get darkModeAvailable;
+
+  /// No description provided for @multiCurrencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple Currencies 💰'**
+  String get multiCurrencyTitle;
+
+  /// No description provided for @multiCurrencyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'We support currencies from around the world'**
+  String get multiCurrencyDesc;
+
+  /// No description provided for @nextButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextButton;
+
+  /// No description provided for @errInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password'**
+  String get errInvalidCredentials;
+
+  /// No description provided for @errEmailNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email address'**
+  String get errEmailNotConfirmed;
+
+  /// No description provided for @errTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts, please wait a moment'**
+  String get errTooManyRequests;
+
+  /// No description provided for @errEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is already in use'**
+  String get errEmailInUse;
+
+  /// No description provided for @errWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak'**
+  String get errWeakPassword;
+
+  /// No description provided for @errInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email address'**
+  String get errInvalidEmail;
+
+  /// No description provided for @errGoogleConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in configuration error (code 10).'**
+  String get errGoogleConfig;
+
+  /// No description provided for @errPlayServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play services are out of date or not supported on this device.'**
+  String get errPlayServices;
+
+  /// No description provided for @newestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get newestFirst;
+
+  /// No description provided for @oldestFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest'**
+  String get oldestFirst;
+
+  /// No description provided for @deleteAccountConfirmWord.
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE'**
+  String get deleteAccountConfirmWord;
+
+  /// No description provided for @deleteAccountTypeToConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {word} to confirm'**
+  String deleteAccountTypeToConfirm(String word);
 }
 
 class _AppLocalizationsDelegate

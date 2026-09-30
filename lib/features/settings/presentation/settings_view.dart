@@ -1753,72 +1753,117 @@ class SettingsView extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final router = GoRouter.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    final confirmWord = l.deleteAccountConfirmWord;
+    final confirmController = TextEditingController();
+
+    // Büyük/küçük harf ve Türkçe i/ı/İ farklarını yok say (ör. "sil" = "SİL")
+    String normalize(String s) =>
+        s.trim().toLowerCase().replaceAll('̇', '').replaceAll('ı', 'i');
 
     showDialog(
       context: context,
       builder: (dialogContext) {
         var isDeleting = false;
         return StatefulBuilder(
-          builder: (dialogContext, setDialogState) => AlertDialog(
-            backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
-            title: Text(
-              l.deleteAccountConfirmTitle,
-              style: TextStyle(color: isDark ? Colors.white : Colors.black),
-            ),
-            content: Text(
-              l.deleteAccountConfirmMessage,
-              style: TextStyle(
-                color: isDark ? Colors.grey[300] : Colors.grey[700],
+          builder: (dialogContext, setDialogState) {
+            final isConfirmed =
+                normalize(confirmController.text) == normalize(confirmWord);
+            return AlertDialog(
+              backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
+              title: Text(
+                l.deleteAccountConfirmTitle,
+                style: TextStyle(color: isDark ? Colors.white : Colors.black),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: isDeleting
-                    ? null
-                    : () => Navigator.pop(dialogContext),
-                child: Text(l.cancel),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.deleteAccountConfirmMessage,
+                    style: TextStyle(
+                      color: isDark ? Colors.grey[300] : Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l.deleteAccountTypeToConfirm(confirmWord),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: confirmController,
+                    enabled: !isDeleting,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textCapitalization: TextCapitalization.characters,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: confirmWord,
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      border: const OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onChanged: (_) => setDialogState(() {}),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: isDeleting
-                    ? null
-                    : () async {
-                        setDialogState(() => isDeleting = true);
-                        final success = await ref
-                            .read(authControllerProvider)
-                            .deleteAccount();
-                        if (dialogContext.mounted) {
-                          Navigator.pop(dialogContext);
-                        }
-                        if (success) {
-                          messenger.showSnackBar(
-                            SnackBar(content: Text(l.deleteAccountSuccess)),
-                          );
-                          router.go('/auth');
-                        } else {
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(l.errorOccurred),
-                              backgroundColor: colorTheme.error,
-                            ),
-                          );
-                        }
-                      },
-                child: isDeleting
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(
-                        l.deleteAccountConfirmButton,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-              ),
-            ],
-          ),
+              actions: [
+                TextButton(
+                  onPressed: isDeleting
+                      ? null
+                      : () => Navigator.pop(dialogContext),
+                  child: Text(l.cancel),
+                ),
+                TextButton(
+                  // Onay kelimesi doğru yazılmadan buton pasif
+                  onPressed: isDeleting || !isConfirmed
+                      ? null
+                      : () async {
+                          setDialogState(() => isDeleting = true);
+                          final success = await ref
+                              .read(authControllerProvider)
+                              .deleteAccount();
+                          if (dialogContext.mounted) {
+                            Navigator.pop(dialogContext);
+                          }
+                          if (success) {
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(l.deleteAccountSuccess)),
+                            );
+                            router.go('/auth');
+                          } else {
+                            messenger.showSnackBar(
+                              SnackBar(
+                                content: Text(l.errorOccurred),
+                                backgroundColor: colorTheme.error,
+                              ),
+                            );
+                          }
+                        },
+                  child: isDeleting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(
+                          l.deleteAccountConfirmButton,
+                          style: TextStyle(
+                            color: isConfirmed ? Colors.red : Colors.grey,
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
         );
       },
-    );
+    ).then((_) => confirmController.dispose());
   }
 
   IconData _getWalletIcon(String type) {

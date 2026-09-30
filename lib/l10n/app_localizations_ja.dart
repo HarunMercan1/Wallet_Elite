@@ -1177,4 +1177,108 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'アカウントを削除しました。';
+
+  @override
+  String get filter => 'フィルター';
+
+  @override
+  String get transactionTypeLabel => '取引の種類';
+
+  @override
+  String get highestAmount => '金額が高い順';
+
+  @override
+  String get lowestAmount => '金額が低い順';
+
+  @override
+  String get appSettingsSection => 'アプリ';
+
+  @override
+  String get replayAppTour => 'アプリツアーをもう一度見る';
+
+  @override
+  String get replayAppTourDesc => 'アプリの機能を見る';
+
+  @override
+  String get watchAdToUnlock => '広告を見てロック解除';
+
+  @override
+  String get premiumThemeUnlockMessage => '短い広告を見ると、このプレミアムテーマが永久にロック解除されます。';
+
+  @override
+  String get watchAd => '広告を見る';
+
+  @override
+  String get uploadYourPhoto => '自分の写真をアップロード';
+
+  @override
+  String get orPickAvatar => 'またはアバターを選択';
+
+  @override
+  String get signingIn => 'ログイン中...';
+
+  @override
+  String get appTour => 'アプリツアー';
+
+  @override
+  String get languageSupportTitle => '18 言語 🌍';
+
+  @override
+  String get languageSupportDesc => '自分の言語で使えます';
+
+  @override
+  String get colorThemesTitle => 'カラーテーマ 🎨';
+
+  @override
+  String get colorThemesDesc => 'スタイルを選択 + ダークモード';
+
+  @override
+  String get darkModeAvailable => 'ダークモードも利用できます！';
+
+  @override
+  String get multiCurrencyTitle => '複数の通貨 💰';
+
+  @override
+  String get multiCurrencyDesc => '世界中の通貨に対応しています';
+
+  @override
+  String get nextButton => '次へ';
+
+  @override
+  String get errInvalidCredentials => 'メールアドレスまたはパスワードが正しくありません';
+
+  @override
+  String get errEmailNotConfirmed => 'メールアドレスを確認してください';
+
+  @override
+  String get errTooManyRequests => '試行回数が多すぎます。しばらくお待ちください';
+
+  @override
+  String get errEmailInUse => 'このメールアドレスはすでに使用されています';
+
+  @override
+  String get errWeakPassword => 'パスワードが弱すぎます';
+
+  @override
+  String get errInvalidEmail => '無効なメールアドレスです';
+
+  @override
+  String get errGoogleConfig => 'Google ログインの設定エラー（コード 10）。';
+
+  @override
+  String get errPlayServices => 'Google Play 開発者サービスが古いか、この端末ではサポートされていません。';
+
+  @override
+  String get newestFirst => '新しい順';
+
+  @override
+  String get oldestFirst => '古い順';
+
+  @override
+  String get deleteAccountConfirmWord => '削除';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return '確認のため $word と入力してください';
+  }
 }

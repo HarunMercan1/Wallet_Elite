@@ -1177,4 +1177,109 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => '계정이 삭제되었습니다.';
+
+  @override
+  String get filter => '필터';
+
+  @override
+  String get transactionTypeLabel => '거래 유형';
+
+  @override
+  String get highestAmount => '높은 금액순';
+
+  @override
+  String get lowestAmount => '낮은 금액순';
+
+  @override
+  String get appSettingsSection => '앱';
+
+  @override
+  String get replayAppTour => '앱 둘러보기 다시 보기';
+
+  @override
+  String get replayAppTourDesc => '앱의 기능 알아보기';
+
+  @override
+  String get watchAdToUnlock => '광고 보고 잠금 해제';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      '짧은 광고를 보면 이 프리미엄 테마가 영구적으로 잠금 해제됩니다.';
+
+  @override
+  String get watchAd => '광고 보기';
+
+  @override
+  String get uploadYourPhoto => '내 사진 업로드';
+
+  @override
+  String get orPickAvatar => '또는 아바타 선택';
+
+  @override
+  String get signingIn => '로그인 중...';
+
+  @override
+  String get appTour => '앱 둘러보기';
+
+  @override
+  String get languageSupportTitle => '18개 언어 🌍';
+
+  @override
+  String get languageSupportDesc => '내 언어로 사용하세요';
+
+  @override
+  String get colorThemesTitle => '색상 테마 🎨';
+
+  @override
+  String get colorThemesDesc => '스타일 선택 + 다크 모드';
+
+  @override
+  String get darkModeAvailable => '다크 모드도 지원합니다!';
+
+  @override
+  String get multiCurrencyTitle => '다양한 통화 💰';
+
+  @override
+  String get multiCurrencyDesc => '전 세계 통화를 지원합니다';
+
+  @override
+  String get nextButton => '다음';
+
+  @override
+  String get errInvalidCredentials => '이메일 또는 비밀번호가 올바르지 않습니다';
+
+  @override
+  String get errEmailNotConfirmed => '이메일 주소를 인증해 주세요';
+
+  @override
+  String get errTooManyRequests => '시도 횟수가 너무 많습니다. 잠시 기다려 주세요';
+
+  @override
+  String get errEmailInUse => '이미 사용 중인 이메일 주소입니다';
+
+  @override
+  String get errWeakPassword => '비밀번호가 너무 약합니다';
+
+  @override
+  String get errInvalidEmail => '유효하지 않은 이메일 주소입니다';
+
+  @override
+  String get errGoogleConfig => 'Google 로그인 설정 오류(코드 10).';
+
+  @override
+  String get errPlayServices => 'Google Play 서비스가 오래되었거나 이 기기에서 지원되지 않습니다.';
+
+  @override
+  String get newestFirst => '최신순';
+
+  @override
+  String get oldestFirst => '오래된순';
+
+  @override
+  String get deleteAccountConfirmWord => '삭제';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return '확인하려면 $word을(를) 입력하세요';
+  }
 }

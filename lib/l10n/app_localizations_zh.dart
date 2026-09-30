@@ -1177,4 +1177,108 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => '您的账户已删除。';
+
+  @override
+  String get filter => '筛选';
+
+  @override
+  String get transactionTypeLabel => '交易类型';
+
+  @override
+  String get highestAmount => '最高金额';
+
+  @override
+  String get lowestAmount => '最低金额';
+
+  @override
+  String get appSettingsSection => '应用';
+
+  @override
+  String get replayAppTour => '重新观看应用导览';
+
+  @override
+  String get replayAppTourDesc => '了解应用的功能';
+
+  @override
+  String get watchAdToUnlock => '观看广告解锁';
+
+  @override
+  String get premiumThemeUnlockMessage => '观看一段简短广告即可永久解锁此高级主题。';
+
+  @override
+  String get watchAd => '观看广告';
+
+  @override
+  String get uploadYourPhoto => '上传你的照片';
+
+  @override
+  String get orPickAvatar => '或选择一个头像';
+
+  @override
+  String get signingIn => '正在登录...';
+
+  @override
+  String get appTour => '应用导览';
+
+  @override
+  String get languageSupportTitle => '18 种语言 🌍';
+
+  @override
+  String get languageSupportDesc => '用你的语言使用';
+
+  @override
+  String get colorThemesTitle => '颜色主题 🎨';
+
+  @override
+  String get colorThemesDesc => '选择你的风格 + 深色模式';
+
+  @override
+  String get darkModeAvailable => '也支持深色模式！';
+
+  @override
+  String get multiCurrencyTitle => '多种货币 💰';
+
+  @override
+  String get multiCurrencyDesc => '我们支持全球各地的货币';
+
+  @override
+  String get nextButton => '下一步';
+
+  @override
+  String get errInvalidCredentials => '邮箱或密码错误';
+
+  @override
+  String get errEmailNotConfirmed => '请验证你的邮箱地址';
+
+  @override
+  String get errTooManyRequests => '尝试次数过多，请稍候';
+
+  @override
+  String get errEmailInUse => '该邮箱地址已被使用';
+
+  @override
+  String get errWeakPassword => '密码强度太弱';
+
+  @override
+  String get errInvalidEmail => '邮箱地址无效';
+
+  @override
+  String get errGoogleConfig => 'Google 登录配置错误（代码 10）。';
+
+  @override
+  String get errPlayServices => 'Google Play 服务已过期或此设备不支持。';
+
+  @override
+  String get newestFirst => '最新';
+
+  @override
+  String get oldestFirst => '最早';
+
+  @override
+  String get deleteAccountConfirmWord => '删除';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return '输入 $word 以确认';
+  }
 }

@@ -1189,4 +1189,110 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Ваш аккаунт удалён.';
+
+  @override
+  String get filter => 'Фильтр';
+
+  @override
+  String get transactionTypeLabel => 'Тип операции';
+
+  @override
+  String get highestAmount => 'Самая большая сумма';
+
+  @override
+  String get lowestAmount => 'Самая маленькая сумма';
+
+  @override
+  String get appSettingsSection => 'Приложение';
+
+  @override
+  String get replayAppTour => 'Посмотреть обзор снова';
+
+  @override
+  String get replayAppTourDesc => 'Узнайте о возможностях приложения';
+
+  @override
+  String get watchAdToUnlock => 'Посмотрите рекламу, чтобы открыть';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Посмотрите короткую рекламу, чтобы навсегда открыть эту премиум-тему.';
+
+  @override
+  String get watchAd => 'Смотреть рекламу';
+
+  @override
+  String get uploadYourPhoto => 'Загрузить своё фото';
+
+  @override
+  String get orPickAvatar => 'или выберите аватар';
+
+  @override
+  String get signingIn => 'Выполняется вход...';
+
+  @override
+  String get appTour => 'Обзор приложения';
+
+  @override
+  String get languageSupportTitle => '18 языков 🌍';
+
+  @override
+  String get languageSupportDesc => 'Пользуйтесь на своём языке';
+
+  @override
+  String get colorThemesTitle => 'Цветовые темы 🎨';
+
+  @override
+  String get colorThemesDesc => 'Выберите свой стиль + Тёмная тема';
+
+  @override
+  String get darkModeAvailable => 'Тёмная тема тоже доступна!';
+
+  @override
+  String get multiCurrencyTitle => 'Несколько валют 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Мы поддерживаем валюты со всего мира';
+
+  @override
+  String get nextButton => 'Далее';
+
+  @override
+  String get errInvalidCredentials => 'Неверный email или пароль';
+
+  @override
+  String get errEmailNotConfirmed => 'Подтвердите свой адрес email';
+
+  @override
+  String get errTooManyRequests => 'Слишком много попыток, подождите немного';
+
+  @override
+  String get errEmailInUse => 'Этот адрес email уже используется';
+
+  @override
+  String get errWeakPassword => 'Слишком слабый пароль';
+
+  @override
+  String get errInvalidEmail => 'Недействительный адрес email';
+
+  @override
+  String get errGoogleConfig => 'Ошибка настройки входа через Google (код 10).';
+
+  @override
+  String get errPlayServices =>
+      'Сервисы Google Play устарели или не поддерживаются на этом устройстве.';
+
+  @override
+  String get newestFirst => 'Сначала новые';
+
+  @override
+  String get oldestFirst => 'Сначала старые';
+
+  @override
+  String get deleteAccountConfirmWord => 'УДАЛИТЬ';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Введите $word для подтверждения';
+  }
 }

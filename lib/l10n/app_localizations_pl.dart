@@ -1193,4 +1193,110 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Twoje konto zostało usunięte.';
+
+  @override
+  String get filter => 'Filtruj';
+
+  @override
+  String get transactionTypeLabel => 'Typ transakcji';
+
+  @override
+  String get highestAmount => 'Najwyższa kwota';
+
+  @override
+  String get lowestAmount => 'Najniższa kwota';
+
+  @override
+  String get appSettingsSection => 'Aplikacja';
+
+  @override
+  String get replayAppTour => 'Obejrzyj ponownie prezentację';
+
+  @override
+  String get replayAppTourDesc => 'Poznaj funkcje aplikacji';
+
+  @override
+  String get watchAdToUnlock => 'Obejrzyj reklamę, aby odblokować';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Obejrzyj krótką reklamę, aby na stałe odblokować ten motyw premium.';
+
+  @override
+  String get watchAd => 'Obejrzyj reklamę';
+
+  @override
+  String get uploadYourPhoto => 'Prześlij własne zdjęcie';
+
+  @override
+  String get orPickAvatar => 'lub wybierz awatar';
+
+  @override
+  String get signingIn => 'Logowanie...';
+
+  @override
+  String get appTour => 'Prezentacja aplikacji';
+
+  @override
+  String get languageSupportTitle => '18 języków 🌍';
+
+  @override
+  String get languageSupportDesc => 'Używaj w swoim języku';
+
+  @override
+  String get colorThemesTitle => 'Motywy kolorystyczne 🎨';
+
+  @override
+  String get colorThemesDesc => 'Wybierz swój styl + Tryb ciemny';
+
+  @override
+  String get darkModeAvailable => 'Tryb ciemny też jest dostępny!';
+
+  @override
+  String get multiCurrencyTitle => 'Wiele walut 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Obsługujemy waluty z całego świata';
+
+  @override
+  String get nextButton => 'Dalej';
+
+  @override
+  String get errInvalidCredentials => 'Nieprawidłowy e-mail lub hasło';
+
+  @override
+  String get errEmailNotConfirmed => 'Potwierdź swój adres e-mail';
+
+  @override
+  String get errTooManyRequests => 'Zbyt wiele prób, poczekaj chwilę';
+
+  @override
+  String get errEmailInUse => 'Ten adres e-mail jest już używany';
+
+  @override
+  String get errWeakPassword => 'Hasło jest zbyt słabe';
+
+  @override
+  String get errInvalidEmail => 'Nieprawidłowy adres e-mail';
+
+  @override
+  String get errGoogleConfig => 'Błąd konfiguracji logowania Google (kod 10).';
+
+  @override
+  String get errPlayServices =>
+      'Usługi Google Play są nieaktualne lub nieobsługiwane na tym urządzeniu.';
+
+  @override
+  String get newestFirst => 'Najnowsze';
+
+  @override
+  String get oldestFirst => 'Najstarsze';
+
+  @override
+  String get deleteAccountConfirmWord => 'USUŃ';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Wpisz $word, aby potwierdzić';
+  }
 }

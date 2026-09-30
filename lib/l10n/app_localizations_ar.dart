@@ -1184,4 +1184,112 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'تم حذف حسابك.';
+
+  @override
+  String get filter => 'تصفية';
+
+  @override
+  String get transactionTypeLabel => 'نوع المعاملة';
+
+  @override
+  String get highestAmount => 'أعلى مبلغ';
+
+  @override
+  String get lowestAmount => 'أدنى مبلغ';
+
+  @override
+  String get appSettingsSection => 'التطبيق';
+
+  @override
+  String get replayAppTour => 'إعادة مشاهدة جولة التطبيق';
+
+  @override
+  String get replayAppTourDesc => 'اكتشف ميزات التطبيق';
+
+  @override
+  String get watchAdToUnlock => 'شاهد إعلانًا لفتح القفل';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'شاهد إعلانًا قصيرًا لفتح هذا المظهر المميز بشكل دائم.';
+
+  @override
+  String get watchAd => 'مشاهدة الإعلان';
+
+  @override
+  String get uploadYourPhoto => 'ارفع صورتك';
+
+  @override
+  String get orPickAvatar => 'أو اختر صورة رمزية';
+
+  @override
+  String get signingIn => 'جارٍ تسجيل الدخول...';
+
+  @override
+  String get appTour => 'جولة التطبيق';
+
+  @override
+  String get languageSupportTitle => '18 لغة 🌍';
+
+  @override
+  String get languageSupportDesc => 'استخدمه بلغتك';
+
+  @override
+  String get colorThemesTitle => 'سمات الألوان 🎨';
+
+  @override
+  String get colorThemesDesc => 'اختر أسلوبك + الوضع الداكن';
+
+  @override
+  String get darkModeAvailable => 'الوضع الداكن متاح أيضًا!';
+
+  @override
+  String get multiCurrencyTitle => 'عملات متعددة 💰';
+
+  @override
+  String get multiCurrencyDesc => 'ندعم العملات من جميع أنحاء العالم';
+
+  @override
+  String get nextButton => 'التالي';
+
+  @override
+  String get errInvalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+
+  @override
+  String get errEmailNotConfirmed => 'يرجى تأكيد بريدك الإلكتروني';
+
+  @override
+  String get errTooManyRequests => 'محاولات كثيرة جدًا، يرجى الانتظار قليلًا';
+
+  @override
+  String get errEmailInUse => 'عنوان البريد الإلكتروني هذا مستخدم بالفعل';
+
+  @override
+  String get errWeakPassword => 'كلمة المرور ضعيفة جدًا';
+
+  @override
+  String get errInvalidEmail => 'عنوان بريد إلكتروني غير صالح';
+
+  @override
+  String get errGoogleConfig =>
+      'خطأ في إعداد تسجيل الدخول عبر Google (الرمز 10).';
+
+  @override
+  String get errPlayServices =>
+      'خدمات Google Play قديمة أو غير مدعومة على هذا الجهاز.';
+
+  @override
+  String get newestFirst => 'الأحدث';
+
+  @override
+  String get oldestFirst => 'الأقدم';
+
+  @override
+  String get deleteAccountConfirmWord => 'حذف';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'اكتب $word للتأكيد';
+  }
 }

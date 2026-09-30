@@ -1195,4 +1195,111 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Il tuo account è stato eliminato.';
+
+  @override
+  String get filter => 'Filtra';
+
+  @override
+  String get transactionTypeLabel => 'Tipo di transazione';
+
+  @override
+  String get highestAmount => 'Importo più alto';
+
+  @override
+  String get lowestAmount => 'Importo più basso';
+
+  @override
+  String get appSettingsSection => 'App';
+
+  @override
+  String get replayAppTour => 'Rivedi il tour dell\'app';
+
+  @override
+  String get replayAppTourDesc => 'Scopri le funzionalità dell\'app';
+
+  @override
+  String get watchAdToUnlock => 'Guarda un annuncio per sbloccare';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Guarda un breve annuncio per sbloccare definitivamente questo tema premium.';
+
+  @override
+  String get watchAd => 'Guarda annuncio';
+
+  @override
+  String get uploadYourPhoto => 'Carica la tua foto';
+
+  @override
+  String get orPickAvatar => 'o scegli un avatar';
+
+  @override
+  String get signingIn => 'Accesso in corso...';
+
+  @override
+  String get appTour => 'Tour dell\'app';
+
+  @override
+  String get languageSupportTitle => '18 lingue 🌍';
+
+  @override
+  String get languageSupportDesc => 'Usala nella tua lingua';
+
+  @override
+  String get colorThemesTitle => 'Temi colore 🎨';
+
+  @override
+  String get colorThemesDesc => 'Scegli il tuo stile + Modalità scura';
+
+  @override
+  String get darkModeAvailable => 'È disponibile anche la modalità scura!';
+
+  @override
+  String get multiCurrencyTitle => 'Più valute 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Supportiamo valute di tutto il mondo';
+
+  @override
+  String get nextButton => 'Avanti';
+
+  @override
+  String get errInvalidCredentials => 'Email o password errate';
+
+  @override
+  String get errEmailNotConfirmed => 'Verifica il tuo indirizzo email';
+
+  @override
+  String get errTooManyRequests => 'Troppi tentativi, attendi un momento';
+
+  @override
+  String get errEmailInUse => 'Questo indirizzo email è già in uso';
+
+  @override
+  String get errWeakPassword => 'La password è troppo debole';
+
+  @override
+  String get errInvalidEmail => 'Indirizzo email non valido';
+
+  @override
+  String get errGoogleConfig =>
+      'Errore di configurazione dell\'accesso con Google (codice 10).';
+
+  @override
+  String get errPlayServices =>
+      'I servizi Google Play non sono aggiornati o non sono supportati su questo dispositivo.';
+
+  @override
+  String get newestFirst => 'Più recenti';
+
+  @override
+  String get oldestFirst => 'Meno recenti';
+
+  @override
+  String get deleteAccountConfirmWord => 'ELIMINA';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Digita $word per confermare';
+  }
 }

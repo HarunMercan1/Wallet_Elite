@@ -1189,4 +1189,111 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'ลบบัญชีของคุณแล้ว';
+
+  @override
+  String get filter => 'ตัวกรอง';
+
+  @override
+  String get transactionTypeLabel => 'ประเภทธุรกรรม';
+
+  @override
+  String get highestAmount => 'จำนวนเงินสูงสุด';
+
+  @override
+  String get lowestAmount => 'จำนวนเงินต่ำสุด';
+
+  @override
+  String get appSettingsSection => 'แอป';
+
+  @override
+  String get replayAppTour => 'ดูทัวร์แอปอีกครั้ง';
+
+  @override
+  String get replayAppTourDesc => 'ค้นพบฟีเจอร์ของแอป';
+
+  @override
+  String get watchAdToUnlock => 'ดูโฆษณาเพื่อปลดล็อก';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'ดูโฆษณาสั้น ๆ เพื่อปลดล็อกธีมพรีเมียมนี้อย่างถาวร';
+
+  @override
+  String get watchAd => 'ดูโฆษณา';
+
+  @override
+  String get uploadYourPhoto => 'อัปโหลดรูปของคุณ';
+
+  @override
+  String get orPickAvatar => 'หรือเลือกอวาตาร์';
+
+  @override
+  String get signingIn => 'กำลังเข้าสู่ระบบ...';
+
+  @override
+  String get appTour => 'ทัวร์แอป';
+
+  @override
+  String get languageSupportTitle => '18 ภาษา 🌍';
+
+  @override
+  String get languageSupportDesc => 'ใช้งานในภาษาของคุณ';
+
+  @override
+  String get colorThemesTitle => 'ธีมสี 🎨';
+
+  @override
+  String get colorThemesDesc => 'เลือกสไตล์ของคุณ + โหมดมืด';
+
+  @override
+  String get darkModeAvailable => 'มีโหมดมืดด้วย!';
+
+  @override
+  String get multiCurrencyTitle => 'หลายสกุลเงิน 💰';
+
+  @override
+  String get multiCurrencyDesc => 'เรารองรับสกุลเงินจากทั่วโลก';
+
+  @override
+  String get nextButton => 'ถัดไป';
+
+  @override
+  String get errInvalidCredentials => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+
+  @override
+  String get errEmailNotConfirmed => 'โปรดยืนยันที่อยู่อีเมลของคุณ';
+
+  @override
+  String get errTooManyRequests => 'พยายามหลายครั้งเกินไป โปรดรอสักครู่';
+
+  @override
+  String get errEmailInUse => 'ที่อยู่อีเมลนี้ถูกใช้งานแล้ว';
+
+  @override
+  String get errWeakPassword => 'รหัสผ่านไม่ปลอดภัยพอ';
+
+  @override
+  String get errInvalidEmail => 'ที่อยู่อีเมลไม่ถูกต้อง';
+
+  @override
+  String get errGoogleConfig =>
+      'การตั้งค่าการเข้าสู่ระบบด้วย Google ผิดพลาด (รหัส 10)';
+
+  @override
+  String get errPlayServices =>
+      'บริการ Google Play ล้าสมัยหรืออุปกรณ์นี้ไม่รองรับ';
+
+  @override
+  String get newestFirst => 'ใหม่สุด';
+
+  @override
+  String get oldestFirst => 'เก่าสุด';
+
+  @override
+  String get deleteAccountConfirmWord => 'ลบ';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'พิมพ์ $word เพื่อยืนยัน';
+  }
 }

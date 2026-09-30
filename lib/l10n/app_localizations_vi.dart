@@ -1190,4 +1190,110 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Tài khoản của bạn đã bị xóa.';
+
+  @override
+  String get filter => 'Lọc';
+
+  @override
+  String get transactionTypeLabel => 'Loại giao dịch';
+
+  @override
+  String get highestAmount => 'Số tiền cao nhất';
+
+  @override
+  String get lowestAmount => 'Số tiền thấp nhất';
+
+  @override
+  String get appSettingsSection => 'Ứng dụng';
+
+  @override
+  String get replayAppTour => 'Xem lại giới thiệu ứng dụng';
+
+  @override
+  String get replayAppTourDesc => 'Khám phá các tính năng của ứng dụng';
+
+  @override
+  String get watchAdToUnlock => 'Xem quảng cáo để mở khóa';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Xem một quảng cáo ngắn để mở khóa vĩnh viễn giao diện cao cấp này.';
+
+  @override
+  String get watchAd => 'Xem quảng cáo';
+
+  @override
+  String get uploadYourPhoto => 'Tải ảnh của bạn lên';
+
+  @override
+  String get orPickAvatar => 'hoặc chọn một ảnh đại diện';
+
+  @override
+  String get signingIn => 'Đang đăng nhập...';
+
+  @override
+  String get appTour => 'Giới thiệu ứng dụng';
+
+  @override
+  String get languageSupportTitle => '18 ngôn ngữ 🌍';
+
+  @override
+  String get languageSupportDesc => 'Sử dụng bằng ngôn ngữ của bạn';
+
+  @override
+  String get colorThemesTitle => 'Chủ đề màu 🎨';
+
+  @override
+  String get colorThemesDesc => 'Chọn phong cách của bạn + Chế độ tối';
+
+  @override
+  String get darkModeAvailable => 'Có cả chế độ tối!';
+
+  @override
+  String get multiCurrencyTitle => 'Nhiều loại tiền tệ 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Chúng tôi hỗ trợ tiền tệ trên toàn thế giới';
+
+  @override
+  String get nextButton => 'Tiếp';
+
+  @override
+  String get errInvalidCredentials => 'Email hoặc mật khẩu không đúng';
+
+  @override
+  String get errEmailNotConfirmed => 'Vui lòng xác minh địa chỉ email của bạn';
+
+  @override
+  String get errTooManyRequests => 'Quá nhiều lần thử, vui lòng đợi một chút';
+
+  @override
+  String get errEmailInUse => 'Địa chỉ email này đã được sử dụng';
+
+  @override
+  String get errWeakPassword => 'Mật khẩu quá yếu';
+
+  @override
+  String get errInvalidEmail => 'Địa chỉ email không hợp lệ';
+
+  @override
+  String get errGoogleConfig => 'Lỗi cấu hình đăng nhập Google (mã 10).';
+
+  @override
+  String get errPlayServices =>
+      'Dịch vụ Google Play đã lỗi thời hoặc không được hỗ trợ trên thiết bị này.';
+
+  @override
+  String get newestFirst => 'Mới nhất';
+
+  @override
+  String get oldestFirst => 'Cũ nhất';
+
+  @override
+  String get deleteAccountConfirmWord => 'XÓA';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Nhập $word để xác nhận';
+  }
 }

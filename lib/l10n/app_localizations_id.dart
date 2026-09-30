@@ -1193,4 +1193,111 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Akun Anda telah dihapus.';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get transactionTypeLabel => 'Jenis Transaksi';
+
+  @override
+  String get highestAmount => 'Jumlah Tertinggi';
+
+  @override
+  String get lowestAmount => 'Jumlah Terendah';
+
+  @override
+  String get appSettingsSection => 'Aplikasi';
+
+  @override
+  String get replayAppTour => 'Putar Ulang Tur Aplikasi';
+
+  @override
+  String get replayAppTourDesc => 'Temukan fitur aplikasi';
+
+  @override
+  String get watchAdToUnlock => 'Tonton iklan untuk membuka';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Tonton iklan singkat untuk membuka tema premium ini secara permanen.';
+
+  @override
+  String get watchAd => 'Tonton Iklan';
+
+  @override
+  String get uploadYourPhoto => 'Unggah foto Anda sendiri';
+
+  @override
+  String get orPickAvatar => 'atau pilih avatar';
+
+  @override
+  String get signingIn => 'Sedang masuk...';
+
+  @override
+  String get appTour => 'Tur Aplikasi';
+
+  @override
+  String get languageSupportTitle => '18 Bahasa 🌍';
+
+  @override
+  String get languageSupportDesc => 'Gunakan dalam bahasa Anda';
+
+  @override
+  String get colorThemesTitle => 'Tema Warna 🎨';
+
+  @override
+  String get colorThemesDesc => 'Pilih gaya Anda + Mode Gelap';
+
+  @override
+  String get darkModeAvailable => 'Mode gelap juga tersedia!';
+
+  @override
+  String get multiCurrencyTitle => 'Beragam Mata Uang 💰';
+
+  @override
+  String get multiCurrencyDesc => 'Kami mendukung mata uang dari seluruh dunia';
+
+  @override
+  String get nextButton => 'Berikutnya';
+
+  @override
+  String get errInvalidCredentials => 'Email atau kata sandi salah';
+
+  @override
+  String get errEmailNotConfirmed => 'Harap verifikasi alamat email Anda';
+
+  @override
+  String get errTooManyRequests =>
+      'Terlalu banyak percobaan, harap tunggu sebentar';
+
+  @override
+  String get errEmailInUse => 'Alamat email ini sudah digunakan';
+
+  @override
+  String get errWeakPassword => 'Kata sandi terlalu lemah';
+
+  @override
+  String get errInvalidEmail => 'Alamat email tidak valid';
+
+  @override
+  String get errGoogleConfig => 'Kesalahan konfigurasi login Google (kode 10).';
+
+  @override
+  String get errPlayServices =>
+      'Layanan Google Play sudah usang atau tidak didukung di perangkat ini.';
+
+  @override
+  String get newestFirst => 'Terbaru';
+
+  @override
+  String get oldestFirst => 'Terlama';
+
+  @override
+  String get deleteAccountConfirmWord => 'HAPUS';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Ketik $word untuk mengonfirmasi';
+  }
 }

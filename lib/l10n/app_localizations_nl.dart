@@ -1193,4 +1193,112 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get deleteAccountSuccess => 'Je account is verwijderd.';
+
+  @override
+  String get filter => 'Filteren';
+
+  @override
+  String get transactionTypeLabel => 'Transactietype';
+
+  @override
+  String get highestAmount => 'Hoogste bedrag';
+
+  @override
+  String get lowestAmount => 'Laagste bedrag';
+
+  @override
+  String get appSettingsSection => 'App';
+
+  @override
+  String get replayAppTour => 'App-rondleiding opnieuw bekijken';
+
+  @override
+  String get replayAppTourDesc => 'Ontdek de functies van de app';
+
+  @override
+  String get watchAdToUnlock => 'Bekijk een advertentie om te ontgrendelen';
+
+  @override
+  String get premiumThemeUnlockMessage =>
+      'Bekijk een korte advertentie om dit premiumthema permanent te ontgrendelen.';
+
+  @override
+  String get watchAd => 'Advertentie bekijken';
+
+  @override
+  String get uploadYourPhoto => 'Upload je eigen foto';
+
+  @override
+  String get orPickAvatar => 'of kies een avatar';
+
+  @override
+  String get signingIn => 'Bezig met inloggen...';
+
+  @override
+  String get appTour => 'App-rondleiding';
+
+  @override
+  String get languageSupportTitle => '18 talen 🌍';
+
+  @override
+  String get languageSupportDesc => 'Gebruik het in je eigen taal';
+
+  @override
+  String get colorThemesTitle => 'Kleurthema\'s 🎨';
+
+  @override
+  String get colorThemesDesc => 'Kies je stijl + Donkere modus';
+
+  @override
+  String get darkModeAvailable => 'Donkere modus is ook beschikbaar!';
+
+  @override
+  String get multiCurrencyTitle => 'Meerdere valuta 💰';
+
+  @override
+  String get multiCurrencyDesc =>
+      'We ondersteunen valuta van over de hele wereld';
+
+  @override
+  String get nextButton => 'Volgende';
+
+  @override
+  String get errInvalidCredentials => 'Onjuist e-mailadres of wachtwoord';
+
+  @override
+  String get errEmailNotConfirmed => 'Bevestig je e-mailadres';
+
+  @override
+  String get errTooManyRequests => 'Te veel pogingen, wacht even';
+
+  @override
+  String get errEmailInUse => 'Dit e-mailadres is al in gebruik';
+
+  @override
+  String get errWeakPassword => 'Wachtwoord is te zwak';
+
+  @override
+  String get errInvalidEmail => 'Ongeldig e-mailadres';
+
+  @override
+  String get errGoogleConfig =>
+      'Configuratiefout bij inloggen met Google (code 10).';
+
+  @override
+  String get errPlayServices =>
+      'Google Play-services zijn verouderd of worden niet ondersteund op dit apparaat.';
+
+  @override
+  String get newestFirst => 'Nieuwste';
+
+  @override
+  String get oldestFirst => 'Oudste';
+
+  @override
+  String get deleteAccountConfirmWord => 'VERWIJDEREN';
+
+  @override
+  String deleteAccountTypeToConfirm(String word) {
+    return 'Typ $word om te bevestigen';
+  }
 }

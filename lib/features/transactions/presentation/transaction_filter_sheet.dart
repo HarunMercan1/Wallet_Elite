@@ -66,7 +66,7 @@ class _TransactionFilterSheetState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Filtrele', // TODO: Localize
+                  l.filter,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class _TransactionFilterSheetState
                     });
                   },
                   child: Text(
-                    'Sıfırla', // TODO: Localize
+                    l.reset,
                     style: TextStyle(color: colorTheme.error),
                   ),
                 ),
@@ -93,22 +93,22 @@ class _TransactionFilterSheetState
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 // Sıralama
-                _buildSectionTitle(l.sort ?? 'Sıralama', isDark),
+                _buildSectionTitle(l.sort, isDark),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    _buildSortChip(SortOption.dateDesc, 'En Yeni', isDark),
-                    _buildSortChip(SortOption.dateAsc, 'En Eski', isDark),
+                    _buildSortChip(SortOption.dateDesc, l.newestFirst, isDark),
+                    _buildSortChip(SortOption.dateAsc, l.oldestFirst, isDark),
                     _buildSortChip(
                       SortOption.amountDesc,
-                      'En Yüksek Tutar',
+                      l.highestAmount,
                       isDark,
                     ),
                     _buildSortChip(
                       SortOption.amountAsc,
-                      'En Düşük Tutar',
+                      l.lowestAmount,
                       isDark,
                     ),
                   ],
@@ -116,7 +116,7 @@ class _TransactionFilterSheetState
                 const SizedBox(height: 24),
 
                 // İşlem Tipi
-                _buildSectionTitle('İşlem Tipi', isDark),
+                _buildSectionTitle(l.transactionTypeLabel, isDark),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -140,7 +140,7 @@ class _TransactionFilterSheetState
                       child: _buildDateButton(
                         context,
                         _state.startDate,
-                        'Başlangıç',
+                        l.startDate,
                         (date) => setState(
                           () => _state = _state.copyWith(startDate: date),
                         ),
@@ -152,7 +152,7 @@ class _TransactionFilterSheetState
                       child: _buildDateButton(
                         context,
                         _state.endDate,
-                        'Bitiş',
+                        l.endDate,
                         (date) => setState(
                           () => _state = _state.copyWith(endDate: date),
                         ),
@@ -231,7 +231,8 @@ class _TransactionFilterSheetState
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? colorTheme.surfaceDark : Colors.white,),
+              color: isDark ? colorTheme.surfaceDark : Colors.white,
+            ),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -246,7 +247,7 @@ class _TransactionFilterSheetState
                   ),
                 ),
                 child: Text(
-                  'Uygula', // Localize
+                  l.apply,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
