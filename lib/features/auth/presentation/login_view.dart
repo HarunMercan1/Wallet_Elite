@@ -94,7 +94,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     padding: responsive.allPadding,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: responsive.borderRadiusL,),
+                      borderRadius: responsive.borderRadiusL,
+                    ),
                     child: Form(
                       key: _formKey,
                       child: Column(

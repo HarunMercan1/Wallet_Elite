@@ -344,10 +344,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     // Avatar yükleme (galeri resmi)
     if (_selectedImage != null) {
       final bytes = await _selectedImage!.readAsBytes();
-      final uploadedUrl = await authRepo.uploadAvatar(
-        widget.profile.id,
-        bytes.toList(),
-      );
+      final uploadedUrl = await authRepo.uploadAvatar(widget.profile.id, bytes);
       if (uploadedUrl != null) {
         newAvatarUrl = uploadedUrl;
       }
@@ -466,7 +463,9 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: colorTheme.primary.withValues(alpha: 0.3),
+                                color: colorTheme.primary.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),

@@ -506,7 +506,9 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
           Container(
             padding: EdgeInsets.all(r.paddingM),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.7)]),
+              gradient: LinearGradient(
+                colors: [color, color.withValues(alpha: 0.7)],
+              ),
               borderRadius: r.borderRadiusS,
             ),
             child: Icon(
@@ -770,7 +772,9 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                       borderRadius: r.borderRadiusM,
                       boxShadow: [
                         BoxShadow(
-                          color: (theme['primary'] as Color).withValues(alpha: 0.4),
+                          color: (theme['primary'] as Color).withValues(
+                            alpha: 0.4,
+                          ),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),

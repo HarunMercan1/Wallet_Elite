@@ -210,6 +210,12 @@ class AuthRepository {
 
   /// Hesabı ve tüm verileri kalıcı olarak sil (delete_my_account RPC)
   Future<bool> deleteAccount() async {
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId == null) return false;
+
+    // Profil fotoğraflarını sil (Storage dosyaları veritabanı silmesiyle gitmez)
+    await _removeAvatarFiles(userId);
+
     try {
       await _supabase.rpc('delete_my_account');
     } catch (e) {
@@ -300,7 +306,7 @@ class AuthRepository {
   }
 
   /// Avatar yükle (Supabase Storage)
-  Future<String?> uploadAvatar(String userId, List<int> imageBytes) async {
+  Future<String?> uploadAvatar(String userId, Uint8List imageBytes) async {
     try {
       final fileName =
           '$userId/avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -310,12 +316,15 @@ class AuthRepository {
           .from('avatars')
           .uploadBinary(
             fileName,
-            imageBytes as dynamic,
+            imageBytes,
             fileOptions: const FileOptions(
               contentType: 'image/jpeg',
               upsert: true,
             ),
           );
+
+      // Eski avatarları temizle (her yüklemede yeni dosya adı kullanılıyor)
+      await _removeAvatarFiles(userId, except: fileName);
 
       // Public URL al
       final publicUrl = _supabase.storage
@@ -333,6 +342,22 @@ class AuthRepository {
     } catch (e) {
       debugPrint('❌ Avatar yükleme hatası: $e');
       return null;
+    }
+  }
+
+  /// Kullanıcının avatars/{userId}/ klasöründeki dosyaları sil
+  Future<void> _removeAvatarFiles(String userId, {String? except}) async {
+    try {
+      final files = await _supabase.storage.from('avatars').list(path: userId);
+      final paths = files
+          .map((f) => '$userId/${f.name}')
+          .where((p) => p != except)
+          .toList();
+      if (paths.isNotEmpty) {
+        await _supabase.storage.from('avatars').remove(paths);
+      }
+    } catch (e) {
+      debugPrint('Avatar temizleme hatası: $e');
     }
   }
 
