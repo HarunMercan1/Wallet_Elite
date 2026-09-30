@@ -633,44 +633,8 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     ColorTheme colorTheme,
     bool isDark,
   ) {
-    final themes = [
-      {
-        'name': _l.themeOcean,
-        'primary': const Color(0xFF2196F3),
-        'accent': const Color(0xFF00BCD4),
-        'icon': Icons.water,
-      },
-      {
-        'name': _l.themeSunset,
-        'primary': const Color(0xFFFF6B35),
-        'accent': const Color(0xFFFFD93D),
-        'icon': Icons.wb_twilight,
-      },
-      {
-        'name': _l.themeForest,
-        'primary': const Color(0xFF4CAF50),
-        'accent': const Color(0xFF8BC34A),
-        'icon': Icons.park,
-      },
-      {
-        'name': _l.themeLavender,
-        'primary': const Color(0xFF9C27B0),
-        'accent': const Color(0xFFE91E63),
-        'icon': Icons.local_florist,
-      },
-      {
-        'name': _l.themeMidnight,
-        'primary': const Color(0xFF3F51B5),
-        'accent': const Color(0xFF7C4DFF),
-        'icon': Icons.nightlight,
-      },
-      {
-        'name': _l.themeRose,
-        'primary': const Color(0xFFE91E63),
-        'accent': const Color(0xFFFF4081),
-        'icon': Icons.favorite,
-      },
-    ];
+    // Uygulamadaki gerçek temalar (ücretsiz olan önce)
+    final themes = [...ColorTheme.freeThemes, ...ColorTheme.premiumThemes];
 
     return Padding(
       padding: EdgeInsets.all(r.paddingL),
@@ -725,41 +689,73 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          theme['primary'] as Color,
-                          theme['accent'] as Color,
-                        ],
+                        colors: [theme.primary, theme.accent],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: r.borderRadiusM,
                       boxShadow: [
                         BoxShadow(
-                          color: (theme['primary'] as Color).withValues(
-                            alpha: 0.4,
-                          ),
+                          color: theme.primary.withValues(alpha: 0.4),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
                       ],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Stack(
                       children: [
-                        Icon(
-                          theme['icon'] as IconData,
-                          size: r.iconXL,
-                          color: Colors.white,
-                        ),
-                        SizedBox(height: r.hp(1)),
-                        Text(
-                          theme['name'] as String,
-                          style: TextStyle(
-                            fontSize: r.fontM,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.palette,
+                                size: r.iconXL,
+                                color: Colors.white,
+                              ),
+                              SizedBox(height: r.hp(1)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Text(
+                                  theme.name,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: r.fontM,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        if (theme.isPremium)
+                          Positioned(
+                            top: 8,
+                            left: 8,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.35),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                'PRO',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),

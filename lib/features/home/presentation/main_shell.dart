@@ -41,6 +41,10 @@ class MainShell extends ConsumerWidget {
     final r = ResponsiveHelper.of(context);
 
     return Scaffold(
+      // İşlem ekleme gibi alt pencerelerde klavye açılınca arkadaki tüm
+      // sekmeler (grafikler dahil) her karede yeniden boyutlanmasın.
+      // Sekmelerdeki metin alanları kendi Scaffold/scroll'ları ile kayar.
+      resizeToAvoidBottomInset: false,
       body: IndexedStack(
         index: selectedTab,
         children: const [

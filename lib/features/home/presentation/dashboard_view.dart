@@ -53,111 +53,121 @@ class DashboardView extends ConsumerWidget {
 
     return Scaffold(
       // Background color comes from AppTheme (scaffoldBackgroundColor)
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header - Kullanıcı Kartı
-          _buildUserHeader(context, userProfile, l, colorTheme, isDark),
-
-          const SizedBox(height: 24),
-
-          // Toplam Bakiye Kartı
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _buildTotalBalanceCard(
-              context,
-              ref,
-              accounts,
-              selectedWalletId,
-              totalIncome,
-              totalExpense,
-              l,
-              isDark,
-              colorTheme,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Hızlı Erişim Butonları
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
+      // Tüm ekran kaydırılabilir: banner reklam veya küçük ekran yüksekliği
+      // azalttığında içerik taşmaz (önceden sabit sütun + Expanded idi).
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _buildQuickActionTile(
+                // Header - Kullanıcı Kartı
+                _buildUserHeader(context, userProfile, l, colorTheme, isDark),
+
+                const SizedBox(height: 24),
+
+                // Toplam Bakiye Kartı
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _buildTotalBalanceCard(
                     context,
-                    label: l.debtTracking,
-                    accentColor: colorTheme.primary,
-                    colorTheme: colorTheme,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const DebtsView()),
-                    ),
+                    ref,
+                    accounts,
+                    selectedWalletId,
+                    totalIncome,
+                    totalExpense,
+                    l,
+                    isDark,
+                    colorTheme,
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _buildQuickActionTile(
-                    context,
-                    label: l.budgets,
-                    accentColor: colorTheme.success,
-                    colorTheme: colorTheme,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const BudgetsView()),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _buildQuickActionTile(
-                    context,
-                    label: l.recurringTransactions,
-                    accentColor: colorTheme.tertiary,
-                    colorTheme: colorTheme,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const RecurringTransactionsView(),
+
+                const SizedBox(height: 16),
+
+                // Hızlı Erişim Butonları
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickActionTile(
+                          context,
+                          label: l.debtTracking,
+                          accentColor: colorTheme.primary,
+                          colorTheme: colorTheme,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const DebtsView(),
+                            ),
+                          ),
+                        ),
                       ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildQuickActionTile(
+                          context,
+                          label: l.budgets,
+                          accentColor: colorTheme.success,
+                          colorTheme: colorTheme,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const BudgetsView(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildQuickActionTile(
+                          context,
+                          label: l.recurringTransactions,
+                          accentColor: colorTheme.tertiary,
+                          colorTheme: colorTheme,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const RecurringTransactionsView(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Son İşlemler Başlığı
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    l.recentTransactions,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 12),
               ],
             ),
           ),
 
-          const SizedBox(height: 24),
-
-          // Son İşlemler Başlığı
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              l.recentTransactions,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: colorTheme.textPrimary,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
           // Son İşlemler Listesi
-          Expanded(
-            child: _buildTransactionsList(
-              context,
-              ref,
-              transactions,
-              categories,
-              l,
-              colorTheme,
-            ),
+          _buildTransactionsList(
+            context,
+            ref,
+            transactions,
+            categories,
+            l,
+            colorTheme,
           ),
 
-          const SizedBox(height: 16), // Alt boşluk
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
         ],
       ),
     );
@@ -501,78 +511,79 @@ class DashboardView extends ConsumerWidget {
   ) {
     return transactions.when(
       data: (List<TransactionModel> transactionsList) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            if (transactionsList.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(32),
-                child: Center(
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.receipt_long_outlined,
-                        size: 56,
-                        color: Colors.grey[400],
-                      ),
-                      const SizedBox(height: 14),
-                      Text(
-                        l.noTransactions,
-                        style: TextStyle(color: Colors.grey[500], fontSize: 15),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        l.addFirstTransaction,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 13),
-                      ),
-                    ],
-                  ),
+        if (transactionsList.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.receipt_long_outlined,
+                      size: 56,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      l.noTransactions,
+                      style: TextStyle(color: Colors.grey[500], fontSize: 15),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      l.addFirstTransaction,
+                      style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+          );
+        }
+
+        final categoryMap = <String, CategoryModel>{
+          for (final cat in categories.valueOrNull ?? const <CategoryModel>[])
+            cat.id: cat,
+        };
+
+        // Ana sayfada son işlemler; tamamı İşlemler sekmesinde
+        const maxRecent = 10;
+        final displayTransactions = transactionsList.take(maxRecent).toList();
+
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverList.builder(
+            itemCount: displayTransactions.length,
+            itemBuilder: (context, index) {
+              final transaction = displayTransactions[index];
+              final category = transaction.categoryId != null
+                  ? categoryMap[transaction.categoryId]
+                  : null;
+              return _buildTransactionItem(
+                context,
+                ref,
+                transaction,
+                category,
+                l,
+                colorTheme,
               );
-            }
-
-            Map<String, CategoryModel> categoryMap = {};
-            if (categories.hasValue) {
-              for (var cat in categories.value!) {
-                categoryMap[cat.id] = cat;
-              }
-            }
-
-            // Estimate item height (68px card + 10px margin = ~78px). Using 80 to be safe.
-            const double itemHeight = 80;
-            final int maxItems = (constraints.maxHeight / itemHeight).floor();
-            // Ensure we show at least 1 if there's space, but clamp to list length
-            final int count = maxItems.clamp(0, transactionsList.length);
-            final displayTransactions = transactionsList.take(count).toList();
-
-            return ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: displayTransactions.length,
-              itemBuilder: (context, index) {
-                final transaction = displayTransactions[index];
-                final category = transaction.categoryId != null
-                    ? categoryMap[transaction.categoryId]
-                    : null;
-                return _buildTransactionItem(
-                  context,
-                  ref,
-                  transaction,
-                  category,
-                  l,
-                  colorTheme,
-                );
-              },
-            );
-          },
+            },
+          ),
         );
       },
-      loading: () => const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: CircularProgressIndicator(),
+      loading: () => const SliverToBoxAdapter(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(32),
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
-      error: (_, __) => Text(l.error),
+      error: (_, __) => SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Center(child: Text(l.error)),
+        ),
+      ),
     );
   }
 

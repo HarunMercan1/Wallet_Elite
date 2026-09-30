@@ -671,7 +671,7 @@ class DebtsView extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        height: MediaQuery.of(context).size.height * 0.75,
+        height: MediaQuery.sizeOf(context).height * 0.75,
         decoration: BoxDecoration(
           color: isDark ? colorTheme.backgroundDark : Colors.white,
           borderRadius: const BorderRadius.only(

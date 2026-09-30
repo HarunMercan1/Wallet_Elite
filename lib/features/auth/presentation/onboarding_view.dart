@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
+import '../../../core/theme/premium_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/auth_provider.dart';
@@ -31,7 +32,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
 
   // Selections
   String _selectedLanguage = 'tr';
-  String _selectedTheme = 'ocean';
+  String _selectedTheme = 'midnight';
   String _selectedCurrency = 'TRY';
   String _selectedAccountType = 'cash';
   bool _isDarkMode = false;
@@ -756,50 +757,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
   ) {
     final l10n = AppLocalizations.of(context)!;
 
-    final themes = [
-      {
-        'id': 'ocean',
-        'name': l10n.themeOcean,
-        'primary': const Color(0xFF2196F3),
-        'accent': const Color(0xFF00BCD4),
-        'icon': Icons.water,
-      },
-      {
-        'id': 'sunset',
-        'name': l10n.themeSunset,
-        'primary': const Color(0xFFFF6B35),
-        'accent': const Color(0xFFFFD93D),
-        'icon': Icons.wb_twilight,
-      },
-      {
-        'id': 'forest',
-        'name': l10n.themeForest,
-        'primary': const Color(0xFF4CAF50),
-        'accent': const Color(0xFF8BC34A),
-        'icon': Icons.park,
-      },
-      {
-        'id': 'lavender',
-        'name': l10n.themeLavender,
-        'primary': const Color(0xFF9C27B0),
-        'accent': const Color(0xFFE91E63),
-        'icon': Icons.local_florist,
-      },
-      {
-        'id': 'midnight',
-        'name': l10n.themeMidnight,
-        'primary': const Color(0xFF3F51B5),
-        'accent': const Color(0xFF7C4DFF),
-        'icon': Icons.nightlight,
-      },
-      {
-        'id': 'rose',
-        'name': l10n.themeRose,
-        'primary': const Color(0xFFE91E63),
-        'accent': const Color(0xFFFF4081),
-        'icon': Icons.favorite,
-      },
-    ];
+    // Uygulamadaki gerçek temalar; ücretsiz olan önce. Premium temalar
+    // kilitli gösterilir (seçilse bile currentColorThemeProvider ücretsize düşer).
+    final themes = [...ColorTheme.freeThemes, ...ColorTheme.premiumThemes];
 
     return Padding(
       padding: EdgeInsets.all(r.paddingL),
@@ -848,25 +808,31 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               itemCount: themes.length,
               itemBuilder: (context, index) {
                 final theme = themes[index];
-                final isSelected = _selectedTheme == theme['id'];
+                final isSelected = _selectedTheme == theme.id;
+                final isLocked =
+                    theme.isPremium &&
+                    !ref.watch(canUseThemeProvider(theme.id));
 
                 return _ScaleInWidget(
                   delay: 200 + (index * 80),
                   child: GestureDetector(
                     onTap: () {
-                      setState(() => _selectedTheme = theme['id'] as String);
+                      if (isLocked) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(l10n.goPremiumDesc)),
+                        );
+                        return;
+                      }
+                      setState(() => _selectedTheme = theme.id);
                       ref
                           .read(colorSchemeProvider.notifier)
-                          .setColorScheme(theme['id'] as String);
+                          .setColorScheme(theme.id);
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [
-                            theme['primary'] as Color,
-                            theme['accent'] as Color,
-                          ],
+                          colors: [theme.primary, theme.accent],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -878,9 +844,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: (theme['primary'] as Color).withValues(
-                                    alpha: 0.5,
-                                  ),
+                                  color: theme.primary.withValues(alpha: 0.5),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -894,22 +858,53 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  theme['icon'] as IconData,
+                                  isLocked ? Icons.lock : Icons.palette,
                                   color: Colors.white,
                                   size: r.iconL,
                                 ),
                                 SizedBox(height: r.hp(1)),
-                                Text(
-                                  theme['name'] as String,
-                                  style: TextStyle(
-                                    fontSize: r.fontM,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Text(
+                                    theme.name,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: r.fontM,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
+                          if (theme.isPremium)
+                            Positioned(
+                              top: 8,
+                              left: 8,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.35),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Text(
+                                  'PRO',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           if (isSelected)
                             Positioned(
                               top: 8,

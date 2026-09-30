@@ -68,7 +68,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         : ref.watch(expenseCategoriesProvider);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+      height: MediaQuery.sizeOf(context).height * 0.85,
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: const BorderRadius.only(

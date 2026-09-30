@@ -70,7 +70,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.sizeOf(context).height * 0.6,
         decoration: BoxDecoration(
           color: isDark ? colorTheme.backgroundDark : Colors.white,
           borderRadius: const BorderRadius.only(
@@ -393,7 +393,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     final currentUser = ref.watch(currentUserProvider).value;
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
+      height: MediaQuery.sizeOf(context).height * 0.7,
       decoration: BoxDecoration(
         color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: const BorderRadius.only(

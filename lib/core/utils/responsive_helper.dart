@@ -11,7 +11,9 @@ class ResponsiveHelper {
   late final double _height;
 
   ResponsiveHelper(this.context) {
-    _screenSize = MediaQuery.of(context).size;
+    // sizeOf: yalnızca ekran boyutuna bağımlı ol; klavye açılırken her karede
+    // değişen viewInsets yüzünden tüm ekranlar yeniden çizilmesin.
+    _screenSize = MediaQuery.sizeOf(context);
     _width = _screenSize.width;
     _height = _screenSize.height;
   }

@@ -36,7 +36,7 @@ class _TransactionFilterSheetState
     final categoriesAsync = ref.watch(categoriesProvider);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+      height: MediaQuery.sizeOf(context).height * 0.85,
       decoration: BoxDecoration(
         color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: const BorderRadius.only(

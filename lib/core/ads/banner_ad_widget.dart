@@ -29,7 +29,7 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
 
   Future<void> _maybeLoad() async {
     if (!ref.read(showAdsProvider)) return;
-    final width = MediaQuery.of(context).size.width.truncate();
+    final width = MediaQuery.sizeOf(context).width.truncate();
     if (_loadedForWidth == width && _banner != null) return;
     _loadedForWidth = width;
 

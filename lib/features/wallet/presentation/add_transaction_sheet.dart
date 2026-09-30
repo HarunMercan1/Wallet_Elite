@@ -591,7 +591,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         final l = AppLocalizations.of(context)!;
         return StatefulBuilder(
           builder: (ctx, setSheetState) => Container(
-            height: MediaQuery.of(context).size.height * 0.7,
+            height: MediaQuery.sizeOf(context).height * 0.7,
             decoration: BoxDecoration(
               color: isDark ? colorTheme.backgroundDark : Colors.white,
               borderRadius: const BorderRadius.only(

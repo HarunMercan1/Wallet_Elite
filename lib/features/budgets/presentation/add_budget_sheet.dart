@@ -65,7 +65,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
     final categoriesAsync = ref.watch(categoriesProvider);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+      height: MediaQuery.sizeOf(context).height * 0.85,
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -245,7 +245,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
               16,
               0,
               16,
-              MediaQuery.of(context).padding.bottom + 16,
+              MediaQuery.paddingOf(context).bottom + 16,
             ),
             child: SizedBox(
               width: double.infinity,

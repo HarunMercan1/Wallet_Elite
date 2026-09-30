@@ -41,7 +41,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
-    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    final bottomPadding = MediaQuery.viewInsetsOf(context).bottom;
 
     return Container(
       margin: EdgeInsets.only(bottom: bottomPadding),

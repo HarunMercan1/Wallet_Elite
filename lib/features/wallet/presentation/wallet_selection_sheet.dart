@@ -34,7 +34,7 @@ class WalletSelectionSheet extends ConsumerWidget {
     final selectedWalletId = ref.watch(selectedWalletIdProvider);
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.sizeOf(context).height * 0.6,
       decoration: BoxDecoration(
         color: isDark ? colorTheme.backgroundDark : Colors.white,
         borderRadius: const BorderRadius.only(
