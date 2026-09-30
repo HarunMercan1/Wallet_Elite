@@ -953,214 +953,212 @@ class AppLocalizationsKo extends AppLocalizations {
   String get reset => '초기화';
 
   @override
-  String get recurringTransactions => 'Recurring Transactions';
+  String get recurringTransactions => '반복 거래';
 
   @override
-  String get addRecurringTransaction => 'Add Recurring Transaction';
+  String get addRecurringTransaction => '반복 거래 추가';
 
   @override
-  String get editRecurringTransaction => 'Edit Recurring Transaction';
+  String get editRecurringTransaction => '반복 거래 수정';
 
   @override
-  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+  String get deleteRecurringTransaction => '반복 거래 삭제';
 
   @override
-  String get deleteRecurringConfirmation =>
-      'Are you sure you want to delete this recurring transaction?';
+  String get deleteRecurringConfirmation => '이 반복 거래를 삭제하시겠습니까?';
 
   @override
-  String get noRecurringTransactions => 'No recurring transactions yet';
+  String get noRecurringTransactions => '아직 반복 거래가 없습니다';
 
   @override
-  String get addRecurringTransactionHint =>
-      'Save time by adding regular transactions like salary and bills';
+  String get addRecurringTransactionHint => '급여, 청구서 등 정기 거래를 추가하여 시간을 절약하세요';
 
   @override
-  String get frequency => 'Frequency';
+  String get frequency => '빈도';
 
   @override
-  String get yearly => 'Yearly';
+  String get yearly => '연간';
 
   @override
-  String get dayOfMonth => 'Day of Month';
+  String get dayOfMonth => '월의 날';
 
   @override
-  String get dayOfWeek => 'Day of Week';
+  String get dayOfWeek => '요일';
 
   @override
-  String get nextExecution => 'Next Execution';
+  String get nextExecution => '다음 실행';
 
   @override
-  String get active => 'Active';
+  String get active => '활성';
 
   @override
-  String get inactive => 'Inactive';
+  String get inactive => '비활성';
 
   @override
-  String get optional => 'Optional';
+  String get optional => '선택사항';
 
   @override
-  String get monday => 'Monday';
+  String get monday => '월요일';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => '화요일';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => '수요일';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => '목요일';
 
   @override
-  String get friday => 'Friday';
+  String get friday => '금요일';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => '토요일';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => '일요일';
 
   @override
-  String get description => 'Description';
+  String get description => '설명';
 
   @override
-  String get descriptionHint => 'e.g. Netflix subscription';
+  String get descriptionHint => '예: 넷플릭스 구독';
 
   @override
-  String get selectAccount => 'Select Account';
+  String get selectAccount => '계좌 선택';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => '카테고리 선택';
 
   @override
-  String get pleaseEnterAmount => 'Please enter amount';
+  String get pleaseEnterAmount => '금액을 입력하세요';
 
   @override
-  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+  String get pleaseEnterValidAmount => '유효한 금액을 입력하세요';
 
   @override
-  String get pleaseSelectAccount => 'Please select an account';
+  String get pleaseSelectAccount => '계좌를 선택하세요';
 
   @override
-  String get budget => 'Budget';
+  String get budget => '예산';
 
   @override
-  String get addBudget => 'Add Budget';
+  String get addBudget => '예산 추가';
 
   @override
-  String get editBudget => 'Edit Budget';
+  String get editBudget => '예산 수정';
 
   @override
-  String get deleteBudget => 'Delete Budget';
+  String get deleteBudget => '예산 삭제';
 
   @override
-  String get deleteBudgetConfirmation =>
-      'Are you sure you want to delete this budget?';
+  String get deleteBudgetConfirmation => '이 예산을 삭제하시겠습니까?';
 
   @override
-  String get noBudgets => 'No budgets yet';
+  String get noBudgets => '아직 예산이 없습니다';
 
   @override
-  String get addBudgetHint =>
-      'Create a budget to keep your expenses under control';
+  String get addBudgetHint => '지출을 관리하기 위한 예산을 만드세요';
 
   @override
-  String get budgetName => 'Budget Name';
+  String get budgetName => '예산 이름';
 
   @override
-  String get budgetNameHint => 'e.g. Monthly Food Budget';
+  String get budgetNameHint => '예: 월간 식비 예산';
 
   @override
-  String get pleaseEnterBudgetName => 'Please enter budget name';
+  String get pleaseEnterBudgetName => '예산 이름을 입력하세요';
 
   @override
-  String get budgetAmount => 'Budget Limit';
+  String get budgetAmount => '예산 한도';
 
   @override
-  String get budgetPeriod => 'Budget Period';
+  String get budgetPeriod => '예산 기간';
 
   @override
-  String get budgetStartDay => 'Period Start Day';
+  String get budgetStartDay => '기간 시작일';
 
   @override
-  String get allExpenses => 'All Expenses';
+  String get allExpenses => '모든 지출';
 
   @override
-  String get notifyAtPercent => 'Warning Percentage';
+  String get notifyAtPercent => '경고 퍼센트';
 
   @override
-  String get notifyWhenExceeded => 'Notify when exceeded';
+  String get notifyWhenExceeded => '초과 시 알림';
 
   @override
-  String get used => 'used';
+  String get used => '사용됨';
 
   @override
-  String get exceeded => 'exceeded';
+  String get exceeded => '초과';
 
   @override
-  String get secureData => 'Your data is secure and encrypted';
+  String get secureData => '데이터는 안전하게 암호화됩니다';
 
   @override
-  String get cloudSync => 'Sync across all your devices';
+  String get cloudSync => '모든 기기에서 동기화';
 
   @override
-  String get smartInsights => 'Smart insights about your finances';
+  String get smartInsights => '재정에 대한 스마트 인사이트';
 
   @override
-  String get discoverFeatures => 'Discover Features';
+  String get discoverFeatures => '기능 살펴보기';
 
   @override
-  String get discoverFeaturesDesc =>
-      'Everything you need to manage your finances';
+  String get discoverFeaturesDesc => '재정 관리에 필요한 모든 것';
 
   @override
-  String get budgetTracking => 'Budget Tracking';
+  String get budgetTracking => '예산 추적';
 
   @override
-  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+  String get budgetTrackingDesc => '지출 한도를 설정하고 지키세요';
 
   @override
-  String get recurringTransactionsDesc => 'Automate your regular payments';
+  String get recurringTransactionsDesc => '정기 결제를 자동화하세요';
 
   @override
-  String get selectLanguageDesc => 'Choose your preferred language';
+  String get selectLanguageDesc => '선호하는 언어를 선택하세요';
 
   @override
-  String get selectThemeDesc => 'Personalize your app experience';
+  String get selectThemeDesc => '앱 경험을 개인화하세요';
 
   @override
-  String get themeOcean => 'Ocean';
+  String get themeOcean => '오션';
 
   @override
-  String get themeSunset => 'Sunset';
+  String get themeSunset => '선셋';
 
   @override
-  String get themeForest => 'Forest';
+  String get themeForest => '숲';
 
   @override
-  String get themeLavender => 'Lavender';
+  String get themeLavender => '라벤더';
 
   @override
-  String get themeMidnight => 'Midnight';
+  String get themeMidnight => '미드나이트';
 
   @override
-  String get themeRose => 'Rose';
+  String get themeRose => '로즈';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => '다크 모드';
 
   @override
-  String get japaneseYen => 'Japanese Yen';
+  String get japaneseYen => '일본 엔';
 
   @override
-  String get russianRuble => 'Russian Ruble';
+  String get russianRuble => '러시아 루블';
 
   @override
-  String get categoryDistribution => 'Category Distribution';
+  String get categoryDistribution => '카테고리 분포';
 
   @override
-  String get other => 'Other';
+  String get other => '기타';
 
   @override
-  String get last7DaysSpending => 'Last 7 Days Spending';
+  String get last7DaysSpending => '최근 7일 지출';
+
+  @override
+  String get currencyLabel => '통화';
 }

@@ -1,5 +1,7 @@
 // lib/features/wallet/models/account_model.dart
 
+import '../../../core/utils/currency_utils.dart';
+
 /// Cüzdan hesabı modeli (accounts tablosu)
 class AccountModel {
   final String id;
@@ -7,7 +9,21 @@ class AccountModel {
   final String name;
   final String type; // bank, cash, gold, credit_card
   final double balance;
+  final String currency;
   final DateTime createdAt;
+
+  String get currencySymbol {
+    switch (currency) {
+      case 'USD':
+        return '\$';
+      case 'EUR':
+        return '€';
+      case 'GBP':
+        return '£';
+      default:
+        return CurrencyUtils.getSymbol(currency);
+    }
+  }
 
   AccountModel({
     required this.id,
@@ -15,6 +31,7 @@ class AccountModel {
     required this.name,
     required this.type,
     required this.balance,
+    required this.currency,
     required this.createdAt,
   });
 
@@ -26,6 +43,7 @@ class AccountModel {
       name: json['name'] as String,
       type: json['type'] as String,
       balance: (json['balance'] as num).toDouble(),
+      currency: json['currency'] as String? ?? 'TRY',
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -38,6 +56,7 @@ class AccountModel {
       'name': name,
       'type': type,
       'balance': balance,
+      'currency': currency,
       'created_at': createdAt.toIso8601String(),
     };
   }
@@ -49,6 +68,7 @@ class AccountModel {
     String? name,
     String? type,
     double? balance,
+    String? currency,
     DateTime? createdAt,
   }) {
     return AccountModel(
@@ -57,6 +77,7 @@ class AccountModel {
       name: name ?? this.name,
       type: type ?? this.type,
       balance: balance ?? this.balance,
+      currency: currency ?? this.currency,
       createdAt: createdAt ?? this.createdAt,
     );
   }

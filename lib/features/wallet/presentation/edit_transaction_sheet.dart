@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/wallet/presentation/edit_transaction_sheet.dart
 
 import 'package:flutter/material.dart';
@@ -143,7 +145,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                             (_transactionType == 'expense'
                                     ? colorTheme.error
                                     : AppColors.success)
-                                .withOpacity(0.1),
+                                .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -194,7 +196,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         ),
                       ],
                       decoration: InputDecoration(
-                        prefixText: '₺ ',
+                        prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                         prefixStyle: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -526,18 +528,14 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     try {
       final supabase = Supabase.instance.client;
 
-      // Get old transaction (for balance revert)
-      final oldAmount = widget.transaction.amount;
-      final oldType = widget.transaction.type;
-      final oldAccountId = widget.transaction.accountId;
-
       // New values
       final newAmount = double.parse(_amountController.text);
       final newDescription = _descriptionController.text.isEmpty
           ? null
           : _descriptionController.text;
 
-      // Update transaction
+      // Update transaction (eski/yeni cüzdan bakiyeleri DB trigger'ı ile
+      // aynı işlem içinde düzeltilir)
       await supabase
           .from('transactions')
           .update({
@@ -548,21 +546,6 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
             'account_id': _selectedAccountId,
           })
           .eq('id', widget.transaction.id);
-
-      // Update balances
-      // 1. Revert old amount from old account
-      if (oldType == 'income') {
-        await _updateAccountBalance(oldAccountId, -oldAmount);
-      } else {
-        await _updateAccountBalance(oldAccountId, oldAmount);
-      }
-
-      // 2. Add new amount to new account
-      if (_transactionType == 'income') {
-        await _updateAccountBalance(_selectedAccountId!, newAmount);
-      } else {
-        await _updateAccountBalance(_selectedAccountId!, -newAmount);
-      }
 
       // Refresh providers
       ref.invalidate(transactionsProvider);
@@ -590,19 +573,5 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         );
       }
     }
-  }
-
-  Future<void> _updateAccountBalance(String accountId, double delta) async {
-    final supabase = Supabase.instance.client;
-    final account = await supabase
-        .from('accounts')
-        .select('balance')
-        .eq('id', accountId)
-        .single();
-    final currentBalance = (account['balance'] as num).toDouble();
-    await supabase
-        .from('accounts')
-        .update({'balance': currentBalance + delta})
-        .eq('id', accountId);
   }
 }

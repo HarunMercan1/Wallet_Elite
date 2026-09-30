@@ -307,7 +307,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 backgroundColor: colorTheme.primary,
                                 foregroundColor: Colors.white,
                                 disabledBackgroundColor: colorTheme.primary
-                                    .withOpacity(0.7),
+                                    .withValues(alpha: 0.7),
                                 disabledForegroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: responsive.borderRadiusM,
@@ -362,7 +362,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                     final errorMessage = await authController
                                         .signInWithGoogle();
 
-                                    if (!mounted) return;
+                                    if (!context.mounted) return;
                                     setState(() => _isGoogleLoading = false);
 
                                     if (errorMessage != null &&
@@ -575,7 +575,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
               if (emailController.text.isNotEmpty) {
                 final authController = ref.read(authControllerProvider);
                 await authController.resetPassword(emailController.text.trim());
-                if (mounted) {
+                if (context.mounted) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

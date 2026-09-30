@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/features/auth/data/auth_repository.dart
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -27,7 +28,9 @@ class AuthRepository {
     required String fullName,
   }) async {
     try {
-      print('🔄 Email ile kayıt başlatılıyor: $email, fullName: $fullName');
+      debugPrint(
+        '🔄 Email ile kayıt başlatılıyor: $email, fullName: $fullName',
+      );
 
       final response = await _supabase.auth.signUp(
         email: email,
@@ -35,12 +38,12 @@ class AuthRepository {
         data: {'full_name': fullName, 'display_name': fullName},
       );
 
-      print(
+      debugPrint(
         '📧 Kayıt response: user=${response.user?.id}, session=${response.session != null}',
       );
 
       if (response.user != null) {
-        print('✅ Kayıt başarılı! User ID: ${response.user!.id}');
+        debugPrint('✅ Kayıt başarılı! User ID: ${response.user!.id}');
 
         // Profil tablosunda full_name'i güncelle (trigger yoksa manuel)
         try {
@@ -48,21 +51,21 @@ class AuthRepository {
             'id': response.user!.id,
             'full_name': fullName,
           });
-          print('✅ Profil güncellendi: $fullName');
+          debugPrint('✅ Profil güncellendi: $fullName');
         } catch (e) {
-          print(
+          debugPrint(
             '⚠️ Profil güncellenirken hata (trigger varsa sorun değil): $e',
           );
         }
 
         return {'success': true};
       } else {
-        print('⚠️ Kayıt response geldi ama user null');
+        debugPrint('⚠️ Kayıt response geldi ama user null');
         return {'success': false, 'error': 'Kayıt işlemi başarısız oldu'};
       }
     } on AuthException catch (e) {
-      print('❌ AuthException: ${e.message}');
-      print('   Status Code: ${e.statusCode}');
+      debugPrint('❌ AuthException: ${e.message}');
+      debugPrint('   Status Code: ${e.statusCode}');
       String errorMessage = 'Kayıt başarısız';
       if (e.message.contains('already registered')) {
         errorMessage = 'Bu e-posta adresi zaten kullanılıyor';
@@ -73,8 +76,8 @@ class AuthRepository {
       }
       return {'success': false, 'error': errorMessage};
     } catch (e) {
-      print('❌ Email kayıt hatası: $e');
-      print('   Hata tipi: ${e.runtimeType}');
+      debugPrint('❌ Email kayıt hatası: $e');
+      debugPrint('   Hata tipi: ${e.runtimeType}');
       if (e.toString().contains('SocketException') ||
           e.toString().contains('host lookup') ||
           e.toString().contains('Network is unreachable')) {
@@ -90,18 +93,18 @@ class AuthRepository {
     String password,
   ) async {
     try {
-      print('🔄 Email ile giriş yapılıyor: $email');
+      debugPrint('🔄 Email ile giriş yapılıyor: $email');
       final response = await _supabase.auth.signInWithPassword(
         email: email,
         password: password,
       );
       if (response.user != null) {
-        print('✅ Giriş başarılı! User ID: ${response.user!.id}');
+        debugPrint('✅ Giriş başarılı! User ID: ${response.user!.id}');
         return {'success': true};
       }
       return {'success': false, 'error': 'Giriş başarısız'};
     } on AuthException catch (e) {
-      print('❌ AuthException: ${e.message}');
+      debugPrint('❌ AuthException: ${e.message}');
       String errorMessage = 'Giriş başarısız';
       if (e.message.contains('Invalid login credentials')) {
         errorMessage = 'E-posta veya şifre hatalı';
@@ -112,7 +115,7 @@ class AuthRepository {
       }
       return {'success': false, 'error': errorMessage};
     } catch (e) {
-      print('Email giriş hatası: $e');
+      debugPrint('Email giriş hatası: $e');
       if (e.toString().contains('SocketException') ||
           e.toString().contains('host lookup') ||
           e.toString().contains('Network is unreachable')) {
@@ -128,7 +131,7 @@ class AuthRepository {
       await _supabase.auth.resetPasswordForEmail(email);
       return true;
     } catch (e) {
-      print('Şifre sıfırlama hatası: $e');
+      debugPrint('Şifre sıfırlama hatası: $e');
       return false;
     }
   }
@@ -160,36 +163,17 @@ class AuthRepository {
       }
 
       // 5. Supabase'e giriş yap
-      final response = await _supabase.auth.signInWithIdToken(
+      // Profil, DB'deki handle_new_user trigger'ı ile onboarding_completed=false
+      // olarak oluşturulur; router yeni kullanıcıyı onboarding'e yönlendirir.
+      await _supabase.auth.signInWithIdToken(
         provider: OAuthProvider.google,
         idToken: idToken,
         accessToken: accessToken,
       );
 
-      // 6. Profil kontrolü yap (yoksa oluştur)
-      if (response.user != null) {
-        final userId = response.user!.id;
-        final fullName = googleUser.displayName ?? 'Google User';
-        final avatarUrl = googleUser.photoUrl;
-
-        // Mevcut profili kontrol et
-        final existingProfile = await getProfile(userId);
-
-        if (existingProfile == null) {
-          // Yeni profil oluştur
-          await _supabase.from('profiles').upsert({
-            'id': userId,
-            'full_name': fullName,
-            'avatar_url': avatarUrl,
-            'is_premium': false,
-            'onboarding_completed': true,
-          });
-        }
-      }
-
       return null; // Başarılı, hata yok
     } catch (e) {
-      print('Google giriş hatası: $e');
+      debugPrint('Google giriş hatası: $e');
       if (e.toString().contains('ApiException: 10')) {
         return 'Google Yapılandırma Hatası (Hata: 10).\nLütfen SHA-1 ve Paket Adını kontrol edin.';
       }
@@ -203,7 +187,7 @@ class AuthRepository {
   /// Apple ile giriş yap
   Future<bool> signInWithApple() async {
     // TODO: iOS cihazda test edilecek
-    print('Apple Sign-In şu an sadece iOS cihazlarda çalışır');
+    debugPrint('Apple Sign-In şu an sadece iOS cihazlarda çalışır');
     return false;
   }
 
@@ -214,13 +198,13 @@ class AuthRepository {
       await _googleSignIn
           .disconnect(); // Disconnect önemli, hesabı unutmasını sağlar
     } catch (e) {
-      print('Google çıkış hatası (disconnect): $e');
+      debugPrint('Google çıkış hatası (disconnect): $e');
     }
 
     try {
       await _googleSignIn.signOut();
     } catch (e) {
-      print('Google çıkış hatası (signOut): $e');
+      debugPrint('Google çıkış hatası (signOut): $e');
     }
   }
 
@@ -238,7 +222,7 @@ class AuthRepository {
       }
 
       // Profil yoksa oluştur
-      print('⚠️ Profil bulunamadı, yeni profil oluşturuluyor...');
+      debugPrint('⚠️ Profil bulunamadı, yeni profil oluşturuluyor...');
 
       // Auth'dan kullanıcı bilgilerini al
       final user = _supabase.auth.currentUser;
@@ -253,10 +237,10 @@ class AuthRepository {
         'id': userId,
         'full_name': fullName,
         'is_premium': false,
-        'onboarding_completed': true,
+        'onboarding_completed': false,
       });
 
-      print('✅ Yeni profil oluşturuldu: $fullName');
+      debugPrint('✅ Yeni profil oluşturuldu: $fullName');
 
       // Oluşturulan profili getir
       final newProfile = await _supabase
@@ -267,7 +251,7 @@ class AuthRepository {
 
       return ProfileModel.fromJson(newProfile);
     } catch (e) {
-      print('❌ Profil getirme/oluşturma hatası: $e');
+      debugPrint('❌ Profil getirme/oluşturma hatası: $e');
       return null;
     }
   }
@@ -283,10 +267,10 @@ class AuthRepository {
 
       await _supabase.from('profiles').update(updateData).eq('id', profile.id);
 
-      print('✅ Profil güncellendi: ${profile.fullName}');
+      debugPrint('✅ Profil güncellendi: ${profile.fullName}');
       return true;
     } catch (e) {
-      print('❌ Profil güncelleme hatası: $e');
+      debugPrint('❌ Profil güncelleme hatası: $e');
       return false;
     }
   }
@@ -320,10 +304,10 @@ class AuthRepository {
           .update({'avatar_url': publicUrl})
           .eq('id', userId);
 
-      print('✅ Avatar yüklendi: $publicUrl');
+      debugPrint('✅ Avatar yüklendi: $publicUrl');
       return publicUrl;
     } catch (e) {
-      print('❌ Avatar yükleme hatası: $e');
+      debugPrint('❌ Avatar yükleme hatası: $e');
       return null;
     }
   }
@@ -337,7 +321,7 @@ class AuthRepository {
           .eq('id', userId);
       return true;
     } catch (e) {
-      print('Onboarding güncelleme hatası: $e');
+      debugPrint('Onboarding güncelleme hatası: $e');
       return false;
     }
   }
@@ -362,10 +346,10 @@ class AuthRepository {
 
       await _supabase.from('profiles').update(updateData).eq('id', userId);
 
-      print('✅ Kullanıcı tercihleri güncellendi: $updateData');
+      debugPrint('✅ Kullanıcı tercihleri güncellendi: $updateData');
       return true;
     } catch (e) {
-      print('❌ Tercih güncelleme hatası: $e');
+      debugPrint('❌ Tercih güncelleme hatası: $e');
       return false;
     }
   }
@@ -383,7 +367,7 @@ class AuthRepository {
 
       return response;
     } catch (e) {
-      print('❌ Tercih getirme hatası: $e');
+      debugPrint('❌ Tercih getirme hatası: $e');
       return null;
     }
   }

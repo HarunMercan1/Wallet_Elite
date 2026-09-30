@@ -124,10 +124,10 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: colorTheme.primary.withOpacity(0.1),
+                    color: colorTheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: colorTheme.primary.withOpacity(0.3),
+                      color: colorTheme.primary.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -229,7 +229,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                           BoxShadow(
                             color: Color(
                               avatar['color'] as int,
-                            ).withOpacity(0.4),
+                            ).withValues(alpha: 0.4),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -466,7 +466,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: colorTheme.primary.withOpacity(0.3),
+                                color: colorTheme.primary.withValues(alpha: 0.3),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
@@ -597,7 +597,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
               color: isDark ? colorTheme.surfaceDark : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -4),
                 ),

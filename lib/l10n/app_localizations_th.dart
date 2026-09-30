@@ -962,214 +962,215 @@ class AppLocalizationsTh extends AppLocalizations {
   String get reset => 'รีเซ็ต';
 
   @override
-  String get recurringTransactions => 'Recurring Transactions';
+  String get recurringTransactions => 'รายการซ้ำ';
 
   @override
-  String get addRecurringTransaction => 'Add Recurring Transaction';
+  String get addRecurringTransaction => 'เพิ่มรายการซ้ำ';
 
   @override
-  String get editRecurringTransaction => 'Edit Recurring Transaction';
+  String get editRecurringTransaction => 'แก้ไขรายการซ้ำ';
 
   @override
-  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+  String get deleteRecurringTransaction => 'ลบรายการซ้ำ';
 
   @override
   String get deleteRecurringConfirmation =>
-      'Are you sure you want to delete this recurring transaction?';
+      'คุณแน่ใจหรือไม่ว่าต้องการลบรายการซ้ำนี้?';
 
   @override
-  String get noRecurringTransactions => 'No recurring transactions yet';
+  String get noRecurringTransactions => 'ยังไม่มีรายการซ้ำ';
 
   @override
   String get addRecurringTransactionHint =>
-      'Save time by adding regular transactions like salary and bills';
+      'ประหยัดเวลาด้วยการเพิ่มรายการประจำ เช่น เงินเดือนและค่าใช้จ่าย';
 
   @override
-  String get frequency => 'Frequency';
+  String get frequency => 'ความถี่';
 
   @override
-  String get yearly => 'Yearly';
+  String get yearly => 'รายปี';
 
   @override
-  String get dayOfMonth => 'Day of Month';
+  String get dayOfMonth => 'วันที่ในเดือน';
 
   @override
-  String get dayOfWeek => 'Day of Week';
+  String get dayOfWeek => 'วันในสัปดาห์';
 
   @override
-  String get nextExecution => 'Next Execution';
+  String get nextExecution => 'ครั้งถัดไป';
 
   @override
-  String get active => 'Active';
+  String get active => 'ใช้งาน';
 
   @override
-  String get inactive => 'Inactive';
+  String get inactive => 'ไม่ใช้งาน';
 
   @override
-  String get optional => 'Optional';
+  String get optional => 'ไม่บังคับ';
 
   @override
-  String get monday => 'Monday';
+  String get monday => 'วันจันทร์';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => 'วันอังคาร';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => 'วันพุธ';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => 'วันพฤหัสบดี';
 
   @override
-  String get friday => 'Friday';
+  String get friday => 'วันศุกร์';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => 'วันเสาร์';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => 'วันอาทิตย์';
 
   @override
-  String get description => 'Description';
+  String get description => 'คำอธิบาย';
 
   @override
-  String get descriptionHint => 'e.g. Netflix subscription';
+  String get descriptionHint => 'เช่น สมาชิก Netflix';
 
   @override
-  String get selectAccount => 'Select Account';
+  String get selectAccount => 'เลือกบัญชี';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'เลือกหมวดหมู่';
 
   @override
-  String get pleaseEnterAmount => 'Please enter amount';
+  String get pleaseEnterAmount => 'กรุณาระบุจำนวนเงิน';
 
   @override
-  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+  String get pleaseEnterValidAmount => 'กรุณาระบุจำนวนเงินที่ถูกต้อง';
 
   @override
-  String get pleaseSelectAccount => 'Please select an account';
+  String get pleaseSelectAccount => 'กรุณาเลือกบัญชี';
 
   @override
-  String get budget => 'Budget';
+  String get budget => 'งบประมาณ';
 
   @override
-  String get addBudget => 'Add Budget';
+  String get addBudget => 'เพิ่มงบประมาณ';
 
   @override
-  String get editBudget => 'Edit Budget';
+  String get editBudget => 'แก้ไขงบประมาณ';
 
   @override
-  String get deleteBudget => 'Delete Budget';
+  String get deleteBudget => 'ลบงบประมาณ';
 
   @override
   String get deleteBudgetConfirmation =>
-      'Are you sure you want to delete this budget?';
+      'คุณแน่ใจหรือไม่ว่าต้องการลบงบประมาณนี้?';
 
   @override
-  String get noBudgets => 'No budgets yet';
+  String get noBudgets => 'ยังไม่มีงบประมาณ';
 
   @override
-  String get addBudgetHint =>
-      'Create a budget to keep your expenses under control';
+  String get addBudgetHint => 'สร้างงบประมาณเพื่อควบคุมค่าใช้จ่าย';
 
   @override
-  String get budgetName => 'Budget Name';
+  String get budgetName => 'ชื่องบประมาณ';
 
   @override
-  String get budgetNameHint => 'e.g. Monthly Food Budget';
+  String get budgetNameHint => 'เช่น งบอาหารรายเดือน';
 
   @override
-  String get pleaseEnterBudgetName => 'Please enter budget name';
+  String get pleaseEnterBudgetName => 'กรุณาระบุชื่องบประมาณ';
 
   @override
-  String get budgetAmount => 'Budget Limit';
+  String get budgetAmount => 'วงเงินงบประมาณ';
 
   @override
-  String get budgetPeriod => 'Budget Period';
+  String get budgetPeriod => 'ระยะเวลางบประมาณ';
 
   @override
-  String get budgetStartDay => 'Period Start Day';
+  String get budgetStartDay => 'วันเริ่มต้นรอบ';
 
   @override
-  String get allExpenses => 'All Expenses';
+  String get allExpenses => 'ค่าใช้จ่ายทั้งหมด';
 
   @override
-  String get notifyAtPercent => 'Warning Percentage';
+  String get notifyAtPercent => 'เปอร์เซ็นต์แจ้งเตือน';
 
   @override
-  String get notifyWhenExceeded => 'Notify when exceeded';
+  String get notifyWhenExceeded => 'แจ้งเตือนเมื่อเกิน';
 
   @override
-  String get used => 'used';
+  String get used => 'ใช้แล้ว';
 
   @override
-  String get exceeded => 'exceeded';
+  String get exceeded => 'เกินงบ';
 
   @override
-  String get secureData => 'Your data is secure and encrypted';
+  String get secureData => 'ข้อมูลของคุณปลอดภัยและเข้ารหัส';
 
   @override
-  String get cloudSync => 'Sync across all your devices';
+  String get cloudSync => 'ซิงค์ข้อมูลทุกอุปกรณ์';
 
   @override
-  String get smartInsights => 'Smart insights about your finances';
+  String get smartInsights => 'ข้อมูลเชิงลึกอัจฉริยะเกี่ยวกับการเงิน';
 
   @override
-  String get discoverFeatures => 'Discover Features';
+  String get discoverFeatures => 'ค้นพบฟีเจอร์';
 
   @override
-  String get discoverFeaturesDesc =>
-      'Everything you need to manage your finances';
+  String get discoverFeaturesDesc => 'ทุกสิ่งที่คุณต้องการเพื่อจัดการการเงิน';
 
   @override
-  String get budgetTracking => 'Budget Tracking';
+  String get budgetTracking => 'ติดตามงบประมาณ';
 
   @override
-  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+  String get budgetTrackingDesc => 'กำหนดและติดตามวงเงินใช้จ่าย';
 
   @override
-  String get recurringTransactionsDesc => 'Automate your regular payments';
+  String get recurringTransactionsDesc => 'ทำให้การชำระเงินประจำเป็นอัตโนมัติ';
 
   @override
-  String get selectLanguageDesc => 'Choose your preferred language';
+  String get selectLanguageDesc => 'เลือกภาษาที่คุณต้องการ';
 
   @override
-  String get selectThemeDesc => 'Personalize your app experience';
+  String get selectThemeDesc => 'ปรับแต่งประสบการณ์การใช้งาน';
 
   @override
-  String get themeOcean => 'Ocean';
+  String get themeOcean => 'มหาสมุทร';
 
   @override
-  String get themeSunset => 'Sunset';
+  String get themeSunset => 'พระอาทิตย์ตก';
 
   @override
-  String get themeForest => 'Forest';
+  String get themeForest => 'ป่า';
 
   @override
-  String get themeLavender => 'Lavender';
+  String get themeLavender => 'ลาเวนเดอร์';
 
   @override
-  String get themeMidnight => 'Midnight';
+  String get themeMidnight => 'เที่ยงคืน';
 
   @override
-  String get themeRose => 'Rose';
+  String get themeRose => 'กุหลาบ';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => 'โหมดมืด';
 
   @override
-  String get japaneseYen => 'Japanese Yen';
+  String get japaneseYen => 'เยนญี่ปุ่น';
 
   @override
-  String get russianRuble => 'Russian Ruble';
+  String get russianRuble => 'รูเบิลรัสเซีย';
 
   @override
-  String get categoryDistribution => 'Category Distribution';
+  String get categoryDistribution => 'การกระจายตามหมวดหมู่';
 
   @override
-  String get other => 'Other';
+  String get other => 'อื่นๆ';
 
   @override
-  String get last7DaysSpending => 'Last 7 Days Spending';
+  String get last7DaysSpending => 'ค่าใช้จ่าย 7 วันล่าสุด';
+
+  @override
+  String get currencyLabel => 'สกุลเงิน';
 }

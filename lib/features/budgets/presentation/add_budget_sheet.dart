@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/budgets/presentation/add_budget_sheet.dart
 
 import 'package:flutter/material.dart';
@@ -124,8 +126,8 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                         hintText: l.budgetNameHint,
                         filled: true,
                         fillColor: isDark
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.black.withOpacity(0.05),
+                            ? Colors.white.withValues(alpha: 0.05)
+                            : Colors.black.withValues(alpha: 0.05),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -153,7 +155,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                       ),
                       decoration: InputDecoration(
                         labelText: l.budgetAmount,
-                        prefixText: '₺ ',
+                        prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                         prefixStyle: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -161,8 +163,8 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                         ),
                         filled: true,
                         fillColor: isDark
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.black.withOpacity(0.05),
+                            ? Colors.white.withValues(alpha: 0.05)
+                            : Colors.black.withValues(alpha: 0.05),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -309,7 +311,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
               onSelected: (selected) {
                 if (selected) setState(() => _selectedCategoryId = null);
               },
-              selectedColor: colorTheme.primary.withOpacity(0.2),
+              selectedColor: colorTheme.primary.withValues(alpha: 0.2),
               labelStyle: TextStyle(
                 color: _selectedCategoryId == null ? colorTheme.primary : null,
                 fontWeight: _selectedCategoryId == null
@@ -327,7 +329,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                     _selectedCategoryId = selected ? category.id : null;
                   });
                 },
-                selectedColor: colorTheme.primary.withOpacity(0.2),
+                selectedColor: colorTheme.primary.withValues(alpha: 0.2),
                 labelStyle: TextStyle(
                   color: isSelected ? colorTheme.primary : null,
                   fontWeight: isSelected ? FontWeight.w600 : null,
@@ -367,7 +369,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
               onSelected: (selected) {
                 if (selected) setState(() => _period = period);
               },
-              selectedColor: colorTheme.primary.withOpacity(0.2),
+              selectedColor: colorTheme.primary.withValues(alpha: 0.2),
               labelStyle: TextStyle(
                 color: isSelected ? colorTheme.primary : null,
                 fontWeight: isSelected ? FontWeight.w600 : null,
@@ -390,8 +392,8 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
         labelText: l.budgetStartDay,
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -433,7 +435,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: colorTheme.primary.withOpacity(0.1),
+                color: colorTheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(

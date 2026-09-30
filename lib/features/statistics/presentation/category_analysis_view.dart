@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/category_analysis_view.dart
 
 import 'package:flutter/material.dart';
@@ -161,7 +163,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         child: _buildSummaryCard(
                           title: l.totalExpense,
                           value:
-                              '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
+                              '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
                           icon: Icons.trending_down,
                           color: colorTheme.error,
                           isDark: isDark,
@@ -173,7 +175,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         child: _buildSummaryCard(
                           title: l.averageTransaction,
                           value:
-                              '₺${NumberFormat('#,##0.00', 'tr_TR').format(avgTransaction)}',
+                              '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(avgTransaction)}',
                           icon: Icons.calculate,
                           color: colorTheme.primary,
                           isDark: isDark,
@@ -307,7 +309,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -507,7 +509,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey[50],
+              color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -527,7 +529,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 ),
                 _buildMiniStat(
                   icon: Icons.trending_down,
-                  value: '₺${NumberFormat('#,##0', 'tr_TR').format(total)}',
+                  value: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(total)}',
                   label: l.totalExpense,
                   color: colorTheme.error,
                   isDark: isDark,
@@ -598,14 +600,14 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),),
       child: Row(
         children: [
           Container(
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -639,7 +641,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '₺${NumberFormat('#,##0.00', 'tr_TR').format(amount)}',
+                '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(amount)}',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -691,7 +693,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: colorTheme.primary.withOpacity(0.1),
+                      color: colorTheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -727,7 +729,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '₺${NumberFormat('#,##0.00', 'tr_TR').format(amount)}',
+                        '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(amount)}',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -778,14 +780,14 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            colorTheme.primary.withOpacity(0.1),
-            colorTheme.primary.withOpacity(0.05),
+            colorTheme.primary.withValues(alpha: 0.1),
+            colorTheme.primary.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorTheme.primary.withOpacity(0.2)),
+        border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -820,7 +822,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppColors.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -843,7 +845,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         l.ifYouReduce(
                           categoryName,
                           20,
-                          '₺${NumberFormat('#,##0', 'tr_TR').format(potentialSavings)}',
+                          '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(potentialSavings)}',
                         ),
                         style: TextStyle(
                           fontSize: 13,

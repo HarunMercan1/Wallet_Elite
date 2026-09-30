@@ -367,7 +367,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cat_transport => 'Transport';
 
   @override
-  String get cat_shopping => 'Start Shopping';
+  String get cat_shopping => 'Shopping';
 
   @override
   String get cat_entertainment => 'Entertainment';
@@ -1175,4 +1175,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last7DaysSpending => 'Last 7 Days Spending';
+
+  @override
+  String get currencyLabel => 'Currency';
 }

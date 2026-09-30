@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/add_debt_sheet.dart
 
 import 'package:flutter/material.dart';
@@ -136,7 +138,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                         icon: Icons.attach_money,
                         isDark: isDark,
                         colorTheme: colorTheme,
-                        prefix: '₺ ',
+                        prefix: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {

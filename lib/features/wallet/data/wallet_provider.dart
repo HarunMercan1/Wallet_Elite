@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/features/wallet/data/wallet_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,11 +98,12 @@ class WalletController {
   Future<bool> createAccount({
     required String name,
     required String type,
+    required String currency,
     double initialBalance = 0,
   }) async {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) {
-      print('❌ WalletController.createAccount: Kullanıcı bulunamadı');
+      debugPrint('❌ WalletController.createAccount: Kullanıcı bulunamadı');
       return false;
     }
 
@@ -110,6 +112,7 @@ class WalletController {
       userId: user.id,
       name: name,
       type: type,
+      currency: currency,
       initialBalance: initialBalance,
     );
 
@@ -133,7 +136,7 @@ class WalletController {
   }) async {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) {
-      print('❌ WalletController.createTransaction: Kullanıcı bulunamadı');
+      debugPrint('❌ WalletController.createTransaction: Kullanıcı bulunamadı');
       return false;
     }
 

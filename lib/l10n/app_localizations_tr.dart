@@ -1176,4 +1176,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get last7DaysSpending => 'Son 7 Gün Harcama';
+
+  @override
+  String get currencyLabel => 'Para Birimi';
 }

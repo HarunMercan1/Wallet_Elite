@@ -953,214 +953,212 @@ class AppLocalizationsJa extends AppLocalizations {
   String get reset => 'リセット';
 
   @override
-  String get recurringTransactions => 'Recurring Transactions';
+  String get recurringTransactions => '定期取引';
 
   @override
-  String get addRecurringTransaction => 'Add Recurring Transaction';
+  String get addRecurringTransaction => '定期取引を追加';
 
   @override
-  String get editRecurringTransaction => 'Edit Recurring Transaction';
+  String get editRecurringTransaction => '定期取引を編集';
 
   @override
-  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+  String get deleteRecurringTransaction => '定期取引を削除';
 
   @override
-  String get deleteRecurringConfirmation =>
-      'Are you sure you want to delete this recurring transaction?';
+  String get deleteRecurringConfirmation => 'この定期取引を削除してもよろしいですか？';
 
   @override
-  String get noRecurringTransactions => 'No recurring transactions yet';
+  String get noRecurringTransactions => '定期取引はまだありません';
 
   @override
-  String get addRecurringTransactionHint =>
-      'Save time by adding regular transactions like salary and bills';
+  String get addRecurringTransactionHint => '給与や請求書などの定期取引を追加して時間を節約';
 
   @override
-  String get frequency => 'Frequency';
+  String get frequency => '頻度';
 
   @override
-  String get yearly => 'Yearly';
+  String get yearly => '年間';
 
   @override
-  String get dayOfMonth => 'Day of Month';
+  String get dayOfMonth => '日';
 
   @override
-  String get dayOfWeek => 'Day of Week';
+  String get dayOfWeek => '曜日';
 
   @override
-  String get nextExecution => 'Next Execution';
+  String get nextExecution => '次回実行';
 
   @override
-  String get active => 'Active';
+  String get active => 'アクティブ';
 
   @override
-  String get inactive => 'Inactive';
+  String get inactive => '非アクティブ';
 
   @override
-  String get optional => 'Optional';
+  String get optional => '任意';
 
   @override
-  String get monday => 'Monday';
+  String get monday => '月曜日';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => '火曜日';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => '水曜日';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => '木曜日';
 
   @override
-  String get friday => 'Friday';
+  String get friday => '金曜日';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => '土曜日';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => '日曜日';
 
   @override
-  String get description => 'Description';
+  String get description => '説明';
 
   @override
-  String get descriptionHint => 'e.g. Netflix subscription';
+  String get descriptionHint => '例：Netflixサブスクリプション';
 
   @override
-  String get selectAccount => 'Select Account';
+  String get selectAccount => 'アカウントを選択';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'カテゴリを選択';
 
   @override
-  String get pleaseEnterAmount => 'Please enter amount';
+  String get pleaseEnterAmount => '金額を入力してください';
 
   @override
-  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+  String get pleaseEnterValidAmount => '有効な金額を入力してください';
 
   @override
-  String get pleaseSelectAccount => 'Please select an account';
+  String get pleaseSelectAccount => 'アカウントを選択してください';
 
   @override
-  String get budget => 'Budget';
+  String get budget => '予算';
 
   @override
-  String get addBudget => 'Add Budget';
+  String get addBudget => '予算を追加';
 
   @override
-  String get editBudget => 'Edit Budget';
+  String get editBudget => '予算を編集';
 
   @override
-  String get deleteBudget => 'Delete Budget';
+  String get deleteBudget => '予算を削除';
 
   @override
-  String get deleteBudgetConfirmation =>
-      'Are you sure you want to delete this budget?';
+  String get deleteBudgetConfirmation => 'この予算を削除してもよろしいですか？';
 
   @override
-  String get noBudgets => 'No budgets yet';
+  String get noBudgets => '予算はまだありません';
 
   @override
-  String get addBudgetHint =>
-      'Create a budget to keep your expenses under control';
+  String get addBudgetHint => '支出を管理するための予算を作成します';
 
   @override
-  String get budgetName => 'Budget Name';
+  String get budgetName => '予算名';
 
   @override
-  String get budgetNameHint => 'e.g. Monthly Food Budget';
+  String get budgetNameHint => '例：月間食費予算';
 
   @override
-  String get pleaseEnterBudgetName => 'Please enter budget name';
+  String get pleaseEnterBudgetName => '予算名を入力してください';
 
   @override
-  String get budgetAmount => 'Budget Limit';
+  String get budgetAmount => '予算限度額';
 
   @override
-  String get budgetPeriod => 'Budget Period';
+  String get budgetPeriod => '予算期間';
 
   @override
-  String get budgetStartDay => 'Period Start Day';
+  String get budgetStartDay => '期間開始日';
 
   @override
-  String get allExpenses => 'All Expenses';
+  String get allExpenses => '全ての支出';
 
   @override
-  String get notifyAtPercent => 'Warning Percentage';
+  String get notifyAtPercent => '警告パーセント';
 
   @override
-  String get notifyWhenExceeded => 'Notify when exceeded';
+  String get notifyWhenExceeded => '超過時に通知';
 
   @override
-  String get used => 'used';
+  String get used => '使用済み';
 
   @override
-  String get exceeded => 'exceeded';
+  String get exceeded => '超過';
 
   @override
-  String get secureData => 'Your data is secure and encrypted';
+  String get secureData => 'データは安全に暗号化されています';
 
   @override
-  String get cloudSync => 'Sync across all your devices';
+  String get cloudSync => 'すべてのデバイスで同期';
 
   @override
-  String get smartInsights => 'Smart insights about your finances';
+  String get smartInsights => '財務に関するスマートな分析';
 
   @override
-  String get discoverFeatures => 'Discover Features';
+  String get discoverFeatures => '機能を発見';
 
   @override
-  String get discoverFeaturesDesc =>
-      'Everything you need to manage your finances';
+  String get discoverFeaturesDesc => '財務管理に必要なすべて';
 
   @override
-  String get budgetTracking => 'Budget Tracking';
+  String get budgetTracking => '予算追跡';
 
   @override
-  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+  String get budgetTrackingDesc => '支出制限を設定して守りましょう';
 
   @override
-  String get recurringTransactionsDesc => 'Automate your regular payments';
+  String get recurringTransactionsDesc => '定期支払いを自動化';
 
   @override
-  String get selectLanguageDesc => 'Choose your preferred language';
+  String get selectLanguageDesc => 'お好みの言語を選択してください';
 
   @override
-  String get selectThemeDesc => 'Personalize your app experience';
+  String get selectThemeDesc => 'アプリ体験をカスタマイズ';
 
   @override
-  String get themeOcean => 'Ocean';
+  String get themeOcean => 'オーシャン';
 
   @override
-  String get themeSunset => 'Sunset';
+  String get themeSunset => 'サンセット';
 
   @override
-  String get themeForest => 'Forest';
+  String get themeForest => 'フォレスト';
 
   @override
-  String get themeLavender => 'Lavender';
+  String get themeLavender => 'ラベンダー';
 
   @override
-  String get themeMidnight => 'Midnight';
+  String get themeMidnight => 'ミッドナイト';
 
   @override
-  String get themeRose => 'Rose';
+  String get themeRose => 'ローズ';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => 'ダークモード';
 
   @override
-  String get japaneseYen => 'Japanese Yen';
+  String get japaneseYen => '日本円';
 
   @override
-  String get russianRuble => 'Russian Ruble';
+  String get russianRuble => 'ロシアルーブル';
 
   @override
-  String get categoryDistribution => 'Category Distribution';
+  String get categoryDistribution => 'カテゴリ分布';
 
   @override
-  String get other => 'Other';
+  String get other => 'その他';
 
   @override
-  String get last7DaysSpending => 'Last 7 Days Spending';
+  String get last7DaysSpending => '過去7日間の支出';
+
+  @override
+  String get currencyLabel => '通貨';
 }

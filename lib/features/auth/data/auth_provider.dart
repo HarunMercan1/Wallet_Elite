@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/features/auth/data/auth_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,7 +51,7 @@ class AuthController {
         fullName: fullName,
       );
     } catch (e) {
-      print('Email kayıt hatası: $e');
+      debugPrint('Email kayıt hatası: $e');
       return {'success': false, 'error': 'Bir hata oluştu: $e'};
     }
   }
@@ -64,7 +65,7 @@ class AuthController {
       final authRepo = ref.read(authRepositoryProvider);
       return await authRepo.signInWithEmail(email, password);
     } catch (e) {
-      print('Email giriş hatası: $e');
+      debugPrint('Email giriş hatası: $e');
       return {'success': false, 'error': 'Bir hata oluştu: $e'};
     }
   }
@@ -75,7 +76,7 @@ class AuthController {
       final authRepo = ref.read(authRepositoryProvider);
       return await authRepo.resetPassword(email);
     } catch (e) {
-      print('Şifre sıfırlama hatası: $e');
+      debugPrint('Şifre sıfırlama hatası: $e');
       return false;
     }
   }
@@ -86,7 +87,7 @@ class AuthController {
       final authRepo = ref.read(authRepositoryProvider);
       return await authRepo.signInWithGoogle();
     } catch (e) {
-      print('Google giriş hatası: $e');
+      debugPrint('Google giriş hatası: $e');
       return 'Bilinmeyen bir hata oluştu: $e';
     }
   }
@@ -97,7 +98,7 @@ class AuthController {
       final authRepo = ref.read(authRepositoryProvider);
       return await authRepo.signInWithApple();
     } catch (e) {
-      print('Apple giriş hatası: $e');
+      debugPrint('Apple giriş hatası: $e');
       return false;
     }
   }

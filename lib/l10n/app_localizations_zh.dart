@@ -953,214 +953,212 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reset => '重置';
 
   @override
-  String get recurringTransactions => 'Recurring Transactions';
+  String get recurringTransactions => '定期交易';
 
   @override
-  String get addRecurringTransaction => 'Add Recurring Transaction';
+  String get addRecurringTransaction => '添加定期交易';
 
   @override
-  String get editRecurringTransaction => 'Edit Recurring Transaction';
+  String get editRecurringTransaction => '编辑定期交易';
 
   @override
-  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+  String get deleteRecurringTransaction => '删除定期交易';
 
   @override
-  String get deleteRecurringConfirmation =>
-      'Are you sure you want to delete this recurring transaction?';
+  String get deleteRecurringConfirmation => '确定要删除此定期交易吗？';
 
   @override
-  String get noRecurringTransactions => 'No recurring transactions yet';
+  String get noRecurringTransactions => '暂无定期交易';
 
   @override
-  String get addRecurringTransactionHint =>
-      'Save time by adding regular transactions like salary and bills';
+  String get addRecurringTransactionHint => '添加工资和账单等定期交易以节省时间';
 
   @override
-  String get frequency => 'Frequency';
+  String get frequency => '频率';
 
   @override
-  String get yearly => 'Yearly';
+  String get yearly => '每年';
 
   @override
-  String get dayOfMonth => 'Day of Month';
+  String get dayOfMonth => '每月几号';
 
   @override
-  String get dayOfWeek => 'Day of Week';
+  String get dayOfWeek => '星期几';
 
   @override
-  String get nextExecution => 'Next Execution';
+  String get nextExecution => '下次执行';
 
   @override
-  String get active => 'Active';
+  String get active => '活跃';
 
   @override
-  String get inactive => 'Inactive';
+  String get inactive => '停用';
 
   @override
-  String get optional => 'Optional';
+  String get optional => '可选';
 
   @override
-  String get monday => 'Monday';
+  String get monday => '星期一';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => '星期二';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => '星期三';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => '星期四';
 
   @override
-  String get friday => 'Friday';
+  String get friday => '星期五';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => '星期六';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => '星期日';
 
   @override
-  String get description => 'Description';
+  String get description => '描述';
 
   @override
-  String get descriptionHint => 'e.g. Netflix subscription';
+  String get descriptionHint => '例如：Netflix订阅';
 
   @override
-  String get selectAccount => 'Select Account';
+  String get selectAccount => '选择账户';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => '选择分类';
 
   @override
-  String get pleaseEnterAmount => 'Please enter amount';
+  String get pleaseEnterAmount => '请输入金额';
 
   @override
-  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+  String get pleaseEnterValidAmount => '请输入有效金额';
 
   @override
-  String get pleaseSelectAccount => 'Please select an account';
+  String get pleaseSelectAccount => '请选择账户';
 
   @override
-  String get budget => 'Budget';
+  String get budget => '预算';
 
   @override
-  String get addBudget => 'Add Budget';
+  String get addBudget => '添加预算';
 
   @override
-  String get editBudget => 'Edit Budget';
+  String get editBudget => '编辑预算';
 
   @override
-  String get deleteBudget => 'Delete Budget';
+  String get deleteBudget => '删除预算';
 
   @override
-  String get deleteBudgetConfirmation =>
-      'Are you sure you want to delete this budget?';
+  String get deleteBudgetConfirmation => '确定要删除此预算吗？';
 
   @override
-  String get noBudgets => 'No budgets yet';
+  String get noBudgets => '暂无预算';
 
   @override
-  String get addBudgetHint =>
-      'Create a budget to keep your expenses under control';
+  String get addBudgetHint => '创建预算以控制支出';
 
   @override
-  String get budgetName => 'Budget Name';
+  String get budgetName => '预算名称';
 
   @override
-  String get budgetNameHint => 'e.g. Monthly Food Budget';
+  String get budgetNameHint => '例如：每月餐饮预算';
 
   @override
-  String get pleaseEnterBudgetName => 'Please enter budget name';
+  String get pleaseEnterBudgetName => '请输入预算名称';
 
   @override
-  String get budgetAmount => 'Budget Limit';
+  String get budgetAmount => '预算限额';
 
   @override
-  String get budgetPeriod => 'Budget Period';
+  String get budgetPeriod => '预算周期';
 
   @override
-  String get budgetStartDay => 'Period Start Day';
+  String get budgetStartDay => '周期开始日';
 
   @override
-  String get allExpenses => 'All Expenses';
+  String get allExpenses => '所有支出';
 
   @override
-  String get notifyAtPercent => 'Warning Percentage';
+  String get notifyAtPercent => '警告百分比';
 
   @override
-  String get notifyWhenExceeded => 'Notify when exceeded';
+  String get notifyWhenExceeded => '超出时通知';
 
   @override
-  String get used => 'used';
+  String get used => '已使用';
 
   @override
-  String get exceeded => 'exceeded';
+  String get exceeded => '已超出';
 
   @override
-  String get secureData => 'Your data is secure and encrypted';
+  String get secureData => '您的数据安全加密';
 
   @override
-  String get cloudSync => 'Sync across all your devices';
+  String get cloudSync => '跨设备同步';
 
   @override
-  String get smartInsights => 'Smart insights about your finances';
+  String get smartInsights => '关于财务的智能洞察';
 
   @override
-  String get discoverFeatures => 'Discover Features';
+  String get discoverFeatures => '发现功能';
 
   @override
-  String get discoverFeaturesDesc =>
-      'Everything you need to manage your finances';
+  String get discoverFeaturesDesc => '管理财务所需的一切';
 
   @override
-  String get budgetTracking => 'Budget Tracking';
+  String get budgetTracking => '预算追踪';
 
   @override
-  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+  String get budgetTrackingDesc => '设定支出限额并坚持执行';
 
   @override
-  String get recurringTransactionsDesc => 'Automate your regular payments';
+  String get recurringTransactionsDesc => '自动化定期付款';
 
   @override
-  String get selectLanguageDesc => 'Choose your preferred language';
+  String get selectLanguageDesc => '选择您偏好的语言';
 
   @override
-  String get selectThemeDesc => 'Personalize your app experience';
+  String get selectThemeDesc => '个性化您的应用体验';
 
   @override
-  String get themeOcean => 'Ocean';
+  String get themeOcean => '海洋';
 
   @override
-  String get themeSunset => 'Sunset';
+  String get themeSunset => '日落';
 
   @override
-  String get themeForest => 'Forest';
+  String get themeForest => '森林';
 
   @override
-  String get themeLavender => 'Lavender';
+  String get themeLavender => '薰衣草';
 
   @override
-  String get themeMidnight => 'Midnight';
+  String get themeMidnight => '午夜';
 
   @override
-  String get themeRose => 'Rose';
+  String get themeRose => '玫瑰';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => '深色模式';
 
   @override
-  String get japaneseYen => 'Japanese Yen';
+  String get japaneseYen => '日元';
 
   @override
-  String get russianRuble => 'Russian Ruble';
+  String get russianRuble => '俄罗斯卢布';
 
   @override
-  String get categoryDistribution => 'Category Distribution';
+  String get categoryDistribution => '分类分布';
 
   @override
-  String get other => 'Other';
+  String get other => '其他';
 
   @override
-  String get last7DaysSpending => 'Last 7 Days Spending';
+  String get last7DaysSpending => '最近7天支出';
+
+  @override
+  String get currencyLabel => '货币';
 }

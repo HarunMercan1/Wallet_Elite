@@ -304,7 +304,7 @@
     "average": "Ortalama",
     "needsImprovement": "Geliştirilmeli",
     "poor": "Zayıf",
-    "comparedToLastMonth": "Geçen aya göre",
+    "comparedToLastMonth": "Geçen Aya Göre",
     "youSpentLess": "daha az harcadın",
     "youSpentMore": "daha fazla harcadın",
     "noChange": "Değişiklik yok",
@@ -394,7 +394,6 @@
     "pleaseEnterAmount": "Lütfen tutar giriniz",
     "pleaseEnterValidAmount": "Geçerli bir tutar giriniz",
     "pleaseSelectAccount": "Lütfen hesap seçiniz",
-    "budgets": "Bütçeler",
     "budget": "Bütçe",
     "addBudget": "Bütçe Ekle",
     "editBudget": "Bütçeyi Düzenle",
@@ -412,7 +411,6 @@
     "notifyAtPercent": "Uyarı Yüzdesi",
     "notifyWhenExceeded": "Aşıldığında bildir",
     "used": "kullanıldı",
-    "remaining": "Kalan",
     "exceeded": "aşıldı",
     "secureData": "Verileriniz güvenli ve şifrelenmiş",
     "cloudSync": "Tüm cihazlarınızda senkronize edin",
@@ -421,7 +419,6 @@
     "discoverFeaturesDesc": "Finanslarınızı yönetmek için ihtiyacınız olan her şey",
     "budgetTracking": "Bütçe Takibi",
     "budgetTrackingDesc": "Harcama limitleri belirle ve takip et",
-    "recurringTransactions": "Tekrarlayan İşlemler",
     "recurringTransactionsDesc": "Düzenli ödemelerinizi otomatikleştirin",
     "selectLanguageDesc": "Tercih ettiğiniz dili seçin",
     "selectThemeDesc": "Uygulama deneyiminizi kişiselleştirin",
@@ -437,7 +434,5 @@
     "categoryDistribution": "Kategori Dağılımı",
     "other": "Diğer",
     "last7DaysSpending": "Son 7 Gün Harcama",
-    "comparedToLastMonth": "Geçen Aya Göre",
-    "lastMonth": "Geçen Ay",
-    "thisMonth": "Bu Ay"
+    "currencyLabel": "Para Birimi"
 }

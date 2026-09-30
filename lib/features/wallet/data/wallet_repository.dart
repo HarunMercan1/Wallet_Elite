@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/features/wallet/data/wallet_repository.dart
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,7 +25,7 @@ class WalletRepository {
           .map((json) => AccountModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Cüzdanları getirme hatası: $e');
+      debugPrint('Cüzdanları getirme hatası: $e');
       return [];
     }
   }
@@ -34,14 +35,16 @@ class WalletRepository {
     required String userId,
     required String name,
     required String type,
+    required String currency,
     double initialBalance = 0,
   }) async {
     try {
-      print('🔄 Cüzdan oluşturuluyor...');
-      print('   user_id: $userId');
-      print('   name: $name');
-      print('   type: $type');
-      print('   balance: $initialBalance');
+      debugPrint('🔄 Cüzdan oluşturuluyor...');
+      debugPrint('   user_id: $userId');
+      debugPrint('   name: $name');
+      debugPrint('   type: $type');
+      debugPrint('   currency: $currency');
+      debugPrint('   balance: $initialBalance');
 
       final response = await _supabase
           .from('accounts')
@@ -49,23 +52,24 @@ class WalletRepository {
             'user_id': userId,
             'name': name,
             'type': type,
+            'currency': currency,
             'balance': initialBalance,
           })
           .select()
           .single();
 
-      print('✅ Cüzdan başarıyla oluşturuldu: ${response['id']}');
+      debugPrint('✅ Cüzdan başarıyla oluşturuldu: ${response['id']}');
       return AccountModel.fromJson(response);
     } on PostgrestException catch (e) {
-      print('❌ Supabase PostgrestException:');
-      print('   Code: ${e.code}');
-      print('   Message: ${e.message}');
-      print('   Details: ${e.details}');
-      print('   Hint: ${e.hint}');
+      debugPrint('❌ Supabase PostgrestException:');
+      debugPrint('   Code: ${e.code}');
+      debugPrint('   Message: ${e.message}');
+      debugPrint('   Details: ${e.details}');
+      debugPrint('   Hint: ${e.hint}');
       return null;
     } catch (e) {
-      print('❌ Cüzdan oluşturma hatası: $e');
-      print('   Hata tipi: ${e.runtimeType}');
+      debugPrint('❌ Cüzdan oluşturma hatası: $e');
+      debugPrint('   Hata tipi: ${e.runtimeType}');
       return null;
     }
   }
@@ -80,7 +84,7 @@ class WalletRepository {
       await _supabase.from('accounts').delete().eq('id', accountId);
       return true;
     } catch (e) {
-      print('Cüzdan silme hatası: $e');
+      debugPrint('Cüzdan silme hatası: $e');
       return false;
     }
   }
@@ -94,7 +98,7 @@ class WalletRepository {
           .eq('id', accountId);
       return true;
     } catch (e) {
-      print('Cüzdan güncelleme hatası: $e');
+      debugPrint('Cüzdan güncelleme hatası: $e');
       return false;
     }
   }
@@ -104,28 +108,99 @@ class WalletRepository {
   /// Varsayılan kategorileri oluştur (ilk kayıtta)
   Future<void> createDefaultCategories(String userId) async {
     try {
-      print('🔄 Varsayılan kategoriler oluşturuluyor...');
+      debugPrint('🔄 Varsayılan kategoriler oluşturuluyor...');
 
       // Gelir kategorileri
+      // translation_key, kategori adının kullanıcının dilinde gösterilmesini sağlar
       final incomeCategories = [
-        {'name': 'Maaş', 'type': 'income', 'icon': 'wallet'},
-        {'name': 'Freelance', 'type': 'income', 'icon': 'laptop'},
-        {'name': 'Yatırım', 'type': 'income', 'icon': 'trending_up'},
-        {'name': 'Hediye', 'type': 'income', 'icon': 'card_giftcard'},
-        {'name': 'Diğer Gelir', 'type': 'income', 'icon': 'attach_money'},
+        {
+          'name': 'Maaş',
+          'translation_key': 'cat_salary',
+          'type': 'income',
+          'icon': 'wallet',
+        },
+        {
+          'name': 'Freelance',
+          'translation_key': 'cat_freelance',
+          'type': 'income',
+          'icon': 'laptop',
+        },
+        {
+          'name': 'Yatırım',
+          'translation_key': 'cat_investment',
+          'type': 'income',
+          'icon': 'trending_up',
+        },
+        {
+          'name': 'Hediye',
+          'translation_key': 'cat_gift',
+          'type': 'income',
+          'icon': 'card_giftcard',
+        },
+        {
+          'name': 'Diğer Gelir',
+          'translation_key': 'cat_other',
+          'type': 'income',
+          'icon': 'attach_money',
+        },
       ];
 
       // Gider kategorileri
       final expenseCategories = [
-        {'name': 'Market', 'type': 'expense', 'icon': 'shopping_cart'},
-        {'name': 'Ulaşım', 'type': 'expense', 'icon': 'directions_car'},
-        {'name': 'Faturalar', 'type': 'expense', 'icon': 'receipt'},
-        {'name': 'Eğlence', 'type': 'expense', 'icon': 'movie'},
-        {'name': 'Yemek', 'type': 'expense', 'icon': 'restaurant'},
-        {'name': 'Sağlık', 'type': 'expense', 'icon': 'local_hospital'},
-        {'name': 'Giyim', 'type': 'expense', 'icon': 'checkroom'},
-        {'name': 'Eğitim', 'type': 'expense', 'icon': 'school'},
-        {'name': 'Diğer Gider', 'type': 'expense', 'icon': 'more_horiz'},
+        {
+          'name': 'Market',
+          'translation_key': 'cat_groceries',
+          'type': 'expense',
+          'icon': 'shopping_cart',
+        },
+        {
+          'name': 'Ulaşım',
+          'translation_key': 'cat_transport',
+          'type': 'expense',
+          'icon': 'directions_car',
+        },
+        {
+          'name': 'Faturalar',
+          'translation_key': 'cat_bills',
+          'type': 'expense',
+          'icon': 'receipt',
+        },
+        {
+          'name': 'Eğlence',
+          'translation_key': 'cat_entertainment',
+          'type': 'expense',
+          'icon': 'movie',
+        },
+        {
+          'name': 'Yemek',
+          'translation_key': 'cat_food',
+          'type': 'expense',
+          'icon': 'restaurant',
+        },
+        {
+          'name': 'Sağlık',
+          'translation_key': 'cat_health',
+          'type': 'expense',
+          'icon': 'local_hospital',
+        },
+        {
+          'name': 'Giyim',
+          'translation_key': 'cat_shopping',
+          'type': 'expense',
+          'icon': 'checkroom',
+        },
+        {
+          'name': 'Eğitim',
+          'translation_key': 'cat_education',
+          'type': 'expense',
+          'icon': 'school',
+        },
+        {
+          'name': 'Diğer Gider',
+          'translation_key': 'cat_other',
+          'type': 'expense',
+          'icon': 'more_horiz',
+        },
       ];
 
       // Tüm kategorileri birleştir ve user_id ekle
@@ -136,9 +211,9 @@ class WalletRepository {
 
       await _supabase.from('categories').insert(allCategories);
 
-      print('✅ ${allCategories.length} varsayılan kategori oluşturuldu');
+      debugPrint('✅ ${allCategories.length} varsayılan kategori oluşturuldu');
     } catch (e) {
-      print('❌ Varsayılan kategori oluşturma hatası: $e');
+      debugPrint('❌ Varsayılan kategori oluşturma hatası: $e');
     }
   }
 
@@ -156,7 +231,7 @@ class WalletRepository {
           .map((json) => CategoryModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Global kategorileri getirme hatası: $e');
+      debugPrint('Global kategorileri getirme hatası: $e');
       return [];
     }
   }
@@ -174,7 +249,7 @@ class WalletRepository {
           .map((json) => CategoryModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Global gelir kategorileri hatası: $e');
+      debugPrint('Global gelir kategorileri hatası: $e');
       return [];
     }
   }
@@ -192,7 +267,7 @@ class WalletRepository {
           .map((json) => CategoryModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Global gider kategorileri hatası: $e');
+      debugPrint('Global gider kategorileri hatası: $e');
       return [];
     }
   }
@@ -212,7 +287,7 @@ class WalletRepository {
           .map((json) => CategoryModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Kategorileri getirme hatası: $e');
+      debugPrint('Kategorileri getirme hatası: $e');
       return [];
     }
   }
@@ -231,7 +306,7 @@ class WalletRepository {
           .map((json) => CategoryModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Gelir kategorileri hatası: $e');
+      debugPrint('Gelir kategorileri hatası: $e');
       return [];
     }
   }
@@ -250,7 +325,7 @@ class WalletRepository {
           .map((json) => CategoryModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Gider kategorileri hatası: $e');
+      debugPrint('Gider kategorileri hatası: $e');
       return [];
     }
   }
@@ -270,7 +345,7 @@ class WalletRepository {
           .map((json) => TransactionModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('İşlemleri getirme hatası: $e');
+      debugPrint('İşlemleri getirme hatası: $e');
       return [];
     }
   }
@@ -292,7 +367,7 @@ class WalletRepository {
           .map((json) => TransactionModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Cüzdan işlemleri hatası: $e');
+      debugPrint('Cüzdan işlemleri hatası: $e');
       return [];
     }
   }
@@ -322,108 +397,23 @@ class WalletRepository {
           .select()
           .single();
 
-      // ⚠️ ÖNEMLİ: İşlem eklendikten sonra cüzdan bakiyesini güncelle
-      await _updateAccountBalance(accountId, amount, type);
-
+      // Cüzdan bakiyesi veritabanındaki trigger_apply_transaction_to_balance
+      // trigger'ı tarafından aynı işlem içinde güncellenir.
       return TransactionModel.fromJson(response);
     } catch (e) {
-      print('İşlem ekleme hatası: $e');
+      debugPrint('İşlem ekleme hatası: $e');
       return null;
     }
   }
 
-  /// Cüzdan bakiyesini güncelle (private method)
-  Future<void> _updateAccountBalance(
-    String accountId,
-    double amount,
-    String type,
-  ) async {
-    try {
-      // Mevcut bakiyeyi al
-      final account = await _supabase
-          .from('accounts')
-          .select('balance')
-          .eq('id', accountId)
-          .single();
-
-      final currentBalance = (account['balance'] as num).toDouble();
-
-      // Yeni bakiyeyi hesapla
-      double newBalance;
-      if (type == 'income') {
-        newBalance = currentBalance + amount;
-      } else if (type == 'expense') {
-        newBalance = currentBalance - amount;
-      } else {
-        return; // Transfer için ayrı mantık gerekecek
-      }
-
-      // Güncelle
-      await _supabase
-          .from('accounts')
-          .update({'balance': newBalance})
-          .eq('id', accountId);
-    } catch (e) {
-      print('Bakiye güncelleme hatası: $e');
-    }
-  }
-
-  /// İşlem sil
+  /// İşlem sil (bakiye DB trigger'ı ile geri alınır)
   Future<bool> deleteTransaction(String transactionId) async {
     try {
-      // ⚠️ Silmeden önce işlem bilgilerini al (bakiye geri döndürme için)
-      final transaction = await _supabase
-          .from('transactions')
-          .select()
-          .eq('id', transactionId)
-          .single();
-
-      final txn = TransactionModel.fromJson(transaction);
-
-      // İşlemi sil
       await _supabase.from('transactions').delete().eq('id', transactionId);
-
-      // Bakiyeyi geri döndür
-      await _reverseAccountBalance(txn.accountId, txn.amount, txn.type);
-
       return true;
     } catch (e) {
-      print('İşlem silme hatası: $e');
+      debugPrint('İşlem silme hatası: $e');
       return false;
-    }
-  }
-
-  /// Bakiyeyi geri döndür (private method)
-  Future<void> _reverseAccountBalance(
-    String accountId,
-    double amount,
-    String type,
-  ) async {
-    try {
-      final account = await _supabase
-          .from('accounts')
-          .select('balance')
-          .eq('id', accountId)
-          .single();
-
-      final currentBalance = (account['balance'] as num).toDouble();
-
-      // Ters işlem yap
-      double newBalance;
-      if (type == 'income') {
-        newBalance = currentBalance - amount; // Geliri geri al
-      } else if (type == 'expense') {
-        newBalance = currentBalance + amount; // Gideri geri ekle
-      } else {
-        return;
-      }
-
-      await _supabase
-          .from('accounts')
-          .update({'balance': newBalance})
-          .eq('id', accountId);
-    } catch (e) {
-      print('Bakiye geri döndürme hatası: $e');
     }
   }
 }

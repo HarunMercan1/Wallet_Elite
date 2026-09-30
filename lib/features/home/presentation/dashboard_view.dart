@@ -8,7 +8,6 @@ import '../../../features/wallet/models/account_model.dart';
 import '../../../features/wallet/models/transaction_model.dart';
 import '../../../features/wallet/models/category_model.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
@@ -17,6 +16,8 @@ import '../../debts/presentation/debts_view.dart';
 import '../../wallet/presentation/wallet_selection_sheet.dart';
 import '../../budgets/presentation/budgets_view.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
+import '../../settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 import '../../../core/utils/responsive_helper.dart';
 
 class DashboardView extends ConsumerWidget {
@@ -30,10 +31,12 @@ class DashboardView extends ConsumerWidget {
     final selectedWalletId = ref.watch(selectedWalletIdProvider);
     final categories = ref.watch(categoriesProvider);
     final locale = ref.watch(localeProvider);
-    final colorTheme = ref.watch(currentColorThemeProvider);
 
+    // Theme setup
+    final themeData = Theme.of(context);
+    final colorTheme = themeData.extension<ColorTheme>()!;
+    final isDark = themeData.brightness == Brightness.dark;
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Gelir/Gider hesapla
     double totalIncome = 0;
@@ -49,132 +52,113 @@ class DashboardView extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(accountsProvider);
-          ref.invalidate(transactionsProvider);
-          ref.invalidate(categoriesProvider);
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header - Kullanıcı Kartı
-              _buildUserHeader(context, userProfile, l, colorTheme, isDark),
+      // Background color comes from AppTheme (scaffoldBackgroundColor)
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header - Kullanıcı Kartı
+          _buildUserHeader(context, userProfile, l, colorTheme, isDark),
 
-              const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-              // Toplam Bakiye Kartı
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildTotalBalanceCard(
-                  context,
-                  ref,
-                  accounts,
-                  selectedWalletId,
-                  totalIncome,
-                  totalExpense,
-                  l,
-                  isDark,
-                  colorTheme,
-                ),
-              ),
+          // Toplam Bakiye Kartı
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildTotalBalanceCard(
+              context,
+              ref,
+              accounts,
+              selectedWalletId,
+              totalIncome,
+              totalExpense,
+              l,
+              isDark,
+              colorTheme,
+            ),
+          ),
 
-              const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-              // Hızlı Erişim Butonları (Borç Takibi, Bütçeler, Tekrarlayan İşlemler)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    // Borç Takibi
-                    Expanded(
-                      child: _buildQuickAccessCard(
-                        context,
-                        icon: Icons.people,
-                        label: l.debtTracking,
-                        colorTheme: colorTheme,
-                        isDark: isDark,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const DebtsView()),
-                        ),
-                      ),
+          // Hızlı Erişim Butonları
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildQuickActionTile(
+                    context,
+                    label: l.debtTracking,
+                    accentColor: colorTheme.primary,
+                    colorTheme: colorTheme,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DebtsView()),
                     ),
-                    const SizedBox(width: 10),
-                    // Bütçeler
-                    Expanded(
-                      child: _buildQuickAccessCard(
-                        context,
-                        icon: Icons.pie_chart,
-                        label: l.budgets,
-                        colorTheme: colorTheme,
-                        isDark: isDark,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const BudgetsView(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    // Tekrarlayan İşlemler
-                    Expanded(
-                      child: _buildQuickAccessCard(
-                        context,
-                        icon: Icons.repeat,
-                        label: l.recurringTransactions,
-                        colorTheme: colorTheme,
-                        isDark: isDark,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RecurringTransactionsView(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Son İşlemler Başlığı
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  l.recentTransactions,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Son İşlemler Listesi
-              _buildTransactionsList(
-                context,
-                ref,
-                transactions,
-                categories,
-                l,
-                isDark,
-                colorTheme,
-              ),
-
-              const SizedBox(height: 100),
-            ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _buildQuickActionTile(
+                    context,
+                    label: l.budgets,
+                    accentColor: colorTheme.success,
+                    colorTheme: colorTheme,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BudgetsView()),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _buildQuickActionTile(
+                    context,
+                    label: l.recurringTransactions,
+                    accentColor: colorTheme.tertiary,
+                    colorTheme: colorTheme,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RecurringTransactionsView(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+
+          const SizedBox(height: 24),
+
+          // Son İşlemler Başlığı
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              l.recentTransactions,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: colorTheme.textPrimary,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Son İşlemler Listesi
+          Expanded(
+            child: _buildTransactionsList(
+              context,
+              ref,
+              transactions,
+              categories,
+              l,
+              colorTheme,
+            ),
+          ),
+
+          const SizedBox(height: 16), // Alt boşluk
+        ],
       ),
     );
   }
@@ -193,7 +177,7 @@ class DashboardView extends ConsumerWidget {
           colors: [
             colorTheme.primary,
             colorTheme.primaryLight,
-            colorTheme.primary.withOpacity(0.9),
+            colorTheme.primary.withValues(alpha: 0.9),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -218,14 +202,14 @@ class DashboardView extends ConsumerWidget {
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.3),
-                          Colors.white.withOpacity(0.1),
+                          Colors.white.withValues(alpha: 0.3),
+                          Colors.white.withValues(alpha: 0.1),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                         width: 2,
                       ),
                     ),
@@ -241,7 +225,7 @@ class DashboardView extends ConsumerWidget {
                         Text(
                           l.welcome,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.85),
+                            color: Colors.white.withValues(alpha: 0.85),
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
@@ -267,18 +251,18 @@ class DashboardView extends ConsumerWidget {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: colorTheme.accent,
+                        color: colorTheme.tertiary,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('👑', style: TextStyle(fontSize: 14)),
-                          SizedBox(width: 4),
+                          const Text('👑', style: TextStyle(fontSize: 14)),
+                          const SizedBox(width: 4),
                           Text(
                             'ELITE',
                             style: TextStyle(
-                              color: Colors.black87,
+                              color: colorTheme.onTertiary,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                               letterSpacing: 0.5,
@@ -358,6 +342,7 @@ class DashboardView extends ConsumerWidget {
       data: (List<AccountModel> accountsList) {
         double totalBalance = 0.0;
         String walletLabel = l.allWallets;
+        String currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
 
         if (selectedWalletId == null) {
           // Sum all wallets
@@ -368,30 +353,27 @@ class DashboardView extends ConsumerWidget {
           // Find the selected wallet
           final selectedAccount = accountsList.firstWhere(
             (a) => a.id == selectedWalletId,
-            orElse: () => accountsList.isNotEmpty
-                ? accountsList.first
-                : AccountModel(
+            orElse: () => AccountModel(
                     id: '',
                     userId: '',
                     name: '',
                     type: '',
                     balance: 0,
+                    currency: 'TRY',
                     createdAt: DateTime.now(),
                   ),
           );
           totalBalance = selectedAccount.balance;
           walletLabel = selectedAccount.name;
+          currencySymbol = selectedAccount.currencySymbol;
         }
 
         return Container(
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
-            color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+            color: colorTheme.cardColor,
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: colorTheme.primary.withValues(alpha: 0.15),
-              width: 1,
-            ),
+            border: Border.all(color: colorTheme.outline, width: 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -405,7 +387,7 @@ class DashboardView extends ConsumerWidget {
                     Text(
                       walletLabel,
                       style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: colorTheme.textSecondary,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -413,7 +395,7 @@ class DashboardView extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Icon(
                       Icons.keyboard_arrow_down,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: colorTheme.textSecondary,
                       size: 18,
                     ),
                   ],
@@ -421,9 +403,9 @@ class DashboardView extends ConsumerWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}',
+                '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}',
                 style: TextStyle(
-                  color: isDark ? Colors.white : AppColors.textPrimary,
+                  color: colorTheme.textPrimary,
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
                   letterSpacing: -1,
@@ -435,10 +417,9 @@ class DashboardView extends ConsumerWidget {
                   Expanded(
                     child: _buildBalanceStat(
                       l.income,
-                      '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalIncome)}',
+                      '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(totalIncome)}',
                       Icons.arrow_upward,
                       colorTheme.success,
-                      isDark,
                       colorTheme,
                     ),
                   ),
@@ -446,10 +427,9 @@ class DashboardView extends ConsumerWidget {
                   Expanded(
                     child: _buildBalanceStat(
                       l.expense,
-                      '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
+                      '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
                       Icons.arrow_downward,
                       colorTheme.error,
-                      isDark,
                       colorTheme,
                     ),
                   ),
@@ -469,15 +449,12 @@ class DashboardView extends ConsumerWidget {
     String value,
     IconData icon,
     Color color,
-    bool isDark,
     ColorTheme colorTheme,
   ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : colorTheme.primary.withValues(alpha: 0.05),
+        color: colorTheme.subtleCardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -491,14 +468,14 @@ class DashboardView extends ConsumerWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: colorTheme.textSecondary,
                     fontSize: 11,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    color: isDark ? Colors.white : AppColors.textPrimary,
+                    color: colorTheme.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
@@ -518,65 +495,71 @@ class DashboardView extends ConsumerWidget {
     AsyncValue<List<TransactionModel>> transactions,
     AsyncValue<List<CategoryModel>> categories,
     AppLocalizations l,
-    bool isDark,
     ColorTheme colorTheme,
   ) {
     return transactions.when(
       data: (List<TransactionModel> transactionsList) {
-        if (transactionsList.isEmpty) {
-          return Padding(
-            padding: const EdgeInsets.all(32),
-            child: Center(
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.receipt_long_outlined,
-                    size: 56,
-                    color: Colors.grey[400],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            if (transactionsList.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.all(32),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.receipt_long_outlined,
+                        size: 56,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 14),
+                      Text(
+                        l.noTransactions,
+                        style: TextStyle(color: Colors.grey[500], fontSize: 15),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        l.addFirstTransaction,
+                        style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 14),
-                  Text(
-                    l.noTransactions,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 15),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    l.addFirstTransaction,
-                    style: TextStyle(color: Colors.grey[400], fontSize: 13),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
+                ),
+              );
+            }
 
-        final recentTransactions = transactionsList.take(5).toList();
+            Map<String, CategoryModel> categoryMap = {};
+            if (categories.hasValue) {
+              for (var cat in categories.value!) {
+                categoryMap[cat.id] = cat;
+              }
+            }
 
-        Map<String, CategoryModel> categoryMap = {};
-        if (categories.hasValue) {
-          for (var cat in categories.value!) {
-            categoryMap[cat.id] = cat;
-          }
-        }
+            // Estimate item height (68px card + 10px margin = ~78px). Using 80 to be safe.
+            const double itemHeight = 80;
+            final int maxItems = (constraints.maxHeight / itemHeight).floor();
+            // Ensure we show at least 1 if there's space, but clamp to list length
+            final int count = maxItems.clamp(0, transactionsList.length);
+            final displayTransactions = transactionsList.take(count).toList();
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: recentTransactions.length,
-          itemBuilder: (context, index) {
-            final transaction = recentTransactions[index];
-            final category = transaction.categoryId != null
-                ? categoryMap[transaction.categoryId]
-                : null;
-            return _buildTransactionItem(
-              context,
-              ref,
-              transaction,
-              category,
-              l,
-              isDark,
-              colorTheme,
+            return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: displayTransactions.length,
+              itemBuilder: (context, index) {
+                final transaction = displayTransactions[index];
+                final category = transaction.categoryId != null
+                    ? categoryMap[transaction.categoryId]
+                    : null;
+                return _buildTransactionItem(
+                  context,
+                  ref,
+                  transaction,
+                  category,
+                  l,
+                  colorTheme,
+                );
+              },
             );
           },
         );
@@ -597,11 +580,25 @@ class DashboardView extends ConsumerWidget {
     TransactionModel transaction,
     CategoryModel? category,
     AppLocalizations l,
-    bool isDark,
     ColorTheme colorTheme,
   ) {
     final isIncome = transaction.type == 'income';
     final color = isIncome ? colorTheme.success : colorTheme.error;
+
+    final accountsList = ref.read(accountsProvider).value ?? [];
+    final txAccount = accountsList.firstWhere(
+      (a) => a.id == transaction.accountId,
+      orElse: () => AccountModel(
+        id: '',
+        userId: '',
+        name: '',
+        type: '',
+        balance: 0,
+        currency: 'TRY',
+        createdAt: DateTime.now(),
+      ),
+    );
+    final String currencySymbol = txAccount.currencySymbol;
 
     IconData categoryIcon = isIncome
         ? Icons.arrow_downward
@@ -623,15 +620,16 @@ class DashboardView extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: colorTheme.outline, width: 1),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(categoryIcon, color: color, size: 20),
@@ -648,7 +646,7 @@ class DashboardView extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      color: colorTheme.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -658,7 +656,10 @@ class DashboardView extends ConsumerWidget {
                     children: [
                       Text(
                         DateFormat('dd MMM', 'tr_TR').format(transaction.date),
-                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorTheme.textSecondary,
+                        ),
                       ),
                       if (transaction.description != null &&
                           category != null) ...[
@@ -687,7 +688,7 @@ class DashboardView extends ConsumerWidget {
               ),
             ),
             Text(
-              '${isIncome ? '+' : '-'}₺${NumberFormat('#,##0.00', 'tr_TR').format(transaction.amount)}',
+              '${isIncome ? '+' : '-'}$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(transaction.amount)}',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -815,12 +816,11 @@ class DashboardView extends ConsumerWidget {
     }
   }
 
-  Widget _buildQuickAccessCard(
+  Widget _buildQuickActionTile(
     BuildContext context, {
-    required IconData icon,
     required String label,
+    required Color accentColor,
     required ColorTheme colorTheme,
-    required bool isDark,
     required VoidCallback onTap,
   }) {
     final r = ResponsiveHelper.of(context);
@@ -828,43 +828,68 @@ class DashboardView extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: r.hp(11), // Dinamik yükseklik (~90px on 800px screen)
-        padding: EdgeInsets.symmetric(
-          vertical: r.paddingXS,
-          horizontal: r.paddingXS,
-        ),
+        height: r.hp(9), // slightly shorter
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: r.borderRadiusM,
-          border: Border.all(
-            color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
-            width: 1,
-          ),
+          border: Border.all(color: colorTheme.outline, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+          ]
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Container(
-              padding: EdgeInsets.all(r.paddingS),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.black.withOpacity(0.05),
-                borderRadius: r.borderRadiusS,
+            // Top Accent Strip
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 4,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      accentColor,
+                      accentColor.withValues(alpha: 0.5),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16), // Match r.borderRadiusM roughly
+                    topRight: Radius.circular(16),
+                  ),
+                ),
               ),
-              child: Icon(icon, color: colorTheme.accent, size: r.iconM),
             ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: r.fontXS,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : AppColors.textPrimary,
+            // Content
+            Padding(
+              padding: EdgeInsets.fromLTRB(r.paddingM, r.paddingM, r.paddingS, r.paddingM),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: r.fontS,
+                        fontWeight: FontWeight.w600,
+                        color: colorTheme.textPrimary,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: colorTheme.textSecondary.withValues(alpha: 0.5),
+                  )
+                ],
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

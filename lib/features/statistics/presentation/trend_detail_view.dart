@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/trend_detail_view.dart
 
 import 'package:flutter/material.dart';
@@ -279,7 +281,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
           ),
           const SizedBox(height: 8),
           Text(
-            '₺${NumberFormat('#,##0.00', 'tr_TR').format(chartData.values.fold<double>(0, (sum, v) => sum + v))}',
+            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(chartData.values.fold<double>(0, (sum, v) => sum + v))}',
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -327,11 +329,11 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                                 gradient: LinearGradient(
                                   colors: _showExpenses
                                       ? [
-                                          colorTheme.error.withOpacity(0.6),
+                                          colorTheme.error.withValues(alpha: 0.6),
                                           colorTheme.error,
                                         ]
                                       : [
-                                          colorTheme.success.withOpacity(0.6),
+                                          colorTheme.success.withValues(alpha: 0.6),
                                           colorTheme.success,
                                         ],
                                   begin: Alignment.topCenter,
@@ -408,7 +410,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             Expanded(
               child: _buildStatCard(
                 title: l.averageTransaction,
-                value: '₺${NumberFormat('#,##0', 'tr_TR').format(avg)}',
+                value: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(avg)}',
                 icon: Icons.calculate,
                 color: Colors.orange,
                 isDark: isDark,
@@ -424,7 +426,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               child: _buildStatCard(
                 title: _showExpenses ? l.biggestExpense : l.biggestIncome,
                 value: maxTx != null
-                    ? '₺${NumberFormat('#,##0', 'tr_TR').format(maxTx.amount)}'
+                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(maxTx.amount)}'
                     : '-',
                 icon: Icons.arrow_upward,
                 color: _showExpenses ? colorTheme.error : colorTheme.success,
@@ -437,7 +439,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               child: _buildStatCard(
                 title: _showExpenses ? l.leastSpendingCategory : l.income,
                 value: minTx != null
-                    ? '₺${NumberFormat('#,##0', 'tr_TR').format(minTx.amount)}'
+                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(minTx.amount)}'
                     : '-',
                 icon: Icons.arrow_downward,
                 color: Colors.teal,
@@ -472,7 +474,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(icon, color: color, size: 16),
@@ -596,7 +598,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               ),
             ),
             Text(
-              '₺${NumberFormat('#,##0', 'tr_TR').format(value)} avg',
+              '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(value)} avg',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -683,7 +685,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '₺${NumberFormat('#,##0', 'tr_TR').format(thisMonth)}',
+                      '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(thisMonth)}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -703,7 +705,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '₺${NumberFormat('#,##0', 'tr_TR').format(lastMonth)}',
+                      '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(lastMonth)}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -727,7 +729,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                           : (_showExpenses
                                 ? colorTheme.success
                                 : colorTheme.error))
-                      .withOpacity(0.1),
+                      .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

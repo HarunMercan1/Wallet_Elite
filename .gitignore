@@ -43,6 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/*.jks
+/android/key.properties
 
 # Environment files - NEVER commit these!
 .env
@@ -55,3 +57,6 @@ app.*.map.json
 bin/diagnose_db.dart
 bin/check_rls.dart
 bin/check_migration.dart
+
+# Supabase CLI local cache
+supabase/.temp/

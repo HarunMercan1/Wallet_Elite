@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/wallet/presentation/wallet_selection_sheet.dart
 
 import 'package:flutter/material.dart';
@@ -189,7 +191,7 @@ class WalletSelectionSheet extends ConsumerWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? colorTheme.primary.withOpacity(0.1)
+              ? colorTheme.primary.withValues(alpha: 0.1)
               : (isDark ? colorTheme.surfaceDark : Colors.white),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
@@ -205,11 +207,11 @@ class WalletSelectionSheet extends ConsumerWidget {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: isAllWallets
-                    ? colorTheme.primary.withOpacity(0.1)
+                    ? colorTheme.primary.withValues(alpha: 0.1)
                     : _getWalletColor(
                         account.type,
                         colorTheme,
-                      ).withOpacity(0.1),
+                      ).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -249,8 +251,8 @@ class WalletSelectionSheet extends ConsumerWidget {
             else
               Text(
                 isAllWallets
-                    ? '₺${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}'
-                    : '₺${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}'
+                    : '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

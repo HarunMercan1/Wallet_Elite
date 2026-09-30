@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/features/wallet/data/debt_repository.dart
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -23,7 +24,7 @@ class DebtRepository {
           .map((json) => DebtModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Borçları getirme hatası: $e');
+      debugPrint('Borçları getirme hatası: $e');
       return [];
     }
   }
@@ -42,7 +43,7 @@ class DebtRepository {
           .map((json) => DebtModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Alacakları getirme hatası: $e');
+      debugPrint('Alacakları getirme hatası: $e');
       return [];
     }
   }
@@ -61,7 +62,7 @@ class DebtRepository {
           .map((json) => DebtModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Borçları getirme hatası: $e');
+      debugPrint('Borçları getirme hatası: $e');
       return [];
     }
   }
@@ -80,7 +81,7 @@ class DebtRepository {
           .map((json) => DebtModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Aktif borçları getirme hatası: $e');
+      debugPrint('Aktif borçları getirme hatası: $e');
       return [];
     }
   }
@@ -104,7 +105,7 @@ class DebtRepository {
           .map((json) => DebtModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Yaklaşan borçları getirme hatası: $e');
+      debugPrint('Yaklaşan borçları getirme hatası: $e');
       return [];
     }
   }
@@ -126,7 +127,7 @@ class DebtRepository {
           .map((json) => DebtModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Vadesi geçmiş borçları getirme hatası: $e');
+      debugPrint('Vadesi geçmiş borçları getirme hatası: $e');
       return [];
     }
   }
@@ -141,11 +142,11 @@ class DebtRepository {
     String? description,
   }) async {
     try {
-      print('🔄 Borç/alacak oluşturuluyor...');
-      print('   user_id: $userId');
-      print('   personName: $personName');
-      print('   amount: $amount');
-      print('   type: $type');
+      debugPrint('🔄 Borç/alacak oluşturuluyor...');
+      debugPrint('   user_id: $userId');
+      debugPrint('   personName: $personName');
+      debugPrint('   amount: $amount');
+      debugPrint('   type: $type');
 
       final response = await _supabase
           .from('debts')
@@ -162,17 +163,17 @@ class DebtRepository {
           .select()
           .single();
 
-      print('✅ Borç/alacak başarıyla oluşturuldu: ${response['id']}');
+      debugPrint('✅ Borç/alacak başarıyla oluşturuldu: ${response['id']}');
       return DebtModel.fromJson(response);
     } on PostgrestException catch (e) {
-      print('❌ Supabase PostgrestException:');
-      print('   Code: ${e.code}');
-      print('   Message: ${e.message}');
-      print('   Details: ${e.details}');
-      print('   Hint: ${e.hint}');
+      debugPrint('❌ Supabase PostgrestException:');
+      debugPrint('   Code: ${e.code}');
+      debugPrint('   Message: ${e.message}');
+      debugPrint('   Details: ${e.details}');
+      debugPrint('   Hint: ${e.hint}');
       throw 'Veritabanı hatası: ${e.message} (Kod: ${e.code})';
     } catch (e) {
-      print('❌ Borç/alacak oluşturma hatası: $e');
+      debugPrint('❌ Borç/alacak oluşturma hatası: $e');
       throw 'Beklenmeyen bir hata oluştu: $e';
     }
   }
@@ -189,7 +190,7 @@ class DebtRepository {
 
       return DebtModel.fromJson(response);
     } catch (e) {
-      print('Borç güncelleme hatası: $e');
+      debugPrint('Borç güncelleme hatası: $e');
       return null;
     }
   }
@@ -233,7 +234,7 @@ class DebtRepository {
 
       return DebtModel.fromJson(response);
     } catch (e) {
-      print('Ödeme kaydetme hatası: $e');
+      debugPrint('Ödeme kaydetme hatası: $e');
       throw 'Ödeme kaydedilirken hata oluştu: $e';
     }
   }
@@ -251,7 +252,7 @@ class DebtRepository {
           .map((json) => DebtPaymentModel.fromJson(json))
           .toList();
     } catch (e) {
-      print('Ödeme geçmişi getirme hatası: $e');
+      debugPrint('Ödeme geçmişi getirme hatası: $e');
       return [];
     }
   }
@@ -266,7 +267,7 @@ class DebtRepository {
 
       return true;
     } catch (e) {
-      print('Borç tamamlama hatası: $e');
+      debugPrint('Borç tamamlama hatası: $e');
       return false;
     }
   }
@@ -277,7 +278,7 @@ class DebtRepository {
       await _supabase.from('debts').delete().eq('id', debtId);
       return true;
     } catch (e) {
-      print('Borç silme hatası: $e');
+      debugPrint('Borç silme hatası: $e');
       return false;
     }
   }
@@ -300,7 +301,7 @@ class DebtRepository {
       }
       return total;
     } catch (e) {
-      print('Toplam alacak hesaplama hatası: $e');
+      debugPrint('Toplam alacak hesaplama hatası: $e');
       return 0;
     }
   }
@@ -321,7 +322,7 @@ class DebtRepository {
       }
       return total;
     } catch (e) {
-      print('Toplam borç hesaplama hatası: $e');
+      debugPrint('Toplam borç hesaplama hatası: $e');
       return 0;
     }
   }
@@ -341,7 +342,7 @@ class DebtRepository {
       }
       return uniqueNames.length;
     } catch (e) {
-      print('Kişi sayısı hesaplama hatası: $e');
+      debugPrint('Kişi sayısı hesaplama hatası: $e');
       return 0;
     }
   }

@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/statistics_view.dart
 
 import 'package:flutter/material.dart';
@@ -143,7 +145,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                         Expanded(
                           child: _buildQuickStatCard(
                             l.averageDailySpending,
-                            '₺${NumberFormat('#,##0.00', 'tr_TR').format(avgDailySpending)}',
+                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(avgDailySpending)}',
                             Icons.calendar_today,
                             colorTheme.primary,
                             isDark,
@@ -536,7 +538,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: colorTheme.primary.withOpacity(0.15),
+          color: colorTheme.primary.withValues(alpha: 0.15),
           width: 1,
         ),
       ),
@@ -558,7 +560,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${isPositive ? '+' : ''}₺${NumberFormat('#,##0.00', 'tr_TR').format(balance)}',
+                    '${isPositive ? '+' : ''}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(balance)}',
                     style: TextStyle(
                       color: isDark ? Colors.white : Colors.black87,
                       fontSize: 32,
@@ -573,7 +575,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: colorTheme.primary.withOpacity(0.1),
+                  color: colorTheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -605,7 +607,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               Expanded(
                 child: _buildBalanceStat(
                   l.totalIncome,
-                  '₺${NumberFormat('#,##0.00', 'tr_TR').format(income)}',
+                  '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(income)}',
                   Icons.arrow_downward,
                   colorTheme.success,
                   isDark,
@@ -616,7 +618,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               Expanded(
                 child: _buildBalanceStat(
                   l.totalExpense,
-                  '₺${NumberFormat('#,##0.00', 'tr_TR').format(expense)}',
+                  '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(expense)}',
                   Icons.arrow_upward,
                   colorTheme.error,
                   isDark,
@@ -641,7 +643,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey[50],
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -701,7 +703,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, color: color, size: 18),
@@ -826,7 +828,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: colorTheme.error.withOpacity(0.1),
+                    color: colorTheme.error.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -915,7 +917,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: scoreColor.withOpacity(0.1),
+              color: scoreColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(Icons.speed, color: scoreColor, size: 18),
@@ -938,7 +940,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: scoreColor.withOpacity(0.1),
+              color: scoreColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -1110,7 +1112,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: colorTheme.primary.withOpacity(0.1),
+                    color: colorTheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -1136,7 +1138,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                             ),
                           ),
                           Text(
-                            '₺${NumberFormat('#,##0.00', 'tr_TR').format(entry.value)}',
+                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(entry.value)}',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -1193,7 +1195,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1201,7 +1203,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
           const SizedBox(height: 8),
           Text(
-            '₺${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
+            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -1280,7 +1282,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      colorTheme.primary.withOpacity(0.7),
+                      colorTheme.primary.withValues(alpha: 0.7),
                       colorTheme.primary,
                     ],
                     begin: Alignment.topCenter,
@@ -1673,7 +1675,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       decoration: BoxDecoration(
         color: isDark ? colorTheme.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorTheme.primary.withOpacity(0.2)),
+        border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1728,7 +1730,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -1897,7 +1899,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                       ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: colorTheme.primary.withOpacity(0.2),
+                        color: colorTheme.primary.withValues(alpha: 0.2),
                       ),
                     ),
                   ],

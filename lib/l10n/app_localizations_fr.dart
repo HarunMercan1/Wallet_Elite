@@ -965,214 +965,218 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reset => 'Réinitialiser';
 
   @override
-  String get recurringTransactions => 'Recurring Transactions';
+  String get recurringTransactions => 'Transactions récurrentes';
 
   @override
-  String get addRecurringTransaction => 'Add Recurring Transaction';
+  String get addRecurringTransaction => 'Ajouter une transaction récurrente';
 
   @override
-  String get editRecurringTransaction => 'Edit Recurring Transaction';
+  String get editRecurringTransaction => 'Modifier la transaction récurrente';
 
   @override
-  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+  String get deleteRecurringTransaction =>
+      'Supprimer la transaction récurrente';
 
   @override
   String get deleteRecurringConfirmation =>
-      'Are you sure you want to delete this recurring transaction?';
+      'Êtes-vous sûr de vouloir supprimer cette transaction récurrente ?';
 
   @override
-  String get noRecurringTransactions => 'No recurring transactions yet';
+  String get noRecurringTransactions => 'Aucune transaction récurrente encore';
 
   @override
   String get addRecurringTransactionHint =>
-      'Save time by adding regular transactions like salary and bills';
+      'Gagnez du temps en ajoutant des transactions régulières comme le salaire et les factures';
 
   @override
-  String get frequency => 'Frequency';
+  String get frequency => 'Fréquence';
 
   @override
-  String get yearly => 'Yearly';
+  String get yearly => 'Annuel';
 
   @override
-  String get dayOfMonth => 'Day of Month';
+  String get dayOfMonth => 'Jour du mois';
 
   @override
-  String get dayOfWeek => 'Day of Week';
+  String get dayOfWeek => 'Jour de la semaine';
 
   @override
-  String get nextExecution => 'Next Execution';
+  String get nextExecution => 'Prochaine exécution';
 
   @override
-  String get active => 'Active';
+  String get active => 'Actif';
 
   @override
-  String get inactive => 'Inactive';
+  String get inactive => 'Inactif';
 
   @override
-  String get optional => 'Optional';
+  String get optional => 'Optionnel';
 
   @override
-  String get monday => 'Monday';
+  String get monday => 'Lundi';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => 'Mardi';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => 'Mercredi';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => 'Jeudi';
 
   @override
-  String get friday => 'Friday';
+  String get friday => 'Vendredi';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => 'Samedi';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => 'Dimanche';
 
   @override
   String get description => 'Description';
 
   @override
-  String get descriptionHint => 'e.g. Netflix subscription';
+  String get descriptionHint => 'ex: Abonnement Netflix';
 
   @override
-  String get selectAccount => 'Select Account';
+  String get selectAccount => 'Sélectionner un compte';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'Sélectionner une catégorie';
 
   @override
-  String get pleaseEnterAmount => 'Please enter amount';
+  String get pleaseEnterAmount => 'Veuillez entrer le montant';
 
   @override
-  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+  String get pleaseEnterValidAmount => 'Veuillez entrer un montant valide';
 
   @override
-  String get pleaseSelectAccount => 'Please select an account';
+  String get pleaseSelectAccount => 'Veuillez sélectionner un compte';
 
   @override
   String get budget => 'Budget';
 
   @override
-  String get addBudget => 'Add Budget';
+  String get addBudget => 'Ajouter un budget';
 
   @override
-  String get editBudget => 'Edit Budget';
+  String get editBudget => 'Modifier le budget';
 
   @override
-  String get deleteBudget => 'Delete Budget';
+  String get deleteBudget => 'Supprimer le budget';
 
   @override
   String get deleteBudgetConfirmation =>
-      'Are you sure you want to delete this budget?';
+      'Êtes-vous sûr de vouloir supprimer ce budget ?';
 
   @override
-  String get noBudgets => 'No budgets yet';
+  String get noBudgets => 'Aucun budget encore';
 
   @override
-  String get addBudgetHint =>
-      'Create a budget to keep your expenses under control';
+  String get addBudgetHint => 'Créez un budget pour contrôler vos dépenses';
 
   @override
-  String get budgetName => 'Budget Name';
+  String get budgetName => 'Nom du budget';
 
   @override
-  String get budgetNameHint => 'e.g. Monthly Food Budget';
+  String get budgetNameHint => 'ex: Budget alimentaire mensuel';
 
   @override
-  String get pleaseEnterBudgetName => 'Please enter budget name';
+  String get pleaseEnterBudgetName => 'Veuillez entrer le nom du budget';
 
   @override
-  String get budgetAmount => 'Budget Limit';
+  String get budgetAmount => 'Limite du budget';
 
   @override
-  String get budgetPeriod => 'Budget Period';
+  String get budgetPeriod => 'Période du budget';
 
   @override
-  String get budgetStartDay => 'Period Start Day';
+  String get budgetStartDay => 'Jour de début de période';
 
   @override
-  String get allExpenses => 'All Expenses';
+  String get allExpenses => 'Toutes les dépenses';
 
   @override
-  String get notifyAtPercent => 'Warning Percentage';
+  String get notifyAtPercent => 'Pourcentage d\'alerte';
 
   @override
-  String get notifyWhenExceeded => 'Notify when exceeded';
+  String get notifyWhenExceeded => 'Notifier en cas de dépassement';
 
   @override
-  String get used => 'used';
+  String get used => 'utilisé';
 
   @override
-  String get exceeded => 'exceeded';
+  String get exceeded => 'dépassé';
 
   @override
-  String get secureData => 'Your data is secure and encrypted';
+  String get secureData => 'Vos données sont sécurisées et chiffrées';
 
   @override
-  String get cloudSync => 'Sync across all your devices';
+  String get cloudSync => 'Synchronisez sur tous vos appareils';
 
   @override
-  String get smartInsights => 'Smart insights about your finances';
+  String get smartInsights => 'Informations intelligentes sur vos finances';
 
   @override
-  String get discoverFeatures => 'Discover Features';
+  String get discoverFeatures => 'Découvrir les fonctionnalités';
 
   @override
   String get discoverFeaturesDesc =>
-      'Everything you need to manage your finances';
+      'Tout ce dont vous avez besoin pour gérer vos finances';
 
   @override
-  String get budgetTracking => 'Budget Tracking';
+  String get budgetTracking => 'Suivi du budget';
 
   @override
-  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+  String get budgetTrackingDesc =>
+      'Définissez des limites de dépenses et respectez-les';
 
   @override
-  String get recurringTransactionsDesc => 'Automate your regular payments';
+  String get recurringTransactionsDesc => 'Automatisez vos paiements réguliers';
 
   @override
-  String get selectLanguageDesc => 'Choose your preferred language';
+  String get selectLanguageDesc => 'Choisissez votre langue préférée';
 
   @override
-  String get selectThemeDesc => 'Personalize your app experience';
+  String get selectThemeDesc => 'Personnalisez votre expérience';
 
   @override
-  String get themeOcean => 'Ocean';
+  String get themeOcean => 'Océan';
 
   @override
-  String get themeSunset => 'Sunset';
+  String get themeSunset => 'Coucher de soleil';
 
   @override
-  String get themeForest => 'Forest';
+  String get themeForest => 'Forêt';
 
   @override
-  String get themeLavender => 'Lavender';
+  String get themeLavender => 'Lavande';
 
   @override
-  String get themeMidnight => 'Midnight';
+  String get themeMidnight => 'Minuit';
 
   @override
   String get themeRose => 'Rose';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => 'Mode sombre';
 
   @override
-  String get japaneseYen => 'Japanese Yen';
+  String get japaneseYen => 'Yen japonais';
 
   @override
-  String get russianRuble => 'Russian Ruble';
+  String get russianRuble => 'Rouble russe';
 
   @override
-  String get categoryDistribution => 'Category Distribution';
+  String get categoryDistribution => 'Répartition par catégorie';
 
   @override
-  String get other => 'Other';
+  String get other => 'Autre';
 
   @override
-  String get last7DaysSpending => 'Last 7 Days Spending';
+  String get last7DaysSpending => 'Dépenses des 7 derniers jours';
+
+  @override
+  String get currencyLabel => 'Devise';
 }

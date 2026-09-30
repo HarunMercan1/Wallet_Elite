@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/recurring/presentation/add_recurring_sheet.dart
 
 import 'package:flutter/material.dart';
@@ -245,8 +247,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
                 color: !_isIncome
-                    ? colorTheme.expense.withOpacity(0.15)
-                    : Colors.grey.withOpacity(0.1),
+                    ? colorTheme.expense.withValues(alpha: 0.15)
+                    : Colors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: !_isIncome
                     ? Border.all(color: colorTheme.expense, width: 2)
@@ -280,8 +282,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
                 color: _isIncome
-                    ? colorTheme.income.withOpacity(0.15)
-                    : Colors.grey.withOpacity(0.1),
+                    ? colorTheme.income.withValues(alpha: 0.15)
+                    : Colors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: _isIncome
                     ? Border.all(color: colorTheme.income, width: 2)
@@ -326,7 +328,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       ),
       decoration: InputDecoration(
         labelText: l.amount,
-        prefixText: '₺ ',
+        prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
         prefixStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
@@ -334,8 +336,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         ),
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -367,8 +369,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         hintText: l.descriptionHint,
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -394,8 +396,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         labelText: l.selectAccount,
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -431,8 +433,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         labelText: l.selectCategory,
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -479,7 +481,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               onSelected: (selected) {
                 if (selected) setState(() => _frequency = freq);
               },
-              selectedColor: colorTheme.primary.withOpacity(0.2),
+              selectedColor: colorTheme.primary.withValues(alpha: 0.2),
               labelStyle: TextStyle(
                 color: isSelected ? colorTheme.primary : null,
                 fontWeight: isSelected ? FontWeight.w600 : null,
@@ -502,8 +504,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         labelText: l.dayOfMonth,
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -544,8 +546,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         labelText: l.dayOfWeek,
         filled: true,
         fillColor: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -581,8 +583,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.black.withOpacity(0.05),
+                    ? Colors.white.withValues(alpha: 0.05)
+                    : Colors.black.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -617,8 +619,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.black.withOpacity(0.05),
+                    ? Colors.white.withValues(alpha: 0.05)
+                    : Colors.black.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(

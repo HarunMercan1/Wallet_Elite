@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/recurring/presentation/recurring_transactions_view.dart
 
 import 'package:flutter/material.dart';
@@ -180,7 +182,7 @@ class RecurringTransactionsView extends ConsumerWidget {
   ) {
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).languageCode,
-      symbol: '₺',
+      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
       decimalDigits: 2,
     );
 
@@ -193,7 +195,7 @@ class RecurringTransactionsView extends ConsumerWidget {
         color: isDark ? colorTheme.cardDark : colorTheme.cardLight,
         borderRadius: BorderRadius.circular(16),
         border: !recurring.isActive
-            ? Border.all(color: Colors.grey.withOpacity(0.3), width: 1)
+            ? Border.all(color: Colors.grey.withValues(alpha: 0.3), width: 1)
             : null,
       ),
       child: Material(
@@ -213,7 +215,7 @@ class RecurringTransactionsView extends ConsumerWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: amountColor.withOpacity(0.15),
+                        color: amountColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
@@ -254,7 +256,7 @@ class RecurringTransactionsView extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.2),
+                                    color: Colors.grey.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(

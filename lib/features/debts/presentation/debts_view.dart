@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/debts_view.dart
 
 import 'package:flutter/material.dart';
@@ -108,7 +110,7 @@ class DebtsView extends ConsumerWidget {
     final peopleCount = ref.watch(debtPeopleCountProvider);
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '₺',
+      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
       decimalDigits: 2,
     );
 
@@ -133,7 +135,7 @@ class DebtsView extends ConsumerWidget {
                   value: totalLent.when(
                     data: (v) => currencyFormat.format(v),
                     loading: () => '...',
-                    error: (_, __) => '₺0.00',
+                    error: (_, __) => '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
                   ),
                   icon: Icons.arrow_upward,
                   color: Colors.green.shade300,
@@ -147,7 +149,7 @@ class DebtsView extends ConsumerWidget {
                   value: totalBorrowed.when(
                     data: (v) => currencyFormat.format(v),
                     loading: () => '...',
-                    error: (_, __) => '₺0.00',
+                    error: (_, __) => '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
                   ),
                   icon: Icons.arrow_downward,
                   color: Colors.red.shade300,
@@ -406,7 +408,7 @@ class DebtsView extends ConsumerWidget {
   ) {
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '₺',
+      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
       decimalDigits: 2,
     );
     final dateFormat = DateFormat(
@@ -656,7 +658,7 @@ class DebtsView extends ConsumerWidget {
         [];
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '₺',
+      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
       decimalDigits: 2,
     );
 
@@ -770,7 +772,7 @@ class DebtsView extends ConsumerWidget {
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: (isLend ? Colors.green : Colors.red)
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(

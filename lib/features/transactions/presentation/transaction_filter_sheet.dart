@@ -282,7 +282,7 @@ class _TransactionFilterSheetState
         setState(() => _state = _state.copyWith(sortOption: option));
       },
       backgroundColor: isDark ? colorTheme.surfaceDark : Colors.grey[100],
-      selectedColor: colorTheme.primary.withOpacity(0.2),
+      selectedColor: colorTheme.primary.withValues(alpha: 0.2),
       labelStyle: TextStyle(
         color: isSelected
             ? colorTheme.primary
@@ -410,7 +410,7 @@ class _TransactionFilterSheetState
         setState(() => _state = _state.copyWith(selectedCategoryIds: ids));
       },
       backgroundColor: isDark ? colorTheme.surfaceDark : Colors.grey[100],
-      selectedColor: colorTheme.primary.withOpacity(0.2),
+      selectedColor: colorTheme.primary.withValues(alpha: 0.2),
       checkmarkColor: colorTheme.primary,
       labelStyle: TextStyle(
         color: isSelected

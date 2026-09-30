@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/month_comparison_view.dart
 
 import 'package:flutter/material.dart';
@@ -55,6 +57,8 @@ class MonthComparisonView extends ConsumerWidget {
     final thisMonthStats = _calculateStats(thisMonthTx);
     final lastMonthStats = _calculateStats(lastMonthTx);
 
+    final currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+
     return Scaffold(
       backgroundColor: isDark
           ? colorTheme.backgroundDark
@@ -89,6 +93,7 @@ class MonthComparisonView extends ConsumerWidget {
               l,
               isDark,
               colorTheme,
+              currencySymbol,
             ),
 
             const SizedBox(height: 24),
@@ -100,6 +105,7 @@ class MonthComparisonView extends ConsumerWidget {
               l,
               isDark,
               colorTheme,
+              currencySymbol,
             ),
 
             const SizedBox(height: 24),
@@ -120,6 +126,7 @@ class MonthComparisonView extends ConsumerWidget {
               l,
               isDark,
               colorTheme,
+              currencySymbol,
             ),
 
             const SizedBox(height: 100),
@@ -160,6 +167,7 @@ class MonthComparisonView extends ConsumerWidget {
     AppLocalizations l,
     bool isDark,
     dynamic colorTheme,
+    String currencySymbol,
   ) {
     final incomeChange = lastMonth['income']! > 0
         ? ((thisMonth['income']! - lastMonth['income']!) /
@@ -183,35 +191,38 @@ class MonthComparisonView extends ConsumerWidget {
         children: [
           // Gelir Karşılaştırma
           _buildComparisonRow(
-            l.income,
-            thisMonth['income']!,
-            lastMonth['income']!,
-            incomeChange,
-            incomeChange >= 0, // Gelir artışı iyi
-            colorTheme,
-            isDark,
+            label: l.income,
+            thisMonth: thisMonth['income']!,
+            lastMonth: lastMonth['income']!,
+            change: incomeChange,
+            isPositive: incomeChange >= 0, // Gelir artışı iyi
+            colorTheme: colorTheme,
+            isDark: isDark,
+            currencySymbol: currencySymbol,
           ),
           const Divider(height: 24),
           // Gider Karşılaştırma
           _buildComparisonRow(
-            l.expense,
-            thisMonth['expense']!,
-            lastMonth['expense']!,
-            expenseChange,
-            expenseChange <= 0, // Gider azalışı iyi
-            colorTheme,
-            isDark,
+            label: l.expense,
+            thisMonth: thisMonth['expense']!,
+            lastMonth: lastMonth['expense']!,
+            change: expenseChange,
+            isPositive: expenseChange <= 0, // Gider azalışı iyi
+            colorTheme: colorTheme,
+            isDark: isDark,
+            currencySymbol: currencySymbol,
           ),
           const Divider(height: 24),
           // Tasarruf Karşılaştırma
           _buildComparisonRow(
-            l.balance,
-            thisMonth['balance']!,
-            lastMonth['balance']!,
-            savingsChange,
-            savingsChange >= 0,
-            colorTheme,
-            isDark,
+            label: l.balance,
+            thisMonth: thisMonth['balance']!,
+            lastMonth: lastMonth['balance']!,
+            change: savingsChange,
+            isPositive: savingsChange >= 0,
+            colorTheme: colorTheme,
+            isDark: isDark,
+            currencySymbol: currencySymbol,
             isAmount: true,
           ),
         ],
@@ -219,14 +230,15 @@ class MonthComparisonView extends ConsumerWidget {
     );
   }
 
-  Widget _buildComparisonRow(
-    String label,
-    double thisMonth,
-    double lastMonth,
-    double change,
-    bool isPositive,
-    dynamic colorTheme,
-    bool isDark, {
+  Widget _buildComparisonRow({
+    required String label,
+    required double thisMonth,
+    required double lastMonth,
+    required double change,
+    required bool isPositive,
+    required dynamic colorTheme,
+    required bool isDark,
+    required String currencySymbol,
     bool isAmount = false,
   }) {
     final formatter = NumberFormat('#,##0.00', 'tr_TR');
@@ -250,7 +262,7 @@ class MonthComparisonView extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '₺${formatter.format(thisMonth)}',
+                '$currencySymbol${formatter.format(thisMonth)}',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -278,6 +290,7 @@ class MonthComparisonView extends ConsumerWidget {
     AppLocalizations l,
     bool isDark,
     dynamic colorTheme,
+    String currencySymbol,
   ) {
     final maxValue = [
       thisMonth['income']!,
@@ -354,7 +367,7 @@ class MonthComparisonView extends ConsumerWidget {
                     barRods: [
                       BarChartRodData(
                         toY: lastMonth['income']!,
-                        color: colorTheme.success.withOpacity(0.5),
+                        color: colorTheme.success.withValues(alpha: 0.5),
                         width: 20,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(4),
@@ -376,7 +389,7 @@ class MonthComparisonView extends ConsumerWidget {
                     barRods: [
                       BarChartRodData(
                         toY: lastMonth['expense']!,
-                        color: colorTheme.error.withOpacity(0.5),
+                        color: colorTheme.error.withValues(alpha: 0.5),
                         width: 20,
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(4),
@@ -403,7 +416,7 @@ class MonthComparisonView extends ConsumerWidget {
             children: [
               _buildLegendItem(
                 l.lastMonth,
-                colorTheme.primary.withOpacity(0.5),
+                colorTheme.primary.withValues(alpha: 0.5),
                 isDark,
               ),
               const SizedBox(width: 24),
@@ -444,6 +457,7 @@ class MonthComparisonView extends ConsumerWidget {
     AppLocalizations l,
     bool isDark,
     dynamic colorTheme,
+    String currencySymbol,
   ) {
     // Kategori bazlı harcamaları hesapla
     final thisMonthCategories = <String, double>{};
@@ -520,7 +534,7 @@ class MonthComparisonView extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: colorTheme.primary.withOpacity(0.1),
+                    color: colorTheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -543,7 +557,7 @@ class MonthComparisonView extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        '₺${NumberFormat('#,##0.00', 'tr_TR').format(thisMonthAmount)}',
+                        '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(thisMonthAmount)}',
                         style: TextStyle(
                           fontSize: 12,
                           color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -559,7 +573,7 @@ class MonthComparisonView extends ConsumerWidget {
                   ),
                   decoration: BoxDecoration(
                     color: (isIncrease ? colorTheme.error : colorTheme.success)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(

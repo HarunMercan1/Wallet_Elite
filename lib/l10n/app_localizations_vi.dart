@@ -963,214 +963,215 @@ class AppLocalizationsVi extends AppLocalizations {
   String get reset => 'Đặt lại';
 
   @override
-  String get recurringTransactions => 'Recurring Transactions';
+  String get recurringTransactions => 'Giao dịch định kỳ';
 
   @override
-  String get addRecurringTransaction => 'Add Recurring Transaction';
+  String get addRecurringTransaction => 'Thêm giao dịch định kỳ';
 
   @override
-  String get editRecurringTransaction => 'Edit Recurring Transaction';
+  String get editRecurringTransaction => 'Sửa giao dịch định kỳ';
 
   @override
-  String get deleteRecurringTransaction => 'Delete Recurring Transaction';
+  String get deleteRecurringTransaction => 'Xóa giao dịch định kỳ';
 
   @override
   String get deleteRecurringConfirmation =>
-      'Are you sure you want to delete this recurring transaction?';
+      'Bạn có chắc muốn xóa giao dịch định kỳ này?';
 
   @override
-  String get noRecurringTransactions => 'No recurring transactions yet';
+  String get noRecurringTransactions => 'Chưa có giao dịch định kỳ';
 
   @override
   String get addRecurringTransactionHint =>
-      'Save time by adding regular transactions like salary and bills';
+      'Tiết kiệm thời gian bằng cách thêm giao dịch định kỳ như lương và hóa đơn';
 
   @override
-  String get frequency => 'Frequency';
+  String get frequency => 'Tần suất';
 
   @override
-  String get yearly => 'Yearly';
+  String get yearly => 'Hàng năm';
 
   @override
-  String get dayOfMonth => 'Day of Month';
+  String get dayOfMonth => 'Ngày trong tháng';
 
   @override
-  String get dayOfWeek => 'Day of Week';
+  String get dayOfWeek => 'Ngày trong tuần';
 
   @override
-  String get nextExecution => 'Next Execution';
+  String get nextExecution => 'Lần thực hiện tiếp theo';
 
   @override
-  String get active => 'Active';
+  String get active => 'Hoạt động';
 
   @override
-  String get inactive => 'Inactive';
+  String get inactive => 'Không hoạt động';
 
   @override
-  String get optional => 'Optional';
+  String get optional => 'Tùy chọn';
 
   @override
-  String get monday => 'Monday';
+  String get monday => 'Thứ Hai';
 
   @override
-  String get tuesday => 'Tuesday';
+  String get tuesday => 'Thứ Ba';
 
   @override
-  String get wednesday => 'Wednesday';
+  String get wednesday => 'Thứ Tư';
 
   @override
-  String get thursday => 'Thursday';
+  String get thursday => 'Thứ Năm';
 
   @override
-  String get friday => 'Friday';
+  String get friday => 'Thứ Sáu';
 
   @override
-  String get saturday => 'Saturday';
+  String get saturday => 'Thứ Bảy';
 
   @override
-  String get sunday => 'Sunday';
+  String get sunday => 'Chủ Nhật';
 
   @override
-  String get description => 'Description';
+  String get description => 'Mô tả';
 
   @override
-  String get descriptionHint => 'e.g. Netflix subscription';
+  String get descriptionHint => 'VD: Đăng ký Netflix';
 
   @override
-  String get selectAccount => 'Select Account';
+  String get selectAccount => 'Chọn tài khoản';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'Chọn danh mục';
 
   @override
-  String get pleaseEnterAmount => 'Please enter amount';
+  String get pleaseEnterAmount => 'Vui lòng nhập số tiền';
 
   @override
-  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+  String get pleaseEnterValidAmount => 'Vui lòng nhập số tiền hợp lệ';
 
   @override
-  String get pleaseSelectAccount => 'Please select an account';
+  String get pleaseSelectAccount => 'Vui lòng chọn tài khoản';
 
   @override
-  String get budget => 'Budget';
+  String get budget => 'Ngân sách';
 
   @override
-  String get addBudget => 'Add Budget';
+  String get addBudget => 'Thêm ngân sách';
 
   @override
-  String get editBudget => 'Edit Budget';
+  String get editBudget => 'Sửa ngân sách';
 
   @override
-  String get deleteBudget => 'Delete Budget';
+  String get deleteBudget => 'Xóa ngân sách';
 
   @override
-  String get deleteBudgetConfirmation =>
-      'Are you sure you want to delete this budget?';
+  String get deleteBudgetConfirmation => 'Bạn có chắc muốn xóa ngân sách này?';
 
   @override
-  String get noBudgets => 'No budgets yet';
+  String get noBudgets => 'Chưa có ngân sách';
 
   @override
-  String get addBudgetHint =>
-      'Create a budget to keep your expenses under control';
+  String get addBudgetHint => 'Tạo ngân sách để kiểm soát chi tiêu';
 
   @override
-  String get budgetName => 'Budget Name';
+  String get budgetName => 'Tên ngân sách';
 
   @override
-  String get budgetNameHint => 'e.g. Monthly Food Budget';
+  String get budgetNameHint => 'VD: Ngân sách ăn uống hàng tháng';
 
   @override
-  String get pleaseEnterBudgetName => 'Please enter budget name';
+  String get pleaseEnterBudgetName => 'Vui lòng nhập tên ngân sách';
 
   @override
-  String get budgetAmount => 'Budget Limit';
+  String get budgetAmount => 'Hạn mức ngân sách';
 
   @override
-  String get budgetPeriod => 'Budget Period';
+  String get budgetPeriod => 'Kỳ ngân sách';
 
   @override
-  String get budgetStartDay => 'Period Start Day';
+  String get budgetStartDay => 'Ngày bắt đầu kỳ';
 
   @override
-  String get allExpenses => 'All Expenses';
+  String get allExpenses => 'Tất cả chi tiêu';
 
   @override
-  String get notifyAtPercent => 'Warning Percentage';
+  String get notifyAtPercent => 'Phần trăm cảnh báo';
 
   @override
-  String get notifyWhenExceeded => 'Notify when exceeded';
+  String get notifyWhenExceeded => 'Thông báo khi vượt mức';
 
   @override
-  String get used => 'used';
+  String get used => 'đã dùng';
 
   @override
-  String get exceeded => 'exceeded';
+  String get exceeded => 'vượt mức';
 
   @override
-  String get secureData => 'Your data is secure and encrypted';
+  String get secureData => 'Dữ liệu của bạn được bảo mật và mã hóa';
 
   @override
-  String get cloudSync => 'Sync across all your devices';
+  String get cloudSync => 'Đồng bộ trên mọi thiết bị';
 
   @override
-  String get smartInsights => 'Smart insights about your finances';
+  String get smartInsights => 'Thông tin thông minh về tài chính';
 
   @override
-  String get discoverFeatures => 'Discover Features';
+  String get discoverFeatures => 'Khám phá tính năng';
 
   @override
-  String get discoverFeaturesDesc =>
-      'Everything you need to manage your finances';
+  String get discoverFeaturesDesc => 'Mọi thứ bạn cần để quản lý tài chính';
 
   @override
-  String get budgetTracking => 'Budget Tracking';
+  String get budgetTracking => 'Theo dõi ngân sách';
 
   @override
-  String get budgetTrackingDesc => 'Set spending limits and stay on track';
+  String get budgetTrackingDesc => 'Đặt hạn mức chi tiêu và tuân thủ';
 
   @override
-  String get recurringTransactionsDesc => 'Automate your regular payments';
+  String get recurringTransactionsDesc =>
+      'Tự động hóa các khoản thanh toán định kỳ';
 
   @override
-  String get selectLanguageDesc => 'Choose your preferred language';
+  String get selectLanguageDesc => 'Chọn ngôn ngữ ưa thích';
 
   @override
-  String get selectThemeDesc => 'Personalize your app experience';
+  String get selectThemeDesc => 'Cá nhân hóa trải nghiệm ứng dụng';
 
   @override
-  String get themeOcean => 'Ocean';
+  String get themeOcean => 'Đại dương';
 
   @override
-  String get themeSunset => 'Sunset';
+  String get themeSunset => 'Hoàng hôn';
 
   @override
-  String get themeForest => 'Forest';
+  String get themeForest => 'Rừng';
 
   @override
-  String get themeLavender => 'Lavender';
+  String get themeLavender => 'Oải hương';
 
   @override
-  String get themeMidnight => 'Midnight';
+  String get themeMidnight => 'Nửa đêm';
 
   @override
-  String get themeRose => 'Rose';
+  String get themeRose => 'Hoa hồng';
 
   @override
-  String get darkMode => 'Dark Mode';
+  String get darkMode => 'Chế độ tối';
 
   @override
-  String get japaneseYen => 'Japanese Yen';
+  String get japaneseYen => 'Yên Nhật';
 
   @override
-  String get russianRuble => 'Russian Ruble';
+  String get russianRuble => 'Rúp Nga';
 
   @override
-  String get categoryDistribution => 'Category Distribution';
+  String get categoryDistribution => 'Phân bố danh mục';
 
   @override
-  String get other => 'Other';
+  String get other => 'Khác';
 
   @override
-  String get last7DaysSpending => 'Last 7 Days Spending';
+  String get last7DaysSpending => 'Chi tiêu 7 ngày qua';
+
+  @override
+  String get currencyLabel => 'Tiền tệ';
 }

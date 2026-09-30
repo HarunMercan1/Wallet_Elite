@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 // lib/core/widgets/app_router.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,7 +61,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             return '/home';
           }
         } catch (e) {
-          print('Router profil kontrolü hatası: $e');
+          debugPrint('Router profil kontrolü hatası: $e');
           // Hata varsa (internet yoksa vb) ve giriş yapmışsa Home'a izin ver
           // Kullanıcıyı engellemek yerine offline moda geçiş yapıyoruz
           if (isGoingToAuth || isGoingToOnboarding) return '/home';

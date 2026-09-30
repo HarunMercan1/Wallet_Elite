@@ -12,6 +12,8 @@ import '../../wallet/models/category_model.dart';
 import '../../wallet/presentation/edit_transaction_sheet.dart';
 import 'transaction_filter_state.dart';
 import 'transaction_filter_sheet.dart';
+import '../../../core/utils/currency_utils.dart';
+import '../../settings/data/settings_provider.dart';
 
 class TransactionsView extends ConsumerStatefulWidget {
   const TransactionsView({super.key});
@@ -107,7 +109,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Filtrele', // Localize next step
+                            l.periodFilter,
                             style: TextStyle(
                               color: _filterState.hasFilters
                                   ? Colors.white
@@ -359,7 +361,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                               ),
                             ),
                             Text(
-                              '${totalFiltered >= 0 ? '+' : ''}₺${NumberFormat('#,##0.00', 'tr_TR').format(totalFiltered)}',
+                              '${totalFiltered >= 0 ? '+' : ''}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(totalFiltered)}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: totalFiltered >= 0
@@ -444,7 +446,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         ),
         backgroundColor: isDark
             ? colorTheme.surfaceDark
-            : colorTheme.primary.withOpacity(0.1),
+            : colorTheme.primary.withValues(alpha: 0.1),
         deleteIcon: Icon(
           Icons.close,
           size: 14,
@@ -548,7 +550,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(categoryIcon, color: color, size: 20),
@@ -602,7 +604,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
               ),
             ),
             Text(
-              '${isIncome ? '+' : '-'}₺${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
+              '${isIncome ? '+' : '-'}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,

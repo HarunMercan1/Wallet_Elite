@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/debt_detail_sheet.dart
 
 import 'package:flutter/material.dart';
@@ -36,7 +38,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     final colorTheme = ref.watch(currentColorThemeProvider);
     final currencyFormat = NumberFormat.currency(
       locale: Localizations.localeOf(context).toString(),
-      symbol: '₺',
+      symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
       decimalDigits: 2,
     );
     final dateFormat = DateFormat(
@@ -281,7 +283,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                               hintText: currencyFormat.format(
                                 debt.remainingAmount,
                               ),
-                              prefixText: '₺ ',
+                              prefixText: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
                               prefixIcon: Icon(
                                 Icons.payment,
                                 color: colorTheme.primary,
@@ -690,6 +692,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     );
 
     if (confirmed == true) {
+      if (!context.mounted) return;
       Navigator.pop(context);
       final controller = ref.read(debtControllerProvider);
       await controller.deleteDebt(debt.id);

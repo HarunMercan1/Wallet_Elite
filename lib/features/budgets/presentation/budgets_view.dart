@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 // lib/features/budgets/presentation/budgets_view.dart
 
 import 'package:flutter/material.dart';
@@ -100,7 +102,7 @@ class BudgetsView extends ConsumerWidget {
           Icon(
             Icons.pie_chart_outline,
             size: 80,
-            color: colorTheme.primary.withOpacity(0.5),
+            color: colorTheme.primary.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 24),
           Text(
@@ -143,7 +145,7 @@ class BudgetsView extends ConsumerWidget {
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    final currencyFormat = NumberFormat.currency(symbol: '₺', decimalDigits: 2);
+    final currencyFormat = NumberFormat.currency(symbol: '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}', decimalDigits: 2);
     final progressColor = budget.isExceeded
         ? Colors.red
         : budget.isWarning
@@ -158,7 +160,7 @@ class BudgetsView extends ConsumerWidget {
           color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
           borderRadius: BorderRadius.circular(16),
           border: budget.isExceeded
-              ? Border.all(color: Colors.red.withOpacity(0.5), width: 2)
+              ? Border.all(color: Colors.red.withValues(alpha: 0.5), width: 2)
               : null,),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +173,7 @@ class BudgetsView extends ConsumerWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: progressColor.withOpacity(0.15),
+                    color: progressColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -249,7 +251,7 @@ class BudgetsView extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: (budget.usagePercent / 100).clamp(0.0, 1.0),
-                    backgroundColor: progressColor.withOpacity(0.2),
+                    backgroundColor: progressColor.withValues(alpha: 0.2),
                     valueColor: AlwaysStoppedAnimation(progressColor),
                     minHeight: 8,
                   ),
@@ -284,7 +286,7 @@ class BudgetsView extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: colorTheme.primary.withOpacity(0.1),
+                color: colorTheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(

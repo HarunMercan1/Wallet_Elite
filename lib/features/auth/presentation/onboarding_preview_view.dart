@@ -176,7 +176,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
           return Container(
             height: r.hp(0.8),
             decoration: BoxDecoration(
-              color: colorTheme.primary.withOpacity(0.2),
+              color: colorTheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(r.hp(0.4)),
             ),
             child: FractionallySizedBox(
@@ -234,7 +234,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: colorTheme.primary.withOpacity(0.4),
+                          color: colorTheme.primary.withValues(alpha: 0.4),
                           blurRadius: 30,
                           spreadRadius: 5,
                         ),
@@ -357,9 +357,9 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     return Container(
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey[50],
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
         borderRadius: r.borderRadiusM,
-        border: Border.all(color: colorTheme.primary.withOpacity(0.2)),
+        border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -490,12 +490,12 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
       margin: EdgeInsets.only(bottom: r.hp(2)),
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
         borderRadius: r.borderRadiusM,
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -506,7 +506,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
           Container(
             padding: EdgeInsets.all(r.paddingM),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
+              gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.7)]),
               borderRadius: r.borderRadiusS,
             ),
             child: Icon(
@@ -620,15 +620,15 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          colorTheme.primary.withOpacity(0.1),
-                          colorTheme.accent.withOpacity(0.05),
+                          colorTheme.primary.withValues(alpha: 0.1),
+                          colorTheme.accent.withValues(alpha: 0.05),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: r.borderRadiusM,
                       border: Border.all(
-                        color: colorTheme.primary.withOpacity(0.2),
+                        color: colorTheme.primary.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Column(
@@ -770,7 +770,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                       borderRadius: r.borderRadiusM,
                       boxShadow: [
                         BoxShadow(
-                          color: (theme['primary'] as Color).withOpacity(0.4),
+                          color: (theme['primary'] as Color).withValues(alpha: 0.4),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -811,7 +811,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               padding: EdgeInsets.all(r.paddingM),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Colors.white.withOpacity(0.1)
+                    ? Colors.white.withValues(alpha: 0.1)
                     : Colors.grey[100],
                 borderRadius: r.borderRadiusM,
               ),
@@ -937,13 +937,13 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                     padding: EdgeInsets.all(r.paddingM),
                     decoration: BoxDecoration(
                       color: isDark
-                          ? Colors.white.withOpacity(0.05)
+                          ? Colors.white.withValues(alpha: 0.05)
                           : Colors.white,
                       borderRadius: r.borderRadiusM,
-                      border: Border.all(color: color.withOpacity(0.3)),
+                      border: Border.all(color: color.withValues(alpha: 0.3)),
                       boxShadow: [
                         BoxShadow(
-                          color: color.withOpacity(0.1),
+                          color: color.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -956,7 +956,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                           height: r.hp(6),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [color, color.withOpacity(0.7)],
+                              colors: [color, color.withValues(alpha: 0.7)],
                             ),
                             borderRadius: r.borderRadiusS,
                           ),
@@ -1020,7 +1020,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -1054,7 +1054,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                 decoration: BoxDecoration(
                   color: isActive
                       ? colorTheme.primary
-                      : colorTheme.primary.withOpacity(0.3),
+                      : colorTheme.primary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(r.hp(0.5)),
                 ),
               );

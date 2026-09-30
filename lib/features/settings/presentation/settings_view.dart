@@ -288,12 +288,12 @@ class SettingsView extends ConsumerWidget {
               color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: colorTheme.primary.withOpacity(0.15),
+                color: colorTheme.primary.withValues(alpha: 0.15),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: colorTheme.primary.withOpacity(0.05),
+                  color: colorTheme.primary.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -329,7 +329,7 @@ class SettingsView extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: colorTheme.primary.withOpacity(0.1),
+                    color: colorTheme.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.edit, size: 16, color: colorTheme.primary),
@@ -609,7 +609,7 @@ class SettingsView extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? theme.primary.withOpacity(0.1)
+              ? theme.primary.withValues(alpha: 0.1)
               : (isDark ? Colors.grey[850] : Colors.grey[50]),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
@@ -637,7 +637,7 @@ class SettingsView extends ConsumerWidget {
                   ? Center(
                       child: Icon(
                         Icons.lock,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         size: 18,
                       ),
                     )
@@ -956,7 +956,7 @@ class SettingsView extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withOpacity(0.1)
+              ? color.withValues(alpha: 0.1)
               : (isDark ? Colors.grey[850] : Colors.grey[50]),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
@@ -971,7 +971,7 @@ class SettingsView extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 22),
@@ -1098,7 +1098,7 @@ class SettingsView extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? colorTheme.primary.withOpacity(0.1)
+              ? colorTheme.primary.withValues(alpha: 0.1)
               : (isDark ? Colors.grey[850] : Colors.grey[50]),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
@@ -1317,7 +1317,7 @@ class SettingsView extends ConsumerWidget {
                                   decoration: BoxDecoration(
                                     color: _getWalletColor(
                                       account.type,
-                                    ).withOpacity(0.1),
+                                    ).withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Icon(
@@ -1354,7 +1354,7 @@ class SettingsView extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  '₺${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                                  '${account.currencySymbol}${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -1397,6 +1397,8 @@ class SettingsView extends ConsumerWidget {
     final nameController = TextEditingController();
     final balanceController = TextEditingController(text: '0');
     String selectedType = 'cash';
+    String selectedCurrency = 'TRY';
+    final currencies = ['TRY', 'USD', 'EUR', 'GBP'];
 
     showDialog(
       context: context,
@@ -1480,6 +1482,36 @@ class SettingsView extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedCurrency,
+                  decoration: InputDecoration(
+                    labelText: l.currencyLabel,
+                    labelStyle: TextStyle(
+                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                    border: const OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  dropdownColor: isDark ? colorTheme.surfaceDark : Colors.white,
+                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                  items: currencies.map((c) {
+                    return DropdownMenuItem(
+                      value: c,
+                      child: Text(c),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => selectedCurrency = value);
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
                 TextField(
                   controller: balanceController,
                   keyboardType: const TextInputType.numberWithOptions(
@@ -1491,7 +1523,6 @@ class SettingsView extends ConsumerWidget {
                     labelStyle: TextStyle(
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
                     ),
-                    prefixText: '₺ ',
                     border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -1517,6 +1548,7 @@ class SettingsView extends ConsumerWidget {
                 final success = await walletController.createAccount(
                   name: nameController.text.trim(),
                   type: selectedType,
+                  currency: selectedCurrency,
                   initialBalance: double.tryParse(balanceController.text) ?? 0,
                 );
 

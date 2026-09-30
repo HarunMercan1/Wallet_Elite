@@ -296,7 +296,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: date != null
-                ? colorTheme.primary.withOpacity(0.5)
+                ? colorTheme.primary.withValues(alpha: 0.5)
                 : (isDark ? Colors.white24 : Colors.grey[300]!),
           ),
         ),
@@ -305,7 +305,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: colorTheme.primary.withOpacity(0.1),
+                color: colorTheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -356,9 +356,9 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorTheme.primary.withOpacity(0.1),
+        color: colorTheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorTheme.primary.withOpacity(0.2)),
+        border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [

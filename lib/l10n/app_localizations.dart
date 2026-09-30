@@ -829,7 +829,7 @@ abstract class AppLocalizations {
   /// No description provided for @cat_shopping.
   ///
   /// In en, this message translates to:
-  /// **'Start Shopping'**
+  /// **'Shopping'**
   String get cat_shopping;
 
   /// No description provided for @cat_entertainment.
@@ -2403,6 +2403,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last 7 Days Spending'**
   String get last7DaysSpending;
+
+  /// No description provided for @currencyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currencyLabel;
 }
 
 class _AppLocalizationsDelegate

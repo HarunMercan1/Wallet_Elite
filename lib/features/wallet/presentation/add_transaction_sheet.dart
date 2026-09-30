@@ -1,3 +1,5 @@
+import '../../../features/settings/data/settings_provider.dart';
+import '../../../core/utils/currency_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -309,8 +311,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         indicator: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: _transactionType == 'expense'
-              ? colorTheme.error.withOpacity(0.9)
-              : colorTheme.success.withOpacity(0.9),
+              ? colorTheme.error.withValues(alpha: 0.9)
+              : colorTheme.success.withValues(alpha: 0.9),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
@@ -360,16 +362,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [color.withOpacity(0.08), color.withOpacity(0.03)],
+          colors: [color.withValues(alpha: 0.08), color.withValues(alpha: 0.03)],
         ),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.15), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.15), width: 1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '₺',
+            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}',
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -399,7 +401,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   hintStyle: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: color.withOpacity(0.3),
+                    color: color.withValues(alpha: 0.3),
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
@@ -952,17 +954,17 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     ref.invalidate(incomeCategoriesProvider);
                     ref.invalidate(expenseCategoriesProvider);
 
-                    if (mounted) {
-                      Navigator.pop(parentContext); // Sheet kapat
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(l.categoryAdded),
-                          backgroundColor: colorTheme.success,
-                        ),
-                      );
-                    }
+                    if (!parentContext.mounted) return;
+                    if (!context.mounted) return;
+                    Navigator.pop(parentContext); // Sheet kapat
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l.categoryAdded),
+                        backgroundColor: colorTheme.success,
+                      ),
+                    );
                   } catch (e) {
-                    if (mounted) {
+                    if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -1223,7 +1225,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                             ),
                           ),
                           Text(
-                            '₺${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
                             style: TextStyle(
                               fontSize: 11,
                               color: isSelected

@@ -114,39 +114,72 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
 
     setState(() => _isLoading = true);
 
-    try {
-      // 1. Kullanıcı tercihlerini kaydet
-      final authRepo = ref.read(authRepositoryProvider);
-      final user = Supabase.instance.client.auth.currentUser;
+    final l = AppLocalizations.of(context)!;
 
-      if (user != null) {
-        await authRepo.updateUserPreferences(
-          userId: user.id,
-          language: _selectedLanguage,
-          theme: _selectedTheme,
-          currency: _selectedCurrency,
-          isDarkMode: _isDarkMode,
-        );
+    try {
+      final authRepo = ref.read(authRepositoryProvider);
+      final walletRepo = ref.read(walletRepositoryProvider);
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) {
+        if (mounted) context.go('/auth');
+        return;
       }
 
-      // 2. İlk cüzdanı oluştur
-      if (user != null) {
+      // 1. Kullanıcı tercihlerini kaydet
+      await authRepo.updateUserPreferences(
+        userId: user.id,
+        language: _selectedLanguage,
+        theme: _selectedTheme,
+        currency: _selectedCurrency,
+        isDarkMode: _isDarkMode,
+      );
+
+      // 2. İlk cüzdanı oluştur (daha önce yarım kalmış bir onboarding'den
+      // cüzdan kaldıysa tekrar oluşturma)
+      final existingAccounts = await walletRepo.getAccounts(user.id);
+      if (existingAccounts.isEmpty) {
         final initialBalance =
             double.tryParse(_initialBalanceController.text) ?? 0.0;
-        // ignore: unused_local_variable
-        final newWallet = await ref
-            .read(walletRepositoryProvider)
-            .createAccount(
-              userId: user.id,
-              name: _accountNameController.text,
-              type: _selectedAccountType,
-              initialBalance: initialBalance,
-            );
-        // Not: Currency, color ve icon şimdilik AccountModel'de yok, o yüzden parametre olarak geçilmiyor.
-        // Currency global ayarlardan yönetiliyor.
+        final newWallet = await walletRepo.createAccount(
+          userId: user.id,
+          name: _accountNameController.text,
+          type: _selectedAccountType,
+          currency: _selectedCurrency,
+          initialBalance: initialBalance,
+        );
+        if (newWallet == null) {
+          if (mounted) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(l.errorOccurred)));
+          }
+          return;
+        }
       }
 
-      // 3. Providerları güncelle
+      // 3. Varsayılan kategorileri oluştur (yoksa)
+      final existingCategories = await walletRepo.getCategories(user.id);
+      if (existingCategories.isEmpty) {
+        await walletRepo.createDefaultCategories(user.id);
+      }
+
+      // 4. Onboarding'i tamamlandı olarak işaretle. Bu olmadan router
+      // kullanıcıyı tekrar onboarding'e yönlendirir.
+      final completed = await authRepo.completeOnboarding(user.id);
+      if (!completed) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l.errorOccurred)));
+        }
+        return;
+      }
+      ref.invalidate(accountsProvider);
+      ref.invalidate(categoriesProvider);
+      ref.invalidate(incomeCategoriesProvider);
+      ref.invalidate(expenseCategoriesProvider);
+
+      // 5. Providerları güncelle
       ref.read(localeProvider.notifier).setLocale(_selectedLanguage);
       ref
           .read(colorSchemeProvider.notifier)
@@ -247,7 +280,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
           return Container(
             height: r.hp(0.8),
             decoration: BoxDecoration(
-              color: colorTheme.primary.withOpacity(0.2),
+              color: colorTheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(r.hp(0.4)),
             ),
             child: FractionallySizedBox(
@@ -307,7 +340,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: colorTheme.primary.withOpacity(0.4),
+                          color: colorTheme.primary.withValues(alpha: 0.4),
                           blurRadius: 30,
                           spreadRadius: 5,
                         ),
@@ -431,9 +464,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
     return Container(
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey[50],
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
         borderRadius: r.borderRadiusM,
-        border: Border.all(color: colorTheme.primary.withOpacity(0.2)),
+        border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -566,12 +599,12 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
       margin: EdgeInsets.only(bottom: r.hp(2)),
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
         borderRadius: r.borderRadiusM,
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -582,7 +615,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
           Container(
             padding: EdgeInsets.all(r.paddingM),
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
+              gradient: LinearGradient(
+                colors: [color, color.withValues(alpha: 0.7)],
+              ),
               borderRadius: r.borderRadiusS,
             ),
             child: Icon(
@@ -706,9 +741,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? colorTheme.primary.withOpacity(0.15)
+                            ? colorTheme.primary.withValues(alpha: 0.15)
                             : (isDark
-                                  ? Colors.white.withOpacity(0.05)
+                                  ? Colors.white.withValues(alpha: 0.05)
                                   : Colors.grey[100]),
                         borderRadius: r.borderRadiusM,
                         border: Border.all(
@@ -884,8 +919,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: (theme['primary'] as Color)
-                                      .withOpacity(0.5),
+                                  color: (theme['primary'] as Color).withValues(
+                                    alpha: 0.5,
+                                  ),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -949,7 +985,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                 padding: EdgeInsets.all(r.paddingM),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.white.withOpacity(0.1)
+                      ? Colors.white.withValues(alpha: 0.1)
                       : Colors.grey[100],
                   borderRadius: r.borderRadiusM,
                   border: Border.all(
@@ -1089,19 +1125,21 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       padding: EdgeInsets.all(r.paddingM),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? color.withOpacity(0.1)
+                            ? color.withValues(alpha: 0.1)
                             : (isDark
-                                  ? Colors.white.withOpacity(0.05)
+                                  ? Colors.white.withValues(alpha: 0.05)
                                   : Colors.white),
                         borderRadius: r.borderRadiusM,
                         border: Border.all(
-                          color: isSelected ? color : color.withOpacity(0.3),
+                          color: isSelected
+                              ? color
+                              : color.withValues(alpha: 0.3),
                           width: isSelected ? 2 : 1,
                         ),
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: color.withOpacity(0.2),
+                                  color: color.withValues(alpha: 0.2),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -1115,7 +1153,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                             height: r.hp(6),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [color, color.withOpacity(0.7)],
+                                colors: [color, color.withValues(alpha: 0.7)],
                               ),
                               borderRadius: r.borderRadiusS,
                             ),
@@ -1265,7 +1303,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                     ),
                     filled: true,
                     fillColor: isDark
-                        ? Colors.white.withOpacity(0.05)
+                        ? Colors.white.withValues(alpha: 0.05)
                         : Colors.grey[100],
                     border: OutlineInputBorder(
                       borderRadius: r.borderRadiusM,
@@ -1325,9 +1363,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                         padding: EdgeInsets.symmetric(horizontal: r.spaceS),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? colorTheme.primary.withOpacity(0.1)
+                              ? colorTheme.primary.withValues(alpha: 0.1)
                               : (isDark
-                                    ? Colors.white.withOpacity(0.05)
+                                    ? Colors.white.withValues(alpha: 0.05)
                                     : Colors.grey[100]),
                           borderRadius: r.borderRadiusS,
                           border: Border.all(
@@ -1404,7 +1442,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                     ),
                     filled: true,
                     fillColor: isDark
-                        ? Colors.white.withOpacity(0.05)
+                        ? Colors.white.withValues(alpha: 0.05)
                         : Colors.grey[100],
                     border: OutlineInputBorder(
                       borderRadius: r.borderRadiusM,
@@ -1454,7 +1492,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -1488,7 +1526,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                 decoration: BoxDecoration(
                   color: isActive
                       ? colorTheme.primary
-                      : colorTheme.primary.withOpacity(0.3),
+                      : colorTheme.primary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(r.hp(0.5)),
                 ),
               );
