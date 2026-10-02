@@ -60,3 +60,6 @@ bin/check_migration.dart
 
 # Supabase CLI local cache
 supabase/.temp/
+
+# Android Gradle build output
+/android/build/
