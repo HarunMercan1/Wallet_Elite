@@ -13,6 +13,7 @@ import 'core/constants/supabase_config.dart';
 import 'core/theme/color_theme_provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_router.dart';
+import 'core/services/support_actions.dart';
 import 'features/settings/data/settings_provider.dart';
 
 void main() async {
@@ -56,8 +57,13 @@ class WalletEliteApp extends ConsumerWidget {
     // Seçili tema (premium hakkı yoksa ücretsiz temaya düşer)
     final colorTheme = ref.watch(currentColorThemeProvider);
 
+    // Uygulama adı ülkeye göre değişir (android/.../res/values-*/strings.xml);
+    // son uygulamalar ekranında da aynı ad görünsün.
+    final appName =
+        ref.watch(packageInfoProvider).valueOrNull?.appName ?? 'Wallet Elite';
+
     return MaterialApp.router(
-      title: 'Wallet Elite',
+      title: appName,
       debugShowCheckedModeBanner: false,
       locale: Locale(localeCode),
 

@@ -349,7 +349,7 @@ class SettingsView extends ConsumerWidget {
                 ref
                     .watch(packageInfoProvider)
                     .maybeWhen(
-                      data: (info) => 'Wallet Elite v${info.version}',
+                      data: (info) => '${info.appName} v${info.version}',
                       orElse: () => 'Wallet Elite',
                     ),
                 style: TextStyle(color: colorTheme.textSecondary, fontSize: 12),

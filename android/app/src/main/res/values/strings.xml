@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Simgenin altında görünen ad (varsayılan). Ülkeye özel adlar
+         values-mccXXX/strings.xml (SIM ülkesi) veya values-xx-rYY/strings.xml
+         (dil + bölge) dosyalarında bu değeri ezer. -->
+    <string name="app_name">Wallet Elite</string>
+</resources>
