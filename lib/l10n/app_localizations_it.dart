@@ -1421,4 +1421,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exportNoData => 'Non ci sono transazioni da esportare.';
+
+  @override
+  String get cat_clothing => 'Abbigliamento';
 }

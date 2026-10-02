@@ -1415,4 +1415,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get exportNoData => 'निर्यात करने के लिए कोई लेनदेन नहीं है।';
+
+  @override
+  String get cat_clothing => 'कपड़े';
 }

@@ -367,7 +367,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cat_transport => 'Ulaşım';
 
   @override
-  String get cat_shopping => 'Market';
+  String get cat_shopping => 'Alışveriş';
 
   @override
   String get cat_entertainment => 'Eğlence';
@@ -1422,4 +1422,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get exportNoData => 'Dışa aktarılacak işlem yok.';
+
+  @override
+  String get cat_clothing => 'Giyim';
 }

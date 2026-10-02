@@ -185,7 +185,7 @@ class WalletRepository {
         },
         {
           'name': 'Giyim',
-          'translation_key': 'cat_shopping',
+          'translation_key': 'cat_clothing',
           'type': 'expense',
           'icon': 'checkroom',
         },

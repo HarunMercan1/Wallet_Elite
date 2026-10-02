@@ -2853,6 +2853,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There are no transactions to export.'**
   String get exportNoData;
+
+  /// No description provided for @cat_clothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get cat_clothing;
 }
 
 class _AppLocalizationsDelegate

@@ -137,7 +137,7 @@
     "categoryBreakdown": "Kategori Dağılımı",
     "cat_food": "Yemek",
     "cat_transport": "Ulaşım",
-    "cat_shopping": "Market",
+    "cat_shopping": "Alışveriş",
     "cat_entertainment": "Eğlence",
     "cat_bills": "Faturalar",
     "cat_health": "Sağlık",
@@ -508,5 +508,6 @@
     "exportData": "Verileri dışa aktar",
     "exportDataDesc": "İşlemlerinizi CSV dosyası olarak paylaşın (Excel'de açılır)",
     "exportFailed": "Dışa aktarma başarısız oldu",
-    "exportNoData": "Dışa aktarılacak işlem yok."
+    "exportNoData": "Dışa aktarılacak işlem yok.",
+    "cat_clothing": "Giyim"
 }

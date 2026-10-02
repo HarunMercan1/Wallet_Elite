@@ -508,5 +508,6 @@
     "exportData": "Gegevens exporteren",
     "exportDataDesc": "Deel je transacties als CSV-bestand (opent in Excel)",
     "exportFailed": "Exporteren mislukt",
-    "exportNoData": "Er zijn geen transacties om te exporteren."
+    "exportNoData": "Er zijn geen transacties om te exporteren.",
+    "cat_clothing": "Kleding"
 }

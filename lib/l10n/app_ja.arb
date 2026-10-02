@@ -494,5 +494,6 @@
     "exportData": "データをエクスポート",
     "exportDataDesc": "取引を CSV ファイルで共有（Excel で開けます）",
     "exportFailed": "エクスポートに失敗しました",
-    "exportNoData": "エクスポートする取引がありません。"
+    "exportNoData": "エクスポートする取引がありません。",
+    "cat_clothing": "衣服"
 }

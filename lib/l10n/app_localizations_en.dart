@@ -1417,4 +1417,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportNoData => 'There are no transactions to export.';
+
+  @override
+  String get cat_clothing => 'Clothing';
 }

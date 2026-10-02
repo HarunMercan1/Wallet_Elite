@@ -508,5 +508,6 @@
     "exportData": "ส่งออกข้อมูล",
     "exportDataDesc": "แชร์ธุรกรรมของคุณเป็นไฟล์ CSV (เปิดใน Excel ได้)",
     "exportFailed": "ส่งออกไม่สำเร็จ",
-    "exportNoData": "ไม่มีธุรกรรมให้ส่งออก"
+    "exportNoData": "ไม่มีธุรกรรมให้ส่งออก",
+    "cat_clothing": "เสื้อผ้า"
 }

@@ -508,5 +508,6 @@
     "exportData": "Xuất dữ liệu",
     "exportDataDesc": "Chia sẻ giao dịch dưới dạng tệp CSV (mở được bằng Excel)",
     "exportFailed": "Xuất dữ liệu thất bại",
-    "exportNoData": "Không có giao dịch nào để xuất."
+    "exportNoData": "Không có giao dịch nào để xuất.",
+    "cat_clothing": "Quần áo"
 }

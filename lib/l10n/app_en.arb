@@ -515,5 +515,6 @@
     "exportNoData": "There are no transactions to export.",
     "@walletLimitReached": {"placeholders": {"count": {"type": "int"}}},
     "@budgetLimitReached": {"placeholders": {"count": {"type": "int"}}},
-    "@unlockThemeTitle": {"placeholders": {"name": {"type": "String"}}}
+    "@unlockThemeTitle": {"placeholders": {"name": {"type": "String"}}},
+    "cat_clothing": "Clothing"
 }

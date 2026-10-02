@@ -1414,4 +1414,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get exportNoData => 'Нет операций для экспорта.';
+
+  @override
+  String get cat_clothing => 'Одежда';
 }

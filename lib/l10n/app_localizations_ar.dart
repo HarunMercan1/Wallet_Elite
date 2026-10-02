@@ -1409,4 +1409,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get exportNoData => 'لا توجد معاملات لتصديرها.';
+
+  @override
+  String get cat_clothing => 'ملابس';
 }

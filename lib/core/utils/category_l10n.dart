@@ -16,6 +16,8 @@ String? localizedCategoryName(CategoryModel? category, AppLocalizations l) {
         return l.cat_transport;
       case 'cat_shopping':
         return l.cat_shopping;
+      case 'cat_clothing':
+        return l.cat_clothing;
       case 'cat_entertainment':
         return l.cat_entertainment;
       case 'cat_bills':
@@ -76,6 +78,9 @@ String? localizedCategoryName(CategoryModel? category, AppLocalizations l) {
   if (name.contains('bill')) return l.cat_bills;
   if (name.contains('educat')) return l.cat_education;
   if (name.contains('entert')) return l.cat_entertainment;
+  if (name.contains('cloth') || name.contains('giyim')) {
+    return l.cat_clothing;
+  }
   if (name.contains('shop')) return l.cat_shopping;
   if (name.contains('transport')) return l.cat_transport;
   if (name.contains('travel') || name.contains('seyahat')) {

@@ -494,5 +494,6 @@
     "exportData": "Exportar dados",
     "exportDataDesc": "Compartilhe suas transações como arquivo CSV (abre no Excel)",
     "exportFailed": "Falha na exportação",
-    "exportNoData": "Não há transações para exportar."
+    "exportNoData": "Não há transações para exportar.",
+    "cat_clothing": "Roupas"
 }

@@ -494,5 +494,6 @@
     "exportData": "تصدير البيانات",
     "exportDataDesc": "شارك معاملاتك كملف CSV (يفتح في Excel)",
     "exportFailed": "فشل التصدير",
-    "exportNoData": "لا توجد معاملات لتصديرها."
+    "exportNoData": "لا توجد معاملات لتصديرها.",
+    "cat_clothing": "ملابس"
 }

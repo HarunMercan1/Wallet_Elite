@@ -508,5 +508,6 @@
     "exportData": "데이터 내보내기",
     "exportDataDesc": "거래 내역을 CSV 파일로 공유 (Excel에서 열림)",
     "exportFailed": "내보내기 실패",
-    "exportNoData": "내보낼 거래가 없습니다."
+    "exportNoData": "내보낼 거래가 없습니다.",
+    "cat_clothing": "의류"
 }

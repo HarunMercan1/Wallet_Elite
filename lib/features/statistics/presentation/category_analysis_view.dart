@@ -12,6 +12,7 @@ import '../../../core/theme/color_theme_provider.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
 import '../../wallet/models/category_model.dart';
+import '../../../core/utils/category_l10n.dart';
 
 class CategoryAnalysisView extends ConsumerStatefulWidget {
   final List<TransactionModel> transactions;
@@ -870,58 +871,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     );
   }
 
-  String? _getCategoryName(CategoryModel? category, AppLocalizations l) {
-    if (category == null) return null;
-
-    if (category.translationKey != null) {
-      switch (category.translationKey) {
-        case 'cat_food':
-          return l.cat_food;
-        case 'cat_transport':
-          return l.cat_transport;
-        case 'cat_shopping':
-          return l.cat_shopping;
-        case 'cat_entertainment':
-          return l.cat_entertainment;
-        case 'cat_bills':
-          return l.cat_bills;
-        case 'cat_health':
-          return l.cat_health;
-        case 'cat_education':
-          return l.cat_education;
-        case 'cat_rent':
-          return l.cat_rent;
-        case 'cat_taxes':
-          return l.cat_taxes;
-        case 'cat_salary':
-          return l.cat_salary;
-        case 'cat_freelance':
-          return l.cat_freelance;
-        case 'cat_investment':
-          return l.cat_investment;
-        case 'cat_gift':
-          return l.cat_gift;
-        case 'cat_pets':
-          return l.cat_pets;
-        case 'cat_groceries':
-          return l.cat_groceries;
-        case 'cat_electronics':
-          return l.cat_electronics;
-        case 'cat_charity':
-          return l.cat_charity;
-        case 'cat_insurance':
-          return l.cat_insurance;
-        case 'cat_gym':
-          return l.cat_gym;
-        case 'cat_travel':
-          return l.cat_travel;
-        case 'cat_other':
-        case 'cat_others':
-          return l.cat_other;
-      }
-    }
-    return category.name;
-  }
+  String? _getCategoryName(CategoryModel? category, AppLocalizations l) =>
+      localizedCategoryName(category, l);
 
   IconData _getCategoryIcon(String? iconName) {
     switch (iconName) {

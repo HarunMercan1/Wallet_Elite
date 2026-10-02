@@ -1395,4 +1395,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get exportNoData => '내보낼 거래가 없습니다.';
+
+  @override
+  String get cat_clothing => '의류';
 }

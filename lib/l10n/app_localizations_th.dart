@@ -1413,4 +1413,7 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get exportNoData => 'ไม่มีธุรกรรมให้ส่งออก';
+
+  @override
+  String get cat_clothing => 'เสื้อผ้า';
 }

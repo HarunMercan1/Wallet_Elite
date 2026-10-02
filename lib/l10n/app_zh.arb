@@ -494,5 +494,6 @@
     "exportData": "导出数据",
     "exportDataDesc": "以 CSV 文件分享你的交易（可用 Excel 打开）",
     "exportFailed": "导出失败",
-    "exportNoData": "没有可导出的交易。"
+    "exportNoData": "没有可导出的交易。",
+    "cat_clothing": "服装"
 }

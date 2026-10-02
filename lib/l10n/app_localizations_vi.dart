@@ -1415,4 +1415,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get exportNoData => 'Không có giao dịch nào để xuất.';
+
+  @override
+  String get cat_clothing => 'Quần áo';
 }

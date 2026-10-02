@@ -508,5 +508,6 @@
     "exportData": "Ekspor data",
     "exportDataDesc": "Bagikan transaksi Anda sebagai file CSV (terbuka di Excel)",
     "exportFailed": "Ekspor gagal",
-    "exportNoData": "Tidak ada transaksi untuk diekspor."
+    "exportNoData": "Tidak ada transaksi untuk diekspor.",
+    "cat_clothing": "Pakaian"
 }

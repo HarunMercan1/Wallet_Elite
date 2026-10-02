@@ -1394,4 +1394,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get exportNoData => 'エクスポートする取引がありません。';
+
+  @override
+  String get cat_clothing => '衣服';
 }

@@ -1393,4 +1393,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get exportNoData => '没有可导出的交易。';
+
+  @override
+  String get cat_clothing => '服装';
 }

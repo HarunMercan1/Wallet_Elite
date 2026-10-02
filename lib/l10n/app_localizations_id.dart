@@ -1417,4 +1417,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get exportNoData => 'Tidak ada transaksi untuk diekspor.';
+
+  @override
+  String get cat_clothing => 'Pakaian';
 }
