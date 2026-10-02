@@ -1397,4 +1397,55 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get cat_clothing => '衣服';
+
+  @override
+  String get supportSection => 'サポート';
+
+  @override
+  String get sendFeedback => '開発者に連絡';
+
+  @override
+  String get sendFeedbackDesc => 'ご提案・ご不満・ご要望をメールで送信';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'メールアプリが見つかりません。宛先: $email';
+  }
+
+  @override
+  String get rateApp => '評価する';
+
+  @override
+  String get rateAppDesc => 'Google Play で評価する';
+
+  @override
+  String get updateAvailableTitle => 'アップデートがあります';
+
+  @override
+  String get updateAvailableMessage =>
+      'Wallet Elite の新しいバージョンがあります。最新の機能と修正を利用するにはアップデートしてください。';
+
+  @override
+  String get updateNow => 'アップデート';
+
+  @override
+  String get later => '後で';
+
+  @override
+  String get summaryImage => 'サマリー画像';
+
+  @override
+  String get summaryImageDesc => 'サマリーを画像として保存・共有';
+
+  @override
+  String get saveToGallery => 'ギャラリーに保存';
+
+  @override
+  String get share => '共有';
+
+  @override
+  String get imageSaved => '画像をギャラリーに保存しました';
+
+  @override
+  String get imageSaveFailed => '画像を保存できませんでした';
 }

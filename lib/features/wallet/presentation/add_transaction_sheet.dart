@@ -10,9 +10,27 @@ import '../../../l10n/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
+import '../../../core/ads/full_screen_ads.dart';
 import '../data/wallet_provider.dart';
 import '../models/category_model.dart';
 import '../../../core/utils/category_l10n.dart';
+
+/// Klavye yüksekliği kadar alttan boşluk bırakır. viewInsets'e yalnızca bu
+/// küçük widget bağımlıdır; klavye animasyonunun her karesinde form yeniden
+/// kurulmaz, yalnızca yerleşim güncellenir.
+class _KeyboardInset extends StatelessWidget {
+  final Widget child;
+
+  const _KeyboardInset({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: child,
+    );
+  }
+}
 
 class AddTransactionSheet extends ConsumerStatefulWidget {
   const AddTransactionSheet({super.key});
@@ -27,6 +45,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _amountFocusNode = FocusNode();
 
   late TabController _tabController;
   String _transactionType = 'expense';
@@ -67,6 +86,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     _tabController.dispose();
     _amountController.dispose();
     _descriptionController.dispose();
+    _amountFocusNode.dispose();
     super.dispose();
   }
 
@@ -93,83 +113,93 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           topRight: Radius.circular(r.radiusXL),
         ),
       ),
-      child: Column(
-        children: [
-          // Handle bar
-          Container(
-            margin: const EdgeInsets.only(top: 12),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-
-          // Header
-          _buildHeader(),
-
-          // Tab Bar
-          _buildTabBar(),
-
-          // Content
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 1. Favorite Categories (6 adet + Daha Fazla)
-                    _buildSectionTitle(l.category, Icons.category_outlined),
-                    const SizedBox(height: 12),
-                    _buildFavoriteCategoryGrid(categories),
-
-                    const SizedBox(height: 20),
-
-                    // 3. Description
-                    _buildSectionTitle(l.note, Icons.note_outlined),
-                    const SizedBox(height: 10),
-                    _buildDescriptionInput(),
-
-                    const SizedBox(height: 20),
-
-                    // 4. Date Selection
-                    _buildDateSelector(),
-
-                    const SizedBox(height: 20),
-
-                    // 5. Wallet Selection (En altta)
-                    _buildSectionTitle(
-                      l.wallet,
-                      Icons.account_balance_wallet_outlined,
-                    ),
-                    const SizedBox(height: 10),
-                    _buildWalletSelector(accounts),
-
-                    const SizedBox(height: 24),
-
-                    // 5. Amount Input — kaydet butonunun hemen üstünde
-                    _buildAmountInput(),
-
-                    const SizedBox(height: 16),
-
-                    // Save Button
-                    _buildSaveButton(),
-                  ],
+      // Tutar kartı ve kaydet butonu altta sabit durur, klavye açılınca onun
+      // hemen üstüne çıkar; geri kalan alanlar aralarında kayar.
+      child: _KeyboardInset(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorTheme.outline,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-            ),
+
+              // Header
+              _buildHeader(),
+
+              // Tab Bar
+              _buildTabBar(),
+
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 1. Favorite Categories (6 adet + Daha Fazla)
+                      _buildSectionTitle(l.category, Icons.category_outlined),
+                      const SizedBox(height: 12),
+                      _buildFavoriteCategoryGrid(categories),
+
+                      const SizedBox(height: 20),
+
+                      // 2. Description
+                      _buildSectionTitle(l.note, Icons.note_outlined),
+                      const SizedBox(height: 10),
+                      _buildDescriptionInput(),
+
+                      const SizedBox(height: 20),
+
+                      // 3. Date Selection
+                      _buildDateSelector(),
+
+                      const SizedBox(height: 20),
+
+                      // 4. Wallet Selection
+                      _buildSectionTitle(
+                        l.wallet,
+                        Icons.account_balance_wallet_outlined,
+                      ),
+                      const SizedBox(height: 10),
+                      _buildWalletSelector(accounts),
+                    ],
+                  ),
+                ),
+              ),
+
+              // 5. Amount Input + Save Button (altta sabit)
+              SafeArea(
+                top: false,
+                minimum: const EdgeInsets.only(bottom: 12),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildAmountInput(),
+                      const SizedBox(height: 12),
+                      _buildSaveButton(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildHeader() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final l = AppLocalizations.of(context)!;
 
     return Padding(
@@ -177,13 +207,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       child: Row(
         children: [
           IconButton(
-            icon: Icon(
-              Icons.close_rounded,
-              color: isDark ? Colors.white : Colors.black,
-            ),
+            icon: Icon(Icons.close_rounded, color: context.colors.textPrimary),
             onPressed: () => Navigator.pop(context),
             style: IconButton.styleFrom(
-              backgroundColor: isDark ? Colors.grey[800] : Colors.grey[100],
+              backgroundColor: context.colors.subtleCardColor,
             ),
           ),
           Expanded(
@@ -192,7 +219,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black,
+                color: context.colors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -204,14 +231,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   }
 
   Widget _buildTabBar() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final l = AppLocalizations.of(context)!;
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 12, 20, 4),
       decoration: BoxDecoration(
-        color: isDark ? Colors.grey[850] : Colors.grey[100],
+        color: colorTheme.subtleCardColor,
         borderRadius: BorderRadius.circular(14),
       ),
       child: TabBar(
@@ -225,7 +251,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         labelColor: Colors.white,
-        unselectedLabelColor: isDark ? Colors.grey[400] : Colors.grey[600],
+        unselectedLabelColor: colorTheme.textSecondary,
         labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         padding: const EdgeInsets.all(4),
         tabs: [
@@ -264,80 +290,104 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       context,
     )!; // Added mostly for completeness if needed later
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            color.withValues(alpha: 0.08),
-            color.withValues(alpha: 0.03),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha: 0.15), width: 1),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+    return GestureDetector(
+      // Kartın herhangi bir yerine dokununca tutar alanı odaklanır
+      behavior: HitTestBehavior.opaque,
+      onTap: _amountFocusNode.requestFocus,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              color.withValues(alpha: 0.10),
+              color.withValues(alpha: 0.04),
+            ],
           ),
-          const SizedBox(width: 4),
-          Flexible(
-            child: IntrinsicWidth(
-              child: TextFormField(
-                controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                textAlign: TextAlign.center,
-                showCursor: false,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
-                ],
-                decoration: InputDecoration(
-                  hintText: '0',
-                  hintStyle: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: color.withValues(alpha: 0.3),
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                  isDense: true,
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return l.enterAmount; // Translated
-                  }
-                  if (double.tryParse(value) == null ||
-                      double.parse(value) <= 0) {
-                    return l.enterAmount;
-                  }
-                  return null;
-                },
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l.amount,
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w600,
+                color: color.withValues(alpha: 0.85),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: IntrinsicWidth(
+                    child: TextFormField(
+                      controller: _amountController,
+                      focusNode: _amountFocusNode,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      textAlign: TextAlign.center,
+                      showCursor: false,
+                      style: TextStyle(
+                        fontSize: 40,
+                        height: 1.15,
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*\.?\d{0,2}'),
+                        ),
+                      ],
+                      decoration: InputDecoration(
+                        hintText: '0',
+                        hintStyle: TextStyle(
+                          fontSize: 40,
+                          height: 1.15,
+                          fontWeight: FontWeight.bold,
+                          color: color.withValues(alpha: 0.3),
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        isDense: true,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return l.enterAmount; // Translated
+                        }
+                        if (double.tryParse(value) == null ||
+                            double.parse(value) <= 0) {
+                          return l.enterAmount;
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildSectionTitle(String title, IconData icon) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
     return Row(
       children: [
@@ -348,7 +398,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.black87,
+            color: colorTheme.textPrimary,
           ),
         ),
       ],
@@ -417,7 +467,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
   Widget _buildCategoryChip(CategoryModel category) {
     final isSelected = _selectedCategoryId == category.id;
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return GestureDetector(
@@ -426,14 +475,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? colorTheme.primary
-              : (isDark ? colorTheme.surfaceDark : Colors.white),
+          color: isSelected ? colorTheme.primary : colorTheme.cardColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected
-                ? colorTheme.primary
-                : (isDark ? Colors.white24 : Colors.grey[200]!),
+            color: isSelected ? colorTheme.primary : colorTheme.outline,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -444,8 +489,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               _getCategoryIcon(category.icon ?? 'category'),
               size: 16,
               color: isSelected
-                  ? Colors.white
-                  : (isDark ? Colors.grey[300] : Colors.grey[700]),
+                  ? colorTheme.onPrimary
+                  : colorTheme.textSecondary,
             ),
             const SizedBox(width: 6),
             Text(
@@ -454,8 +499,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected
-                    ? Colors.white
-                    : (isDark ? Colors.white : Colors.black87),
+                    ? colorTheme.onPrimary
+                    : colorTheme.textPrimary,
               ),
             ),
           ],
@@ -469,34 +514,26 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     ColorTheme colorTheme,
   ) {
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () => _showAllCategoriesSheet(allCategories),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
+          color: colorTheme.subtleCardColor,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isDark ? Colors.white24 : Colors.grey[300]!,
-            width: 1,
-          ),
+          border: Border.all(color: colorTheme.outline, width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.more_horiz,
-              size: 16,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
+            Icon(Icons.more_horiz, size: 16, color: colorTheme.textSecondary),
             const SizedBox(width: 6),
             Text(
               l.more,
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ],
@@ -532,7 +569,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[600] : Colors.grey[300],
+                    color: colorTheme.outline,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -555,7 +592,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black,
+                            color: colorTheme.textPrimary,
                           ),
                         ),
                       ),
@@ -575,20 +612,20 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     ],
                   ),
                 ),
-                Divider(height: 1, color: isDark ? Colors.white12 : null),
+                Divider(height: 1, color: colorTheme.borderColor),
                 // İpucu
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
+                  color: colorTheme.subtleCardColor,
                   child: Row(
                     children: [
                       Icon(
                         Icons.info_outline,
                         size: 14,
-                        color: Colors.grey[500],
+                        color: colorTheme.textSecondary,
                       ),
                       const SizedBox(width: 6),
                       Expanded(
@@ -596,7 +633,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                           l.longPressToFavorite,
                           style: TextStyle(
                             fontSize: 11,
-                            color: Colors.grey[500],
+                            color: colorTheme.textSecondary,
                           ),
                         ),
                       ),
@@ -632,18 +669,14 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? colorTheme.primary
-                                    : (isDark
-                                          ? colorTheme.surfaceDark
-                                          : Colors.grey[100]),
+                                    : colorTheme.subtleCardColor,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: isSelected
                                       ? colorTheme.primary
                                       : (isFavorite
-                                            ? colorTheme.accent
-                                            : (isDark
-                                                  ? Colors.white24
-                                                  : Colors.grey[200]!)),
+                                            ? colorTheme.warning
+                                            : colorTheme.outline),
                                   width: isFavorite ? 2 : 1,
                                 ),
                               ),
@@ -659,10 +692,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                         _getCategoryIcon(category.icon),
                                         size: 14,
                                         color: isSelected
-                                            ? Colors.white
-                                            : (isDark
-                                                  ? Colors.grey[300]
-                                                  : Colors.grey[700]),
+                                            ? colorTheme.onPrimary
+                                            : colorTheme.textSecondary,
                                       ),
                                       const SizedBox(width: 4),
                                       Flexible(
@@ -672,10 +703,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                             color: isSelected
-                                                ? Colors.white
-                                                : (isDark
-                                                      ? Colors.white
-                                                      : Colors.black87),
+                                                ? colorTheme.onPrimary
+                                                : colorTheme.textPrimary,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -693,7 +722,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                 child: Icon(
                                   Icons.star,
                                   size: 12,
-                                  color: colorTheme.accent,
+                                  color: colorTheme.warning,
                                 ),
                               ),
                           ],
@@ -818,18 +847,20 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                       decoration: BoxDecoration(
                         color: isSelected
                             ? colorTheme.primary
-                            : Colors.grey[100],
+                            : colorTheme.subtleCardColor,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isSelected
                               ? colorTheme.primary
-                              : Colors.grey[200]!,
+                              : colorTheme.outline,
                         ),
                       ),
                       child: Icon(
                         _getCategoryIcon(iconName),
                         size: 20,
-                        color: isSelected ? Colors.white : Colors.grey[700],
+                        color: isSelected
+                            ? colorTheme.onPrimary
+                            : colorTheme.textSecondary,
                       ),
                     ),
                   );
@@ -910,17 +941,21 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: context.colors.subtleCardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(color: context.colors.outline),
       ),
       child: Column(
         children: [
-          Icon(Icons.category_outlined, size: 28, color: Colors.grey[400]),
+          Icon(
+            Icons.category_outlined,
+            size: 28,
+            color: context.colors.textMuted,
+          ),
           const SizedBox(height: 8),
           Text(
             l.categoryNotFound,
-            style: TextStyle(color: Colors.grey[500], fontSize: 13),
+            style: TextStyle(color: context.colors.textSecondary, fontSize: 13),
           ),
           const SizedBox(height: 10),
           TextButton.icon(
@@ -955,28 +990,23 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildDescriptionInput() {
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
     return TextFormField(
       controller: _descriptionController,
       maxLines: 1,
-      style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+      style: TextStyle(color: colorTheme.textPrimary),
       decoration: InputDecoration(
         hintText: l.addNote,
-        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
+        hintStyle: TextStyle(color: colorTheme.textSecondary, fontSize: 14),
         filled: true,
-        fillColor: isDark ? colorTheme.surfaceDark : Colors.grey[50],
+        fillColor: colorTheme.subtleCardColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.white24 : Colors.grey[200]!,
-          ),
+          borderSide: BorderSide(color: colorTheme.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.white24 : Colors.grey[200]!,
-          ),
+          borderSide: BorderSide(color: colorTheme.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -993,7 +1023,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildDateSelector() {
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
     return GestureDetector(
       onTap: () async {
@@ -1003,14 +1032,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           firstDate: DateTime(2020),
           lastDate: DateTime.now().add(const Duration(days: 1)),
           builder: (context, child) {
-            return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: isDark
-                    ? ColorScheme.dark(primary: colorTheme.primary)
-                    : ColorScheme.light(primary: colorTheme.primary),
-              ),
-              child: child!,
-            );
+            return Theme(data: Theme.of(context), child: child!);
           },
         );
         if (date != null) setState(() => _selectedDate = date);
@@ -1018,11 +1040,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
+          color: colorTheme.subtleCardColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isDark ? Colors.white24 : Colors.grey[200]!,
-          ),
+          border: Border.all(color: colorTheme.outline),
         ),
         child: Row(
           children: [
@@ -1042,13 +1062,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
             const Spacer(),
             Icon(
               Icons.chevron_right_rounded,
-              color: Colors.grey[400],
+              color: colorTheme.textMuted,
               size: 20,
             ),
           ],
@@ -1059,7 +1079,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
   Widget _buildWalletSelector(AsyncValue<List<dynamic>> accounts) {
     final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
     return accounts.when(
       data: (accountsList) {
@@ -1067,15 +1086,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           return Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? colorTheme.surfaceDark : Colors.grey[50],
+              color: colorTheme.subtleCardColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isDark ? Colors.white24 : Colors.grey[200]!,
-              ),
+              border: Border.all(color: colorTheme.outline),
             ),
             child: Text(
               l.walletNotFound,
-              style: TextStyle(color: Colors.grey[500]),
+              style: TextStyle(color: colorTheme.textSecondary),
             ),
           );
         }
@@ -1103,12 +1120,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   decoration: BoxDecoration(
                     color: isSelected
                         ? colorTheme.primary
-                        : (isDark ? colorTheme.surfaceDark : Colors.white),
+                        : colorTheme.cardColor,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected
                           ? colorTheme.primary
-                          : (isDark ? Colors.white24 : Colors.grey[200]!),
+                          : colorTheme.outline,
                       width: isSelected ? 2 : 1,
                     ),
                   ),
@@ -1116,7 +1133,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                     children: [
                       Icon(
                         _getAccountIcon(account.type),
-                        color: isSelected ? Colors.white : colorTheme.primary,
+                        color: isSelected
+                            ? colorTheme.onPrimary
+                            : colorTheme.primary,
                         size: 20,
                       ),
                       const SizedBox(width: 10),
@@ -1130,8 +1149,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: isSelected
-                                  ? Colors.white
-                                  : (isDark ? Colors.white : Colors.black87),
+                                  ? colorTheme.onPrimary
+                                  : colorTheme.textPrimary,
                             ),
                           ),
                           Text(
@@ -1139,8 +1158,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                             style: TextStyle(
                               fontSize: 11,
                               color: isSelected
-                                  ? Colors.white70
-                                  : Colors.grey[500],
+                                  ? colorTheme.onPrimary.withValues(alpha: 0.7)
+                                  : colorTheme.textSecondary,
                             ),
                           ),
                         ],
@@ -1321,7 +1340,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
             ),
           ),
         );
+        final interstitial = ref.read(interstitialAdServiceProvider);
         Navigator.pop(context);
+        interstitial.onUserAction();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -150,14 +150,14 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     l.premiumSubtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[500]),
+                    style: TextStyle(color: colorTheme.textSecondary),
                   ),
                   const SizedBox(height: 24),
                   for (final (icon, text) in features)
@@ -172,7 +172,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                               text,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: colorTheme.textPrimary,
                               ),
                             ),
                           ),
@@ -212,18 +212,18 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                       onPressed: premium.isBusy ? null : _purchase,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorTheme.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: colorTheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
                       child: premium.isBusy
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 22,
                               height: 22,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: colorTheme.onPrimary,
                               ),
                             )
                           : Text(
@@ -245,14 +245,20 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                       child: Text(
                         l.purchaseNotAvailable,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                        style: TextStyle(
+                          color: colorTheme.textSecondary,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   const SizedBox(height: 8),
                   Text(
                     l.subscriptionTerms,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                    style: TextStyle(
+                      color: colorTheme.textSecondary,
+                      fontSize: 11,
+                    ),
                   ),
                 ],
               ),
@@ -281,11 +287,9 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
           borderRadius: BorderRadius.circular(14),
           color: isSelected
               ? primary.withValues(alpha: 0.1)
-              : (isDark ? Colors.grey[850] : Colors.grey[50]),
+              : context.colors.subtleCardColor,
           border: Border.all(
-            color: isSelected
-                ? primary
-                : (isDark ? Colors.grey[700]! : Colors.grey[300]!),
+            color: isSelected ? primary : context.colors.textMuted,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -293,7 +297,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
           children: [
             Icon(
               isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: isSelected ? primary : Colors.grey,
+              color: isSelected ? primary : context.colors.textSecondary,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -305,7 +309,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: context.colors.textPrimary,
                       ),
                     ),
                   ),
@@ -322,8 +326,8 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                       ),
                       child: Text(
                         badge,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: context.colors.onPrimary,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),
@@ -341,12 +345,15 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 Text(
                   period,
-                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: context.colors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -374,14 +381,14 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               l.premiumActiveDesc,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[500]),
+              style: TextStyle(color: colorTheme.textSecondary),
             ),
           ],
         ),

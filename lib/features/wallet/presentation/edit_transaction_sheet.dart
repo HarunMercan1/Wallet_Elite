@@ -61,7 +61,6 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     final colorTheme = ref.watch(currentColorThemeProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final accounts = ref.watch(accountsProvider);
     final categories = _transactionType == 'income'
         ? ref.watch(incomeCategoriesProvider)
@@ -70,7 +69,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.85,
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -84,7 +83,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: colorTheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -144,7 +143,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         color:
                             (_transactionType == 'expense'
                                     ? colorTheme.error
-                                    : AppColors.success)
+                                    : colorTheme.success)
                                 .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -157,7 +156,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                 : Icons.arrow_downward,
                             color: _transactionType == 'expense'
                                 ? colorTheme.error
-                                : AppColors.success,
+                                : colorTheme.success,
                             size: 18,
                           ),
                           const SizedBox(width: 6),
@@ -168,7 +167,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                             style: TextStyle(
                               color: _transactionType == 'expense'
                                   ? colorTheme.error
-                                  : AppColors.success,
+                                  : colorTheme.success,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -203,7 +202,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                           fontWeight: FontWeight.bold,
                           color: _transactionType == 'expense'
                               ? colorTheme.error
-                              : AppColors.success,
+                              : colorTheme.success,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -218,7 +217,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         fontWeight: FontWeight.bold,
                         color: _transactionType == 'expense'
                             ? colorTheme.error
-                            : AppColors.success,
+                            : colorTheme.success,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -259,12 +258,12 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? colorTheme.primary
-                                      : Colors.grey[100],
+                                      : colorTheme.subtleCardColor,
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: isSelected
                                         ? colorTheme.primary
-                                        : Colors.grey[200]!,
+                                        : colorTheme.outline,
                                   ),
                                 ),
                                 child: Text(
@@ -272,8 +271,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: isSelected
-                                        ? Colors.white
-                                        : Colors.black87,
+                                        ? colorTheme.onPrimary
+                                        : colorTheme.textPrimary,
                                     fontWeight: isSelected
                                         ? FontWeight.bold
                                         : FontWeight.normal,
@@ -327,7 +326,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                       child: Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[300]!),
+                          border: Border.all(color: colorTheme.outline),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -398,18 +397,18 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                             : () => _updateTransaction(l, colorTheme),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: colorTheme.primary,
-                          foregroundColor: Colors.white,
+                          foregroundColor: colorTheme.onPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                         child: _isLoading
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 22,
                                 height: 22,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: colorTheme.onPrimary,
                                 ),
                               )
                             : Row(

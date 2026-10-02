@@ -64,7 +64,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   Icon(
                     Icons.account_balance_wallet_rounded,
                     size: responsive.largeIconSize,
-                    color: colorTheme.accent,
+                    color: colorTheme.onPrimary,
                   ),
                   SizedBox(height: responsive.hp(2)),
 
@@ -73,7 +73,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     style: TextStyle(
                       fontSize: responsive.titleFontSize,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: colorTheme.onPrimary,
                     ),
                   ),
 
@@ -83,7 +83,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     l.tagline,
                     style: TextStyle(
                       fontSize: responsive.bodyFontSize,
-                      color: colorTheme.accentLight,
+                      color: colorTheme.onPrimary.withValues(alpha: 0.85),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -94,7 +94,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   Container(
                     padding: responsive.allPadding,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorTheme.cardColor,
                       borderRadius: responsive.borderRadiusL,
                     ),
                     child: Form(
@@ -138,10 +138,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
-                              style: const TextStyle(color: Colors.black87),
+                              style: TextStyle(color: colorTheme.textPrimary),
                               decoration: InputDecoration(
                                 labelText: l.fullName,
-                                labelStyle: TextStyle(color: Colors.grey[700]),
+                                labelStyle: TextStyle(
+                                  color: colorTheme.textSecondary,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.person_outlined,
                                   color: colorTheme.primary,
@@ -150,13 +152,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 border: OutlineInputBorder(
                                   borderRadius: responsive.borderRadiusM,
                                   borderSide: BorderSide(
-                                    color: Colors.grey[400]!,
+                                    color: colorTheme.textMuted,
                                   ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: responsive.borderRadiusM,
                                   borderSide: BorderSide(
-                                    color: Colors.grey[400]!,
+                                    color: colorTheme.textMuted,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -185,10 +187,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
-                            style: const TextStyle(color: Colors.black87),
+                            style: TextStyle(color: colorTheme.textPrimary),
                             decoration: InputDecoration(
                               labelText: l.email,
-                              labelStyle: TextStyle(color: Colors.grey[700]),
+                              labelStyle: TextStyle(
+                                color: colorTheme.textSecondary,
+                              ),
                               prefixIcon: Icon(
                                 Icons.email_outlined,
                                 color: colorTheme.primary,
@@ -197,13 +201,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               border: OutlineInputBorder(
                                 borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
-                                  color: Colors.grey[400]!,
+                                  color: colorTheme.textMuted,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
-                                  color: Colors.grey[400]!,
+                                  color: colorTheme.textMuted,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -231,10 +235,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
-                            style: const TextStyle(color: Colors.black87),
+                            style: TextStyle(color: colorTheme.textPrimary),
                             decoration: InputDecoration(
                               labelText: l.password,
-                              labelStyle: TextStyle(color: Colors.grey[700]),
+                              labelStyle: TextStyle(
+                                color: colorTheme.textSecondary,
+                              ),
                               prefixIcon: Icon(
                                 Icons.lock_outlined,
                                 color: colorTheme.primary,
@@ -245,7 +251,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   _obscurePassword
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
-                                  color: Colors.grey[600],
+                                  color: colorTheme.textSecondary,
                                   size: responsive.iconL,
                                 ),
                                 onPressed: () {
@@ -257,13 +263,13 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               border: OutlineInputBorder(
                                 borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
-                                  color: Colors.grey[400]!,
+                                  color: colorTheme.textMuted,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: responsive.borderRadiusM,
                                 borderSide: BorderSide(
-                                  color: Colors.grey[400]!,
+                                  color: colorTheme.textMuted,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -307,21 +313,21 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   : () => _handleEmailAuth(l),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: colorTheme.primary,
-                                foregroundColor: Colors.white,
+                                foregroundColor: colorTheme.onPrimary,
                                 disabledBackgroundColor: colorTheme.primary
                                     .withValues(alpha: 0.7),
-                                disabledForegroundColor: Colors.white,
+                                disabledForegroundColor: colorTheme.onPrimary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: responsive.borderRadiusM,
                                 ),
                               ),
                               child: _isLoading
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                       width: 24,
                                       height: 24,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        color: Colors.white,
+                                        color: colorTheme.onPrimary,
                                       ),
                                     )
                                   : Text(
@@ -339,17 +345,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           // Or divider
                           Row(
                             children: [
-                              Expanded(child: Divider(color: Colors.grey[300])),
+                              Expanded(
+                                child: Divider(color: colorTheme.outline),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                 ),
                                 child: Text(
                                   l.orDivider,
-                                  style: TextStyle(color: Colors.grey[500]),
+                                  style: TextStyle(
+                                    color: colorTheme.textSecondary,
+                                  ),
                                 ),
                               ),
-                              Expanded(child: Divider(color: Colors.grey[300])),
+                              Expanded(
+                                child: Divider(color: colorTheme.outline),
+                              ),
                             ],
                           ),
 
@@ -376,7 +388,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                           content: Text(
                                             _authErrorText(errorMessage, l),
                                           ),
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: colorTheme.error,
                                           duration: const Duration(seconds: 4),
                                         ),
                                       );
@@ -389,8 +401,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               padding: EdgeInsets.symmetric(
                                 vertical: responsive.hp(1.5),
                               ),
-                              foregroundColor: Colors.black87,
-                              side: BorderSide(color: Colors.grey[400]!),
+                              foregroundColor: colorTheme.textPrimary,
+                              side: BorderSide(color: colorTheme.textMuted),
                               shape: RoundedRectangleBorder(
                                 borderRadius: responsive.borderRadiusM,
                               ),
@@ -406,7 +418,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 : FaIcon(
                                     FontAwesomeIcons.google,
                                     size: responsive.iconM,
-                                    color: Colors.red[600],
+                                    color: colorTheme.error,
                                   ),
                             label: Text(
                               _isGoogleLoading
@@ -414,7 +426,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                   : l.continueWithGoogle,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
+                                color: colorTheme.textPrimary,
                                 fontSize: responsive.fontM,
                               ),
                             ),
@@ -431,7 +443,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     l.privacyText,
                     style: TextStyle(
                       fontSize: responsive.subtitleFontSize,
-                      color: colorTheme.accentLight,
+                      color: colorTheme.onPrimary.withValues(alpha: 0.85),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -456,7 +468,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? colorTheme.primary : Colors.grey[100],
+          color: isSelected ? colorTheme.primary : colorTheme.subtleCardColor,
           borderRadius: responsive.borderRadiusS,
         ),
         child: Text(
@@ -464,7 +476,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : Colors.grey[600],
+            color: isSelected ? colorTheme.onPrimary : colorTheme.textSecondary,
             fontSize: responsive.fontM,
           ),
         ),
@@ -538,7 +550,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(l.onboardingSuccess),
-                backgroundColor: Colors.green,
+                backgroundColor: context.colors.success,
               ),
             );
             setState(() {
@@ -556,7 +568,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   fallback: _isLogin ? l.loginFailed : l.registerFailed,
                 ),
               ),
-              backgroundColor: Colors.red,
+              backgroundColor: context.colors.error,
             ),
           );
         }
@@ -566,7 +578,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l.errorOccurred}: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colors.error,
           ),
         );
       }
@@ -614,7 +626,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(l.passwordResetSent),
-                      backgroundColor: Colors.green,
+                      backgroundColor: context.colors.success,
                     ),
                   );
                 }

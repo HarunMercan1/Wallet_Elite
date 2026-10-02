@@ -59,19 +59,14 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         title: Text(l.trendDetails),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: colorTheme.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -145,7 +140,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.grey[200],
+        color: colorTheme.subtleCardColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -168,7 +163,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 style: TextStyle(
                   color: _showExpenses
                       ? Colors.white
-                      : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                      : colorTheme.textSecondary,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -192,7 +187,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 style: TextStyle(
                   color: !_showExpenses
                       ? Colors.white
-                      : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                      : colorTheme.textSecondary,
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -218,7 +213,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.grey[100],
+        color: colorTheme.subtleCardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -242,8 +237,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: isSelected
-                        ? Colors.white
-                        : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                        ? colorTheme.onPrimary
+                        : colorTheme.textSecondary,
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
@@ -266,7 +261,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -277,7 +272,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -318,9 +313,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                                   style: TextStyle(
                                     fontSize: 9,
                                     fontWeight: FontWeight.bold,
-                                    color: isDark
-                                        ? Colors.grey[400]
-                                        : Colors.grey[600],
+                                    color: colorTheme.textSecondary,
                                   ),
                                 ),
                               ),
@@ -352,7 +345,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                               entry.key,
                               style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.grey[500],
+                                color: colorTheme.textSecondary,
                               ),
                             ),
                           ],
@@ -395,7 +388,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.black87,
+            color: colorTheme.textPrimary,
           ),
         ),
         const SizedBox(height: 16),
@@ -418,7 +411,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 value:
                     '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(avg)}',
                 icon: Icons.calculate,
-                color: Colors.orange,
+                color: colorTheme.warning,
                 isDark: isDark,
                 colorTheme: colorTheme,
               ),
@@ -448,7 +441,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(minTx.amount)}'
                     : '-',
                 icon: Icons.arrow_downward,
-                color: Colors.teal,
+                color: colorTheme.info,
                 isDark: isDark,
                 colorTheme: colorTheme,
               ),
@@ -470,7 +463,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -489,7 +482,10 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             ],
           ),
           const SizedBox(height: 12),
-          Text(title, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+          Text(
+            title,
+            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
+          ),
           const SizedBox(height: 4),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -499,7 +495,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -539,7 +535,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -554,7 +550,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: colorTheme.textPrimary,
                 ),
               ),
             ],
@@ -573,7 +569,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             label: l.weekendSpending,
             value: weekendAvg,
             maxValue: maxAvg,
-            color: Colors.purple,
+            color: colorTheme.tertiary,
             isDark: isDark,
             colorTheme: colorTheme,
           ),
@@ -600,17 +596,14 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 13,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 13, color: colorTheme.textSecondary),
             ),
             Text(
               '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(value)} avg',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ],
@@ -620,7 +613,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
             value: percent,
-            backgroundColor: isDark ? Colors.white12 : Colors.grey[200],
+            backgroundColor: colorTheme.borderColor,
             valueColor: AlwaysStoppedAnimation<Color>(color),
             minHeight: 8,
           ),
@@ -661,7 +654,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -676,7 +669,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: colorTheme.textPrimary,
                 ),
               ),
             ],
@@ -690,7 +683,10 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                   children: [
                     Text(
                       l.thisMonth,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorTheme.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -698,7 +694,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: colorTheme.textPrimary,
                       ),
                     ),
                   ],
@@ -710,7 +706,10 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                   children: [
                     Text(
                       l.lastMonth,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorTheme.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -718,7 +717,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[500],
+                        color: colorTheme.textSecondary,
                       ),
                     ),
                   ],

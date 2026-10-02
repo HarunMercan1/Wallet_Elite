@@ -67,7 +67,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.85,
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -78,7 +78,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[400],
+              color: colorTheme.textMuted,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -93,14 +93,14 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
                 const Spacer(),
                 if (isEditing)
                   IconButton(
                     onPressed: _deleteBudget,
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    icon: Icon(Icons.delete_outline, color: colorTheme.error),
                   ),
               ],
             ),
@@ -118,16 +118,12 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                     // Bütçe adı
                     TextFormField(
                       controller: _nameController,
-                      style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
-                      ),
+                      style: TextStyle(color: colorTheme.textPrimary),
                       decoration: InputDecoration(
                         labelText: l.budgetName,
                         hintText: l.budgetNameHint,
                         filled: true,
-                        fillColor: isDark
-                            ? Colors.white.withValues(alpha: 0.05)
-                            : Colors.black.withValues(alpha: 0.05),
+                        fillColor: colorTheme.borderColor,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -151,7 +147,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: colorTheme.textPrimary,
                       ),
                       decoration: InputDecoration(
                         labelText: l.budgetAmount,
@@ -163,9 +159,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                           color: colorTheme.primary,
                         ),
                         filled: true,
-                        fillColor: isDark
-                            ? Colors.white.withValues(alpha: 0.05)
-                            : Colors.black.withValues(alpha: 0.05),
+                        fillColor: colorTheme.borderColor,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -224,9 +218,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                           setState(() => _notifyWhenExceeded = value),
                       title: Text(
                         l.notifyWhenExceeded,
-                        style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
+                        style: TextStyle(color: colorTheme.textPrimary),
                       ),
                       activeColor: colorTheme.primary,
                       contentPadding: EdgeInsets.zero,
@@ -254,17 +246,17 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                 onPressed: _isLoading ? null : _save,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorTheme.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorTheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 child: _isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: colorTheme.onPrimary,
                           strokeWidth: 2,
                         ),
                       )
@@ -297,7 +289,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: isDark ? Colors.grey[400] : Colors.grey[700],
+            color: colorTheme.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -356,7 +348,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: isDark ? Colors.grey[400] : Colors.grey[700],
+            color: colorTheme.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -392,22 +384,17 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
       decoration: InputDecoration(
         labelText: l.budgetStartDay,
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
-      dropdownColor: isDark ? colorTheme.cardDark : colorTheme.cardLight,
+      dropdownColor: colorTheme.cardColor,
       items: List.generate(28, (i) => i + 1).map((day) {
         return DropdownMenuItem(
           value: day,
-          child: Text(
-            '$day',
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-          ),
+          child: Text('$day', style: TextStyle(color: colorTheme.textPrimary)),
         );
       }).toList(),
       onChanged: (value) => setState(() => _startDay = value!),
@@ -430,7 +417,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: isDark ? Colors.grey[400] : Colors.grey[700],
+                color: colorTheme.textSecondary,
               ),
             ),
             Container(
@@ -527,7 +514,10 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l.delete, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              l.delete,
+              style: TextStyle(color: context.colors.error),
+            ),
           ),
         ],
       ),

@@ -58,18 +58,18 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.close, color: isDark ? Colors.white : Colors.black),
+          icon: Icon(Icons.close, color: colorTheme.textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(
           _l.appTour,
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black,
+            color: colorTheme.textPrimary,
             fontSize: r.fontL,
             fontWeight: FontWeight.bold,
           ),
@@ -148,7 +148,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [colorTheme.primary, colorTheme.accent],
+                    colors: [colorTheme.primary, colorTheme.primaryDark],
                   ),
                   borderRadius: BorderRadius.circular(r.hp(0.4)),
                 ),
@@ -190,7 +190,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                     padding: EdgeInsets.all(r.paddingXL),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [colorTheme.primary, colorTheme.accent],
+                        colors: [colorTheme.primary, colorTheme.primaryDark],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -206,7 +206,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                     child: Icon(
                       Icons.account_balance_wallet_rounded,
                       size: r.hp(10),
-                      color: Colors.white,
+                      color: colorTheme.onPrimary,
                     ),
                   ),
                 ),
@@ -223,7 +223,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   style: TextStyle(
                     fontSize: r.hp(4.5),
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
               ),
@@ -237,7 +237,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   _l.tagline,
                   style: TextStyle(
                     fontSize: r.fontM,
-                    color: isDark ? Colors.white70 : Colors.grey[600],
+                    color: colorTheme.textSecondary,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
@@ -320,7 +320,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     return Container(
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
+        color: colorTheme.subtleCardColor,
         borderRadius: r.borderRadiusM,
         border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
@@ -330,11 +330,11 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             padding: EdgeInsets.all(r.paddingS),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [colorTheme.primary, colorTheme.accent],
+                colors: [colorTheme.primary, colorTheme.primaryDark],
               ),
               borderRadius: r.borderRadiusS,
             ),
-            child: Icon(icon, color: Colors.white, size: r.iconM),
+            child: Icon(icon, color: colorTheme.onPrimary, size: r.iconM),
           ),
           SizedBox(width: r.spaceM),
           Expanded(
@@ -342,7 +342,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               text,
               style: TextStyle(
                 fontSize: r.fontS,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -369,7 +369,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
         'icon': Icons.pie_chart,
         'title': _l.budgetTracking,
         'desc': _l.budgetTrackingDesc,
-        'color': colorTheme.accent,
+        'color': Colors.teal,
       },
       {
         'icon': Icons.repeat,
@@ -406,7 +406,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -420,7 +420,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               _l.discoverFeaturesDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -453,7 +453,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
       margin: EdgeInsets.only(bottom: r.hp(2)),
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
+        color: context.colors.cardColor,
         borderRadius: r.borderRadiusM,
         border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
@@ -490,7 +490,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   style: TextStyle(
                     fontSize: r.fontM,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: r.hp(0.5)),
@@ -498,7 +498,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   feature['desc'] as String,
                   style: TextStyle(
                     fontSize: r.fontXS,
-                    color: isDark ? Colors.white60 : Colors.grey[600],
+                    color: context.colors.textSecondary,
                   ),
                 ),
               ],
@@ -546,7 +546,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -560,7 +560,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               _l.languageSupportDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -586,7 +586,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                       gradient: LinearGradient(
                         colors: [
                           colorTheme.primary.withValues(alpha: 0.1),
-                          colorTheme.accent.withValues(alpha: 0.05),
+                          colorTheme.primary.withValues(alpha: 0.05),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -609,7 +609,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                           style: TextStyle(
                             fontSize: r.fontXS,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.black87,
+                            color: colorTheme.textPrimary,
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 1,
@@ -651,7 +651,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -665,7 +665,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               _l.colorThemesDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -689,7 +689,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [theme.primary, theme.accent],
+                        colors: [theme.primary, theme.primaryDark],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -711,7 +711,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                               Icon(
                                 Icons.palette,
                                 size: r.iconXL,
-                                color: Colors.white,
+                                color: theme.onPrimary,
                               ),
                               SizedBox(height: r.hp(1)),
                               Padding(
@@ -726,7 +726,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                                   style: TextStyle(
                                     fontSize: r.fontM,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: theme.onPrimary,
                                   ),
                                 ),
                               ),
@@ -746,10 +746,10 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                                 color: Colors.black.withValues(alpha: 0.35),
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'PRO',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: theme.onPrimary,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -773,9 +773,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
             child: Container(
               padding: EdgeInsets.all(r.paddingM),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.grey[100],
+                color: colorTheme.subtleCardColor,
                 borderRadius: r.borderRadiusM,
               ),
               child: Row(
@@ -791,7 +789,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                     style: TextStyle(
                       fontSize: r.fontM,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   const Spacer(),
@@ -864,7 +862,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -878,7 +876,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               _l.multiCurrencyDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -899,9 +897,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                     margin: EdgeInsets.only(bottom: r.hp(1.5)),
                     padding: EdgeInsets.all(r.paddingM),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.05)
-                          : Colors.white,
+                      color: colorTheme.cardColor,
                       borderRadius: r.borderRadiusM,
                       border: Border.all(color: color.withValues(alpha: 0.3)),
                       boxShadow: [
@@ -944,16 +940,14 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                                 style: TextStyle(
                                   fontSize: r.fontM,
                                   fontWeight: FontWeight.w600,
-                                  color: isDark ? Colors.white : Colors.black87,
+                                  color: colorTheme.textPrimary,
                                 ),
                               ),
                               Text(
                                 currency['code'] as String,
                                 style: TextStyle(
                                   fontSize: r.fontXS,
-                                  color: isDark
-                                      ? Colors.white60
-                                      : Colors.grey[600],
+                                  color: colorTheme.textSecondary,
                                 ),
                               ),
                             ],
@@ -980,7 +974,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
     return Container(
       padding: EdgeInsets.all(r.paddingL),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        color: colorTheme.cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -997,7 +991,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               icon: Icon(Icons.arrow_back, size: r.iconS),
               label: Text(_l.backButton),
               style: TextButton.styleFrom(
-                foregroundColor: isDark ? Colors.white70 : Colors.grey[700],
+                foregroundColor: colorTheme.textSecondary,
               ),
             )
           else
@@ -1031,7 +1025,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
               onPressed: _nextPage,
               style: ElevatedButton.styleFrom(
                 backgroundColor: colorTheme.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: colorTheme.onPrimary,
                 padding: EdgeInsets.symmetric(
                   horizontal: r.paddingL,
                   vertical: r.paddingS,

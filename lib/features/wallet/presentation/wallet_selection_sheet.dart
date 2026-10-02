@@ -50,7 +50,7 @@ class WalletSelectionSheet extends ConsumerWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: colorTheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -59,17 +59,14 @@ class WalletSelectionSheet extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Icon(
-                  Icons.account_balance_wallet,
-                  color: isDark ? colorTheme.accent : colorTheme.primary,
-                ),
+                Icon(Icons.account_balance_wallet, color: colorTheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   l.wallets,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
               ],
@@ -130,12 +127,12 @@ class WalletSelectionSheet extends ConsumerWidget {
                         Icon(
                           Icons.account_balance_wallet_outlined,
                           size: 48,
-                          color: Colors.grey[400],
+                          color: colorTheme.textMuted,
                         ),
                         const SizedBox(height: 12),
                         Text(
                           l.noWallets,
-                          style: TextStyle(color: Colors.grey[500]),
+                          style: TextStyle(color: colorTheme.textSecondary),
                         ),
                       ],
                     ),
@@ -192,12 +189,10 @@ class WalletSelectionSheet extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? colorTheme.primary.withValues(alpha: 0.1)
-              : (isDark ? colorTheme.surfaceDark : Colors.white),
+              : colorTheme.cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? colorTheme.primary
-                : (isDark ? Colors.white10 : Colors.grey[200]!),
+            color: isSelected ? colorTheme.primary : colorTheme.borderColor,
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -233,14 +228,17 @@ class WalletSelectionSheet extends ConsumerWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
-                      color: isDark ? Colors.white : Colors.black,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   if (!isAllWallets) ...[
                     const SizedBox(height: 2),
                     Text(
                       _getWalletTypeName(account.type, l),
-                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorTheme.textSecondary,
+                      ),
                     ),
                   ],
                 ],
@@ -256,7 +254,7 @@ class WalletSelectionSheet extends ConsumerWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: isDark ? colorTheme.accent : colorTheme.primary,
+                  color: colorTheme.primary,
                 ),
               ),
           ],
@@ -283,13 +281,13 @@ class WalletSelectionSheet extends ConsumerWidget {
   Color _getWalletColor(String type, ColorTheme colorTheme) {
     switch (type) {
       case 'bank':
-        return Colors.blue;
+        return colorTheme.info;
       case 'cash':
         return colorTheme.success;
       case 'credit_card':
         return colorTheme.error;
       case 'savings':
-        return Colors.orange;
+        return colorTheme.warning;
       default:
         return colorTheme.primary;
     }

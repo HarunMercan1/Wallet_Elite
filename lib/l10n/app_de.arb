@@ -495,5 +495,21 @@
     "exportDataDesc": "Teile deine Transaktionen als CSV-Datei (öffnet in Excel)",
     "exportFailed": "Export fehlgeschlagen",
     "exportNoData": "Es gibt keine Transaktionen zum Exportieren.",
-    "cat_clothing": "Kleidung"
+    "cat_clothing": "Kleidung",
+  "supportSection": "Support",
+  "sendFeedback": "An den Entwickler schreiben",
+  "sendFeedbackDesc": "Vorschlag, Beschwerde oder Wunsch per E-Mail senden",
+  "emailAppNotFound": "Keine E-Mail-App gefunden. Schreib an: {email}",
+  "rateApp": "Bewerte uns",
+  "rateAppDesc": "Gib eine Bewertung bei Google Play ab",
+  "updateAvailableTitle": "Update verfügbar",
+  "updateAvailableMessage": "Eine neue Version von Wallet Elite ist verfügbar. Aktualisiere für die neuesten Funktionen und Fehlerbehebungen.",
+  "updateNow": "Aktualisieren",
+  "later": "Später",
+  "summaryImage": "Übersichtsbild",
+  "summaryImageDesc": "Speichere oder teile deine Übersicht als Bild",
+  "saveToGallery": "In Galerie speichern",
+  "share": "Teilen",
+  "imageSaved": "Bild in der Galerie gespeichert",
+  "imageSaveFailed": "Bild konnte nicht gespeichert werden"
 }

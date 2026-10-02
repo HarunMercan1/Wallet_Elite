@@ -58,7 +58,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.backgroundDark : colorTheme.backgroundLight,
+        color: colorTheme.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -70,7 +70,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: isDark ? Colors.white24 : Colors.grey.shade300,
+              color: colorTheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -84,14 +84,13 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: (isLend ? Colors.green : Colors.red).withValues(
-                      alpha: 0.1,
-                    ),
+                    color: (isLend ? colorTheme.success : colorTheme.error)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
                     isLend ? Icons.arrow_upward : Icons.arrow_downward,
-                    color: isLend ? Colors.green : Colors.red,
+                    color: isLend ? colorTheme.success : colorTheme.error,
                     size: 24,
                   ),
                 ),
@@ -105,13 +104,13 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                       Text(
                         isLend ? l.lend : l.borrow,
                         style: TextStyle(
-                          color: isLend ? Colors.green : Colors.red,
+                          color: isLend ? colorTheme.success : colorTheme.error,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -119,13 +118,13 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  icon: Icon(Icons.delete_outline, color: colorTheme.error),
                   onPressed: () => _deleteDebt(context, ref, debt, l),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
-                  color: isDark ? Colors.white54 : Colors.grey,
+                  color: colorTheme.textSecondary,
                 ),
               ],
             ),
@@ -144,8 +143,8 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: isLend
-                            ? [Colors.green.shade400, Colors.green.shade600]
-                            : [Colors.red.shade400, Colors.red.shade600],
+                            ? [colorTheme.success, colorTheme.success]
+                            : [colorTheme.error, colorTheme.error],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -262,7 +261,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: colorTheme.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -290,9 +289,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                 color: colorTheme.primary,
                               ),
                               filled: true,
-                              fillColor: isDark
-                                  ? colorTheme.surfaceDark
-                                  : colorTheme.surfaceLight,
+                              fillColor: colorTheme.cardColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -300,9 +297,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: isDark
-                                      ? Colors.white12
-                                      : Colors.grey.shade200,
+                                  color: colorTheme.borderColor,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
@@ -320,7 +315,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                           onPressed: _isLoading ? null : _recordPayment,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: colorTheme.primary,
-                            foregroundColor: Colors.white,
+                            foregroundColor: colorTheme.onPrimary,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 16,
@@ -330,11 +325,11 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                             ),
                           ),
                           child: _isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
-                                    color: Colors.white,
+                                    color: colorTheme.onPrimary,
                                     strokeWidth: 2,
                                   ),
                                 )
@@ -352,8 +347,8 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         icon: const Icon(Icons.check_circle_outline),
                         label: Text(l.markAsCompleted),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.green,
-                          side: const BorderSide(color: Colors.green),
+                          foregroundColor: colorTheme.success,
+                          side: BorderSide(color: colorTheme.success),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -373,7 +368,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -395,9 +390,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                 child: Text(
                                   l.noPaymentsYet,
                                   style: TextStyle(
-                                    color: isDark
-                                        ? Colors.white54
-                                        : Colors.grey,
+                                    color: colorTheme.textSecondary,
                                   ),
                                 ),
                               ),
@@ -415,9 +408,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                               return Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? Colors.white10
-                                      : Colors.grey.shade50,
+                                  color: colorTheme.subtleCardColor,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -425,14 +416,14 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                     Container(
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
-                                        color: Colors.green.withValues(
+                                        color: colorTheme.success.withValues(
                                           alpha: 0.1,
                                         ),
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.check,
-                                        color: Colors.green,
+                                        color: colorTheme.success,
                                         size: 16,
                                       ),
                                     ),
@@ -444,9 +435,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                         Text(
                                           l.payment,
                                           style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black87,
+                                            color: colorTheme.textPrimary,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -457,9 +446,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                           ),
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color: isDark
-                                                ? Colors.white54
-                                                : Colors.grey,
+                                            color: colorTheme.textSecondary,
                                           ),
                                         ),
                                       ],
@@ -470,9 +457,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black87,
+                                        color: colorTheme.textPrimary,
                                       ),
                                     ),
                                   ],
@@ -516,16 +501,16 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: (isWarning
-                  ? Colors.red
-                  : (isDark ? Colors.white10 : Colors.grey.shade100)),
+                  ? context.colors.error
+                  : context.colors.subtleCardColor),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
               size: 18,
               color: isWarning
-                  ? Colors.red
-                  : (isDark ? Colors.white54 : Colors.grey.shade600),
+                  ? context.colors.error
+                  : context.colors.textSecondary,
             ),
           ),
           const SizedBox(width: 12),
@@ -537,7 +522,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                   label,
                   style: TextStyle(
                     fontSize: 12,
-                    color: isDark ? Colors.white54 : Colors.grey.shade600,
+                    color: context.colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -549,8 +534,8 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         style: TextStyle(
                           fontSize: 15,
                           color: isWarning
-                              ? Colors.red
-                              : (isDark ? Colors.white : Colors.black87),
+                              ? context.colors.error
+                              : context.colors.textPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -563,13 +548,13 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: 0.1),
+                          color: context.colors.error.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           warningText,
-                          style: const TextStyle(
-                            color: Colors.red,
+                          style: TextStyle(
+                            color: context.colors.error,
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                           ),
@@ -581,7 +566,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                       Icon(
                         Icons.edit,
                         size: 16,
-                        color: isDark ? Colors.white38 : Colors.grey.shade400,
+                        color: context.colors.textMuted,
                       ),
                     ],
                   ],
@@ -625,7 +610,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
+        backgroundColor: colorTheme.cardColor,
         title: Text(l.note),
         content: TextField(
           controller: textController,
@@ -663,19 +648,18 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     DebtModel debt,
     AppLocalizations l,
   ) async {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.read(currentColorThemeProvider);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: isDark ? colorTheme.surfaceDark : Colors.white,
+        backgroundColor: colorTheme.cardColor,
         title: Text(
           l.deleteDebt,
-          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+          style: TextStyle(color: colorTheme.textPrimary),
         ),
         content: Text(
           l.deleteDebtConfirm,
-          style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+          style: TextStyle(color: colorTheme.textSecondary),
         ),
         actions: [
           TextButton(
@@ -686,7 +670,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l.deleteDebt,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: colorTheme.error),
             ),
           ),
         ],
@@ -726,7 +710,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l.paymentRecorded),
-          backgroundColor: Colors.green,
+          backgroundColor: context.colors.success,
         ),
       );
       Navigator.pop(context);
@@ -744,7 +728,10 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     if (success && mounted) {
       final l = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l.debtUpdated), backgroundColor: Colors.green),
+        SnackBar(
+          content: Text(l.debtUpdated),
+          backgroundColor: context.colors.success,
+        ),
       );
       Navigator.pop(context);
     }

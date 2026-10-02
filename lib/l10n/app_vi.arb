@@ -509,5 +509,21 @@
     "exportDataDesc": "Chia sẻ giao dịch dưới dạng tệp CSV (mở được bằng Excel)",
     "exportFailed": "Xuất dữ liệu thất bại",
     "exportNoData": "Không có giao dịch nào để xuất.",
-    "cat_clothing": "Quần áo"
+    "cat_clothing": "Quần áo",
+  "supportSection": "Hỗ trợ",
+  "sendFeedback": "Gửi cho nhà phát triển",
+  "sendFeedbackDesc": "Gửi góp ý, khiếu nại hoặc yêu cầu qua email",
+  "emailAppNotFound": "Không tìm thấy ứng dụng email. Gửi tới: {email}",
+  "rateApp": "Đánh giá ứng dụng",
+  "rateAppDesc": "Chấm điểm trên Google Play",
+  "updateAvailableTitle": "Có bản cập nhật",
+  "updateAvailableMessage": "Đã có phiên bản Wallet Elite mới. Cập nhật để có tính năng và bản sửa lỗi mới nhất.",
+  "updateNow": "Cập nhật",
+  "later": "Để sau",
+  "summaryImage": "Ảnh tóm tắt",
+  "summaryImageDesc": "Lưu hoặc chia sẻ bản tóm tắt dưới dạng ảnh",
+  "saveToGallery": "Lưu vào thư viện",
+  "share": "Chia sẻ",
+  "imageSaved": "Đã lưu ảnh vào thư viện",
+  "imageSaveFailed": "Không thể lưu ảnh"
 }

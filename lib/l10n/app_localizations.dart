@@ -2859,6 +2859,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clothing'**
   String get cat_clothing;
+
+  /// No description provided for @supportSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get supportSection;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Write to the developer'**
+  String get sendFeedback;
+
+  /// No description provided for @sendFeedbackDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a suggestion, complaint or request by email'**
+  String get sendFeedbackDesc;
+
+  /// No description provided for @emailAppNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app found. Write to: {email}'**
+  String emailAppNotFound(String email);
+
+  /// No description provided for @rateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate us'**
+  String get rateApp;
+
+  /// No description provided for @rateAppDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a rating on Google Play'**
+  String get rateAppDesc;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of Wallet Elite is available. Update to get the latest features and fixes.'**
+  String get updateAvailableMessage;
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateNow;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @summaryImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary image'**
+  String get summaryImage;
+
+  /// No description provided for @summaryImageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Save or share your summary as an image'**
+  String get summaryImageDesc;
+
+  /// No description provided for @saveToGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to gallery'**
+  String get saveToGallery;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @imageSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Image saved to gallery'**
+  String get imageSaved;
+
+  /// No description provided for @imageSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save the image'**
+  String get imageSaveFailed;
 }
 
 class _AppLocalizationsDelegate

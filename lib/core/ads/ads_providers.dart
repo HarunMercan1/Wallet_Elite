@@ -22,6 +22,25 @@ final showAdsProvider = Provider<bool>((ref) {
   return adsReady && !isPremium;
 });
 
+/// Tam ekran reklamlar (geçiş, uygulama açılış, ödüllü) arasında ortak durum:
+/// aynı anda yalnızca biri gösterilir ve art arda gösterim engellenir.
+class FullScreenAdGate {
+  static bool isShowing = false;
+  static DateTime? lastClosedAt;
+
+  static bool closedWithin(Duration duration) {
+    final last = lastClosedAt;
+    return last != null && DateTime.now().difference(last) < duration;
+  }
+
+  static void opened() => isShowing = true;
+
+  static void closed() {
+    isShowing = false;
+    lastClosedAt = DateTime.now();
+  }
+}
+
 /// Ödüllü reklamı önceden yükler ve gösterir
 class RewardedAdService {
   RewardedAd? _ad;
@@ -70,8 +89,10 @@ class RewardedAdService {
         if (!closed.isCompleted) closed.complete();
       },
     );
+    FullScreenAdGate.opened();
     await ad.show(onUserEarnedReward: (_, _) => earned = true);
     await closed.future;
+    FullScreenAdGate.closed();
     load(); // bir sonrakini hazırla
     return earned;
   }

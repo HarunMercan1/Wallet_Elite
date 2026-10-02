@@ -1418,4 +1418,56 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get cat_clothing => 'कपड़े';
+
+  @override
+  String get supportSection => 'सहायता';
+
+  @override
+  String get sendFeedback => 'डेवलपर को लिखें';
+
+  @override
+  String get sendFeedbackDesc => 'ईमेल से सुझाव, शिकायत या अनुरोध भेजें';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'कोई ईमेल ऐप नहीं मिला। यहाँ लिखें: $email';
+  }
+
+  @override
+  String get rateApp => 'हमें रेट करें';
+
+  @override
+  String get rateAppDesc => 'Google Play पर रेटिंग दें';
+
+  @override
+  String get updateAvailableTitle => 'अपडेट उपलब्ध है';
+
+  @override
+  String get updateAvailableMessage =>
+      'Wallet Elite का नया संस्करण उपलब्ध है। नई सुविधाओं और सुधारों के लिए अपडेट करें।';
+
+  @override
+  String get updateNow => 'अपडेट करें';
+
+  @override
+  String get later => 'बाद में';
+
+  @override
+  String get summaryImage => 'सारांश छवि';
+
+  @override
+  String get summaryImageDesc =>
+      'अपने सारांश को छवि के रूप में सहेजें या साझा करें';
+
+  @override
+  String get saveToGallery => 'गैलरी में सहेजें';
+
+  @override
+  String get share => 'साझा करें';
+
+  @override
+  String get imageSaved => 'छवि गैलरी में सहेजी गई';
+
+  @override
+  String get imageSaveFailed => 'छवि सहेजी नहीं जा सकी';
 }

@@ -1412,4 +1412,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cat_clothing => 'ملابس';
+
+  @override
+  String get supportSection => 'الدعم';
+
+  @override
+  String get sendFeedback => 'راسل المطوّر';
+
+  @override
+  String get sendFeedbackDesc =>
+      'أرسل اقتراحًا أو شكوى أو طلبًا عبر البريد الإلكتروني';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'لم يُعثر على تطبيق بريد. راسلنا على: $email';
+  }
+
+  @override
+  String get rateApp => 'قيّمنا';
+
+  @override
+  String get rateAppDesc => 'امنحنا تقييمًا على Google Play';
+
+  @override
+  String get updateAvailableTitle => 'يتوفر تحديث';
+
+  @override
+  String get updateAvailableMessage =>
+      'يتوفر إصدار جديد من Wallet Elite. حدّث للحصول على أحدث الميزات والإصلاحات.';
+
+  @override
+  String get updateNow => 'تحديث';
+
+  @override
+  String get later => 'لاحقًا';
+
+  @override
+  String get summaryImage => 'صورة الملخص';
+
+  @override
+  String get summaryImageDesc => 'احفظ ملخصك كصورة أو شاركه';
+
+  @override
+  String get saveToGallery => 'حفظ في المعرض';
+
+  @override
+  String get share => 'مشاركة';
+
+  @override
+  String get imageSaved => 'تم حفظ الصورة في المعرض';
+
+  @override
+  String get imageSaveFailed => 'تعذّر حفظ الصورة';
 }

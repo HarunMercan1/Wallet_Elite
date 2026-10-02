@@ -495,5 +495,21 @@
     "exportDataDesc": "Поделитесь операциями в виде CSV-файла (открывается в Excel)",
     "exportFailed": "Не удалось выполнить экспорт",
     "exportNoData": "Нет операций для экспорта.",
-    "cat_clothing": "Одежда"
+    "cat_clothing": "Одежда",
+  "supportSection": "Поддержка",
+  "sendFeedback": "Написать разработчику",
+  "sendFeedbackDesc": "Отправьте предложение, жалобу или пожелание по почте",
+  "emailAppNotFound": "Почтовое приложение не найдено. Пишите на: {email}",
+  "rateApp": "Оцените нас",
+  "rateAppDesc": "Поставьте оценку в Google Play",
+  "updateAvailableTitle": "Доступно обновление",
+  "updateAvailableMessage": "Доступна новая версия Wallet Elite. Обновите, чтобы получить новые функции и исправления.",
+  "updateNow": "Обновить",
+  "later": "Позже",
+  "summaryImage": "Изображение сводки",
+  "summaryImageDesc": "Сохраните сводку как изображение или поделитесь ею",
+  "saveToGallery": "Сохранить в галерею",
+  "share": "Поделиться",
+  "imageSaved": "Изображение сохранено в галерею",
+  "imageSaveFailed": "Не удалось сохранить изображение"
 }

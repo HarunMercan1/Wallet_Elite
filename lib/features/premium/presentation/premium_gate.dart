@@ -34,7 +34,6 @@ class _PremiumRequiredSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context)!;
     final colorTheme = ref.watch(currentColorThemeProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final features = [
       (Icons.block, l.premiumFeatureNoAds),
@@ -45,7 +44,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
@@ -62,7 +61,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                   top: Radius.circular(24),
                 ),
                 gradient: LinearGradient(
-                  colors: [colorTheme.primary, colorTheme.accent],
+                  colors: [colorTheme.primary, colorTheme.primaryDark],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -73,7 +72,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: colorTheme.onPrimary.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -81,20 +80,20 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: colorTheme.onPrimary.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.workspace_premium,
-                      color: Colors.white,
+                      color: colorTheme.onPrimary,
                       size: 36,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     l.premiumTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: colorTheme.onPrimary,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -104,7 +103,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                     message,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: colorTheme.onPrimary.withValues(alpha: 0.9),
                       fontSize: 14,
                       height: 1.35,
                     ),
@@ -141,7 +140,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                               text,
                               style: TextStyle(
                                 fontSize: 15,
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: colorTheme.textPrimary,
                               ),
                             ),
                           ),
@@ -177,7 +176,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorTheme.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: colorTheme.onPrimary,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -190,7 +189,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                     onPressed: () => Navigator.pop(context),
                     child: Text(
                       l.cancel,
-                      style: TextStyle(color: Colors.grey[500]),
+                      style: TextStyle(color: colorTheme.textSecondary),
                     ),
                   ),
                 ],

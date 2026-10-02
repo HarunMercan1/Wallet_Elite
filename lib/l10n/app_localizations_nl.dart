@@ -1423,4 +1423,56 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get cat_clothing => 'Kleding';
+
+  @override
+  String get supportSection => 'Ondersteuning';
+
+  @override
+  String get sendFeedback => 'Schrijf de ontwikkelaar';
+
+  @override
+  String get sendFeedbackDesc =>
+      'Stuur een suggestie, klacht of verzoek per e-mail';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'Geen e-mailapp gevonden. Schrijf naar: $email';
+  }
+
+  @override
+  String get rateApp => 'Beoordeel ons';
+
+  @override
+  String get rateAppDesc => 'Geef een beoordeling op Google Play';
+
+  @override
+  String get updateAvailableTitle => 'Update beschikbaar';
+
+  @override
+  String get updateAvailableMessage =>
+      'Er is een nieuwe versie van Wallet Elite. Werk bij voor de nieuwste functies en verbeteringen.';
+
+  @override
+  String get updateNow => 'Bijwerken';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get summaryImage => 'Overzichtsafbeelding';
+
+  @override
+  String get summaryImageDesc => 'Bewaar of deel je overzicht als afbeelding';
+
+  @override
+  String get saveToGallery => 'Opslaan in galerij';
+
+  @override
+  String get share => 'Delen';
+
+  @override
+  String get imageSaved => 'Afbeelding opgeslagen in galerij';
+
+  @override
+  String get imageSaveFailed => 'Afbeelding kon niet worden opgeslagen';
 }

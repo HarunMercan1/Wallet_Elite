@@ -1416,4 +1416,55 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get cat_clothing => 'เสื้อผ้า';
+
+  @override
+  String get supportSection => 'การสนับสนุน';
+
+  @override
+  String get sendFeedback => 'เขียนถึงผู้พัฒนา';
+
+  @override
+  String get sendFeedbackDesc => 'ส่งข้อเสนอแนะ ข้อร้องเรียน หรือคำขอทางอีเมล';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'ไม่พบแอปอีเมล เขียนถึง: $email';
+  }
+
+  @override
+  String get rateApp => 'ให้คะแนนเรา';
+
+  @override
+  String get rateAppDesc => 'ให้คะแนนบน Google Play';
+
+  @override
+  String get updateAvailableTitle => 'มีอัปเดตใหม่';
+
+  @override
+  String get updateAvailableMessage =>
+      'Wallet Elite มีเวอร์ชันใหม่ อัปเดตเพื่อรับฟีเจอร์และการแก้ไขล่าสุด';
+
+  @override
+  String get updateNow => 'อัปเดต';
+
+  @override
+  String get later => 'ภายหลัง';
+
+  @override
+  String get summaryImage => 'รูปภาพสรุป';
+
+  @override
+  String get summaryImageDesc => 'บันทึกหรือแชร์สรุปเป็นรูปภาพ';
+
+  @override
+  String get saveToGallery => 'บันทึกลงแกลเลอรี';
+
+  @override
+  String get share => 'แชร์';
+
+  @override
+  String get imageSaved => 'บันทึกรูปภาพลงแกลเลอรีแล้ว';
+
+  @override
+  String get imageSaveFailed => 'บันทึกรูปภาพไม่สำเร็จ';
 }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/utils/responsive_helper.dart';
@@ -15,6 +16,8 @@ import '../../recurring/data/recurring_provider.dart';
 import '../../auth/data/auth_provider.dart';
 import '../../../core/ads/ads_providers.dart';
 import '../../../core/ads/banner_ad_widget.dart';
+import '../../../core/ads/full_screen_ads.dart';
+import '../../../core/services/app_update_service.dart';
 import '../../premium/data/premium_provider.dart';
 
 /// Bottom navigation için seçili sekme provider'ı
@@ -34,6 +37,14 @@ class MainShell extends ConsumerWidget {
     // Açılışta reklam iznini (GDPR) topla ve premium durumunu yükle
     ref.watch(adConsentStartupProvider);
     ref.watch(isPremiumProvider);
+    // Tam ekran reklamları (geçiş, uygulama açılış) hazırla
+    ref.watch(interstitialAdServiceProvider);
+    ref.watch(appOpenAdServiceProvider);
+    // Play Store'da yeni sürüm varsa açılışta bir kez sor
+    ref.listen(appUpdateInfoProvider, (_, next) {
+      final info = next.valueOrNull;
+      if (info != null) showUpdateAvailableDialog(context, info);
+    });
     ref.watch(localeProvider); // dil değişince yeniden çiz
     final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
@@ -58,23 +69,18 @@ class MainShell extends ConsumerWidget {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Banner yalnızca Ana Sayfa ve İstatistikler'de görünür; tek örnek
-          // canlı tutulur, sekme değişince yeniden yüklenmez.
+          // Banner yalnızca İstatistikler'de görünür (Ana Sayfa reklamsız);
+          // tek örnek canlı tutulur, sekme değişince yeniden yüklenmez.
           Visibility(
-            visible: selectedTab == 0 || selectedTab == 3,
+            visible: selectedTab == 3,
             maintainState: true,
             child: const AdaptiveBannerAd(),
           ),
           Container(
             decoration: BoxDecoration(
-              color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+              color: colorTheme.cardColor,
               border: Border(
-                top: BorderSide(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.05)
-                      : Colors.black.withValues(alpha: 0.05),
-                  width: 0.5,
-                ),
+                top: BorderSide(color: colorTheme.borderColor, width: 0.5),
               ),
             ),
             child: SafeArea(
@@ -188,9 +194,7 @@ class _NavItem extends StatelessWidget {
           children: [
             Icon(
               isSelected ? selectedIcon : icon,
-              color: isSelected
-                  ? primaryColor
-                  : (isDark ? Colors.grey[500] : Colors.grey[500]),
+              color: isSelected ? primaryColor : context.colors.textSecondary,
               size: r.navIconSize,
             ),
             SizedBox(height: r.spaceXS),
@@ -203,7 +207,7 @@ class _NavItem extends StatelessWidget {
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   color: isSelected
                       ? primaryColor
-                      : (isDark ? Colors.grey[500] : Colors.grey[500]),
+                      : context.colors.textSecondary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -246,7 +250,7 @@ class _AddButton extends StatelessWidget {
           ),
           shape: BoxShape.circle,
         ),
-        child: Icon(Icons.add, color: Colors.white, size: r.iconXL),
+        child: Icon(Icons.add, color: context.colors.onPrimary, size: r.iconXL),
       ),
     );
   }

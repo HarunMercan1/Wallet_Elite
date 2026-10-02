@@ -1424,4 +1424,56 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cat_clothing => 'Ropa';
+
+  @override
+  String get supportSection => 'Soporte';
+
+  @override
+  String get sendFeedback => 'Escribir al desarrollador';
+
+  @override
+  String get sendFeedbackDesc =>
+      'Envía una sugerencia, queja o petición por correo';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'No se encontró una app de correo. Escribe a: $email';
+  }
+
+  @override
+  String get rateApp => 'Valóranos';
+
+  @override
+  String get rateAppDesc => 'Puntúa la app en Google Play';
+
+  @override
+  String get updateAvailableTitle => 'Actualización disponible';
+
+  @override
+  String get updateAvailableMessage =>
+      'Hay una nueva versión de Wallet Elite. Actualiza para obtener las últimas funciones y correcciones.';
+
+  @override
+  String get updateNow => 'Actualizar';
+
+  @override
+  String get later => 'Más tarde';
+
+  @override
+  String get summaryImage => 'Imagen del resumen';
+
+  @override
+  String get summaryImageDesc => 'Guarda o comparte tu resumen como imagen';
+
+  @override
+  String get saveToGallery => 'Guardar en galería';
+
+  @override
+  String get share => 'Compartir';
+
+  @override
+  String get imageSaved => 'Imagen guardada en la galería';
+
+  @override
+  String get imageSaveFailed => 'No se pudo guardar la imagen';
 }

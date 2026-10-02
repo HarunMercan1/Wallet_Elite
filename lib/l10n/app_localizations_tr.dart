@@ -1425,4 +1425,56 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get cat_clothing => 'Giyim';
+
+  @override
+  String get supportSection => 'Destek';
+
+  @override
+  String get sendFeedback => 'Geliştiriciye Yaz';
+
+  @override
+  String get sendFeedbackDesc =>
+      'Öneri, şikayet veya isteğini e-postayla gönder';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'E-posta uygulaması bulunamadı. Adres: $email';
+  }
+
+  @override
+  String get rateApp => 'Bizi Değerlendir';
+
+  @override
+  String get rateAppDesc => 'Google Play\'de puan ver';
+
+  @override
+  String get updateAvailableTitle => 'Güncelleme var';
+
+  @override
+  String get updateAvailableMessage =>
+      'Wallet Elite\'in yeni sürümü yayınlandı. En yeni özellikler ve düzeltmeler için güncelle.';
+
+  @override
+  String get updateNow => 'Güncelle';
+
+  @override
+  String get later => 'Sonra';
+
+  @override
+  String get summaryImage => 'Özet Görseli';
+
+  @override
+  String get summaryImageDesc => 'Özetini görsel olarak kaydet veya paylaş';
+
+  @override
+  String get saveToGallery => 'Galeriye Kaydet';
+
+  @override
+  String get share => 'Paylaş';
+
+  @override
+  String get imageSaved => 'Görsel galeriye kaydedildi';
+
+  @override
+  String get imageSaveFailed => 'Görsel kaydedilemedi';
 }

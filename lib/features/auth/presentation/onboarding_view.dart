@@ -165,12 +165,14 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
   @override
   Widget build(BuildContext context) {
     final r = ResponsiveHelper.of(context);
-    final colorTheme = ref.watch(currentColorThemeProvider);
+    final colorTheme = ref
+        .watch(currentColorThemeProvider)
+        .forBrightness(_isDarkMode ? Brightness.dark : Brightness.light);
     // Dark mode state'den veya sistemden gelebilir ama burada state öncelikli (seçim yapılıyor)
     final isDark = _isDarkMode;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+      backgroundColor: colorTheme.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -249,7 +251,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [colorTheme.primary, colorTheme.accent],
+                    colors: [colorTheme.primary, colorTheme.primaryDark],
                   ),
                   borderRadius: BorderRadius.circular(r.hp(0.4)),
                 ),
@@ -293,7 +295,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                     padding: EdgeInsets.all(r.paddingXL),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [colorTheme.primary, colorTheme.accent],
+                        colors: [colorTheme.primary, colorTheme.primaryDark],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -309,7 +311,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                     child: Icon(
                       Icons.account_balance_wallet_rounded,
                       size: r.hp(10),
-                      color: Colors.white,
+                      color: colorTheme.onPrimary,
                     ),
                   ),
                 ),
@@ -326,7 +328,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   style: TextStyle(
                     fontSize: r.hp(4.5),
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -341,7 +343,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   l10n.welcomeSubtitle,
                   style: TextStyle(
                     fontSize: r.fontM,
-                    color: isDark ? Colors.white70 : Colors.grey[600],
+                    color: colorTheme.textSecondary,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
@@ -424,7 +426,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
     return Container(
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
+        color: colorTheme.subtleCardColor,
         borderRadius: r.borderRadiusM,
         border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
@@ -434,11 +436,11 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
             padding: EdgeInsets.all(r.paddingS),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [colorTheme.primary, colorTheme.accent],
+                colors: [colorTheme.primary, colorTheme.primaryDark],
               ),
               borderRadius: r.borderRadiusS,
             ),
-            child: Icon(icon, color: Colors.white, size: r.iconM),
+            child: Icon(icon, color: colorTheme.onPrimary, size: r.iconM),
           ),
           SizedBox(width: r.spaceM),
           Expanded(
@@ -446,7 +448,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               text,
               style: TextStyle(
                 fontSize: r.fontS,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -475,7 +477,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
         'icon': Icons.pie_chart,
         'title': l10n.budgetTracking,
         'desc': l10n.budgetTrackingDesc,
-        'color': colorTheme.accent,
+        'color': Colors.teal,
       },
       {
         'icon': Icons.repeat,
@@ -512,7 +514,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -526,7 +528,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               l10n.discoverFeaturesDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -559,7 +561,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
       margin: EdgeInsets.only(bottom: r.hp(2)),
       padding: EdgeInsets.all(r.paddingM),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
+        color: context.colors.cardColor,
         borderRadius: r.borderRadiusM,
         border: Border.all(color: color.withValues(alpha: 0.3)),
         boxShadow: [
@@ -596,7 +598,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   style: TextStyle(
                     fontSize: r.fontM,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: r.hp(0.5)),
@@ -604,7 +606,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   feature['desc'] as String,
                   style: TextStyle(
                     fontSize: r.fontXS,
-                    color: isDark ? Colors.white60 : Colors.grey[600],
+                    color: context.colors.textSecondary,
                   ),
                 ),
               ],
@@ -653,7 +655,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -667,7 +669,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               l10n.selectLanguageDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -702,9 +704,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       decoration: BoxDecoration(
                         color: isSelected
                             ? colorTheme.primary.withValues(alpha: 0.15)
-                            : (isDark
-                                  ? Colors.white.withValues(alpha: 0.05)
-                                  : Colors.grey[100]),
+                            : colorTheme.subtleCardColor,
                         borderRadius: r.borderRadiusM,
                         border: Border.all(
                           color: isSelected
@@ -730,7 +730,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                   : FontWeight.normal,
                               color: isSelected
                                   ? colorTheme.primary
-                                  : (isDark ? Colors.white70 : Colors.black87),
+                                  : colorTheme.textSecondary,
                             ),
                             textAlign: TextAlign.center,
                             maxLines: 1,
@@ -776,7 +776,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -790,7 +790,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               l10n.selectThemeDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -832,13 +832,15 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [theme.primary, theme.accent],
+                          colors: [theme.primary, theme.primaryDark],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: r.borderRadiusM,
                         border: Border.all(
-                          color: isSelected ? Colors.white : Colors.transparent,
+                          color: isSelected
+                              ? colorTheme.onPrimary
+                              : Colors.transparent,
                           width: 3,
                         ),
                         boxShadow: isSelected
@@ -859,7 +861,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                               children: [
                                 Icon(
                                   isLocked ? Icons.lock : Icons.palette,
-                                  color: Colors.white,
+                                  color: theme.onPrimary,
                                   size: r.iconL,
                                 ),
                                 SizedBox(height: r.hp(1)),
@@ -875,7 +877,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                     style: TextStyle(
                                       fontSize: r.fontM,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: theme.onPrimary,
                                     ),
                                   ),
                                 ),
@@ -895,10 +897,10 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                   color: Colors.black.withValues(alpha: 0.35),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'PRO',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: theme.onPrimary,
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -911,7 +913,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                               right: 8,
                               child: Icon(
                                 Icons.check_circle,
-                                color: Colors.white,
+                                color: theme.onPrimary,
                                 size: r.iconM,
                               ),
                             ),
@@ -938,9 +940,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               child: Container(
                 padding: EdgeInsets.all(r.paddingM),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : Colors.grey[100],
+                  color: colorTheme.subtleCardColor,
                   borderRadius: r.borderRadiusM,
                   border: Border.all(
                     color: _isDarkMode
@@ -952,7 +952,9 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   children: [
                     Icon(
                       _isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                      color: _isDarkMode ? colorTheme.primary : Colors.orange,
+                      color: _isDarkMode
+                          ? colorTheme.primary
+                          : colorTheme.warning,
                       size: r.iconM,
                     ),
                     SizedBox(width: r.spaceM),
@@ -961,7 +963,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       style: TextStyle(
                         fontSize: r.fontM,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: colorTheme.textPrimary,
                       ),
                     ),
                     const Spacer(),
@@ -1037,7 +1039,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -1051,7 +1053,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               l10n.selectCurrencyDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -1080,9 +1082,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       decoration: BoxDecoration(
                         color: isSelected
                             ? color.withValues(alpha: 0.1)
-                            : (isDark
-                                  ? Colors.white.withValues(alpha: 0.05)
-                                  : Colors.white),
+                            : colorTheme.cardColor,
                         borderRadius: r.borderRadiusM,
                         border: Border.all(
                           color: isSelected
@@ -1132,18 +1132,14 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                   style: TextStyle(
                                     fontSize: r.fontM,
                                     fontWeight: FontWeight.w600,
-                                    color: isDark
-                                        ? Colors.white
-                                        : Colors.black87,
+                                    color: colorTheme.textPrimary,
                                   ),
                                 ),
                                 Text(
                                   currency['code'] as String,
                                   style: TextStyle(
                                     fontSize: r.fontXS,
-                                    color: isDark
-                                        ? Colors.white60
-                                        : Colors.grey[600],
+                                    color: colorTheme.textSecondary,
                                   ),
                                 ),
                               ],
@@ -1206,7 +1202,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               style: TextStyle(
                 fontSize: r.hp(3.5),
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -1220,7 +1216,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               l10n.createWalletDesc,
               style: TextStyle(
                 fontSize: r.fontM,
-                color: isDark ? Colors.white70 : Colors.grey[600],
+                color: colorTheme.textSecondary,
               ),
             ),
           ),
@@ -1239,26 +1235,22 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   style: TextStyle(
                     fontSize: r.fontS,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
+                    color: colorTheme.textSecondary,
                   ),
                 ),
                 SizedBox(height: r.spaceXS),
                 TextField(
                   controller: _accountNameController,
-                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                  style: TextStyle(color: colorTheme.textPrimary),
                   decoration: InputDecoration(
                     hintText: l10n.walletNameHint,
-                    hintStyle: TextStyle(
-                      color: isDark ? Colors.grey[600] : Colors.grey[400],
-                    ),
+                    hintStyle: TextStyle(color: colorTheme.textMuted),
                     prefixIcon: Icon(
                       Icons.account_balance_wallet,
                       color: colorTheme.primary,
                     ),
                     filled: true,
-                    fillColor: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.grey[100],
+                    fillColor: colorTheme.subtleCardColor,
                     border: OutlineInputBorder(
                       borderRadius: r.borderRadiusM,
                       borderSide: BorderSide.none,
@@ -1290,7 +1282,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   style: TextStyle(
                     fontSize: r.fontS,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
+                    color: colorTheme.textSecondary,
                   ),
                 ),
                 SizedBox(height: r.spaceS),
@@ -1318,9 +1310,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                         decoration: BoxDecoration(
                           color: isSelected
                               ? colorTheme.primary.withValues(alpha: 0.1)
-                              : (isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : Colors.grey[100]),
+                              : colorTheme.subtleCardColor,
                           borderRadius: r.borderRadiusS,
                           border: Border.all(
                             color: isSelected
@@ -1336,7 +1326,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                               type['icon'] as IconData,
                               color: isSelected
                                   ? colorTheme.primary
-                                  : Colors.grey,
+                                  : colorTheme.textSecondary,
                               size: r.iconS,
                             ),
                             SizedBox(width: r.spaceS),
@@ -1347,7 +1337,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                 fontWeight: isSelected
                                     ? FontWeight.bold
                                     : FontWeight.normal,
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: colorTheme.textPrimary,
                               ),
                             ),
                           ],
@@ -1374,7 +1364,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   style: TextStyle(
                     fontSize: r.fontS,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
+                    color: colorTheme.textSecondary,
                   ),
                 ),
                 SizedBox(height: r.spaceXS),
@@ -1383,21 +1373,17 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
-                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                  style: TextStyle(color: colorTheme.textPrimary),
                   decoration: InputDecoration(
                     suffixText: _selectedCurrency,
                     hintText: '0.0',
-                    hintStyle: TextStyle(
-                      color: isDark ? Colors.grey[600] : Colors.grey[400],
-                    ),
+                    hintStyle: TextStyle(color: colorTheme.textMuted),
                     prefixIcon: Icon(
                       Icons.attach_money,
                       color: colorTheme.primary,
                     ),
                     filled: true,
-                    fillColor: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.grey[100],
+                    fillColor: colorTheme.subtleCardColor,
                     border: OutlineInputBorder(
                       borderRadius: r.borderRadiusM,
                       borderSide: BorderSide.none,
@@ -1414,7 +1400,10 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                 SizedBox(height: r.spaceXS),
                 Text(
                   l10n.initialBalanceHint,
-                  style: TextStyle(fontSize: r.fontXS, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: r.fontXS,
+                    color: colorTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -1443,7 +1432,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
     return Container(
       padding: EdgeInsets.all(r.paddingL),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        color: colorTheme.cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -1460,7 +1449,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               icon: Icon(Icons.arrow_back, size: r.iconS),
               label: Text(AppLocalizations.of(context)!.backButton),
               style: TextButton.styleFrom(
-                foregroundColor: isDark ? Colors.white70 : Colors.grey[700],
+                foregroundColor: colorTheme.textSecondary,
               ),
             )
           else
@@ -1494,7 +1483,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
               onPressed: _nextPage,
               style: ElevatedButton.styleFrom(
                 backgroundColor: colorTheme.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: colorTheme.onPrimary,
                 padding: EdgeInsets.symmetric(
                   horizontal: r.paddingL,
                   vertical: r.paddingS,

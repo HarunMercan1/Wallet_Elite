@@ -97,19 +97,14 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
         : 0.0;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         title: Text(l.categoryDetails),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: colorTheme.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -121,12 +116,15 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   Icon(
                     Icons.pie_chart_outline,
                     size: 80,
-                    color: Colors.grey[400],
+                    color: colorTheme.textMuted,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     l.noExpenseData,
-                    style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: colorTheme.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -238,7 +236,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -302,7 +300,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -317,7 +315,10 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
             child: Icon(icon, color: color, size: 20),
           ),
           const SizedBox(height: 12),
-          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+          Text(
+            title,
+            style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
+          ),
           const SizedBox(height: 4),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -327,7 +328,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
           ),
@@ -348,11 +349,11 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
       colorTheme.primary,
       colorTheme.error,
       colorTheme.success,
-      Colors.orange,
-      Colors.purple,
-      Colors.teal,
+      colorTheme.warning,
+      colorTheme.tertiary,
+      colorTheme.info,
       Colors.pink,
-      Colors.indigo,
+      Colors.teal,
       Colors.amber,
       Colors.cyan,
     ];
@@ -360,7 +361,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -402,14 +403,14 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87,
+                              color: colorTheme.textPrimary,
                             ),
                           ),
                           Text(
                             l.categories,
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.grey[500],
+                              color: colorTheme.textSecondary,
                             ),
                           ),
                         ],
@@ -463,9 +464,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
-                                          color: isDark
-                                              ? Colors.white
-                                              : Colors.black87,
+                                          color: colorTheme.textPrimary,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -486,9 +485,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                                   borderRadius: BorderRadius.circular(2),
                                   child: LinearProgressIndicator(
                                     value: percent / 100 * _animation.value,
-                                    backgroundColor: isDark
-                                        ? Colors.white12
-                                        : Colors.grey[200],
+                                    backgroundColor: colorTheme.borderColor,
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                       color,
                                     ),
@@ -512,9 +509,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.grey[50],
+              color: colorTheme.subtleCardColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -527,11 +522,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   color: colorTheme.primary,
                   isDark: isDark,
                 ),
-                Container(
-                  width: 1,
-                  height: 30,
-                  color: isDark ? Colors.white24 : Colors.grey[300],
-                ),
+                Container(width: 1, height: 30, color: colorTheme.outline),
                 _buildMiniStat(
                   icon: Icons.trending_down,
                   value:
@@ -540,11 +531,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   color: colorTheme.error,
                   isDark: isDark,
                 ),
-                Container(
-                  width: 1,
-                  height: 30,
-                  color: isDark ? Colors.white24 : Colors.grey[300],
-                ),
+                Container(width: 1, height: 30, color: colorTheme.outline),
                 _buildMiniStat(
                   icon: Icons.pie_chart,
                   value: categories.isNotEmpty
@@ -578,12 +565,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.black87,
+            color: context.colors.textPrimary,
           ),
         ),
         Text(
           label,
-          style: TextStyle(fontSize: 9, color: Colors.grey[500]),
+          style: TextStyle(fontSize: 9, color: context.colors.textSecondary),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -604,7 +591,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
@@ -630,7 +617,10 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorTheme.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -638,7 +628,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
               ],
@@ -657,7 +647,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
               ),
               Text(
                 '${percent.toStringAsFixed(1)}%',
-                style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
               ),
             ],
           ),
@@ -690,7 +680,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+            color: colorTheme.cardColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -720,14 +710,14 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white : Colors.black87,
+                            color: colorTheme.textPrimary,
                           ),
                         ),
                         Text(
                           '$count ${l.transactions.toLowerCase()}',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[500],
+                            color: colorTheme.textSecondary,
                           ),
                         ),
                       ],
@@ -741,12 +731,15 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                       Text(
                         '${(percent * 100).toStringAsFixed(1)}%',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorTheme.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -757,7 +750,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: percent * itemProgress,
-                  backgroundColor: isDark ? Colors.white12 : Colors.grey[200],
+                  backgroundColor: colorTheme.borderColor,
                   valueColor: AlwaysStoppedAnimation<Color>(colorTheme.primary),
                   minHeight: 6,
                 ),
@@ -813,7 +806,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : AppColors.textPrimary,
+                  color: colorTheme.textPrimary,
                 ),
               ),
             ],
@@ -822,7 +815,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark ? Colors.black26 : Colors.white,
+              color: colorTheme.cardColor,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -830,12 +823,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.1),
+                    color: colorTheme.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.savings,
-                    color: AppColors.success,
+                    color: colorTheme.success,
                     size: 20,
                   ),
                 ),
@@ -846,7 +839,10 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                     children: [
                       Text(
                         l.potentialSavings,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorTheme.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -857,7 +853,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         ),
                         style: TextStyle(
                           fontSize: 13,
-                          color: isDark ? Colors.white : AppColors.textPrimary,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                     ],
@@ -957,7 +953,7 @@ class PieChartPainter extends CustomPainter {
 
     // Draw center hole with theme-aware color
     final holePaint = Paint()
-      ..color = isDark ? colorTheme.surfaceDark : Colors.white
+      ..color = colorTheme.cardColor
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius * 0.55, holePaint);
   }

@@ -1,7 +1,12 @@
 // lib/features/home/presentation/dashboard_view.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../core/ads/full_screen_ads.dart';
+import '../../premium/data/premium_provider.dart';
+import '../../premium/presentation/paywall_view.dart';
+import 'main_shell.dart' show selectedTabProvider;
 import '../../../features/auth/data/auth_provider.dart';
 import '../../../features/wallet/data/wallet_provider.dart';
 import '../../../features/wallet/models/account_model.dart';
@@ -18,7 +23,6 @@ import '../../budgets/presentation/budgets_view.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
 import '../../../core/utils/category_l10n.dart';
 import '../../../core/utils/currency_utils.dart';
-import '../../../core/utils/responsive_helper.dart';
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
@@ -51,244 +55,301 @@ class DashboardView extends ConsumerWidget {
       }
     }
 
+    final isPremium = ref.watch(isPremiumProvider);
+
     return Scaffold(
       // Background color comes from AppTheme (scaffoldBackgroundColor)
-      // Tüm ekran kaydırılabilir: banner reklam veya küçük ekran yüksekliği
-      // azalttığında içerik taşmaz (önceden sabit sütun + Expanded idi).
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header - Kullanıcı Kartı
-                _buildUserHeader(context, userProfile, l, colorTheme, isDark),
-
-                const SizedBox(height: 24),
-
-                // Toplam Bakiye Kartı
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _buildTotalBalanceCard(
+      // Tüm ekran kaydırılabilir: küçük ekran yüksekliğinde içerik taşmaz.
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        // Üstte renkli başlık yok; durum çubuğu simgeleri temaya uysun
+        value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header - Kullanıcı satırı
+                  _buildUserHeader(
                     context,
-                    ref,
-                    accounts,
-                    selectedWalletId,
-                    totalIncome,
-                    totalExpense,
+                    userProfile,
+                    isPremium,
                     l,
-                    isDark,
                     colorTheme,
                   ),
-                ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                // Hızlı Erişim Butonları
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickActionTile(
-                          context,
-                          label: l.debtTracking,
-                          accentColor: colorTheme.primary,
-                          colorTheme: colorTheme,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const DebtsView(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildQuickActionTile(
-                          context,
-                          label: l.budgets,
-                          accentColor: colorTheme.success,
-                          colorTheme: colorTheme,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const BudgetsView(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildQuickActionTile(
-                          context,
-                          label: l.recurringTransactions,
-                          accentColor: colorTheme.tertiary,
-                          colorTheme: colorTheme,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const RecurringTransactionsView(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Son İşlemler Başlığı
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    l.recentTransactions,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: colorTheme.textPrimary,
+                  // Toplam Bakiye Kartı
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _buildTotalBalanceCard(
+                      context,
+                      ref,
+                      accounts,
+                      selectedWalletId,
+                      totalIncome,
+                      totalExpense,
+                      l,
+                      isDark,
+                      colorTheme,
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 12),
-              ],
-            ),
-          ),
+                  const SizedBox(height: 20),
 
-          // Son İşlemler Listesi
-          _buildTransactionsList(
-            context,
-            ref,
-            transactions,
-            categories,
-            l,
-            colorTheme,
-          ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUserHeader(
-    BuildContext context,
-    AsyncValue userProfile,
-    AppLocalizations l,
-    ColorTheme colorTheme,
-    bool isDark,
-  ) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorTheme.primary,
-            colorTheme.primaryLight,
-            colorTheme.primary.withValues(alpha: 0.9),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),
-          child: userProfile.when(
-            data: (profile) {
-              return Row(
-                children: [
-                  // Avatar (Read-only)
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withValues(alpha: 0.3),
-                          Colors.white.withValues(alpha: 0.1),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.4),
-                        width: 2,
-                      ),
-                    ),
-                    child: _buildDashboardAvatar(profile, colorTheme),
-                  ),
-                  const SizedBox(width: 16),
-                  // User info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                  // Hızlı Erişim Butonları
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
                       children: [
-                        Text(
-                          l.welcome,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.85),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
+                        Expanded(
+                          child: _buildQuickActionTile(
+                            label: l.debtTracking,
+                            icon: Icons.handshake_outlined,
+                            accentColor: colorTheme.primary,
+                            colorTheme: colorTheme,
+                            onTap: () =>
+                                _openSubScreen(context, ref, const DebtsView()),
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          profile?.fullName ?? l.user,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -0.5,
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _buildQuickActionTile(
+                            label: l.budgets,
+                            icon: Icons.pie_chart_outline_rounded,
+                            accentColor: colorTheme.success,
+                            colorTheme: colorTheme,
+                            onTap: () => _openSubScreen(
+                              context,
+                              ref,
+                              const BudgetsView(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _buildQuickActionTile(
+                            label: l.recurringTransactions,
+                            icon: Icons.autorenew_rounded,
+                            accentColor: colorTheme.tertiary,
+                            colorTheme: colorTheme,
+                            onTap: () => _openSubScreen(
+                              context,
+                              ref,
+                              const RecurringTransactionsView(),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // Premium badge (if applicable)
-                  if (profile?.isPremium ?? false)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colorTheme.tertiary,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('👑', style: TextStyle(fontSize: 14)),
-                          const SizedBox(width: 4),
-                          Text(
-                            'ELITE',
+
+                  const SizedBox(height: 20),
+
+                  // Son İşlemler Başlığı
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 6, 4),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            l.recentTransactions,
                             style: TextStyle(
-                              color: colorTheme.onTertiary,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              letterSpacing: 0.5,
+                              color: colorTheme.textPrimary,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                              ref.read(selectedTabProvider.notifier).state = 1,
+                          style: TextButton.styleFrom(
+                            foregroundColor: colorTheme.primary,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l.all,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Icon(Icons.chevron_right_rounded, size: 18),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
                 ],
-              );
-            },
-            loading: () => const Center(
-              child: CircularProgressIndicator(color: Colors.white),
+              ),
             ),
-            error: (_, __) =>
-                Text(l.error, style: const TextStyle(color: Colors.white)),
+
+            // Son İşlemler Listesi
+            _buildTransactionsList(
+              context,
+              ref,
+              transactions,
+              categories,
+              l,
+              colorTheme,
+            ),
+
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Alt ekranı açar; dönüşte (doğal geçiş anı) geçiş reklamı sayacını ilerletir.
+  Future<void> _openSubScreen(
+    BuildContext context,
+    WidgetRef ref,
+    Widget screen,
+  ) async {
+    final interstitial = ref.read(interstitialAdServiceProvider);
+    await Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+    interstitial.onUserAction();
+  }
+
+  Widget _buildUserHeader(
+    BuildContext context,
+    AsyncValue userProfile,
+    bool isPremium,
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) {
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 14, 16, 0),
+        child: userProfile.when(
+          data: (profile) {
+            final showEliteBadge = isPremium || (profile?.isPremium ?? false);
+            return Row(
+              children: [
+                // Avatar (Read-only)
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: colorTheme.primary.withValues(alpha: 0.5),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: _buildDashboardAvatar(profile, colorTheme),
+                ),
+                const SizedBox(width: 12),
+                // User info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l.welcome,
+                        style: TextStyle(
+                          color: colorTheme.textSecondary,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        profile?.fullName ?? l.user,
+                        style: TextStyle(
+                          color: colorTheme.textPrimary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (showEliteBadge)
+                  _buildEliteBadge(colorTheme)
+                else
+                  _buildGoPremiumButton(context, colorTheme, l),
+              ],
+            );
+          },
+          loading: () => const SizedBox(height: 47),
+          error: (_, __) =>
+              Text(l.error, style: TextStyle(color: colorTheme.textPrimary)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEliteBadge(ColorTheme colorTheme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: colorTheme.tertiary,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('👑', style: TextStyle(fontSize: 13)),
+          const SizedBox(width: 4),
+          Text(
+            'ELITE',
+            style: TextStyle(
+              color: colorTheme.onTertiary,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGoPremiumButton(
+    BuildContext context,
+    ColorTheme colorTheme,
+    AppLocalizations l,
+  ) {
+    final borderRadius = BorderRadius.circular(20);
+    return Material(
+      color: colorTheme.tertiary.withValues(alpha: 0.14),
+      borderRadius: borderRadius,
+      child: InkWell(
+        borderRadius: borderRadius,
+        onTap: () => showPaywall(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.workspace_premium_rounded,
+                size: 16,
+                color: colorTheme.tertiary,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                l.goPremium,
+                style: TextStyle(
+                  color: colorTheme.tertiary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12.5,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -296,6 +357,7 @@ class DashboardView extends ConsumerWidget {
   }
 
   Widget _buildDashboardAvatar(dynamic profile, ColorTheme colorTheme) {
+    const double radius = 20;
     final avatarUrl = profile?.avatarUrl;
 
     // Check for preset avatar
@@ -306,9 +368,9 @@ class DashboardView extends ConsumerWidget {
         final emoji = parts[0];
         final colorValue = int.tryParse(parts[1]) ?? 0xFF2196F3;
         return CircleAvatar(
-          radius: 30,
+          radius: radius,
           backgroundColor: Color(colorValue),
-          child: Text(emoji, style: const TextStyle(fontSize: 28)),
+          child: Text(emoji, style: const TextStyle(fontSize: 20)),
         );
       }
     }
@@ -316,22 +378,22 @@ class DashboardView extends ConsumerWidget {
     // Regular image URL
     if (avatarUrl != null) {
       return CircleAvatar(
-        radius: 30,
-        backgroundColor: colorTheme.accent,
+        radius: radius,
+        backgroundColor: colorTheme.primary,
         backgroundImage: NetworkImage(avatarUrl),
       );
     }
 
     // Default: show initial letter
     return CircleAvatar(
-      radius: 30,
-      backgroundColor: colorTheme.accent,
+      radius: radius,
+      backgroundColor: colorTheme.primary,
       child: Text(
         profile?.fullName?.substring(0, 1).toUpperCase() ?? 'U',
-        style: const TextStyle(
-          fontSize: 26,
+        style: TextStyle(
+          fontSize: 17,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          color: colorTheme.onPrimary,
         ),
       ),
     );
@@ -380,72 +442,124 @@ class DashboardView extends ConsumerWidget {
           currencySymbol = selectedAccount.currencySymbol;
         }
 
+        final pillRadius = BorderRadius.circular(20);
+        final onPrimary = colorTheme.onPrimary;
+
         return Container(
-          padding: const EdgeInsets.all(22),
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: colorTheme.cardColor,
+            gradient: LinearGradient(
+              colors: [colorTheme.primary, colorTheme.primaryLight],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: colorTheme.outline, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: colorTheme.primary.withValues(alpha: 0.3),
+                blurRadius: 24,
+                offset: const Offset(0, 12),
+              ),
+            ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              // Wallet Selector Row
-              GestureDetector(
-                onTap: () => WalletSelectionSheet.show(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              // Dekoratif halkalar
+              Positioned(
+                top: -56,
+                right: -36,
+                child: _buildDecorCircle(160, onPrimary),
+              ),
+              Positioned(
+                bottom: -80,
+                left: -48,
+                child: _buildDecorCircle(180, onPrimary),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      walletLabel,
-                      style: TextStyle(
-                        color: colorTheme.textSecondary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
+                    // Wallet Selector
+                    Material(
+                      color: onPrimary.withValues(alpha: 0.18),
+                      borderRadius: pillRadius,
+                      child: InkWell(
+                        borderRadius: pillRadius,
+                        onTap: () => WalletSelectionSheet.show(context),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 6, 6, 6),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.account_balance_wallet_outlined,
+                                color: onPrimary,
+                                size: 15,
+                              ),
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  walletLabel,
+                                  style: TextStyle(
+                                    color: onPrimary,
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: onPrimary,
+                                size: 18,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: colorTheme.textSecondary,
-                      size: 18,
+                    const SizedBox(height: 14),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _formatMoney(totalBalance, currencySymbol),
+                        style: TextStyle(
+                          color: onPrimary,
+                          fontSize: 34,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildBalanceStat(
+                            l.income,
+                            _formatMoney(totalIncome, currencySymbol),
+                            Icons.arrow_upward_rounded,
+                            colorTheme.success,
+                            onPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _buildBalanceStat(
+                            l.expense,
+                            _formatMoney(totalExpense, currencySymbol),
+                            Icons.arrow_downward_rounded,
+                            colorTheme.error,
+                            onPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}',
-                style: TextStyle(
-                  color: colorTheme.textPrimary,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -1,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildBalanceStat(
-                      l.income,
-                      '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(totalIncome)}',
-                      Icons.arrow_upward,
-                      colorTheme.success,
-                      colorTheme,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildBalanceStat(
-                      l.expense,
-                      '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
-                      Icons.arrow_downward,
-                      colorTheme.error,
-                      colorTheme,
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -456,22 +570,47 @@ class DashboardView extends ConsumerWidget {
     );
   }
 
+  /// Eksi işareti para biriminin önüne gelir: -₺200,00
+  String _formatMoney(double value, String currencySymbol) {
+    final formatted = NumberFormat('#,##0.00', 'tr_TR').format(value.abs());
+    return '${value < 0 ? '-' : ''}$currencySymbol$formatted';
+  }
+
+  Widget _buildDecorCircle(double size, Color onPrimary) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: onPrimary.withValues(alpha: 0.08),
+      ),
+    );
+  }
+
   Widget _buildBalanceStat(
     String label,
     String value,
     IconData icon,
     Color color,
-    ColorTheme colorTheme,
+    Color onPrimary,
   ) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: colorTheme.subtleCardColor,
-        borderRadius: BorderRadius.circular(12),
+        color: onPrimary.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 18),
+          Container(
+            width: 28,
+            height: 28,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: Icon(icon, color: color, size: 16),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -480,17 +619,18 @@ class DashboardView extends ConsumerWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    color: colorTheme.textSecondary,
+                    color: onPrimary.withValues(alpha: 0.8),
                     fontSize: 11,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    color: colorTheme.textPrimary,
-                    fontSize: 13,
+                    color: onPrimary,
+                    fontSize: 13.5,
                     fontWeight: FontWeight.bold,
                   ),
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -521,17 +661,23 @@ class DashboardView extends ConsumerWidget {
                     Icon(
                       Icons.receipt_long_outlined,
                       size: 56,
-                      color: Colors.grey[400],
+                      color: colorTheme.textMuted,
                     ),
                     const SizedBox(height: 14),
                     Text(
                       l.noTransactions,
-                      style: TextStyle(color: Colors.grey[500], fontSize: 15),
+                      style: TextStyle(
+                        color: colorTheme.textSecondary,
+                        fontSize: 15,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       l.addFirstTransaction,
-                      style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                      style: TextStyle(
+                        color: colorTheme.textMuted,
+                        fontSize: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -680,7 +826,7 @@ class DashboardView extends ConsumerWidget {
                           ' • ',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[400],
+                            color: colorTheme.textMuted,
                           ),
                         ),
                         Expanded(
@@ -688,7 +834,7 @@ class DashboardView extends ConsumerWidget {
                             transaction.description!,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[500],
+                              color: colorTheme.textSecondary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -752,88 +898,84 @@ class DashboardView extends ConsumerWidget {
     }
   }
 
-  Widget _buildQuickActionTile(
-    BuildContext context, {
+  Widget _buildQuickActionTile({
     required String label,
+    required IconData icon,
     required Color accentColor,
     required ColorTheme colorTheme,
     required VoidCallback onTap,
   }) {
-    final r = ResponsiveHelper.of(context);
+    final borderRadius = BorderRadius.circular(18);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: r.hp(9), // slightly shorter
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: r.borderRadiusM,
-          border: Border.all(color: colorTheme.outline, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Top Accent Strip
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 4,
+    return Material(
+      color: colorTheme.cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius,
+        side: BorderSide(color: colorTheme.outline, width: 1),
+      ),
+      child: InkWell(
+        borderRadius: borderRadius,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 14, 8, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [accentColor, accentColor.withValues(alpha: 0.5)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(
-                      16,
-                    ), // Match r.borderRadiusM roughly
-                    topRight: Radius.circular(16),
+                  color: accentColor.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: Icon(icon, color: accentColor, size: 22),
+              ),
+              const SizedBox(height: 10),
+              // İki satırlık sabit alan: tüm kutular aynı yükseklikte kalır ve
+              // uzun kelimeler bölünmek yerine küçülür.
+              SizedBox(
+                height: 32,
+                width: double.infinity,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    _splitIntoTwoLines(label),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      height: 1.25,
+                      fontWeight: FontWeight.w600,
+                      color: colorTheme.textPrimary,
+                    ),
                   ),
                 ),
               ),
-            ),
-            // Content
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                r.paddingM,
-                r.paddingM,
-                r.paddingS,
-                r.paddingM,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: r.fontS,
-                        fontWeight: FontWeight.w600,
-                        color: colorTheme.textPrimary,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 14,
-                    color: colorTheme.textSecondary.withValues(alpha: 0.5),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  /// Uzun etiketi kelime ortasından bölmeden, iki dengeli satıra ayırır
+  /// ("Tekrarlayan İşlemler" → "Tekrarlayan\nİşlemler"). Kısa etiketler tek
+  /// satır kalır.
+  String _splitIntoTwoLines(String label) {
+    final words = label.trim().split(RegExp(r'\s+'));
+    if (words.length < 2 || label.length <= 12) return label;
+
+    var bestSplit = 1;
+    var bestDiff = label.length;
+    for (var i = 1; i < words.length; i++) {
+      final first = words.sublist(0, i).join(' ').length;
+      final second = words.sublist(i).join(' ').length;
+      final diff = (first - second).abs();
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        bestSplit = i;
+      }
+    }
+    return '${words.sublist(0, bestSplit).join(' ')}\n'
+        '${words.sublist(bestSplit).join(' ')}';
   }
 }

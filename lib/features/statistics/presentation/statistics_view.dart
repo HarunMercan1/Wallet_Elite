@@ -41,9 +41,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       body: SafeArea(
         child: transactions.when(
           data: (List<TransactionModel> txList) {
@@ -115,7 +113,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                       _buildPeriodSelector(l, isDark, colorTheme),
@@ -285,7 +283,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: colorTheme.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -344,7 +342,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                       GestureDetector(
@@ -447,15 +445,13 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       },
       offset: const Offset(0, 40),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+      color: colorTheme.cardColor,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isDark ? Colors.white24 : Colors.grey[200]!,
-          ),
+          border: Border.all(color: colorTheme.outline),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -469,14 +465,14 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
             const SizedBox(width: 4),
             Icon(
               Icons.keyboard_arrow_down,
               size: 18,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
+              color: colorTheme.textSecondary,
             ),
           ],
         ),
@@ -511,7 +507,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           Text(
             label,
             style: TextStyle(
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
               fontWeight: _selectedPeriod == value
                   ? FontWeight.bold
                   : FontWeight.normal,
@@ -536,7 +532,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: colorTheme.primary.withValues(alpha: 0.15),
@@ -555,7 +551,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   Text(
                     l.balance,
                     style: TextStyle(
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: colorTheme.textSecondary,
                       fontSize: 14,
                     ),
                   ),
@@ -563,7 +559,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   Text(
                     '${isPositive ? '+' : ''}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(balance)}',
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
@@ -644,7 +640,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey[50],
+        color: colorTheme.subtleCardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -658,14 +654,14 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 Text(
                   label,
                   style: TextStyle(
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: colorTheme.textSecondary,
                     fontSize: 11,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                   ),
@@ -690,7 +686,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -712,14 +708,17 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             ],
           ),
           const Spacer(),
-          Text(title, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+          Text(
+            title,
+            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
+          ),
           const SizedBox(height: 4),
           Text(
             value,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
         ],
@@ -738,7 +737,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -759,7 +758,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           const SizedBox(height: 12),
           Text(
             l.transactionSummary,
-            style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
           ),
           const SizedBox(height: 4),
           Text(
@@ -767,7 +766,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : AppColors.textPrimary,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
@@ -778,7 +777,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 '$incomeCount',
                 style: TextStyle(
                   fontSize: 11,
-                  color: AppColors.success,
+                  color: colorTheme.success,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -788,7 +787,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 '$expenseCount',
                 style: TextStyle(
                   fontSize: 11,
-                  color: AppColors.error,
+                  color: colorTheme.error,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -816,7 +815,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
         ),
@@ -841,14 +840,14 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 14,
-                  color: Colors.grey[400],
+                  color: colorTheme.textMuted,
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(
               l.topSpendingCategory,
-              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
             ),
             const SizedBox(height: 4),
             Text(
@@ -856,7 +855,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -894,10 +893,10 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       scoreColor = colorTheme.success;
     } else if (score >= 60) {
       scoreLabel = l.good;
-      scoreColor = Colors.teal;
+      scoreColor = colorTheme.info;
     } else if (score >= 40) {
       scoreLabel = l.average;
-      scoreColor = Colors.orange;
+      scoreColor = colorTheme.warning;
     } else if (score >= 20) {
       scoreLabel = l.needsImprovement;
       scoreColor = Colors.deepOrange;
@@ -909,7 +908,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -926,7 +925,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           const SizedBox(height: 12),
           Text(
             l.financialScore,
-            style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
           ),
           const SizedBox(height: 4),
           Text(
@@ -934,7 +933,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
@@ -972,7 +971,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -983,7 +982,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -1037,7 +1036,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                     l.income,
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: colorTheme.textSecondary,
                     ),
                   ),
                   Text(
@@ -1045,7 +1044,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                 ],
@@ -1065,7 +1064,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                     l.expense,
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: colorTheme.textSecondary,
                     ),
                   ),
                   Text(
@@ -1073,7 +1072,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                 ],
@@ -1096,7 +1095,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -1135,7 +1134,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: isDark ? Colors.white : Colors.black87,
+                              color: colorTheme.textPrimary,
                             ),
                           ),
                           Text(
@@ -1143,7 +1142,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87,
+                              color: colorTheme.textPrimary,
                             ),
                           ),
                         ],
@@ -1153,9 +1152,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
                           value: percent,
-                          backgroundColor: isDark
-                              ? Colors.white12
-                              : Colors.grey[200],
+                          backgroundColor: colorTheme.borderColor,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             colorTheme.primary,
                           ),
@@ -1171,7 +1168,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey[500],
+                    color: colorTheme.textSecondary,
                   ),
                 ),
               ],
@@ -1194,14 +1191,17 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+          Text(
+            title,
+            style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
+          ),
           const SizedBox(height: 8),
           Text(
             '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
@@ -1214,10 +1214,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           const SizedBox(height: 4),
           Text(
             _getCategoryName(category, l) ?? tx.description ?? '',
-            style: TextStyle(
-              fontSize: 12,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -1262,7 +1259,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       height: 200,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -1295,7 +1292,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               const SizedBox(height: 8),
               Text(
                 dayNames[index],
-                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
               ),
             ],
           );
@@ -1434,15 +1431,13 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.white,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(
           child: Text(
             l.noExpenseData,
-            style: TextStyle(
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
+            style: TextStyle(color: colorTheme.textSecondary),
           ),
         ),
       );
@@ -1455,15 +1450,15 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     final colors = [
       colorTheme.primary,
       colorTheme.success,
-      AppColors.warning,
+      colorTheme.warning,
       colorTheme.error,
-      Colors.purple,
+      colorTheme.tertiary,
     ];
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -1474,7 +1469,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -1534,9 +1529,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                               name,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark
-                                    ? Colors.grey[300]
-                                    : Colors.grey[700],
+                                color: colorTheme.textSecondary,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -1597,7 +1590,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
       ),
@@ -1609,7 +1602,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -1669,7 +1662,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: colorTheme.textSecondary,
                   ),
                 ),
                 Text(
@@ -1734,7 +1727,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.white,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -1748,13 +1741,13 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
                 Icon(
                   Icons.arrow_forward_ios,
                   size: 14,
-                  color: Colors.grey[400],
+                  color: colorTheme.textMuted,
                 ),
               ],
             ),
@@ -1786,9 +1779,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                                 labels[idx],
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[600],
+                                  color: colorTheme.textSecondary,
                                 ),
                               ),
                             );
@@ -1817,7 +1808,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                             radius: 4,
                             color: colorTheme.primary,
                             strokeWidth: 2,
-                            strokeColor: Colors.white,
+                            strokeColor: colorTheme.cardColor,
                           );
                         },
                       ),

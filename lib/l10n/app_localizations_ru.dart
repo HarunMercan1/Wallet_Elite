@@ -1417,4 +1417,57 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get cat_clothing => 'Одежда';
+
+  @override
+  String get supportSection => 'Поддержка';
+
+  @override
+  String get sendFeedback => 'Написать разработчику';
+
+  @override
+  String get sendFeedbackDesc =>
+      'Отправьте предложение, жалобу или пожелание по почте';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'Почтовое приложение не найдено. Пишите на: $email';
+  }
+
+  @override
+  String get rateApp => 'Оцените нас';
+
+  @override
+  String get rateAppDesc => 'Поставьте оценку в Google Play';
+
+  @override
+  String get updateAvailableTitle => 'Доступно обновление';
+
+  @override
+  String get updateAvailableMessage =>
+      'Доступна новая версия Wallet Elite. Обновите, чтобы получить новые функции и исправления.';
+
+  @override
+  String get updateNow => 'Обновить';
+
+  @override
+  String get later => 'Позже';
+
+  @override
+  String get summaryImage => 'Изображение сводки';
+
+  @override
+  String get summaryImageDesc =>
+      'Сохраните сводку как изображение или поделитесь ею';
+
+  @override
+  String get saveToGallery => 'Сохранить в галерею';
+
+  @override
+  String get share => 'Поделиться';
+
+  @override
+  String get imageSaved => 'Изображение сохранено в галерею';
+
+  @override
+  String get imageSaveFailed => 'Не удалось сохранить изображение';
 }

@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../wallet/data/debt_provider.dart';
 import '../../wallet/models/debt_model.dart';
+import '../../../core/ads/banner_ad_widget.dart';
 import 'add_debt_sheet.dart';
 import 'debt_detail_sheet.dart';
 
@@ -25,13 +26,11 @@ class DebtsView extends ConsumerWidget {
     final filterType = ref.watch(debtFilterTypeProvider);
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         title: Text(l.debtTracking),
         backgroundColor: Colors.transparent,
-        foregroundColor: isDark ? Colors.white : Colors.black87,
+        foregroundColor: colorTheme.textPrimary,
         elevation: 0,
         actions: [
           // Yeni kayıt ekle butonu
@@ -95,6 +94,7 @@ class DebtsView extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('${l.error}: $e')),
       ),
+      bottomNavigationBar: const AdaptiveBannerAd(bottomSafeArea: true),
     );
   }
 
@@ -140,10 +140,14 @@ class DebtsView extends ConsumerWidget {
                         '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
                   ),
                   icon: Icons.arrow_upward,
-                  color: Colors.green.shade300,
+                  color: colorTheme.onPrimary,
                 ),
               ),
-              Container(height: 50, width: 1, color: Colors.white24),
+              Container(
+                height: 50,
+                width: 1,
+                color: colorTheme.onPrimary.withValues(alpha: 0.24),
+              ),
               // Toplam Borç
               Expanded(
                 child: _buildSummaryItem(
@@ -155,7 +159,7 @@ class DebtsView extends ConsumerWidget {
                         '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
                   ),
                   icon: Icons.arrow_downward,
-                  color: Colors.red.shade300,
+                  color: colorTheme.onPrimary,
                 ),
               ),
             ],
@@ -172,7 +176,7 @@ class DebtsView extends ConsumerWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: colorTheme.cardColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -192,8 +196,8 @@ class DebtsView extends ConsumerWidget {
                                   ? Icons.trending_up
                                   : Icons.trending_down,
                               color: isPositive
-                                  ? Colors.green.shade300
-                                  : Colors.red.shade300,
+                                  ? colorTheme.success
+                                  : colorTheme.error,
                               size: 16,
                             ),
                             const SizedBox(width: 6),
@@ -201,8 +205,8 @@ class DebtsView extends ConsumerWidget {
                               '${isPositive ? '+' : ''}${currencyFormat.format(net)}',
                               style: TextStyle(
                                 color: isPositive
-                                    ? Colors.green.shade300
-                                    : Colors.red.shade300,
+                                    ? colorTheme.success
+                                    : colorTheme.error,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -222,13 +226,17 @@ class DebtsView extends ConsumerWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: colorTheme.onPrimary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.people, color: Colors.white70, size: 16),
+                    Icon(
+                      Icons.people,
+                      color: colorTheme.onPrimary.withValues(alpha: 0.7),
+                      size: 16,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       peopleCount.when(
@@ -236,8 +244,8 @@ class DebtsView extends ConsumerWidget {
                         loading: () => '...',
                         error: (_, __) => l.people(0),
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: colorTheme.onPrimary,
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
                       ),
@@ -268,7 +276,7 @@ class DebtsView extends ConsumerWidget {
             Text(
               title,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
+                color: color.withValues(alpha: 0.8),
                 fontSize: 12,
               ),
             ),
@@ -277,8 +285,8 @@ class DebtsView extends ConsumerWidget {
         const SizedBox(height: 4),
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: color,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -299,7 +307,7 @@ class DebtsView extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -350,7 +358,7 @@ class DebtsView extends ConsumerWidget {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isSelected ? Colors.white : colorTheme.primary,
+              color: isSelected ? colorTheme.onPrimary : colorTheme.primary,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -372,15 +380,12 @@ class DebtsView extends ConsumerWidget {
           Icon(
             Icons.account_balance_wallet_outlined,
             size: 80,
-            color: isDark ? Colors.white24 : Colors.grey.shade300,
+            color: colorTheme.outline,
           ),
           const SizedBox(height: 16),
           Text(
             l.noDebts,
-            style: TextStyle(
-              color: isDark ? Colors.white54 : Colors.grey.shade600,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: colorTheme.textSecondary, fontSize: 16),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -389,7 +394,7 @@ class DebtsView extends ConsumerWidget {
             label: Text(l.addDebt),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorTheme.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: colorTheme.onPrimary,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -437,10 +442,10 @@ class DebtsView extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
           border: isOverdue
-              ? Border.all(color: Colors.red.shade300, width: 2)
+              ? Border.all(color: colorTheme.error, width: 2)
               : null,
         ),
         child: Column(
@@ -452,14 +457,13 @@ class DebtsView extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: (isLend ? Colors.green : Colors.red).withValues(
-                      alpha: 0.1,
-                    ),
+                    color: (isLend ? colorTheme.success : colorTheme.error)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     isLend ? Icons.arrow_upward : Icons.arrow_downward,
-                    color: isLend ? Colors.green : Colors.red,
+                    color: isLend ? colorTheme.success : colorTheme.error,
                     size: 20,
                   ),
                 ),
@@ -474,7 +478,7 @@ class DebtsView extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                           decoration: debt.isCompleted
                               ? TextDecoration.lineThrough
                               : null,
@@ -484,7 +488,7 @@ class DebtsView extends ConsumerWidget {
                         isLend ? l.lend : l.borrow,
                         style: TextStyle(
                           fontSize: 12,
-                          color: isLend ? Colors.green : Colors.red,
+                          color: isLend ? colorTheme.success : colorTheme.error,
                         ),
                       ),
                     ],
@@ -499,7 +503,7 @@ class DebtsView extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isLend ? Colors.green : Colors.red,
+                        color: isLend ? colorTheme.success : colorTheme.error,
                         decoration: debt.isCompleted
                             ? TextDecoration.lineThrough
                             : null,
@@ -510,7 +514,7 @@ class DebtsView extends ConsumerWidget {
                         '/ ${currencyFormat.format(debt.amount)}',
                         style: TextStyle(
                           fontSize: 11,
-                          color: isDark ? Colors.white54 : Colors.grey,
+                          color: colorTheme.textSecondary,
                         ),
                       ),
                   ],
@@ -525,11 +529,9 @@ class DebtsView extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: progress,
-                  backgroundColor: isDark
-                      ? Colors.white12
-                      : Colors.grey.shade200,
+                  backgroundColor: colorTheme.borderColor,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    isLend ? Colors.green : Colors.red,
+                    isLend ? colorTheme.success : colorTheme.error,
                   ),
                   minHeight: 6,
                 ),
@@ -545,8 +547,8 @@ class DebtsView extends ConsumerWidget {
                     Icons.event,
                     size: 14,
                     color: isOverdue
-                        ? Colors.red
-                        : (isDark ? Colors.white54 : Colors.grey),
+                        ? colorTheme.error
+                        : colorTheme.textSecondary,
                   ),
                   const SizedBox(width: 4),
                   Text(
@@ -554,8 +556,8 @@ class DebtsView extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 12,
                       color: isOverdue
-                          ? Colors.red
-                          : (isDark ? Colors.white54 : Colors.grey),
+                          ? colorTheme.error
+                          : colorTheme.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -567,10 +569,10 @@ class DebtsView extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isOverdue
-                            ? Colors.red.withValues(alpha: 0.1)
+                            ? colorTheme.error.withValues(alpha: 0.1)
                             : (daysRemaining != null && daysRemaining <= 7
-                                  ? Colors.orange.withValues(alpha: 0.1)
-                                  : Colors.green.withValues(alpha: 0.1)),
+                                  ? colorTheme.warning.withValues(alpha: 0.1)
+                                  : colorTheme.success.withValues(alpha: 0.1)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -581,10 +583,10 @@ class DebtsView extends ConsumerWidget {
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                           color: isOverdue
-                              ? Colors.red
+                              ? colorTheme.error
                               : (daysRemaining != null && daysRemaining <= 7
-                                    ? Colors.orange
-                                    : Colors.green),
+                                    ? colorTheme.warning
+                                    : colorTheme.success),
                         ),
                       ),
                     ),
@@ -598,22 +600,22 @@ class DebtsView extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
+                  color: colorTheme.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.check_circle,
-                      color: Colors.green,
+                      color: colorTheme.success,
                       size: 14,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       l.markAsCompleted,
-                      style: const TextStyle(
-                        color: Colors.green,
+                      style: TextStyle(
+                        color: colorTheme.success,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -687,7 +689,7 @@ class DebtsView extends ConsumerWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey[600] : Colors.grey[300],
+                color: colorTheme.outline,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -703,7 +705,7 @@ class DebtsView extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   const Spacer(),
@@ -718,10 +720,7 @@ class DebtsView extends ConsumerWidget {
                 ],
               ),
             ),
-            Divider(
-              height: 1,
-              color: isDark ? Colors.white12 : Colors.grey[200],
-            ),
+            Divider(height: 1, color: colorTheme.borderColor),
             // List
             Expanded(
               child: completedDebts.isEmpty
@@ -732,14 +731,14 @@ class DebtsView extends ConsumerWidget {
                           Icon(
                             Icons.check_circle_outline,
                             size: 64,
-                            color: isDark ? Colors.white24 : Colors.grey[300],
+                            color: colorTheme.outline,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             l.noCompletedDebts,
                             style: TextStyle(
                               fontSize: 16,
-                              color: isDark ? Colors.white54 : Colors.grey[600],
+                              color: colorTheme.textSecondary,
                             ),
                           ),
                         ],
@@ -760,28 +759,27 @@ class DebtsView extends ConsumerWidget {
                             margin: const EdgeInsets.only(bottom: 12),
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? colorTheme.surfaceDark
-                                  : Colors.grey[50],
+                              color: colorTheme.subtleCardColor,
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isDark
-                                    ? Colors.white10
-                                    : Colors.grey[200]!,
-                              ),
+                              border: Border.all(color: colorTheme.borderColor),
                             ),
                             child: Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: (isLend ? Colors.green : Colors.red)
-                                        .withValues(alpha: 0.1),
+                                    color:
+                                        (isLend
+                                                ? colorTheme.success
+                                                : colorTheme.error)
+                                            .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
                                     Icons.check_circle,
-                                    color: isLend ? Colors.green : Colors.red,
+                                    color: isLend
+                                        ? colorTheme.success
+                                        : colorTheme.error,
                                     size: 20,
                                   ),
                                 ),
@@ -796,9 +794,7 @@ class DebtsView extends ConsumerWidget {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
-                                          color: isDark
-                                              ? Colors.white
-                                              : Colors.black87,
+                                          color: colorTheme.textPrimary,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
@@ -807,8 +803,8 @@ class DebtsView extends ConsumerWidget {
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: isLend
-                                              ? Colors.green
-                                              : Colors.red,
+                                              ? colorTheme.success
+                                              : colorTheme.error,
                                         ),
                                       ),
                                     ],
@@ -819,7 +815,9 @@ class DebtsView extends ConsumerWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
-                                    color: isLend ? Colors.green : Colors.red,
+                                    color: isLend
+                                        ? colorTheme.success
+                                        : colorTheme.error,
                                   ),
                                 ),
                               ],

@@ -1396,4 +1396,54 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cat_clothing => '服装';
+
+  @override
+  String get supportSection => '支持';
+
+  @override
+  String get sendFeedback => '联系开发者';
+
+  @override
+  String get sendFeedbackDesc => '通过电子邮件发送建议、投诉或需求';
+
+  @override
+  String emailAppNotFound(String email) {
+    return '未找到邮件应用。请发送至：$email';
+  }
+
+  @override
+  String get rateApp => '给我们评分';
+
+  @override
+  String get rateAppDesc => '在 Google Play 上评分';
+
+  @override
+  String get updateAvailableTitle => '有可用更新';
+
+  @override
+  String get updateAvailableMessage => 'Wallet Elite 有新版本。更新以获取最新功能和修复。';
+
+  @override
+  String get updateNow => '更新';
+
+  @override
+  String get later => '稍后';
+
+  @override
+  String get summaryImage => '摘要图片';
+
+  @override
+  String get summaryImageDesc => '将摘要保存为图片或分享';
+
+  @override
+  String get saveToGallery => '保存到相册';
+
+  @override
+  String get share => '分享';
+
+  @override
+  String get imageSaved => '图片已保存到相册';
+
+  @override
+  String get imageSaveFailed => '无法保存图片';
 }

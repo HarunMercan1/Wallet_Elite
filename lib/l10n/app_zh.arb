@@ -495,5 +495,21 @@
     "exportDataDesc": "以 CSV 文件分享你的交易（可用 Excel 打开）",
     "exportFailed": "导出失败",
     "exportNoData": "没有可导出的交易。",
-    "cat_clothing": "服装"
+    "cat_clothing": "服装",
+  "supportSection": "支持",
+  "sendFeedback": "联系开发者",
+  "sendFeedbackDesc": "通过电子邮件发送建议、投诉或需求",
+  "emailAppNotFound": "未找到邮件应用。请发送至：{email}",
+  "rateApp": "给我们评分",
+  "rateAppDesc": "在 Google Play 上评分",
+  "updateAvailableTitle": "有可用更新",
+  "updateAvailableMessage": "Wallet Elite 有新版本。更新以获取最新功能和修复。",
+  "updateNow": "更新",
+  "later": "稍后",
+  "summaryImage": "摘要图片",
+  "summaryImageDesc": "将摘要保存为图片或分享",
+  "saveToGallery": "保存到相册",
+  "share": "分享",
+  "imageSaved": "图片已保存到相册",
+  "imageSaveFailed": "无法保存图片"
 }

@@ -516,5 +516,22 @@
     "@walletLimitReached": {"placeholders": {"count": {"type": "int"}}},
     "@budgetLimitReached": {"placeholders": {"count": {"type": "int"}}},
     "@unlockThemeTitle": {"placeholders": {"name": {"type": "String"}}},
-    "cat_clothing": "Clothing"
+    "cat_clothing": "Clothing",
+  "supportSection": "Support",
+  "sendFeedback": "Write to the developer",
+  "sendFeedbackDesc": "Send a suggestion, complaint or request by email",
+  "emailAppNotFound": "No email app found. Write to: {email}",
+  "@emailAppNotFound": {"placeholders": {"email": {"type": "String"}}},
+  "rateApp": "Rate us",
+  "rateAppDesc": "Give a rating on Google Play",
+  "updateAvailableTitle": "Update available",
+  "updateAvailableMessage": "A new version of Wallet Elite is available. Update to get the latest features and fixes.",
+  "updateNow": "Update",
+  "later": "Later",
+  "summaryImage": "Summary image",
+  "summaryImageDesc": "Save or share your summary as an image",
+  "saveToGallery": "Save to gallery",
+  "share": "Share",
+  "imageSaved": "Image saved to gallery",
+  "imageSaveFailed": "Couldn't save the image"
 }

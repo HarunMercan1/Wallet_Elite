@@ -11,11 +11,21 @@ class AdHelper {
       'ca-app-pub-3940256099942544/9214589741';
   static const String _testRewardedId =
       'ca-app-pub-3940256099942544/5224354917';
+  static const String _testInterstitialId =
+      'ca-app-pub-3940256099942544/1033173712';
+  static const String _testAppOpenId = 'ca-app-pub-3940256099942544/9257395921';
+  static const String _testNativeId = 'ca-app-pub-3940256099942544/2247696110';
 
   static const String _productionAdaptiveBannerId =
       'ca-app-pub-3820038977003119/3641957956';
   static const String _productionRewardedId =
       'ca-app-pub-3820038977003119/3376207957';
+  static const String _productionInterstitialId =
+      'ca-app-pub-3820038977003119/9330477877';
+  static const String _productionAppOpenId =
+      'ca-app-pub-3820038977003119/4269547875';
+  static const String _productionNativeId =
+      'ca-app-pub-3820038977003119/1264196306';
 
   static bool get isTestMode => kDebugMode;
 
@@ -24,4 +34,13 @@ class AdHelper {
 
   static String get rewardedAdUnitId =>
       isTestMode ? _testRewardedId : _productionRewardedId;
+
+  static String get interstitialAdUnitId =>
+      isTestMode ? _testInterstitialId : _productionInterstitialId;
+
+  static String get appOpenAdUnitId =>
+      isTestMode ? _testAppOpenId : _productionAppOpenId;
+
+  static String get nativeAdUnitId =>
+      isTestMode ? _testNativeId : _productionNativeId;
 }

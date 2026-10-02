@@ -24,7 +24,7 @@ class CustomButton extends ConsumerWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: colorTheme.primary, // Tek yerden renk yönetimi
-          foregroundColor: Colors.black,
+          foregroundColor: colorTheme.onPrimary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -32,11 +32,11 @@ class CustomButton extends ConsumerWidget {
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 height: 24,
                 width: 24,
                 child: CircularProgressIndicator(
-                  color: Colors.black,
+                  color: colorTheme.onPrimary,
                   strokeWidth: 2.5,
                 ),
               )

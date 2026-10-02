@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../data/recurring_provider.dart';
 import '../models/recurring_transaction_model.dart';
+import '../../../core/ads/banner_ad_widget.dart';
 import 'add_recurring_sheet.dart';
 
 class RecurringTransactionsView extends ConsumerWidget {
@@ -24,9 +25,7 @@ class RecurringTransactionsView extends ConsumerWidget {
     final transactionsAsync = ref.watch(filteredRecurringTransactionsProvider);
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         title: Text(l.recurringTransactions),
         backgroundColor: Colors.transparent,
@@ -34,10 +33,7 @@ class RecurringTransactionsView extends ConsumerWidget {
         actions: [
           // Filtre butonu
           PopupMenuButton<RecurringFilter>(
-            icon: Icon(
-              Icons.filter_list,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
+            icon: Icon(Icons.filter_list, color: colorTheme.textPrimary),
             onSelected: (value) {
               ref.read(recurringFilterProvider.notifier).state = value;
             },
@@ -116,10 +112,11 @@ class RecurringTransactionsView extends ConsumerWidget {
             : FloatingActionButton(
                 onPressed: () => _showAddSheet(context),
                 backgroundColor: colorTheme.primary,
-                child: const Icon(Icons.add, color: Colors.white),
+                child: Icon(Icons.add, color: colorTheme.onPrimary),
               ),
         orElse: () => null,
       ),
+      bottomNavigationBar: const AdaptiveBannerAd(bottomSafeArea: true),
     );
   }
 
@@ -133,27 +130,20 @@ class RecurringTransactionsView extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.repeat,
-            size: 64,
-            color: isDark ? Colors.grey[600] : Colors.grey[400],
-          ),
+          Icon(Icons.repeat, size: 64, color: colorTheme.textMuted),
           const SizedBox(height: 16),
           Text(
             l.noRecurringTransactions,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
+              color: colorTheme.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             l.addRecurringTransactionHint,
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.grey[500] : Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 14, color: colorTheme.textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -163,7 +153,7 @@ class RecurringTransactionsView extends ConsumerWidget {
             label: Text(l.addRecurringTransaction),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorTheme.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: colorTheme.onPrimary,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),
@@ -192,10 +182,13 @@ class RecurringTransactionsView extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.cardDark : colorTheme.cardLight,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: !recurring.isActive
-            ? Border.all(color: Colors.grey.withValues(alpha: 0.3), width: 1)
+            ? Border.all(
+                color: colorTheme.textSecondary.withValues(alpha: 0.3),
+                width: 1,
+              )
             : null,
       ),
       child: Material(
@@ -240,10 +233,8 @@ class RecurringTransactionsView extends ConsumerWidget {
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: recurring.isActive
-                                        ? (isDark
-                                              ? Colors.white
-                                              : Colors.black87)
-                                        : Colors.grey,
+                                        ? colorTheme.textPrimary
+                                        : colorTheme.textSecondary,
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -256,14 +247,16 @@ class RecurringTransactionsView extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withValues(alpha: 0.2),
+                                    color: colorTheme.textSecondary.withValues(
+                                      alpha: 0.2,
+                                    ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
                                     l.inactive,
                                     style: TextStyle(
                                       fontSize: 10,
-                                      color: Colors.grey[600],
+                                      color: colorTheme.textSecondary,
                                     ),
                                   ),
                                 ),
@@ -274,9 +267,7 @@ class RecurringTransactionsView extends ConsumerWidget {
                             _getFrequencyText(recurring.frequency, l),
                             style: TextStyle(
                               fontSize: 13,
-                              color: isDark
-                                  ? Colors.grey[400]
-                                  : Colors.grey[600],
+                              color: colorTheme.textSecondary,
                             ),
                           ),
                         ],
@@ -289,7 +280,9 @@ class RecurringTransactionsView extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: recurring.isActive ? amountColor : Colors.grey,
+                        color: recurring.isActive
+                            ? amountColor
+                            : colorTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -303,14 +296,14 @@ class RecurringTransactionsView extends ConsumerWidget {
                     Icon(
                       Icons.calendar_today_outlined,
                       size: 14,
-                      color: isDark ? Colors.grey[500] : Colors.grey[600],
+                      color: colorTheme.textSecondary,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${l.nextExecution}: ${DateFormat('dd MMM yyyy').format(recurring.nextExecutionDate)}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        color: colorTheme.textSecondary,
                       ),
                     ),
                     const Spacer(),

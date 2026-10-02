@@ -1420,4 +1420,56 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get cat_clothing => 'Pakaian';
+
+  @override
+  String get supportSection => 'Dukungan';
+
+  @override
+  String get sendFeedback => 'Tulis ke pengembang';
+
+  @override
+  String get sendFeedbackDesc =>
+      'Kirim saran, keluhan, atau permintaan lewat email';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'Aplikasi email tidak ditemukan. Tulis ke: $email';
+  }
+
+  @override
+  String get rateApp => 'Beri nilai';
+
+  @override
+  String get rateAppDesc => 'Beri rating di Google Play';
+
+  @override
+  String get updateAvailableTitle => 'Pembaruan tersedia';
+
+  @override
+  String get updateAvailableMessage =>
+      'Versi baru Wallet Elite tersedia. Perbarui untuk mendapatkan fitur dan perbaikan terbaru.';
+
+  @override
+  String get updateNow => 'Perbarui';
+
+  @override
+  String get later => 'Nanti';
+
+  @override
+  String get summaryImage => 'Gambar ringkasan';
+
+  @override
+  String get summaryImageDesc => 'Simpan atau bagikan ringkasan sebagai gambar';
+
+  @override
+  String get saveToGallery => 'Simpan ke galeri';
+
+  @override
+  String get share => 'Bagikan';
+
+  @override
+  String get imageSaved => 'Gambar disimpan ke galeri';
+
+  @override
+  String get imageSaveFailed => 'Gambar tidak dapat disimpan';
 }

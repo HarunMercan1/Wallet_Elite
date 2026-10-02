@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../wallet/models/transaction_model.dart';
 import '../../wallet/models/category_model.dart';
@@ -60,24 +61,19 @@ class MonthComparisonView extends ConsumerWidget {
     final currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
           l.comparedToLastMonth,
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black87,
+            color: colorTheme.textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+          icon: Icon(Icons.arrow_back, color: colorTheme.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -116,7 +112,7 @@ class MonthComparisonView extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -184,7 +180,7 @@ class MonthComparisonView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -250,10 +246,7 @@ class MonthComparisonView extends ConsumerWidget {
           flex: 2,
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: colorTheme.textSecondary),
           ),
         ),
         Expanded(
@@ -266,7 +259,7 @@ class MonthComparisonView extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: colorTheme.textPrimary,
                 ),
               ),
               Text(
@@ -302,7 +295,7 @@ class MonthComparisonView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -313,7 +306,7 @@ class MonthComparisonView extends ConsumerWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 20),
@@ -346,9 +339,7 @@ class MonthComparisonView extends ConsumerWidget {
                               labels[value.toInt()],
                               style: TextStyle(
                                 fontSize: 12,
-                                color: isDark
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600],
+                                color: colorTheme.textSecondary,
                               ),
                             ),
                           );
@@ -417,10 +408,10 @@ class MonthComparisonView extends ConsumerWidget {
               _buildLegendItem(
                 l.lastMonth,
                 colorTheme.primary.withValues(alpha: 0.5),
-                isDark,
+                colorTheme,
               ),
               const SizedBox(width: 24),
-              _buildLegendItem(l.thisMonth, colorTheme.primary, isDark),
+              _buildLegendItem(l.thisMonth, colorTheme.primary, colorTheme),
             ],
           ),
         ],
@@ -428,7 +419,7 @@ class MonthComparisonView extends ConsumerWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, Color color, bool isDark) {
+  Widget _buildLegendItem(String label, Color color, ColorTheme colorTheme) {
     return Row(
       children: [
         Container(
@@ -442,10 +433,7 @@ class MonthComparisonView extends ConsumerWidget {
         const SizedBox(width: 6),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isDark ? Colors.grey[400] : Colors.grey[600],
-          ),
+          style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
         ),
       ],
     );
@@ -487,15 +475,13 @@ class MonthComparisonView extends ConsumerWidget {
       return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.white,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(
           child: Text(
             l.noExpenseData,
-            style: TextStyle(
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
+            style: TextStyle(color: colorTheme.textSecondary),
           ),
         ),
       );
@@ -514,7 +500,7 @@ class MonthComparisonView extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : Colors.white,
+        color: colorTheme.cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -553,14 +539,14 @@ class MonthComparisonView extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                       Text(
                         '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(thisMonthAmount)}',
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: colorTheme.textSecondary,
                         ),
                       ),
                     ],

@@ -495,5 +495,21 @@
     "exportDataDesc": "شارك معاملاتك كملف CSV (يفتح في Excel)",
     "exportFailed": "فشل التصدير",
     "exportNoData": "لا توجد معاملات لتصديرها.",
-    "cat_clothing": "ملابس"
+    "cat_clothing": "ملابس",
+  "supportSection": "الدعم",
+  "sendFeedback": "راسل المطوّر",
+  "sendFeedbackDesc": "أرسل اقتراحًا أو شكوى أو طلبًا عبر البريد الإلكتروني",
+  "emailAppNotFound": "لم يُعثر على تطبيق بريد. راسلنا على: {email}",
+  "rateApp": "قيّمنا",
+  "rateAppDesc": "امنحنا تقييمًا على Google Play",
+  "updateAvailableTitle": "يتوفر تحديث",
+  "updateAvailableMessage": "يتوفر إصدار جديد من Wallet Elite. حدّث للحصول على أحدث الميزات والإصلاحات.",
+  "updateNow": "تحديث",
+  "later": "لاحقًا",
+  "summaryImage": "صورة الملخص",
+  "summaryImageDesc": "احفظ ملخصك كصورة أو شاركه",
+  "saveToGallery": "حفظ في المعرض",
+  "share": "مشاركة",
+  "imageSaved": "تم حفظ الصورة في المعرض",
+  "imageSaveFailed": "تعذّر حفظ الصورة"
 }

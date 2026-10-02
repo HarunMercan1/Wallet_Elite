@@ -495,5 +495,21 @@
     "exportDataDesc": "取引を CSV ファイルで共有（Excel で開けます）",
     "exportFailed": "エクスポートに失敗しました",
     "exportNoData": "エクスポートする取引がありません。",
-    "cat_clothing": "衣服"
+    "cat_clothing": "衣服",
+  "supportSection": "サポート",
+  "sendFeedback": "開発者に連絡",
+  "sendFeedbackDesc": "ご提案・ご不満・ご要望をメールで送信",
+  "emailAppNotFound": "メールアプリが見つかりません。宛先: {email}",
+  "rateApp": "評価する",
+  "rateAppDesc": "Google Play で評価する",
+  "updateAvailableTitle": "アップデートがあります",
+  "updateAvailableMessage": "Wallet Elite の新しいバージョンがあります。最新の機能と修正を利用するにはアップデートしてください。",
+  "updateNow": "アップデート",
+  "later": "後で",
+  "summaryImage": "サマリー画像",
+  "summaryImageDesc": "サマリーを画像として保存・共有",
+  "saveToGallery": "ギャラリーに保存",
+  "share": "共有",
+  "imageSaved": "画像をギャラリーに保存しました",
+  "imageSaveFailed": "画像を保存できませんでした"
 }

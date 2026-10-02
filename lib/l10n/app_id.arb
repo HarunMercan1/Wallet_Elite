@@ -509,5 +509,21 @@
     "exportDataDesc": "Bagikan transaksi Anda sebagai file CSV (terbuka di Excel)",
     "exportFailed": "Ekspor gagal",
     "exportNoData": "Tidak ada transaksi untuk diekspor.",
-    "cat_clothing": "Pakaian"
+    "cat_clothing": "Pakaian",
+  "supportSection": "Dukungan",
+  "sendFeedback": "Tulis ke pengembang",
+  "sendFeedbackDesc": "Kirim saran, keluhan, atau permintaan lewat email",
+  "emailAppNotFound": "Aplikasi email tidak ditemukan. Tulis ke: {email}",
+  "rateApp": "Beri nilai",
+  "rateAppDesc": "Beri rating di Google Play",
+  "updateAvailableTitle": "Pembaruan tersedia",
+  "updateAvailableMessage": "Versi baru Wallet Elite tersedia. Perbarui untuk mendapatkan fitur dan perbaikan terbaru.",
+  "updateNow": "Perbarui",
+  "later": "Nanti",
+  "summaryImage": "Gambar ringkasan",
+  "summaryImageDesc": "Simpan atau bagikan ringkasan sebagai gambar",
+  "saveToGallery": "Simpan ke galeri",
+  "share": "Bagikan",
+  "imageSaved": "Gambar disimpan ke galeri",
+  "imageSaveFailed": "Gambar tidak dapat disimpan"
 }

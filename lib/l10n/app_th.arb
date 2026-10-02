@@ -509,5 +509,21 @@
     "exportDataDesc": "แชร์ธุรกรรมของคุณเป็นไฟล์ CSV (เปิดใน Excel ได้)",
     "exportFailed": "ส่งออกไม่สำเร็จ",
     "exportNoData": "ไม่มีธุรกรรมให้ส่งออก",
-    "cat_clothing": "เสื้อผ้า"
+    "cat_clothing": "เสื้อผ้า",
+  "supportSection": "การสนับสนุน",
+  "sendFeedback": "เขียนถึงผู้พัฒนา",
+  "sendFeedbackDesc": "ส่งข้อเสนอแนะ ข้อร้องเรียน หรือคำขอทางอีเมล",
+  "emailAppNotFound": "ไม่พบแอปอีเมล เขียนถึง: {email}",
+  "rateApp": "ให้คะแนนเรา",
+  "rateAppDesc": "ให้คะแนนบน Google Play",
+  "updateAvailableTitle": "มีอัปเดตใหม่",
+  "updateAvailableMessage": "Wallet Elite มีเวอร์ชันใหม่ อัปเดตเพื่อรับฟีเจอร์และการแก้ไขล่าสุด",
+  "updateNow": "อัปเดต",
+  "later": "ภายหลัง",
+  "summaryImage": "รูปภาพสรุป",
+  "summaryImageDesc": "บันทึกหรือแชร์สรุปเป็นรูปภาพ",
+  "saveToGallery": "บันทึกลงแกลเลอรี",
+  "share": "แชร์",
+  "imageSaved": "บันทึกรูปภาพลงแกลเลอรีแล้ว",
+  "imageSaveFailed": "บันทึกรูปภาพไม่สำเร็จ"
 }

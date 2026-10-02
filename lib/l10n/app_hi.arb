@@ -509,5 +509,21 @@
     "exportDataDesc": "अपने लेनदेन CSV फ़ाइल के रूप में साझा करें (Excel में खुलती है)",
     "exportFailed": "निर्यात विफल रहा",
     "exportNoData": "निर्यात करने के लिए कोई लेनदेन नहीं है।",
-    "cat_clothing": "कपड़े"
+    "cat_clothing": "कपड़े",
+  "supportSection": "सहायता",
+  "sendFeedback": "डेवलपर को लिखें",
+  "sendFeedbackDesc": "ईमेल से सुझाव, शिकायत या अनुरोध भेजें",
+  "emailAppNotFound": "कोई ईमेल ऐप नहीं मिला। यहाँ लिखें: {email}",
+  "rateApp": "हमें रेट करें",
+  "rateAppDesc": "Google Play पर रेटिंग दें",
+  "updateAvailableTitle": "अपडेट उपलब्ध है",
+  "updateAvailableMessage": "Wallet Elite का नया संस्करण उपलब्ध है। नई सुविधाओं और सुधारों के लिए अपडेट करें।",
+  "updateNow": "अपडेट करें",
+  "later": "बाद में",
+  "summaryImage": "सारांश छवि",
+  "summaryImageDesc": "अपने सारांश को छवि के रूप में सहेजें या साझा करें",
+  "saveToGallery": "गैलरी में सहेजें",
+  "share": "साझा करें",
+  "imageSaved": "छवि गैलरी में सहेजी गई",
+  "imageSaveFailed": "छवि सहेजी नहीं जा सकी"
 }

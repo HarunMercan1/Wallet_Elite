@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../data/budget_provider.dart';
 import '../models/budget_model.dart';
+import '../../../core/ads/banner_ad_widget.dart';
 import 'add_budget_sheet.dart';
 import '../../premium/data/premium_constants.dart';
 import '../../premium/data/premium_provider.dart';
@@ -26,14 +27,12 @@ class BudgetsView extends ConsumerWidget {
     final budgetsAsync = ref.watch(budgetsProvider);
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         title: Text(l.budgets),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        foregroundColor: isDark ? Colors.white : Colors.black87,
+        foregroundColor: colorTheme.textPrimary,
       ),
       body: budgetsAsync.when(
         data: (budgets) {
@@ -70,9 +69,9 @@ class BudgetsView extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
+              Icon(Icons.error_outline, size: 48, color: colorTheme.error),
               const SizedBox(height: 16),
-              Text(l.error, style: TextStyle(color: Colors.red[300])),
+              Text(l.error, style: TextStyle(color: colorTheme.error)),
             ],
           ),
         ),
@@ -83,12 +82,13 @@ class BudgetsView extends ConsumerWidget {
             : FloatingActionButton.extended(
                 onPressed: () => _showAddSheet(context),
                 backgroundColor: colorTheme.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: colorTheme.onPrimary,
                 icon: const Icon(Icons.add),
                 label: Text(l.addBudget),
               ),
         orElse: () => null,
       ),
+      bottomNavigationBar: const AdaptiveBannerAd(bottomSafeArea: true),
     );
   }
 
@@ -113,16 +113,14 @@ class BudgetsView extends ConsumerWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white : Colors.black87,
+              color: colorTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             l.addBudgetHint,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isDark ? Colors.grey[400] : Colors.grey[600],
-            ),
+            style: TextStyle(color: colorTheme.textSecondary),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -131,7 +129,7 @@ class BudgetsView extends ConsumerWidget {
             label: Text(l.addBudget),
             style: ElevatedButton.styleFrom(
               backgroundColor: colorTheme.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: colorTheme.onPrimary,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),
@@ -153,9 +151,9 @@ class BudgetsView extends ConsumerWidget {
       decimalDigits: 2,
     );
     final progressColor = budget.isExceeded
-        ? Colors.red
+        ? colorTheme.error
         : budget.isWarning
-        ? Colors.orange
+        ? colorTheme.warning
         : colorTheme.success;
 
     return GestureDetector(
@@ -163,10 +161,13 @@ class BudgetsView extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
           border: budget.isExceeded
-              ? Border.all(color: Colors.red.withValues(alpha: 0.5), width: 2)
+              ? Border.all(
+                  color: colorTheme.error.withValues(alpha: 0.5),
+                  width: 2,
+                )
               : null,
         ),
         child: Column(
@@ -200,7 +201,7 @@ class BudgetsView extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: colorTheme.textPrimary,
                         ),
                       ),
                       if (budget.categoryName != null)
@@ -208,7 +209,7 @@ class BudgetsView extends ConsumerWidget {
                           budget.categoryName!,
                           style: TextStyle(
                             fontSize: 13,
-                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                            color: colorTheme.textSecondary,
                           ),
                         ),
                     ],
@@ -248,7 +249,7 @@ class BudgetsView extends ConsumerWidget {
                       currencyFormat.format(budget.amount),
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: colorTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -279,7 +280,7 @@ class BudgetsView extends ConsumerWidget {
                       '${l.remaining}: ${currencyFormat.format(budget.remaining.abs())}${budget.isExceeded ? ' (${l.exceeded})' : ''}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: colorTheme.textSecondary,
                       ),
                     ),
                   ],

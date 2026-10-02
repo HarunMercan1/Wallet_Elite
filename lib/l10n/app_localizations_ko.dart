@@ -1398,4 +1398,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get cat_clothing => '의류';
+
+  @override
+  String get supportSection => '지원';
+
+  @override
+  String get sendFeedback => '개발자에게 보내기';
+
+  @override
+  String get sendFeedbackDesc => '제안, 불만 또는 요청을 이메일로 보내기';
+
+  @override
+  String emailAppNotFound(String email) {
+    return '이메일 앱을 찾을 수 없습니다. 주소: $email';
+  }
+
+  @override
+  String get rateApp => '평가하기';
+
+  @override
+  String get rateAppDesc => 'Google Play에서 평점 남기기';
+
+  @override
+  String get updateAvailableTitle => '업데이트 가능';
+
+  @override
+  String get updateAvailableMessage =>
+      'Wallet Elite의 새 버전이 나왔습니다. 최신 기능과 수정 사항을 위해 업데이트하세요.';
+
+  @override
+  String get updateNow => '업데이트';
+
+  @override
+  String get later => '나중에';
+
+  @override
+  String get summaryImage => '요약 이미지';
+
+  @override
+  String get summaryImageDesc => '요약을 이미지로 저장하거나 공유';
+
+  @override
+  String get saveToGallery => '갤러리에 저장';
+
+  @override
+  String get share => '공유';
+
+  @override
+  String get imageSaved => '이미지가 갤러리에 저장되었습니다';
+
+  @override
+  String get imageSaveFailed => '이미지를 저장하지 못했습니다';
 }

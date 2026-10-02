@@ -29,47 +29,68 @@ class AppColors {
   static const Color textSecondary = Color(0xFF64748B);
 }
 
-/// Color theme definitions for different palettes
+/// Bir temanın tek bir parlaklık (koyu/açık) için renkleri.
+///
+/// Her temanın koyu ve açık olmak üzere iki paleti vardır; ekranda kullanılan
+/// palet [forBrightness] ile seçilir. Paletler WCAG kontrast oranlarına göre
+/// denetlenmiştir; bir rengi değiştirirken şu kurallar korunmalıdır:
+///  * [primary], [accent], [tertiary], [success], [error], [warning], [info]
+///    kart ve arka plan üzerinde en az 3:1 (simge/yazı olarak görünür),
+///  * [onPrimary] → [primary] üzerinde en az 4:1, gradyan uçlarında
+///    ([primaryLight], [primaryDark]) en az 3:1,
+///  * [onTertiary] → [tertiary] üzerinde en az 4.5:1,
+///  * [success] ve [error] üzerinde beyaz yazı en az 3:1 (dolu butonlar),
+///  * [textSecondary] kart/arka plan üzerinde en az 4.5:1.
 class ColorTheme extends ThemeExtension<ColorTheme> {
+  // Meta
+  final String id;
+  final String name;
+  final bool isPremium;
+  final Brightness brightness;
+
   // Brand Colors
   final Color primary;
-  final Color primaryLight;
-  final Color primaryDark;
-  final Color accent;
-  final Color accentLight;
-  final Color tertiary; // New: 3rd Major Color
-  final Color onTertiary; // Text on tertiary
+  final Color primaryLight; // Gradyanın açık ucu
+  final Color primaryDark; // Gradyanın koyu ucu
+  final Color onPrimary; // primary (ve gradyanı) üzerindeki yazı/simge
+  final Color accent; // Yüzeyler üzerinde vurgu simgesi/yazısı
+  final Color accentLight; // Yumuşak vurgu zemini
+  final Color tertiary; // 3. renk (rozet, ikincil vurgu)
+  final Color onTertiary; // tertiary üzerindeki yazı
 
-  // Surface & Background
+  // Surface & Background (her iki parlaklıkta aynı değerler)
   final Color backgroundLight;
   final Color backgroundDark;
-  final Color surfaceLight; // Generic surface
+  final Color surfaceLight;
   final Color surfaceDark;
 
-  // Specialized Component Colors
-  final Color cardColor; // Main card background
-  final Color subtleCardColor; // Secondary/Interactive styling
-  final Color surfaceVariant; // New: Distinct surface for active elements
+  // Specialized Component Colors (bu parlaklık için)
+  final Color cardColor; // Ana kart zemini
+  final Color subtleCardColor; // İkincil/etkileşimli zemin
+  final Color surfaceVariant; // Belirgin zemin (seçili/aktif öğeler)
   final Color onSurfaceVariant;
-  final Color borderColor; // Dividers, borders
-  final Color outline; // New: Stronger border
+  final Color borderColor; // Ayırıcılar, ince kenarlıklar
+  final Color outline; // Daha belirgin kenarlık
 
-  // Typography (Theme-specific overrides)
+  // Typography
   final Color textPrimary;
   final Color textSecondary;
 
   // Status Colors
   final Color success;
   final Color error;
-
-  // Meta
-  final String name;
-  final bool isPremium;
+  final Color warning;
+  final Color info;
 
   const ColorTheme({
+    required this.id,
+    required this.name,
+    required this.isPremium,
+    required this.brightness,
     required this.primary,
     required this.primaryLight,
     required this.primaryDark,
+    required this.onPrimary,
     required this.accent,
     required this.accentLight,
     required this.tertiary,
@@ -86,17 +107,33 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     required this.outline,
     required this.textPrimary,
     required this.textSecondary,
-    required this.name,
-    this.success = const Color(0xFF10B981),
-    this.error = const Color(0xFFEF4444),
-    this.isPremium = false,
+    required this.success,
+    required this.error,
+    required this.warning,
+    required this.info,
   });
+
+  bool get isDark => brightness == Brightness.dark;
+
+  /// Bu parlaklıktaki sayfa arka planı
+  Color get background => isDark ? backgroundDark : backgroundLight;
+
+  /// Kapalı/pasif simgeler ve ipuçları için soluk yazı rengi
+  Color get textMuted => textSecondary.withValues(alpha: 0.7);
+
+  /// Aynı temanın istenen parlaklıktaki paleti
+  ColorTheme forBrightness(Brightness brightness) {
+    if (brightness == this.brightness) return this;
+    final palettes = brightness == Brightness.dark ? _dark : _light;
+    return palettes[id] ?? this;
+  }
 
   @override
   ColorTheme copyWith({
     Color? primary,
     Color? primaryLight,
     Color? primaryDark,
+    Color? onPrimary,
     Color? accent,
     Color? accentLight,
     Color? tertiary,
@@ -115,13 +152,18 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     Color? textSecondary,
     Color? success,
     Color? error,
-    String? name,
-    bool? isPremium,
+    Color? warning,
+    Color? info,
   }) {
     return ColorTheme(
+      id: id,
+      name: name,
+      isPremium: isPremium,
+      brightness: brightness,
       primary: primary ?? this.primary,
       primaryLight: primaryLight ?? this.primaryLight,
       primaryDark: primaryDark ?? this.primaryDark,
+      onPrimary: onPrimary ?? this.onPrimary,
       accent: accent ?? this.accent,
       accentLight: accentLight ?? this.accentLight,
       tertiary: tertiary ?? this.tertiary,
@@ -138,10 +180,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
       outline: outline ?? this.outline,
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
-      name: name ?? this.name,
       success: success ?? this.success,
       error: error ?? this.error,
-      isPremium: isPremium ?? this.isPremium,
+      warning: warning ?? this.warning,
+      info: info ?? this.info,
     );
   }
 
@@ -150,10 +192,16 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     if (other is! ColorTheme) {
       return this;
     }
+    final target = t < 0.5 ? this : other;
     return ColorTheme(
+      id: target.id,
+      name: target.name,
+      isPremium: target.isPremium,
+      brightness: target.brightness,
       primary: Color.lerp(primary, other.primary, t)!,
       primaryLight: Color.lerp(primaryLight, other.primaryLight, t)!,
       primaryDark: Color.lerp(primaryDark, other.primaryDark, t)!,
+      onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
       accentLight: Color.lerp(accentLight, other.accentLight, t)!,
       tertiary: Color.lerp(tertiary, other.tertiary, t)!,
@@ -174,310 +222,666 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
       outline: Color.lerp(outline, other.outline, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
-      name: name,
       success: Color.lerp(success, other.success, t)!,
       error: Color.lerp(error, other.error, t)!,
-      isPremium: isPremium,
+      warning: Color.lerp(warning, other.warning, t)!,
+      info: Color.lerp(info, other.info, t)!,
     );
   }
 
-  // 1. Ultra Premium (The Ultra Premium - Siyah & Altın)
-  static const elite = ColorTheme(
-    primary: Color(0xFFCCA43B),
-    primaryLight: Color(0xFFFFD700),
-    primaryDark: Color(0xFF8F7018),
-    accent: Color(0xFFFFD700),
-    accentLight: Color(0xFFFFF4CC),
-    tertiary: Color(0xFFE5C158), // Gold Variation
-    onTertiary: Colors.black,
-    backgroundLight: Color(0xFFFAFAFA),
-    backgroundDark: Color(0xFF000000),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF141414),
-    cardColor: Color(0xFF141414),
-    subtleCardColor: Color(0xFF1C1C1C),
-    surfaceVariant: Color(0xFF27272A), // Lighter black
-    onSurfaceVariant: Color(0xFFD4AF37), // Gold text
-    borderColor: Color(0xFF27272A),
-    outline: Color(0xFF3F3F46),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFA1A1AA),
-    success: Color(0xFF00E676),
-    error: Color(0xFFFF4D4D),
-    name: 'Ultra Premium',
-    isPremium: true,
-  );
+  // ========== Paletler (koyu: herkese açık ad, açık: _<ad>Light) ==========
 
-  // 2. Midnight Fintech (Modern Lacivert & Slate - REFINED)
   static const midnight = ColorTheme(
-    primary: Color(0xFF3B82F6), // Blue 500
-    primaryLight: Color(0xFF60A5FA),
-    primaryDark: Color(0xFF1D4ED8),
-    accent: Color(0xFF1E293B),
-    accentLight: Color(0xFF334155),
-    tertiary: Color(0xFF6366F1), // Indigo 500 (3rd color)
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFF8FAFC),
-    backgroundDark: Color(0xFF020617), // Slate 950
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF0F172A), // Slate 900
-    cardColor: Color(0xFF0F172A), // Slate 900
-    subtleCardColor: Color(0xFF1E293B), // Slate 800
-    surfaceVariant: Color(0xFF334155), // Slate 700 - VISIBLE BUTTONS
-    onSurfaceVariant: Color(0xFFF1F5F9), // Slate 100
-    borderColor: Color(0xFF1E293B), // Slate 800
-    outline: Color(0xFF475569), // Slate 600
-    textPrimary: Color(0xFFF8FAFC), // Slate 50
-    textSecondary: Color(0xFF94A3B8), // Slate 400
-    success: Color(0xFF10B981),
-    error: Color(0xFFEF4444),
+    id: 'midnight',
     name: 'Midnight Fintech',
     isPremium: false,
+    brightness: Brightness.dark,
+    primary: Color(0xFF3577F0),
+    primaryLight: Color(0xFF4F8AF7),
+    primaryDark: Color(0xFF2563EB),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF93C5FD),
+    accentLight: Color(0xFF1E3A5F),
+    tertiary: Color(0xFF818CF8),
+    onTertiary: Color(0xFF0B1026),
+    backgroundLight: Color(0xFFF8FAFC),
+    backgroundDark: Color(0xFF020617),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF0F172A),
+    cardColor: Color(0xFF0F172A),
+    subtleCardColor: Color(0xFF1E293B),
+    surfaceVariant: Color(0xFF334155),
+    onSurfaceVariant: Color(0xFFF1F5F9),
+    borderColor: Color(0xFF1E293B),
+    outline: Color(0xFF334155),
+    textPrimary: Color(0xFFF8FAFC),
+    textSecondary: Color(0xFF94A3B8),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 3. Cyber Amethyst (Tech-Vibe Mor - Derin & Asil)
+  static const _midnightLight = ColorTheme(
+    id: 'midnight',
+    name: 'Midnight Fintech',
+    isPremium: false,
+    brightness: Brightness.light,
+    primary: Color(0xFF2563EB),
+    primaryLight: Color(0xFF3B82F6),
+    primaryDark: Color(0xFF1D4ED8),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF1D4ED8),
+    accentLight: Color(0xFFDBEAFE),
+    tertiary: Color(0xFF4F46E5),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFF8FAFC),
+    backgroundDark: Color(0xFF020617),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF0F172A),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFF1F5F9),
+    surfaceVariant: Color(0xFFE2E8F0),
+    onSurfaceVariant: Color(0xFF0F172A),
+    borderColor: Color(0xFFE2E8F0),
+    outline: Color(0xFFCBD5E1),
+    textPrimary: Color(0xFF0F172A),
+    textSecondary: Color(0xFF64748B),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
+  static const elite = ColorTheme(
+    id: 'elite',
+    name: 'Ultra Premium',
+    isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFFD4AF37),
+    primaryLight: Color(0xFFF2D675),
+    primaryDark: Color(0xFFB8922A),
+    onPrimary: Color(0xFF1A1400),
+    accent: Color(0xFFF2D675),
+    accentLight: Color(0xFF3A2F0B),
+    tertiary: Color(0xFFF5E6B3),
+    onTertiary: Color(0xFF1A1400),
+    backgroundLight: Color(0xFFFAF8F2),
+    backgroundDark: Color(0xFF000000),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF141414),
+    cardColor: Color(0xFF141414),
+    subtleCardColor: Color(0xFF1E1E1E),
+    surfaceVariant: Color(0xFF2A2A2A),
+    onSurfaceVariant: Color(0xFFF2D675),
+    borderColor: Color(0xFF262626),
+    outline: Color(0xFF3A3A3A),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFA1A1AA),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
+  );
+
+  static const _eliteLight = ColorTheme(
+    id: 'elite',
+    name: 'Ultra Premium',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFF8F6F12),
+    primaryLight: Color(0xFFA8851F),
+    primaryDark: Color(0xFF75590B),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF75590B),
+    accentLight: Color(0xFFF5ECCB),
+    tertiary: Color(0xFF57534E),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFFAF8F2),
+    backgroundDark: Color(0xFF000000),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF141414),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFF5F1E6),
+    surfaceVariant: Color(0xFFEBE4D0),
+    onSurfaceVariant: Color(0xFF1A1814),
+    borderColor: Color(0xFFE9E2CF),
+    outline: Color(0xFFD6CBA8),
+    textPrimary: Color(0xFF1A1814),
+    textSecondary: Color(0xFF6B6658),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const amethyst = ColorTheme(
-    primary: Color(0xFF8B5CF6),
-    primaryLight: Color(0xFFA78BFA),
-    primaryDark: Color(0xFF6D28D9),
-    accent: Color(0xFFC084FC),
-    accentLight: Color(0xFFE9D5FF),
-    tertiary: Color(0xFFD946EF), // Fuchsia
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFFAF5FF),
-    backgroundDark: Color(0xFF0F0B1A),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF151026),
-    cardColor: Color(0xFF151026),
-    subtleCardColor: Color(0xFF2E2150),
-    surfaceVariant: Color(0xFF4C1D95), // Deep Violet
-    onSurfaceVariant: Color(0xFFE9D5FF),
-    borderColor: Color(0xFF2E2150),
-    outline: Color(0xFF5B21B6),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFE9D5FF),
-    success: Color(0xFF10B981),
-    error: Color(0xFFF43F5E),
+    id: 'amethyst',
     name: 'Cyber Amethyst',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFF8B5CF6),
+    primaryLight: Color(0xFF9A70F7),
+    primaryDark: Color(0xFF7C3AED),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFFC4B5FD),
+    accentLight: Color(0xFF2E1F5E),
+    tertiary: Color(0xFFE879F9),
+    onTertiary: Color(0xFF2A0A30),
+    backgroundLight: Color(0xFFFAF7FF),
+    backgroundDark: Color(0xFF0D0A17),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF171128),
+    cardColor: Color(0xFF171128),
+    subtleCardColor: Color(0xFF241A3D),
+    surfaceVariant: Color(0xFF34265A),
+    onSurfaceVariant: Color(0xFFE9D5FF),
+    borderColor: Color(0xFF241A3D),
+    outline: Color(0xFF3B2C66),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFB3A8D1),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 4. Nordic Forest (Zengin Yeşil - Organik)
+  static const _amethystLight = ColorTheme(
+    id: 'amethyst',
+    name: 'Cyber Amethyst',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFF7C3AED),
+    primaryLight: Color(0xFF8B5CF6),
+    primaryDark: Color(0xFF6D28D9),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF6D28D9),
+    accentLight: Color(0xFFEDE9FE),
+    tertiary: Color(0xFFC026D3),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFFAF7FF),
+    backgroundDark: Color(0xFF0D0A17),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF171128),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFF3EEFE),
+    surfaceVariant: Color(0xFFE9E0FD),
+    onSurfaceVariant: Color(0xFF1E1433),
+    borderColor: Color(0xFFE6DDF7),
+    outline: Color(0xFFD0C2EE),
+    textPrimary: Color(0xFF1E1433),
+    textSecondary: Color(0xFF6B5F85),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const forest = ColorTheme(
-    primary: Color(0xFF059669),
-    primaryLight: Color(0xFF34D399),
-    primaryDark: Color(0xFF047857),
-    accent: Color(0xFFD1FAE5),
-    accentLight: Color(0xFFE6FFFA),
-    tertiary: Color(0xFF059669),
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFF0FDF4),
-    backgroundDark: Color(0xFF01130E),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF021F16),
-    cardColor: Color(0xFF021F16),
-    subtleCardColor: Color(0xFF064E3B),
-    surfaceVariant: Color(0xFF065F46),
-    onSurfaceVariant: Color(0xFFD1FAE5),
-    borderColor: Color(0xFF064E3B),
-    outline: Color(0xFF047857),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFA7F3D0),
-    success: Color(0xFF34D399),
-    error: Color(0xFFEF4444),
+    id: 'forest',
     name: 'Nordic Forest',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFF10B981),
+    primaryLight: Color(0xFF34D399),
+    primaryDark: Color(0xFF059669),
+    onPrimary: Color(0xFF022C22),
+    accent: Color(0xFF6EE7B7),
+    accentLight: Color(0xFF0F3D30),
+    tertiary: Color(0xFFFCD34D),
+    onTertiary: Color(0xFF2A1F00),
+    backgroundLight: Color(0xFFF3FBF7),
+    backgroundDark: Color(0xFF03120D),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF0A1F18),
+    cardColor: Color(0xFF0A1F18),
+    subtleCardColor: Color(0xFF123026),
+    surfaceVariant: Color(0xFF1B4336),
+    onSurfaceVariant: Color(0xFFD1FAE5),
+    borderColor: Color(0xFF123026),
+    outline: Color(0xFF1F4D3E),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFF9CC4B3),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 5. Blood Carbon (Güçlü & Modern Kırmızı)
+  static const _forestLight = ColorTheme(
+    id: 'forest',
+    name: 'Nordic Forest',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFF047857),
+    primaryLight: Color(0xFF059669),
+    primaryDark: Color(0xFF065F46),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF065F46),
+    accentLight: Color(0xFFD1FAE5),
+    tertiary: Color(0xFFA16207),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFF3FBF7),
+    backgroundDark: Color(0xFF03120D),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF0A1F18),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFE8F5EE),
+    surfaceVariant: Color(0xFFD5ECDF),
+    onSurfaceVariant: Color(0xFF0B2A1F),
+    borderColor: Color(0xFFD5E8DD),
+    outline: Color(0xFFB5D6C4),
+    textPrimary: Color(0xFF0B2A1F),
+    textSecondary: Color(0xFF547466),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const carbon = ColorTheme(
-    primary: Color(0xFFDC2626),
-    primaryLight: Color(0xFFF87171),
-    primaryDark: Color(0xFFB91C1C),
-    accent: Color(0xFFFDA4AF),
-    accentLight: Color(0xFFFFF1F2),
-    tertiary: Color(0xFF991B1B),
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFFEF2F2),
-    backgroundDark: Color(0xFF0F0505),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF1A0A0A),
-    cardColor: Color(0xFF1A0A0A),
-    subtleCardColor: Color(0xFF2A1010),
-    surfaceVariant: Color(0xFF450A0A),
-    onSurfaceVariant: Color(0xFFFECACA),
-    borderColor: Color(0xFF2A1010),
-    outline: Color(0xFF7F1D1D),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFFECACA),
-    success: Color(0xFF2DD4BF),
-    error: Color(0xFFEF4444),
+    id: 'carbon',
     name: 'Blood Carbon',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFFE5383B),
+    primaryLight: Color(0xFFEC5050),
+    primaryDark: Color(0xFFC81E1E),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFFFCA5A5),
+    accentLight: Color(0xFF4A1414),
+    tertiary: Color(0xFFFB923C),
+    onTertiary: Color(0xFF2B1000),
+    backgroundLight: Color(0xFFFDF6F6),
+    backgroundDark: Color(0xFF0C0606),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF190D0D),
+    cardColor: Color(0xFF190D0D),
+    subtleCardColor: Color(0xFF261414),
+    surfaceVariant: Color(0xFF3A1D1D),
+    onSurfaceVariant: Color(0xFFFECACA),
+    borderColor: Color(0xFF261414),
+    outline: Color(0xFF472424),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFC7A8A8),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 6. Minimalist Ivory (Aydınlık & Temiz Zinc)
+  static const _carbonLight = ColorTheme(
+    id: 'carbon',
+    name: 'Blood Carbon',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFFC81E1E),
+    primaryLight: Color(0xFFDC2626),
+    primaryDark: Color(0xFFA31515),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFFA31515),
+    accentLight: Color(0xFFFEE2E2),
+    tertiary: Color(0xFFC2410C),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFFDF6F6),
+    backgroundDark: Color(0xFF0C0606),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF190D0D),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFFAECEC),
+    surfaceVariant: Color(0xFFF3DADA),
+    onSurfaceVariant: Color(0xFF2A1010),
+    borderColor: Color(0xFFF0D9D9),
+    outline: Color(0xFFE0BABA),
+    textPrimary: Color(0xFF2A1010),
+    textSecondary: Color(0xFF7A5C5C),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const ivory = ColorTheme(
+    id: 'ivory',
+    name: 'Minimalist Ivory',
+    isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFFE4E4E7),
+    primaryLight: Color(0xFFFAFAFA),
+    primaryDark: Color(0xFFA1A1AA),
+    onPrimary: Color(0xFF18181B),
+    accent: Color(0xFFFAFAFA),
+    accentLight: Color(0xFF3F3F46),
+    tertiary: Color(0xFFA1A1AA),
+    onTertiary: Color(0xFF18181B),
+    backgroundLight: Color(0xFFFAFAFA),
+    backgroundDark: Color(0xFF0F0F10),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF1C1C1F),
+    cardColor: Color(0xFF1C1C1F),
+    subtleCardColor: Color(0xFF27272A),
+    surfaceVariant: Color(0xFF3F3F46),
+    onSurfaceVariant: Color(0xFFFAFAFA),
+    borderColor: Color(0xFF27272A),
+    outline: Color(0xFF3F3F46),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFA1A1AA),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
+  );
+
+  static const _ivoryLight = ColorTheme(
+    id: 'ivory',
+    name: 'Minimalist Ivory',
+    isPremium: true,
+    brightness: Brightness.light,
     primary: Color(0xFF18181B),
     primaryLight: Color(0xFF3F3F46),
     primaryDark: Color(0xFF09090B),
-    accent: Color(0xFFE4E4E7),
-    accentLight: Color(0xFFFAFAFA),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF3F3F46),
+    accentLight: Color(0xFFE4E4E7),
     tertiary: Color(0xFF52525B),
-    onTertiary: Colors.white,
+    onTertiary: Color(0xFFFFFFFF),
     backgroundLight: Color(0xFFFAFAFA),
-    backgroundDark: Color(0xFF18181B),
+    backgroundDark: Color(0xFF0F0F10),
     surfaceLight: Color(0xFFFFFFFF),
-    surfaceDark: Color(0xFF27272A),
-    cardColor: Color(0xFF27272A),
-    subtleCardColor: Color(0xFF3F3F46),
-    surfaceVariant: Color(0xFF52525B),
-    onSurfaceVariant: Colors.white,
-    borderColor: Color(0xFF3F3F46),
-    outline: Color(0xFF71717A),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFA1A1AA),
-    success: Color(0xFF059669),
-    error: Color(0xFFE11D48),
-    name: 'Minimalist Ivory',
-    isPremium: true,
+    surfaceDark: Color(0xFF1C1C1F),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFF4F4F5),
+    surfaceVariant: Color(0xFFE4E4E7),
+    onSurfaceVariant: Color(0xFF18181B),
+    borderColor: Color(0xFFE4E4E7),
+    outline: Color(0xFFD4D4D8),
+    textPrimary: Color(0xFF18181B),
+    textSecondary: Color(0xFF71717A),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
   );
 
-  // 7. Oceanic Deep (Derin Okyanus & Camgöbeği)
   static const ocean = ColorTheme(
-    primary: Color(0xFF06B6D4),
-    primaryLight: Color(0xFF67E8F9),
-    primaryDark: Color(0xFF0E7490),
-    accent: Color(0xFF164E63),
-    accentLight: Color(0xFFCFFAFE),
-    tertiary: Color(0xFF0891B2),
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFECFEFF),
-    backgroundDark: Color(0xFF083344),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF164E63),
-    cardColor: Color(0xFF164E63),
-    subtleCardColor: Color(0xFF155E75),
-    surfaceVariant: Color(0xFF0E7490),
-    onSurfaceVariant: Color(0xFFCFFAFE),
-    borderColor: Color(0xFF155E75),
-    outline: Color(0xFF155E75),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFCFFAFE),
-    success: Color(0xFF34D399),
-    error: Color(0xFFF87171),
+    id: 'ocean',
     name: 'Oceanic Deep',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFF06B6D4),
+    primaryLight: Color(0xFF22D3EE),
+    primaryDark: Color(0xFF0891B2),
+    onPrimary: Color(0xFF03222B),
+    accent: Color(0xFF67E8F9),
+    accentLight: Color(0xFF0E3F4F),
+    tertiary: Color(0xFF5EEAD4),
+    onTertiary: Color(0xFF03241F),
+    backgroundLight: Color(0xFFF2FBFD),
+    backgroundDark: Color(0xFF04161F),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF0A2530),
+    cardColor: Color(0xFF0A2530),
+    subtleCardColor: Color(0xFF103544),
+    surfaceVariant: Color(0xFF174A5E),
+    onSurfaceVariant: Color(0xFFCFFAFE),
+    borderColor: Color(0xFF103544),
+    outline: Color(0xFF1B5268),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFF93C0CC),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 8. Royal Velvet (Lüks Bordo & Amber)
+  static const _oceanLight = ColorTheme(
+    id: 'ocean',
+    name: 'Oceanic Deep',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFF0E7490),
+    primaryLight: Color(0xFF0891B2),
+    primaryDark: Color(0xFF155E75),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF155E75),
+    accentLight: Color(0xFFCFFAFE),
+    tertiary: Color(0xFF0F766E),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFF2FBFD),
+    backgroundDark: Color(0xFF04161F),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF0A2530),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFE3F5F9),
+    surfaceVariant: Color(0xFFCDEBF2),
+    onSurfaceVariant: Color(0xFF082F3D),
+    borderColor: Color(0xFFCFE7EE),
+    outline: Color(0xFFA9D3DF),
+    textPrimary: Color(0xFF082F3D),
+    textSecondary: Color(0xFF4F7682),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const velvet = ColorTheme(
-    primary: Color(0xFFF59E0B),
-    primaryLight: Color(0xFFFCD34D),
-    primaryDark: Color(0xFFB45309),
-    accent: Color(0xFF7F1D1D),
-    accentLight: Color(0xFFFEF3C7),
-    tertiary: Color(0xFF92400E),
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFFEF2F2),
-    backgroundDark: Color(0xFF450A0A),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF7F1D1D),
-    cardColor: Color(0xFF7F1D1D),
-    subtleCardColor: Color(0xFF991B1B),
-    surfaceVariant: Color(0xFFB91C1C),
-    onSurfaceVariant: Color(0xFFFEF3C7),
-    borderColor: Color(0xFF991B1B),
-    outline: Color(0xFFB91C1C),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFFEF3C7),
-    success: Color(0xFFF59E0B),
-    error: Color(0xFFEF4444),
+    id: 'velvet',
     name: 'Royal Velvet',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFFF59E0B),
+    primaryLight: Color(0xFFFCD34D),
+    primaryDark: Color(0xFFD97706),
+    onPrimary: Color(0xFF2A1400),
+    accent: Color(0xFFFCD34D),
+    accentLight: Color(0xFF4A2A0A),
+    tertiary: Color(0xFFFDA4AF),
+    onTertiary: Color(0xFF3A0A14),
+    backgroundLight: Color(0xFFFDF6F4),
+    backgroundDark: Color(0xFF14060A),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF240C12),
+    cardColor: Color(0xFF240C12),
+    subtleCardColor: Color(0xFF34121A),
+    surfaceVariant: Color(0xFF4A1A25),
+    onSurfaceVariant: Color(0xFFFEF3C7),
+    borderColor: Color(0xFF34121A),
+    outline: Color(0xFF55202C),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFD4B0AA),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 9. Slate & Electric Blue (Mühendis Favorisi - Teknik & Net)
+  static const _velvetLight = ColorTheme(
+    id: 'velvet',
+    name: 'Royal Velvet',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFF9F1239),
+    primaryLight: Color(0xFFBE123C),
+    primaryDark: Color(0xFF881337),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF881337),
+    accentLight: Color(0xFFFFE4E6),
+    tertiary: Color(0xFFB45309),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFFDF6F4),
+    backgroundDark: Color(0xFF14060A),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF240C12),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFF9EBE8),
+    surfaceVariant: Color(0xFFF1D9D4),
+    onSurfaceVariant: Color(0xFF2E0D14),
+    borderColor: Color(0xFFEFD8D3),
+    outline: Color(0xFFDDB9B1),
+    textPrimary: Color(0xFF2E0D14),
+    textSecondary: Color(0xFF80605C),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const slate = ColorTheme(
-    primary: Color(0xFF3B82F6),
-    primaryLight: Color(0xFF60A5FA),
-    primaryDark: Color(0xFF2563EB),
-    accent: Color(0xFF94A3B8),
-    accentLight: Color(0xFFE2E8F0),
-    tertiary: Color(0xFF64748B),
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFF8FAFC),
-    backgroundDark: Color(0xFF0F172A),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF1E293B),
-    cardColor: Color(0xFF1E293B),
-    subtleCardColor: Color(0xFF334155),
-    surfaceVariant: Color(0xFF475569),
-    onSurfaceVariant: Colors.white,
-    borderColor: Color(0xFF334155),
-    outline: Color(0xFF64748B),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFCBD5E1),
-    success: Color(0xFF22C55E),
-    error: Color(0xFFEF4444),
+    id: 'slate',
     name: 'Slate & Electric',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFF38BDF8),
+    primaryLight: Color(0xFF7DD3FC),
+    primaryDark: Color(0xFF0EA5E9),
+    onPrimary: Color(0xFF06202E),
+    accent: Color(0xFF7DD3FC),
+    accentLight: Color(0xFF1E4258),
+    tertiary: Color(0xFFA78BFA),
+    onTertiary: Color(0xFF160A33),
+    backgroundLight: Color(0xFFF5F7FA),
+    backgroundDark: Color(0xFF0F172A),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF1E293B),
+    cardColor: Color(0xFF1E293B),
+    subtleCardColor: Color(0xFF2A3649),
+    surfaceVariant: Color(0xFF3B4A61),
+    onSurfaceVariant: Color(0xFFF1F5F9),
+    borderColor: Color(0xFF2A3649),
+    outline: Color(0xFF475569),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFA9B6C9),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  // 10. Rose Graphite (Yumuşak Lüks - Modern & Sıcak)
+  static const _slateLight = ColorTheme(
+    id: 'slate',
+    name: 'Slate & Electric',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFF0369A1),
+    primaryLight: Color(0xFF0284C7),
+    primaryDark: Color(0xFF075985),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFF075985),
+    accentLight: Color(0xFFE0F2FE),
+    tertiary: Color(0xFF6D28D9),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFF5F7FA),
+    backgroundDark: Color(0xFF0F172A),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF1E293B),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFEEF2F6),
+    surfaceVariant: Color(0xFFE2E8F0),
+    onSurfaceVariant: Color(0xFF1E293B),
+    borderColor: Color(0xFFDDE3EA),
+    outline: Color(0xFFC3CCD8),
+    textPrimary: Color(0xFF1E293B),
+    textSecondary: Color(0xFF5B6B80),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
+
   static const rose = ColorTheme(
-    primary: Color(0xFFFB7185),
-    primaryLight: Color(0xFFFDA4AF),
-    primaryDark: Color(0xFFE11D48),
-    accent: Color(0xFFE7E5E4),
-    accentLight: Color(0xFFF5F5F4),
-    tertiary: Color(0xFFE11D48),
-    onTertiary: Colors.white,
-    backgroundLight: Color(0xFFFFF1F2),
-    backgroundDark: Color(0xFF1C1917),
-    surfaceLight: Colors.white,
-    surfaceDark: Color(0xFF292524),
-    cardColor: Color(0xFF292524),
-    subtleCardColor: Color(0xFF44403C),
-    surfaceVariant: Color(0xFF57534E),
-    onSurfaceVariant: Color(0xFFE7E5E4),
-    borderColor: Color(0xFF44403C),
-    outline: Color(0xFF78716C),
-    textPrimary: Colors.white,
-    textSecondary: Color(0xFFE7E5E4),
-    success: Color(0xFF2ECC71),
-    error: Color(0xFFE11D48),
+    id: 'rose',
     name: 'Rose Graphite',
     isPremium: true,
+    brightness: Brightness.dark,
+    primary: Color(0xFFFB7185),
+    primaryLight: Color(0xFFFDA4AF),
+    primaryDark: Color(0xFFF43F5E),
+    onPrimary: Color(0xFF3B0A16),
+    accent: Color(0xFFFDA4AF),
+    accentLight: Color(0xFF4A1F28),
+    tertiary: Color(0xFFFDBA74),
+    onTertiary: Color(0xFF2B1400),
+    backgroundLight: Color(0xFFFFF5F6),
+    backgroundDark: Color(0xFF141110),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF211C1A),
+    cardColor: Color(0xFF211C1A),
+    subtleCardColor: Color(0xFF2E2725),
+    surfaceVariant: Color(0xFF443B38),
+    onSurfaceVariant: Color(0xFFF5F5F4),
+    borderColor: Color(0xFF2E2725),
+    outline: Color(0xFF4A403D),
+    textPrimary: Color(0xFFFFFFFF),
+    textSecondary: Color(0xFFBFB3AE),
+    success: Color(0xFF17A84D),
+    error: Color(0xFFEF4444),
+    warning: Color(0xFFF59E0B),
+    info: Color(0xFF60A5FA),
   );
 
-  static ColorTheme fromString(String scheme) {
-    switch (scheme) {
-      case 'amethyst':
-        return amethyst;
-      case 'forest':
-        return forest;
-      case 'carbon':
-        return carbon;
-      case 'ivory':
-        return ivory;
-      case 'ocean':
-        return ocean;
-      case 'velvet':
-        return velvet;
-      case 'slate':
-        return slate;
-      case 'rose':
-        return rose;
-      case 'elite':
-        return elite;
-      case 'midnight':
-      default:
-        return midnight;
-    }
-  }
+  static const _roseLight = ColorTheme(
+    id: 'rose',
+    name: 'Rose Graphite',
+    isPremium: true,
+    brightness: Brightness.light,
+    primary: Color(0xFFE11D48),
+    primaryLight: Color(0xFFF43F5E),
+    primaryDark: Color(0xFFBE123C),
+    onPrimary: Color(0xFFFFFFFF),
+    accent: Color(0xFFBE123C),
+    accentLight: Color(0xFFFFE4E6),
+    tertiary: Color(0xFFC2410C),
+    onTertiary: Color(0xFFFFFFFF),
+    backgroundLight: Color(0xFFFFF5F6),
+    backgroundDark: Color(0xFF141110),
+    surfaceLight: Color(0xFFFFFFFF),
+    surfaceDark: Color(0xFF211C1A),
+    cardColor: Color(0xFFFFFFFF),
+    subtleCardColor: Color(0xFFFDECEE),
+    surfaceVariant: Color(0xFFFAD9DD),
+    onSurfaceVariant: Color(0xFF2B1519),
+    borderColor: Color(0xFFF5D7DB),
+    outline: Color(0xFFE8B9C0),
+    textPrimary: Color(0xFF2B1519),
+    textSecondary: Color(0xFF85656B),
+    success: Color(0xFF15803D),
+    error: Color(0xFFDC2626),
+    warning: Color(0xFFB45309),
+    info: Color(0xFF2563EB),
+  );
 
-  static List<ColorTheme> get all => [
+  static const Map<String, ColorTheme> _dark = {
+    'midnight': midnight,
+    'elite': elite,
+    'amethyst': amethyst,
+    'forest': forest,
+    'carbon': carbon,
+    'ivory': ivory,
+    'ocean': ocean,
+    'velvet': velvet,
+    'slate': slate,
+    'rose': rose,
+  };
+
+  static const Map<String, ColorTheme> _light = {
+    'midnight': _midnightLight,
+    'elite': _eliteLight,
+    'amethyst': _amethystLight,
+    'forest': _forestLight,
+    'carbon': _carbonLight,
+    'ivory': _ivoryLight,
+    'ocean': _oceanLight,
+    'velvet': _velvetLight,
+    'slate': _slateLight,
+    'rose': _roseLight,
+  };
+
+  /// Kimlikten temayı (koyu paletiyle) döndürür; bilinmeyen kimlik → midnight.
+  /// Ekranda kullanılacak palet için [forBrightness] çağrılmalıdır.
+  static ColorTheme fromString(String scheme) => _dark[scheme] ?? midnight;
+
+  static List<ColorTheme> get all => const [
     midnight,
     elite,
     amethyst,
@@ -501,19 +905,9 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
   Color get expense => error;
   Color get cardDark => surfaceDark;
   Color get cardLight => surfaceLight;
+}
 
-  String get id {
-    if (this == midnight) return 'midnight';
-    if (this == amethyst) return 'amethyst';
-    if (this == forest) return 'forest';
-    if (this == carbon) return 'carbon';
-    if (this == ivory) return 'ivory';
-    if (this == ocean) return 'ocean';
-    if (this == velvet) return 'velvet';
-    if (this == slate) return 'slate';
-    if (this == rose) return 'rose';
-    if (this == elite) return 'elite';
-    // Midnight default
-    return 'midnight';
-  }
+/// `context.colors` → etkin temanın bu parlaklıktaki paleti
+extension ColorThemeContext on BuildContext {
+  ColorTheme get colors => Theme.of(this).extension<ColorTheme>()!;
 }

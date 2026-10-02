@@ -509,5 +509,21 @@
     "exportDataDesc": "Deel je transacties als CSV-bestand (opent in Excel)",
     "exportFailed": "Exporteren mislukt",
     "exportNoData": "Er zijn geen transacties om te exporteren.",
-    "cat_clothing": "Kleding"
+    "cat_clothing": "Kleding",
+  "supportSection": "Ondersteuning",
+  "sendFeedback": "Schrijf de ontwikkelaar",
+  "sendFeedbackDesc": "Stuur een suggestie, klacht of verzoek per e-mail",
+  "emailAppNotFound": "Geen e-mailapp gevonden. Schrijf naar: {email}",
+  "rateApp": "Beoordeel ons",
+  "rateAppDesc": "Geef een beoordeling op Google Play",
+  "updateAvailableTitle": "Update beschikbaar",
+  "updateAvailableMessage": "Er is een nieuwe versie van Wallet Elite. Werk bij voor de nieuwste functies en verbeteringen.",
+  "updateNow": "Bijwerken",
+  "later": "Later",
+  "summaryImage": "Overzichtsafbeelding",
+  "summaryImageDesc": "Bewaar of deel je overzicht als afbeelding",
+  "saveToGallery": "Opslaan in galerij",
+  "share": "Delen",
+  "imageSaved": "Afbeelding opgeslagen in galerij",
+  "imageSaveFailed": "Afbeelding kon niet worden opgeslagen"
 }

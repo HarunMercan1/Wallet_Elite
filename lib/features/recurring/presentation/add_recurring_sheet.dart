@@ -77,7 +77,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.85,
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+        color: colorTheme.cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -88,7 +88,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[400],
+              color: colorTheme.textMuted,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -105,14 +105,14 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
                 const Spacer(),
                 if (isEditing)
                   IconButton(
                     onPressed: _deleteRecurring,
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    icon: Icon(Icons.delete_outline, color: colorTheme.error),
                   ),
               ],
             ),
@@ -208,17 +208,17 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                 onPressed: _isLoading ? null : _save,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorTheme.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: colorTheme.onPrimary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 child: _isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: colorTheme.onPrimary,
                           strokeWidth: 2,
                         ),
                       )
@@ -248,7 +248,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               decoration: BoxDecoration(
                 color: !_isIncome
                     ? colorTheme.expense.withValues(alpha: 0.15)
-                    : Colors.grey.withValues(alpha: 0.1),
+                    : colorTheme.textSecondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: !_isIncome
                     ? Border.all(color: colorTheme.expense, width: 2)
@@ -259,14 +259,18 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                 children: [
                   Icon(
                     Icons.arrow_upward,
-                    color: !_isIncome ? colorTheme.expense : Colors.grey,
+                    color: !_isIncome
+                        ? colorTheme.expense
+                        : colorTheme.textSecondary,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     l.expense,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: !_isIncome ? colorTheme.expense : Colors.grey,
+                      color: !_isIncome
+                          ? colorTheme.expense
+                          : colorTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -283,7 +287,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
               decoration: BoxDecoration(
                 color: _isIncome
                     ? colorTheme.income.withValues(alpha: 0.15)
-                    : Colors.grey.withValues(alpha: 0.1),
+                    : colorTheme.textSecondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: _isIncome
                     ? Border.all(color: colorTheme.income, width: 2)
@@ -294,14 +298,18 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                 children: [
                   Icon(
                     Icons.arrow_downward,
-                    color: _isIncome ? colorTheme.income : Colors.grey,
+                    color: _isIncome
+                        ? colorTheme.income
+                        : colorTheme.textSecondary,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     l.income,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: _isIncome ? colorTheme.income : Colors.grey,
+                      color: _isIncome
+                          ? colorTheme.income
+                          : colorTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -324,7 +332,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: isDark ? Colors.white : Colors.black87,
+        color: colorTheme.textPrimary,
       ),
       decoration: InputDecoration(
         labelText: l.amount,
@@ -335,9 +343,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
           color: _isIncome ? colorTheme.income : colorTheme.expense,
         ),
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -363,14 +369,12 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
   ) {
     return TextFormField(
       controller: _descriptionController,
-      style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+      style: TextStyle(color: colorTheme.textPrimary),
       decoration: InputDecoration(
         labelText: l.description,
         hintText: l.descriptionHint,
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -395,21 +399,19 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       decoration: InputDecoration(
         labelText: l.selectAccount,
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
-      dropdownColor: isDark ? colorTheme.cardDark : colorTheme.cardLight,
+      dropdownColor: colorTheme.cardColor,
       items: accounts.map((account) {
         return DropdownMenuItem(
           value: account.id,
           child: Text(
             account.name,
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            style: TextStyle(color: colorTheme.textPrimary),
           ),
         );
       }).toList(),
@@ -432,21 +434,19 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       decoration: InputDecoration(
         labelText: l.selectCategory,
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
-      dropdownColor: isDark ? colorTheme.cardDark : colorTheme.cardLight,
+      dropdownColor: colorTheme.cardColor,
       items: categories.map((category) {
         return DropdownMenuItem(
           value: category.id,
           child: Text(
             category.name,
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            style: TextStyle(color: colorTheme.textPrimary),
           ),
         );
       }).toList(),
@@ -467,7 +467,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: isDark ? Colors.grey[400] : Colors.grey[700],
+            color: colorTheme.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -503,21 +503,19 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       decoration: InputDecoration(
         labelText: l.dayOfMonth,
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
-      dropdownColor: isDark ? colorTheme.cardDark : colorTheme.cardLight,
+      dropdownColor: colorTheme.cardColor,
       items: List.generate(31, (i) => i + 1).map((day) {
         return DropdownMenuItem(
           value: day,
           child: Text(
             day.toString(),
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            style: TextStyle(color: colorTheme.textPrimary),
           ),
         );
       }).toList(),
@@ -545,22 +543,17 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       decoration: InputDecoration(
         labelText: l.dayOfWeek,
         filled: true,
-        fillColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.black.withValues(alpha: 0.05),
+        fillColor: colorTheme.borderColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
-      dropdownColor: isDark ? colorTheme.cardDark : colorTheme.cardLight,
+      dropdownColor: colorTheme.cardColor,
       items: List.generate(7, (i) {
         return DropdownMenuItem(
           value: i + 1,
-          child: Text(
-            days[i],
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-          ),
+          child: Text(days[i], style: TextStyle(color: colorTheme.textPrimary)),
         );
       }).toList(),
       onChanged: (value) => setState(() => _dayOfWeek = value!),
@@ -582,9 +575,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.05)
-                    : Colors.black.withValues(alpha: 0.05),
+                color: colorTheme.borderColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -594,7 +585,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                     l.startDate,
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: colorTheme.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -603,7 +594,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                 ],
@@ -618,9 +609,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.05)
-                    : Colors.black.withValues(alpha: 0.05),
+                color: colorTheme.borderColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -633,7 +622,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                         l.endDate,
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          color: colorTheme.textSecondary,
                         ),
                       ),
                       if (_endDate != null)
@@ -642,7 +631,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                           child: Icon(
                             Icons.close,
                             size: 16,
-                            color: Colors.grey,
+                            color: colorTheme.textSecondary,
                           ),
                         ),
                     ],
@@ -656,8 +645,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: _endDate != null
-                          ? (isDark ? Colors.white : Colors.black87)
-                          : Colors.grey,
+                          ? colorTheme.textPrimary
+                          : colorTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -770,7 +759,10 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l.delete, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              l.delete,
+              style: TextStyle(color: context.colors.error),
+            ),
           ),
         ],
       ),

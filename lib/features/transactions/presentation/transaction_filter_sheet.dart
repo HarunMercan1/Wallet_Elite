@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../wallet/data/wallet_provider.dart';
@@ -53,7 +54,7 @@ class _TransactionFilterSheetState
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: colorTheme.outline,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -70,7 +71,7 @@ class _TransactionFilterSheetState
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
                 TextButton(
@@ -183,7 +184,7 @@ class _TransactionFilterSheetState
                           Text(
                             l.income,
                             style: TextStyle(
-                              color: Colors.grey[600],
+                              color: colorTheme.textSecondary,
                               fontSize: 13,
                             ),
                           ),
@@ -202,7 +203,7 @@ class _TransactionFilterSheetState
                           Text(
                             l.expense,
                             style: TextStyle(
-                              color: Colors.grey[600],
+                              color: colorTheme.textSecondary,
                               fontSize: 13,
                             ),
                           ),
@@ -230,9 +231,7 @@ class _TransactionFilterSheetState
           // Apply Button
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isDark ? colorTheme.surfaceDark : Colors.white,
-            ),
+            decoration: BoxDecoration(color: colorTheme.cardColor),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -248,10 +247,10 @@ class _TransactionFilterSheetState
                 ),
                 child: Text(
                   l.apply,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: colorTheme.onPrimary,
                   ),
                 ),
               ),
@@ -268,7 +267,7 @@ class _TransactionFilterSheetState
       style: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
-        color: isDark ? Colors.white : Colors.black,
+        color: context.colors.textPrimary,
       ),
     );
   }
@@ -282,12 +281,10 @@ class _TransactionFilterSheetState
       onSelected: (bool selected) {
         setState(() => _state = _state.copyWith(sortOption: option));
       },
-      backgroundColor: isDark ? colorTheme.surfaceDark : Colors.grey[100],
+      backgroundColor: colorTheme.subtleCardColor,
       selectedColor: colorTheme.primary.withValues(alpha: 0.2),
       labelStyle: TextStyle(
-        color: isSelected
-            ? colorTheme.primary
-            : (isDark ? Colors.white : Colors.black),
+        color: isSelected ? colorTheme.primary : colorTheme.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
       shape: RoundedRectangleBorder(
@@ -308,9 +305,7 @@ class _TransactionFilterSheetState
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? colorTheme.primary
-              : (isDark ? colorTheme.surfaceDark : Colors.grey[100]),
+          color: isSelected ? colorTheme.primary : colorTheme.subtleCardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? colorTheme.primary : Colors.transparent,
@@ -321,8 +316,8 @@ class _TransactionFilterSheetState
             label,
             style: TextStyle(
               color: isSelected
-                  ? Colors.white
-                  : (isDark ? Colors.white70 : Colors.black87),
+                  ? colorTheme.onPrimary
+                  : colorTheme.textSecondary,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -353,7 +348,7 @@ class _TransactionFilterSheetState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.grey[100],
+          color: colorTheme.subtleCardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? colorTheme.primary : Colors.transparent,
@@ -364,7 +359,7 @@ class _TransactionFilterSheetState
             Icon(
               Icons.calendar_today,
               size: 16,
-              color: isSelected ? colorTheme.primary : Colors.grey[500],
+              color: isSelected ? colorTheme.primary : colorTheme.textSecondary,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -374,8 +369,8 @@ class _TransactionFilterSheetState
                     : placeholder,
                 style: TextStyle(
                   color: isSelected
-                      ? (isDark ? Colors.white : Colors.black)
-                      : Colors.grey[500],
+                      ? colorTheme.textPrimary
+                      : colorTheme.textSecondary,
                   fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
                   fontSize: 13,
                 ),
@@ -385,7 +380,11 @@ class _TransactionFilterSheetState
             if (isSelected)
               GestureDetector(
                 onTap: () => onChanged(null),
-                child: Icon(Icons.close, size: 16, color: Colors.grey[500]),
+                child: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: colorTheme.textSecondary,
+                ),
               ),
           ],
         ),
@@ -410,13 +409,11 @@ class _TransactionFilterSheetState
         }
         setState(() => _state = _state.copyWith(selectedCategoryIds: ids));
       },
-      backgroundColor: isDark ? colorTheme.surfaceDark : Colors.grey[100],
+      backgroundColor: colorTheme.subtleCardColor,
       selectedColor: colorTheme.primary.withValues(alpha: 0.2),
       checkmarkColor: colorTheme.primary,
       labelStyle: TextStyle(
-        color: isSelected
-            ? colorTheme.primary
-            : (isDark ? Colors.white : Colors.black),
+        color: isSelected ? colorTheme.primary : colorTheme.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 12,
       ),

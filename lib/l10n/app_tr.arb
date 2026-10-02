@@ -509,5 +509,21 @@
     "exportDataDesc": "İşlemlerinizi CSV dosyası olarak paylaşın (Excel'de açılır)",
     "exportFailed": "Dışa aktarma başarısız oldu",
     "exportNoData": "Dışa aktarılacak işlem yok.",
-    "cat_clothing": "Giyim"
+    "cat_clothing": "Giyim",
+  "supportSection": "Destek",
+  "sendFeedback": "Geliştiriciye Yaz",
+  "sendFeedbackDesc": "Öneri, şikayet veya isteğini e-postayla gönder",
+  "emailAppNotFound": "E-posta uygulaması bulunamadı. Adres: {email}",
+  "rateApp": "Bizi Değerlendir",
+  "rateAppDesc": "Google Play'de puan ver",
+  "updateAvailableTitle": "Güncelleme var",
+  "updateAvailableMessage": "Wallet Elite'in yeni sürümü yayınlandı. En yeni özellikler ve düzeltmeler için güncelle.",
+  "updateNow": "Güncelle",
+  "later": "Sonra",
+  "summaryImage": "Özet Görseli",
+  "summaryImageDesc": "Özetini görsel olarak kaydet veya paylaş",
+  "saveToGallery": "Galeriye Kaydet",
+  "share": "Paylaş",
+  "imageSaved": "Görsel galeriye kaydedildi",
+  "imageSaveFailed": "Görsel kaydedilemedi"
 }

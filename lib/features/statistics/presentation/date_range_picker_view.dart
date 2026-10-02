@@ -53,19 +53,14 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
     final colorTheme = ref.watch(currentColorThemeProvider);
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       appBar: AppBar(
         title: Text(l.selectDateRange),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
-            Icons.close,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+          icon: Icon(Icons.close, color: colorTheme.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -93,7 +88,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
@@ -107,7 +102,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color: colorTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
@@ -144,10 +139,10 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               Center(
                 child: TextButton.icon(
                   onPressed: _resetDates,
-                  icon: Icon(Icons.refresh, color: Colors.grey[500]),
+                  icon: Icon(Icons.refresh, color: colorTheme.textSecondary),
                   label: Text(
                     l.reset,
-                    style: TextStyle(color: Colors.grey[500]),
+                    style: TextStyle(color: colorTheme.textSecondary),
                   ),
                 ),
               ),
@@ -157,15 +152,13 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
       bottomNavigationBar: _startDate != null && _endDate != null
           ? Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: isDark ? colorTheme.surfaceDark : Colors.white,
-              ),
+              decoration: BoxDecoration(color: colorTheme.cardColor),
               child: SafeArea(
                 child: ElevatedButton(
                   onPressed: _applyDateRange,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorTheme.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: colorTheme.onPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -254,22 +247,18 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? colorTheme.primary
-                  : (isDark ? colorTheme.surfaceDark : Colors.white),
+              color: isSelected ? colorTheme.primary : colorTheme.cardColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected
-                    ? colorTheme.primary
-                    : (isDark ? Colors.white24 : Colors.grey[300]!),
+                color: isSelected ? colorTheme.primary : colorTheme.outline,
               ),
             ),
             child: Text(
               preset['label'] as String,
               style: TextStyle(
                 color: isSelected
-                    ? Colors.white
-                    : (isDark ? Colors.white : Colors.black87),
+                    ? colorTheme.onPrimary
+                    : colorTheme.textPrimary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 13,
               ),
@@ -292,12 +281,12 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : Colors.white,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: date != null
                 ? colorTheme.primary.withValues(alpha: 0.5)
-                : (isDark ? Colors.white24 : Colors.grey[300]!),
+                : colorTheme.outline,
           ),
         ),
         child: Row(
@@ -321,7 +310,10 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: colorTheme.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -332,14 +324,14 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: date != null
-                          ? (isDark ? Colors.white : Colors.black87)
-                          : Colors.grey[400],
+                          ? colorTheme.textPrimary
+                          : colorTheme.textMuted,
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.grey[400]),
+            Icon(Icons.chevron_right, color: colorTheme.textMuted),
           ],
         ),
       ),
@@ -373,12 +365,15 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
                 Text(
                   '$days ${l.daily.toLowerCase()}',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorTheme.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -389,7 +384,6 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
   }
 
   Future<void> _selectDate(bool isStart) async {
-    final colorTheme = ref.read(currentColorThemeProvider);
     final now = DateTime.now();
 
     final picked = await showDatePicker(
@@ -398,17 +392,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
       firstDate: DateTime(2000),
       lastDate: now,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: colorTheme.primary,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black87,
-            ),
-          ),
-          child: child!,
-        );
+        return Theme(data: Theme.of(context), child: child!);
       },
     );
 

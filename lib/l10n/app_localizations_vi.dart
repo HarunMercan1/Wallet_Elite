@@ -1418,4 +1418,55 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get cat_clothing => 'Quần áo';
+
+  @override
+  String get supportSection => 'Hỗ trợ';
+
+  @override
+  String get sendFeedback => 'Gửi cho nhà phát triển';
+
+  @override
+  String get sendFeedbackDesc => 'Gửi góp ý, khiếu nại hoặc yêu cầu qua email';
+
+  @override
+  String emailAppNotFound(String email) {
+    return 'Không tìm thấy ứng dụng email. Gửi tới: $email';
+  }
+
+  @override
+  String get rateApp => 'Đánh giá ứng dụng';
+
+  @override
+  String get rateAppDesc => 'Chấm điểm trên Google Play';
+
+  @override
+  String get updateAvailableTitle => 'Có bản cập nhật';
+
+  @override
+  String get updateAvailableMessage =>
+      'Đã có phiên bản Wallet Elite mới. Cập nhật để có tính năng và bản sửa lỗi mới nhất.';
+
+  @override
+  String get updateNow => 'Cập nhật';
+
+  @override
+  String get later => 'Để sau';
+
+  @override
+  String get summaryImage => 'Ảnh tóm tắt';
+
+  @override
+  String get summaryImageDesc => 'Lưu hoặc chia sẻ bản tóm tắt dưới dạng ảnh';
+
+  @override
+  String get saveToGallery => 'Lưu vào thư viện';
+
+  @override
+  String get share => 'Chia sẻ';
+
+  @override
+  String get imageSaved => 'Đã lưu ảnh vào thư viện';
+
+  @override
+  String get imageSaveFailed => 'Không thể lưu ảnh';
 }

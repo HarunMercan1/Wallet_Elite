@@ -15,6 +15,7 @@ import 'transaction_filter_sheet.dart';
 import '../../../core/utils/currency_utils.dart';
 import '../../settings/data/settings_provider.dart';
 import '../../../core/utils/category_l10n.dart';
+import '../../../core/ads/native_ad_widget.dart';
 
 class TransactionsView extends ConsumerStatefulWidget {
   const TransactionsView({super.key});
@@ -59,9 +60,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? colorTheme.backgroundDark
-          : colorTheme.backgroundLight,
+      backgroundColor: colorTheme.background,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +76,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                   ),
                   GestureDetector(
@@ -90,14 +89,12 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                       decoration: BoxDecoration(
                         color: _filterState.hasFilters
                             ? colorTheme.primary
-                            : (isDark
-                                  ? colorTheme.surfaceDark
-                                  : colorTheme.surfaceLight),
+                            : colorTheme.cardColor,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: _filterState.hasFilters
                               ? colorTheme.primary
-                              : (isDark ? Colors.white10 : Colors.grey[300]!),
+                              : colorTheme.borderColor,
                         ),
                       ),
                       child: Row(
@@ -106,18 +103,16 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                             Icons.filter_list,
                             size: 20,
                             color: _filterState.hasFilters
-                                ? Colors.white
-                                : (isDark ? Colors.white70 : Colors.grey[700]),
+                                ? colorTheme.onPrimary
+                                : colorTheme.textSecondary,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             l.periodFilter,
                             style: TextStyle(
                               color: _filterState.hasFilters
-                                  ? Colors.white
-                                  : (isDark
-                                        ? Colors.white70
-                                        : Colors.grey[700]),
+                                  ? colorTheme.onPrimary
+                                  : colorTheme.textSecondary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -125,14 +120,16 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                color: Colors.white24,
+                              decoration: BoxDecoration(
+                                color: colorTheme.onPrimary.withValues(
+                                  alpha: 0.24,
+                                ),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.check,
                                 size: 10,
-                                color: Colors.white,
+                                color: colorTheme.onPrimary,
                               ),
                             ),
                           ],
@@ -187,11 +184,14 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
               child: TextField(
                 controller: _searchController,
                 onChanged: (value) => setState(() => _searchQuery = value),
-                style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                style: TextStyle(color: colorTheme.textPrimary),
                 decoration: InputDecoration(
                   hintText: l.searchTransactions,
-                  hintStyle: TextStyle(color: Colors.grey[500]),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+                  hintStyle: TextStyle(color: colorTheme.textSecondary),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: colorTheme.textSecondary,
+                  ),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear, size: 20),
@@ -202,9 +202,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                         )
                       : null,
                   filled: true,
-                  fillColor: isDark
-                      ? colorTheme.surfaceDark
-                      : colorTheme.surfaceLight,
+                  fillColor: colorTheme.cardColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
                     borderSide: BorderSide.none,
@@ -344,13 +342,9 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? colorTheme.surfaceDark
-                              : colorTheme.surfaceLight,
+                          color: colorTheme.cardColor,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isDark ? Colors.white10 : Colors.grey[200]!,
-                          ),
+                          border: Border.all(color: colorTheme.borderColor),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -358,7 +352,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                             Text(
                               '${filteredList.length} ${l.transactions.toLowerCase()}',
                               style: TextStyle(
-                                color: Colors.grey[500],
+                                color: colorTheme.textSecondary,
                                 fontSize: 13,
                               ),
                             ),
@@ -399,7 +393,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.grey[500],
+                                      color: colorTheme.textSecondary,
                                     ),
                                   ),
                                 ),
@@ -412,6 +406,11 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                                     colorTheme,
                                   ),
                                 ),
+                                // İlk günün altında liste içi native reklam
+                                if (index == 0)
+                                  const NativeAdCard(
+                                    margin: EdgeInsets.only(top: 4, bottom: 4),
+                                  ),
                               ],
                             );
                           },
@@ -441,19 +440,12 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
       child: Chip(
         label: Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isDark ? Colors.white : colorTheme.primary,
-          ),
+          style: TextStyle(fontSize: 12, color: colorTheme.primary),
         ),
         backgroundColor: isDark
             ? colorTheme.surfaceDark
             : colorTheme.primary.withValues(alpha: 0.1),
-        deleteIcon: Icon(
-          Icons.close,
-          size: 14,
-          color: isDark ? Colors.white70 : colorTheme.primary,
-        ),
+        deleteIcon: Icon(Icons.close, size: 14, color: colorTheme.primary),
         onDeleted: onRemove,
         side: BorderSide.none,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -473,11 +465,15 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey[400]),
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 64,
+            color: context.colors.textMuted,
+          ),
           const SizedBox(height: 16),
           Text(
             message,
-            style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+            style: TextStyle(fontSize: 15, color: context.colors.textSecondary),
           ),
         ],
       ),
@@ -544,7 +540,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+          color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
@@ -569,7 +565,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: colorTheme.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -579,14 +575,17 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     children: [
                       Text(
                         DateFormat('HH:mm').format(tx.date),
-                        style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorTheme.textSecondary,
+                        ),
                       ),
                       if (tx.description != null && category != null) ...[
                         Text(
                           ' • ',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[400],
+                            color: colorTheme.textMuted,
                           ),
                         ),
                         Expanded(
@@ -594,7 +593,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                             tx.description!,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[500],
+                              color: colorTheme.textSecondary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

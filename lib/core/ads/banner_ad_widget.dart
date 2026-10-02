@@ -10,7 +10,11 @@ import 'ads_providers.dart';
 /// Ekran genişliğine uyarlanan (anchored adaptive) banner. Premium
 /// kullanıcılarda, izin alınmadıysa veya reklam yüklenemezse yer kaplamaz.
 class AdaptiveBannerAd extends ConsumerStatefulWidget {
-  const AdaptiveBannerAd({super.key});
+  /// Banner ekranın en altındaysa (altında gezinme çubuğu yoksa) sistem
+  /// çubuğunun üstünde kalması için true verilir.
+  final bool bottomSafeArea;
+
+  const AdaptiveBannerAd({super.key, this.bottomSafeArea = false});
 
   @override
   ConsumerState<AdaptiveBannerAd> createState() => _AdaptiveBannerAdState();
@@ -90,10 +94,11 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
     if (!ref.watch(showAdsProvider) || banner == null || !_loaded) {
       return const SizedBox.shrink();
     }
-    return SizedBox(
+    final adBox = SizedBox(
       width: banner.size.width.toDouble(),
       height: banner.size.height.toDouble(),
       child: AdWidget(ad: banner),
     );
+    return widget.bottomSafeArea ? SafeArea(top: false, child: adBox) : adBox;
   }
 }

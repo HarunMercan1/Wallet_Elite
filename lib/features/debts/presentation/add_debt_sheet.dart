@@ -46,7 +46,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     return Container(
       margin: EdgeInsets.only(bottom: bottomPadding),
       decoration: BoxDecoration(
-        color: isDark ? colorTheme.backgroundDark : colorTheme.backgroundLight,
+        color: colorTheme.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -58,7 +58,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: isDark ? Colors.white24 : Colors.grey.shade300,
+              color: colorTheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -73,14 +73,14 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: colorTheme.textPrimary,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
-                  color: isDark ? Colors.white54 : Colors.grey,
+                  color: colorTheme.textSecondary,
                 ),
               ],
             ),
@@ -165,15 +165,9 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                           vertical: 14,
                         ),
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? colorTheme.surfaceDark
-                              : colorTheme.surfaceLight,
+                          color: colorTheme.cardColor,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isDark
-                                ? Colors.white12
-                                : Colors.grey.shade200,
-                          ),
+                          border: Border.all(color: colorTheme.borderColor),
                         ),
                         child: Row(
                           children: [
@@ -195,8 +189,8 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                                     : l.selectDueDate,
                                 style: TextStyle(
                                   color: _dueDate != null
-                                      ? (isDark ? Colors.white : Colors.black87)
-                                      : (isDark ? Colors.white54 : Colors.grey),
+                                      ? colorTheme.textPrimary
+                                      : colorTheme.textSecondary,
                                   fontSize: 15,
                                 ),
                               ),
@@ -207,7 +201,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                                 child: Icon(
                                   Icons.clear,
                                   size: 18,
-                                  color: isDark ? Colors.white54 : Colors.grey,
+                                  color: colorTheme.textSecondary,
                                 ),
                               ),
                           ],
@@ -239,18 +233,18 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                         onPressed: _isLoading ? null : _saveDebt,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: colorTheme.primary,
-                          foregroundColor: Colors.white,
+                          foregroundColor: colorTheme.onPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                           elevation: 0,
                         ),
                         child: _isLoading
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 24,
                                 height: 24,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: colorTheme.onPrimary,
                                   strokeWidth: 2,
                                 ),
                               )
@@ -286,7 +280,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
             label: l.lend,
             icon: Icons.arrow_upward,
             isSelected: _selectedType == 'lend',
-            color: Colors.green,
+            color: colorTheme.success,
             isDark: isDark,
             colorTheme: colorTheme,
             onTap: () => setState(() => _selectedType = 'lend'),
@@ -298,7 +292,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
             label: l.borrow,
             icon: Icons.arrow_downward,
             isSelected: _selectedType == 'borrow',
-            color: Colors.red,
+            color: colorTheme.error,
             isDark: isDark,
             colorTheme: colorTheme,
             onTap: () => setState(() => _selectedType = 'borrow'),
@@ -325,7 +319,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? color.withValues(alpha: 0.15)
-              : (isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight),
+              : colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,
@@ -335,19 +329,12 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isSelected
-                  ? color
-                  : (isDark ? Colors.white54 : Colors.grey),
-            ),
+            Icon(icon, color: isSelected ? color : colorTheme.textSecondary),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
-                color: isSelected
-                    ? color
-                    : (isDark ? Colors.white : Colors.black87),
+                color: isSelected ? color : colorTheme.textPrimary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 15,
               ),
@@ -364,7 +351,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: isDark ? Colors.white70 : Colors.black54,
+        color: context.colors.textSecondary,
       ),
     );
   }
@@ -381,16 +368,14 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       prefixText: prefix,
       prefixIcon: Icon(icon, color: colorTheme.primary),
       filled: true,
-      fillColor: isDark ? colorTheme.surfaceDark : colorTheme.surfaceLight,
+      fillColor: colorTheme.cardColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(
-          color: isDark ? Colors.white12 : Colors.grey.shade200,
-        ),
+        borderSide: BorderSide(color: colorTheme.borderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -398,7 +383,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.red),
+        borderSide: BorderSide(color: colorTheme.error),
       ),
     );
   }
@@ -413,18 +398,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: colorTheme.primary,
-              onPrimary: Colors.white,
-              surface: Theme.of(context).scaffoldBackgroundColor,
-              onSurface:
-                  Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
-            ),
-          ),
-          child: child!,
-        );
+        return Theme(data: Theme.of(context), child: child!);
       },
     );
 
@@ -455,7 +429,10 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
       if (success && mounted) {
         final l = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l.debtAdded), backgroundColor: Colors.green),
+          SnackBar(
+            content: Text(l.debtAdded),
+            backgroundColor: context.colors.success,
+          ),
         );
         Navigator.pop(context);
       }
@@ -464,7 +441,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colors.error,
             duration: const Duration(seconds: 4),
           ),
         );
