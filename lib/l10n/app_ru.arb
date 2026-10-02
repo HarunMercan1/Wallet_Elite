@@ -511,5 +511,11 @@
   "saveToGallery": "Сохранить в галерею",
   "share": "Поделиться",
   "imageSaved": "Изображение сохранено в галерею",
-  "imageSaveFailed": "Не удалось сохранить изображение"
+  "imageSaveFailed": "Не удалось сохранить изображение",
+  "premiumFeatureStats": "Подробная статистика и сравнения",
+  "premiumStatsMessage": "Подробная аналитика доступна в Premium.",
+  "savePercent": "Скидка {percent}%",
+  "pricePerMonth": "{price} в месяц",
+  "freeTrialDays": "{days} дней бесплатно",
+  "startFreeTrial": "Начать бесплатный период"
 }

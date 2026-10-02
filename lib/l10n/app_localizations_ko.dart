@@ -1449,4 +1449,28 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get imageSaveFailed => '이미지를 저장하지 못했습니다';
+
+  @override
+  String get premiumFeatureStats => '상세 통계 및 비교';
+
+  @override
+  String get premiumStatsMessage => '상세 분석은 Premium에서 이용할 수 있습니다.';
+
+  @override
+  String savePercent(int percent) {
+    return '$percent% 할인';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '월 $price';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days일 무료';
+  }
+
+  @override
+  String get startFreeTrial => '무료 체험 시작';
 }

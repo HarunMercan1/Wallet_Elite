@@ -1470,4 +1470,28 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'छवि सहेजी नहीं जा सकी';
+
+  @override
+  String get premiumFeatureStats => 'विस्तृत आँकड़े और तुलनाएँ';
+
+  @override
+  String get premiumStatsMessage => 'विस्तृत विश्लेषण Premium में शामिल है।';
+
+  @override
+  String savePercent(int percent) {
+    return '$percent% बचत';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price प्रति माह';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days दिन मुफ़्त';
+  }
+
+  @override
+  String get startFreeTrial => 'मुफ़्त ट्रायल शुरू करें';
 }

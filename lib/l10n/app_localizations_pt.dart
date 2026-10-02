@@ -1471,4 +1471,29 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Não foi possível salvar a imagem';
+
+  @override
+  String get premiumFeatureStats => 'Estatísticas detalhadas e comparações';
+
+  @override
+  String get premiumStatsMessage =>
+      'As análises detalhadas fazem parte do Premium.';
+
+  @override
+  String savePercent(int percent) {
+    return 'Economize $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price por mês';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days dias grátis';
+  }
+
+  @override
+  String get startFreeTrial => 'Iniciar teste grátis';
 }

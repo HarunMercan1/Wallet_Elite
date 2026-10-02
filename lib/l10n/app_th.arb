@@ -525,5 +525,11 @@
   "saveToGallery": "บันทึกลงแกลเลอรี",
   "share": "แชร์",
   "imageSaved": "บันทึกรูปภาพลงแกลเลอรีแล้ว",
-  "imageSaveFailed": "บันทึกรูปภาพไม่สำเร็จ"
+  "imageSaveFailed": "บันทึกรูปภาพไม่สำเร็จ",
+  "premiumFeatureStats": "สถิติโดยละเอียดและการเปรียบเทียบ",
+  "premiumStatsMessage": "การวิเคราะห์โดยละเอียดมีใน Premium",
+  "savePercent": "ประหยัด {percent}%",
+  "pricePerMonth": "{price} ต่อเดือน",
+  "freeTrialDays": "ฟรี {days} วัน",
+  "startFreeTrial": "เริ่มทดลองใช้ฟรี"
 }

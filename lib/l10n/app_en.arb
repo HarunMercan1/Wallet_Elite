@@ -533,5 +533,14 @@
   "saveToGallery": "Save to gallery",
   "share": "Share",
   "imageSaved": "Image saved to gallery",
-  "imageSaveFailed": "Couldn't save the image"
+  "imageSaveFailed": "Couldn't save the image",
+  "premiumFeatureStats": "Detailed statistics and comparisons",
+  "premiumStatsMessage": "Detailed analysis is part of Premium.",
+  "savePercent": "Save {percent}%",
+  "@savePercent": {"placeholders": {"percent": {"type": "int"}}},
+  "pricePerMonth": "{price} / month",
+  "@pricePerMonth": {"placeholders": {"price": {"type": "String"}}},
+  "freeTrialDays": "{days} days free",
+  "@freeTrialDays": {"placeholders": {"days": {"type": "int"}}},
+  "startFreeTrial": "Start free trial"
 }

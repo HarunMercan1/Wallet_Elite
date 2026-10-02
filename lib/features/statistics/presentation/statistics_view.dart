@@ -1,24 +1,41 @@
-import '../../../features/settings/data/settings_provider.dart';
-import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/statistics_view.dart
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'dart:math' as math;
-import '../../../l10n/app_localizations.dart';
+
 import '../../../core/theme/app_colors.dart';
-import '../../wallet/data/wallet_provider.dart';
-import '../../wallet/models/transaction_model.dart';
-import '../../wallet/models/category_model.dart';
 import '../../../core/theme/color_theme_provider.dart';
+import '../../../core/utils/category_l10n.dart';
+import '../../../core/utils/currency_utils.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../premium/data/premium_provider.dart';
+import '../../premium/presentation/premium_gate.dart';
+import '../../settings/data/settings_provider.dart';
+import '../../wallet/data/wallet_provider.dart';
+import '../../wallet/models/category_model.dart';
+import '../../wallet/models/transaction_model.dart';
 import 'category_analysis_view.dart';
-import 'trend_detail_view.dart';
 import 'date_range_picker_view.dart';
 import 'month_comparison_view.dart';
-import '../../../core/utils/category_l10n.dart';
+import 'trend_detail_view.dart';
 
+/// Seçilebilir dönemler
+enum _Period { last7Days, thisMonth, last30Days, thisYear, allTime, custom }
+
+/// Harcama grafiğindeki bir çubuk (gün veya ay)
+class _Bucket {
+  final String label;
+  final String tooltipLabel;
+  double amount = 0;
+
+  _Bucket(this.label, this.tooltipLabel);
+}
+
+/// İstatistik sekmesi. Dört soruyu yanıtlar: bu dönemde ne kadar kazandım /
+/// harcadım, harcama zamana nasıl yayıldı, para nereye gitti, öne çıkan
+/// işlemler neler. Ayrıntılar alt ekranlarda.
 class StatisticsView extends ConsumerStatefulWidget {
   const StatisticsView({super.key});
 
@@ -27,381 +44,35 @@ class StatisticsView extends ConsumerStatefulWidget {
 }
 
 class _StatisticsViewState extends ConsumerState<StatisticsView> {
-  String _selectedPeriod = 'thisMonth';
-  DateTime? _customStartDate;
-  DateTime? _customEndDate;
-  String? _customPeriodLabel;
+  static const int _maxCategories = 5;
+  // Bu kadar günden uzun dönemler gün yerine ay bazında çizilir
+  static const int _maxDailyBars = 45;
+
+  _Period _period = _Period.thisMonth;
+  DateTime? _customStart;
+  DateTime? _customEnd;
+  String? _customLabel;
 
   @override
   Widget build(BuildContext context) {
     final transactions = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesProvider);
-    final l = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorTheme = ref.watch(currentColorThemeProvider);
+    final l = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: colorTheme.background,
       body: SafeArea(
         child: transactions.when(
-          data: (List<TransactionModel> txList) {
-            Map<String, CategoryModel> categoryMap = {};
-            if (categories.hasValue) {
-              for (var cat in categories.value!) {
-                categoryMap[cat.id] = cat;
-              }
-            }
-
-            // Filter by period
-            final filteredTx = _filterByPeriod(txList, _selectedPeriod);
-
-            // Calculate statistics
-            double totalIncome = 0;
-            double totalExpense = 0;
-            int incomeCount = 0;
-            int expenseCount = 0;
-            TransactionModel? biggestIncome;
-            TransactionModel? biggestExpense;
-            Map<String, double> categoryExpenses = {};
-
-            for (final tx in filteredTx) {
-              if (tx.type == 'income') {
-                totalIncome += tx.amount;
-                incomeCount++;
-                if (biggestIncome == null || tx.amount > biggestIncome.amount) {
-                  biggestIncome = tx;
-                }
-              } else {
-                totalExpense += tx.amount;
-                expenseCount++;
-                if (biggestExpense == null ||
-                    tx.amount > biggestExpense.amount) {
-                  biggestExpense = tx;
-                }
-                // Accumulate category expenses
-                if (tx.categoryId != null) {
-                  categoryExpenses[tx.categoryId!] =
-                      (categoryExpenses[tx.categoryId!] ?? 0) + tx.amount;
-                }
-              }
-            }
-
-            final balance = totalIncome - totalExpense;
-            final savingsRate = totalIncome > 0
-                ? ((totalIncome - totalExpense) / totalIncome * 100)
-                : 0.0;
-            final daysInPeriod = _getDaysInPeriod(_selectedPeriod);
-            final avgDailySpending = daysInPeriod > 0
-                ? totalExpense / daysInPeriod
-                : 0.0;
-
-            // Sort categories by expense amount
-            final sortedCategories = categoryExpenses.entries.toList()
-              ..sort((a, b) => b.value.compareTo(a.value));
-
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l.statistics,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: colorTheme.textPrimary,
-                        ),
-                      ),
-                      _buildPeriodSelector(l, isDark, colorTheme),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Main Balance Card
-                  _buildMainBalanceCard(
-                    context,
-                    totalIncome,
-                    totalExpense,
-                    balance,
-                    savingsRate,
-                    l,
-                    isDark,
-                    colorTheme,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Quick Stats Row 1: Daily spending & Transaction Summary
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: _buildQuickStatCard(
-                            l.averageDailySpending,
-                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(avgDailySpending)}',
-                            Icons.calendar_today,
-                            colorTheme.primary,
-                            isDark,
-                            colorTheme,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildTransactionSummaryCard(
-                            incomeCount + expenseCount,
-                            incomeCount,
-                            expenseCount,
-                            l,
-                            isDark,
-                            colorTheme,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Quick Stats Row 2: Top Category & Financial Score
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: _buildTopCategoryCard(
-                            sortedCategories.isNotEmpty
-                                ? categoryMap[sortedCategories.first.key]
-                                : null,
-                            sortedCategories.isNotEmpty
-                                ? sortedCategories.first.value
-                                : 0,
-                            totalExpense,
-                            l,
-                            isDark,
-                            colorTheme,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CategoryAnalysisView(
-                                    transactions: filteredTx,
-                                    periodLabel: _getPeriodLabel(
-                                      _selectedPeriod,
-                                      l,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildFinancialScoreCard(
-                            savingsRate,
-                            l,
-                            isDark,
-                            colorTheme,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // YENİ: Kategori Pasta Grafiği
-                  _buildCategoryPieChart(
-                    categoryExpenses,
-                    categoryMap,
-                    totalExpense,
-                    l,
-                    isDark,
-                    colorTheme,
-                    filteredTx,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // YENİ: Haftalık Trend Çizgi Grafiği
-                  _buildWeeklyLineChart(filteredTx, l, isDark, colorTheme),
-
-                  const SizedBox(height: 16),
-
-                  // YENİ: Geçen Ay Karşılaştırma Kartı
-                  Builder(
-                    builder: (context) {
-                      final lastMonthStats = _calculateLastMonthStats(txList);
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MonthComparisonView(
-                                allTransactions: txList,
-                                categoryMap: categoryMap,
-                              ),
-                            ),
-                          );
-                        },
-                        child: _buildComparisonCard(
-                          totalExpense,
-                          lastMonthStats['expense']!,
-                          totalIncome,
-                          lastMonthStats['income']!,
-                          l,
-                          isDark,
-                          colorTheme,
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Gelir vs Gider Basit Bar
-                  _buildIncomeVsExpenseChart(
-                    totalIncome,
-                    totalExpense,
-                    l,
-                    isDark,
-                    colorTheme,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Top Categories Section
-                  if (sortedCategories.isNotEmpty) ...[
-                    Text(
-                      l.topCategories,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: colorTheme.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTopCategories(
-                      sortedCategories.take(5).toList(),
-                      categoryMap,
-                      totalExpense,
-                      l,
-                      isDark,
-                      colorTheme,
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-
-                  // Biggest Transactions
-                  if (biggestIncome != null || biggestExpense != null) ...[
-                    Row(
-                      children: [
-                        if (biggestIncome != null)
-                          Expanded(
-                            child: _buildBiggestTransaction(
-                              l.biggestIncome,
-                              biggestIncome,
-                              categoryMap[biggestIncome.categoryId],
-                              colorTheme.success,
-                              l,
-                              isDark,
-                              colorTheme,
-                            ),
-                          ),
-                        if (biggestIncome != null && biggestExpense != null)
-                          const SizedBox(width: 12),
-                        if (biggestExpense != null)
-                          Expanded(
-                            child: _buildBiggestTransaction(
-                              l.biggestExpense,
-                              biggestExpense,
-                              categoryMap[biggestExpense.categoryId],
-                              colorTheme.error,
-                              l,
-                              isDark,
-                              colorTheme,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-
-                  // Weekly Spending Trend
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        l.spendingTrend,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: colorTheme.textPrimary,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TrendDetailView(
-                                transactions: filteredTx,
-                                periodLabel: _getPeriodLabel(
-                                  _selectedPeriod,
-                                  l,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              l.viewDetails,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: colorTheme.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 12,
-                              color: colorTheme.primary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TrendDetailView(
-                            transactions: filteredTx,
-                            periodLabel: _getPeriodLabel(_selectedPeriod, l),
-                          ),
-                        ),
-                      );
-                    },
-                    child: _buildWeeklyTrend(filteredTx, l, isDark, colorTheme),
-                  ),
-
-                  const SizedBox(height: 100),
-                ],
-              ),
-            );
-          },
+          data: (all) => _buildContent(
+            all,
+            {
+              for (final c in categories.valueOrNull ?? const <CategoryModel>[])
+                c.id: c,
+            },
+            l,
+            colorTheme,
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('${l.error}: $e')),
         ),
@@ -409,1223 +80,421 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     );
   }
 
-  Widget _buildPeriodSelector(
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return PopupMenuButton<String>(
-      onSelected: (value) async {
-        if (value == 'customRange') {
-          final result = await Navigator.push<DateRangeResult>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DateRangePickerView(
-                initialStartDate: _customStartDate,
-                initialEndDate: _customEndDate,
-              ),
-            ),
-          );
-          if (result != null) {
-            setState(() {
-              _selectedPeriod = 'customRange';
-              _customStartDate = result.startDate;
-              _customEndDate = result.endDate;
-              _customPeriodLabel = result.label;
-            });
-          }
-        } else {
-          setState(() {
-            _selectedPeriod = value;
-            _customStartDate = null;
-            _customEndDate = null;
-            _customPeriodLabel = null;
-          });
+  // ========== Dönem ==========
+
+  DateTime get _today {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
+  }
+
+  /// Dönemin ilk ve son günü (ikisi de dahil)
+  ({DateTime start, DateTime end}) _range(List<TransactionModel> all) {
+    final today = _today;
+    switch (_period) {
+      case _Period.last7Days:
+        return (start: today.subtract(const Duration(days: 6)), end: today);
+      case _Period.thisMonth:
+        return (start: DateTime(today.year, today.month), end: today);
+      case _Period.last30Days:
+        return (start: today.subtract(const Duration(days: 29)), end: today);
+      case _Period.thisYear:
+        return (start: DateTime(today.year), end: today);
+      case _Period.allTime:
+        var first = today;
+        for (final t in all) {
+          if (t.date.isBefore(first)) first = t.date;
         }
-      },
-      offset: const Offset(0, 40),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: colorTheme.cardColor,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colorTheme.outline),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.calendar_month, size: 16, color: colorTheme.primary),
-            const SizedBox(width: 6),
-            Text(
-              _selectedPeriod == 'customRange'
-                  ? (_customPeriodLabel ?? l.customDateRange)
-                  : _getPeriodLabel(_selectedPeriod, l),
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: colorTheme.textPrimary,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Icon(
-              Icons.keyboard_arrow_down,
-              size: 18,
-              color: colorTheme.textSecondary,
-            ),
-          ],
+        return (
+          start: DateTime(first.year, first.month, first.day),
+          end: today,
+        );
+      case _Period.custom:
+        return (start: _customStart ?? today, end: _customEnd ?? today);
+    }
+  }
+
+  String _periodLabel(_Period period, AppLocalizations l) {
+    switch (period) {
+      case _Period.last7Days:
+        return l.last7Days;
+      case _Period.thisMonth:
+        return l.thisMonth;
+      case _Period.last30Days:
+        return l.last30Days;
+      case _Period.thisYear:
+        return l.thisYear;
+      case _Period.allTime:
+        return l.allTime;
+      case _Period.custom:
+        return _customLabel ?? l.customDateRange;
+    }
+  }
+
+  Future<void> _pickCustomRange() async {
+    final result = await Navigator.push<DateRangeResult>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DateRangePickerView(
+          initialStartDate: _customStart,
+          initialEndDate: _customEnd,
         ),
       ),
-      itemBuilder: (context) => [
-        _buildMenuItem('last7Days', l.last7Days, isDark, colorTheme),
-        _buildMenuItem('thisMonth', l.thisMonth, isDark, colorTheme),
-        _buildMenuItem('last30Days', l.last30Days, isDark, colorTheme),
-        _buildMenuItem('thisYear', l.thisYear, isDark, colorTheme),
-        _buildMenuItem('allTime', l.allTime, isDark, colorTheme),
-        const PopupMenuDivider(),
-        _buildMenuItem('customRange', l.customDateRange, isDark, colorTheme),
+    );
+    if (result == null) return;
+    setState(() {
+      _period = _Period.custom;
+      _customStart = result.startDate;
+      _customEnd = result.endDate;
+      _customLabel = result.label;
+    });
+  }
+
+  // ========== İçerik ==========
+
+  String _money(double value, {int decimals = 2}) {
+    final symbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+    final pattern = decimals == 0 ? '#,##0' : '#,##0.00';
+    final formatted = NumberFormat(pattern, 'tr_TR').format(value.abs());
+    return '${value < 0 ? '-' : ''}$symbol$formatted';
+  }
+
+  Widget _buildContent(
+    List<TransactionModel> all,
+    Map<String, CategoryModel> categoryMap,
+    AppLocalizations l,
+    ColorTheme c,
+  ) {
+    final range = _range(all);
+    final endExclusive = range.end.add(const Duration(days: 1));
+    final inPeriod = all
+        .where(
+          (t) => !t.date.isBefore(range.start) && t.date.isBefore(endExclusive),
+        )
+        .toList();
+
+    var income = 0.0;
+    var expense = 0.0;
+    var count = 0;
+    TransactionModel? biggestIncome;
+    TransactionModel? biggestExpense;
+    final byCategory = <String?, double>{};
+    for (final t in inPeriod) {
+      if (t.isIncome) {
+        income += t.amount;
+        count++;
+        if (biggestIncome == null || t.amount > biggestIncome.amount) {
+          biggestIncome = t;
+        }
+      } else if (t.isExpense) {
+        expense += t.amount;
+        count++;
+        if (biggestExpense == null || t.amount > biggestExpense.amount) {
+          biggestExpense = t;
+        }
+        byCategory[t.categoryId] = (byCategory[t.categoryId] ?? 0) + t.amount;
+      }
+    }
+    final days = range.end.difference(range.start).inDays + 1;
+    final periodLabel = _periodLabel(_period, l);
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            l.statistics,
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: c.textPrimary,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        _buildPeriodChips(l, c),
+        const SizedBox(height: 16),
+        if (count == 0)
+          _buildEmptyState(l, c)
+        else ...[
+          _buildSummaryCard(all, income, expense, l, c),
+          const SizedBox(height: 14),
+          _buildTrendCard(inPeriod, range, expense, days, periodLabel, l, c),
+          const SizedBox(height: 14),
+          _buildCategoryCard(
+            inPeriod,
+            byCategory,
+            categoryMap,
+            expense,
+            periodLabel,
+            l,
+            c,
+          ),
+          const SizedBox(height: 14),
+          _buildHighlightsCard(
+            biggestExpense,
+            biggestIncome,
+            categoryMap,
+            count,
+            income + expense,
+            l,
+            c,
+          ),
+        ],
+        const SizedBox(height: 14),
+        _buildComparisonLink(all, categoryMap, l, c),
       ],
     );
   }
 
-  PopupMenuItem<String> _buildMenuItem(
-    String value,
-    String label,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return PopupMenuItem<String>(
-      value: value,
-      child: Row(
-        children: [
-          if (_selectedPeriod == value)
-            Icon(Icons.check, size: 16, color: colorTheme.primary)
-          else
-            const SizedBox(width: 16),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: colorTheme.textPrimary,
-              fontWeight: _selectedPeriod == value
-                  ? FontWeight.bold
-                  : FontWeight.normal,
-            ),
+  Widget _buildPeriodChips(AppLocalizations l, ColorTheme c) {
+    Widget chip(_Period period, {IconData? icon}) {
+      final selected = period == _period;
+      final radius = BorderRadius.circular(20);
+      return Padding(
+        padding: const EdgeInsets.only(right: 8),
+        child: Material(
+          color: selected ? c.primary : c.cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: radius,
+            side: BorderSide(color: selected ? c.primary : c.outline),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMainBalanceCard(
-    BuildContext context,
-    double income,
-    double expense,
-    double balance,
-    double savingsRate,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    final isPositive = balance >= 0;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: colorTheme.primary.withValues(alpha: 0.15),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          child: InkWell(
+            borderRadius: radius,
+            onTap: () {
+              if (period == _Period.custom) {
+                _requirePremium(_pickCustomRange);
+              } else {
+                setState(() => _period = period);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    l.balance,
-                    style: TextStyle(
-                      color: colorTheme.textSecondary,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${isPositive ? '+' : ''}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(balance)}',
-                    style: TextStyle(
-                      color: colorTheme.textPrimary,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: colorTheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
+                  if (icon != null) ...[
                     Icon(
-                      savingsRate >= 0
-                          ? Icons.trending_up
-                          : Icons.trending_down,
-                      color: colorTheme.primary,
-                      size: 16,
+                      icon,
+                      size: 15,
+                      color: selected ? c.onPrimary : c.textSecondary,
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${savingsRate.toStringAsFixed(1)}%',
-                      style: TextStyle(
-                        color: colorTheme.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
+                    const SizedBox(width: 6),
                   ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: _buildBalanceStat(
-                  l.totalIncome,
-                  '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(income)}',
-                  Icons.arrow_downward,
-                  colorTheme.success,
-                  isDark,
-                  colorTheme,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildBalanceStat(
-                  l.totalExpense,
-                  '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(expense)}',
-                  Icons.arrow_upward,
-                  colorTheme.error,
-                  isDark,
-                  colorTheme,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBalanceStat(
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colorTheme.subtleCardColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 18),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: colorTheme.textSecondary,
-                    fontSize: 11,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: colorTheme.textPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: color, size: 18),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Text(
-            title,
-            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorTheme.textPrimary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTransactionSummaryCard(
-    int total,
-    int incomeCount,
-    int expenseCount,
-    AppLocalizations l,
-    bool isDark,
-    dynamic colorTheme,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: colorTheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              Icons.receipt_long,
-              color: colorTheme.primary,
-              size: 18,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l.transactionSummary,
-            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '$total',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              Icon(Icons.arrow_downward, color: colorTheme.success, size: 12),
-              Text(
-                '$incomeCount',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: colorTheme.success,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Icon(Icons.arrow_upward, color: colorTheme.error, size: 12),
-              Text(
-                '$expenseCount',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: colorTheme.error,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopCategoryCard(
-    CategoryModel? category,
-    double amount,
-    double totalExpense,
-    AppLocalizations l,
-    bool isDark,
-    dynamic colorTheme, {
-    VoidCallback? onTap,
-  }) {
-    final percent = totalExpense > 0 ? (amount / totalExpense * 100) : 0.0;
-    final categoryName = _getCategoryName(category, l) ?? l.noExpenseData;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: colorTheme.error.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    _getCategoryIcon(category?.icon),
-                    color: colorTheme.error,
-                    size: 18,
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 14,
-                  color: colorTheme.textMuted,
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              l.topSpendingCategory,
-              style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              categoryName,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: colorTheme.textPrimary,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (amount > 0) ...[
-              const SizedBox(height: 2),
-              Text(
-                '${percent.toStringAsFixed(0)}%',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: colorTheme.error,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFinancialScoreCard(
-    double savingsRate,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    // Calculate score (0-100) based on savings rate
-    final score = (savingsRate.clamp(-50, 100) + 50) / 1.5;
-    String scoreLabel;
-    Color scoreColor;
-
-    if (score >= 80) {
-      scoreLabel = l.excellent;
-      scoreColor = colorTheme.success;
-    } else if (score >= 60) {
-      scoreLabel = l.good;
-      scoreColor = colorTheme.info;
-    } else if (score >= 40) {
-      scoreLabel = l.average;
-      scoreColor = colorTheme.warning;
-    } else if (score >= 20) {
-      scoreLabel = l.needsImprovement;
-      scoreColor = Colors.deepOrange;
-    } else {
-      scoreLabel = l.poor;
-      scoreColor = colorTheme.error;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: scoreColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(Icons.speed, color: scoreColor, size: 18),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            l.financialScore,
-            style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${score.toInt()}',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: scoreColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              scoreLabel,
-              style: TextStyle(
-                fontSize: 10,
-                color: scoreColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIncomeVsExpenseChart(
-    double income,
-    double expense,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    final total = income + expense;
-    final incomePercent = total > 0 ? income / total : 0.5;
-    final expensePercent = total > 0 ? expense / total : 0.5;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l.incomeVsExpense,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Horizontal Bar Chart
-          Row(
-            children: [
-              Expanded(
-                flex: (incomePercent * 100).toInt().clamp(1, 99),
-                child: Container(
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: colorTheme.success,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomLeft: Radius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: (expensePercent * 100).toInt().clamp(1, 99),
-                child: Container(
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: colorTheme.error,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: colorTheme.success,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
                   Text(
-                    l.income,
+                    _periodLabel(period, l),
                     style: TextStyle(
-                      fontSize: 12,
-                      color: colorTheme.textSecondary,
-                    ),
-                  ),
-                  Text(
-                    ' (${(incomePercent * 100).toStringAsFixed(0)}%)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: colorTheme.textPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: selected ? c.onPrimary : c.textPrimary,
                     ),
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: colorTheme.error,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    l.expense,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colorTheme.textSecondary,
-                    ),
-                  ),
-                  Text(
-                    ' (${(expensePercent * 100).toStringAsFixed(0)}%)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: colorTheme.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopCategories(
-    List<MapEntry<String, double>> categories,
-    Map<String, CategoryModel> categoryMap,
-    double totalExpense,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: categories.map((entry) {
-          final category = categoryMap[entry.key];
-          final percent = totalExpense > 0 ? entry.value / totalExpense : 0.0;
-          final categoryName = _getCategoryName(category, l) ?? l.cat_other;
-
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: colorTheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    _getCategoryIcon(category?.icon),
-                    color: colorTheme.primary,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            categoryName,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: colorTheme.textPrimary,
-                            ),
-                          ),
-                          Text(
-                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(entry.value)}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: colorTheme.textPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: LinearProgressIndicator(
-                          value: percent,
-                          backgroundColor: colorTheme.borderColor,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            colorTheme.primary,
-                          ),
-                          minHeight: 6,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${(percent * 100).toStringAsFixed(0)}%',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: colorTheme.textSecondary,
-                  ),
-                ),
-              ],
             ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildBiggestTransaction(
-    String title,
-    TransactionModel tx,
-    CategoryModel? category,
-    Color color,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _getCategoryName(category, l) ?? tx.description ?? '',
-            style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeeklyTrend(
-    List<TransactionModel> txList,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    // Group expenses by day of week for last 7 days
-    final now = DateTime.now();
-    final Map<int, double> dailyExpenses = {};
-
-    for (int i = 6; i >= 0; i--) {
-      final date = now.subtract(Duration(days: i));
-      dailyExpenses[date.weekday] = 0;
-    }
-
-    for (final tx in txList) {
-      if (tx.type == 'expense') {
-        final daysDiff = now.difference(tx.date).inDays;
-        if (daysDiff >= 0 && daysDiff < 7) {
-          final weekday = tx.date.weekday;
-          dailyExpenses[weekday] = (dailyExpenses[weekday] ?? 0) + tx.amount;
-        }
-      }
-    }
-
-    final maxExpense = dailyExpenses.values.fold<double>(
-      0,
-      (max, value) => value > max ? value : max,
-    );
-
-    final dayNames = [l.mon, l.tue, l.wed, l.thu, l.fri, l.sat, l.sun];
-
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: List.generate(7, (index) {
-          final weekday = (index + 1); // Monday = 1, Sunday = 7
-          final expense = dailyExpenses[weekday] ?? 0;
-          final heightPercent = maxExpense > 0 ? expense / maxExpense : 0.0;
-          final barHeight = (heightPercent * 120).clamp(4.0, 120.0);
-
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                width: 30,
-                height: barHeight,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      colorTheme.primary.withValues(alpha: 0.7),
-                      colorTheme.primary,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                dayNames[index],
-                style: TextStyle(fontSize: 11, color: colorTheme.textSecondary),
-              ),
-            ],
-          );
-        }),
-      ),
-    );
-  }
-
-  List<TransactionModel> _filterByPeriod(
-    List<TransactionModel> txList,
-    String period,
-  ) {
-    final now = DateTime.now();
-
-    switch (period) {
-      case 'last7Days':
-        final startDate = now.subtract(const Duration(days: 7));
-        return txList.where((tx) => tx.date.isAfter(startDate)).toList();
-      case 'thisMonth':
-        return txList
-            .where(
-              (tx) => tx.date.month == now.month && tx.date.year == now.year,
-            )
-            .toList();
-      case 'last30Days':
-        final startDate = now.subtract(const Duration(days: 30));
-        return txList.where((tx) => tx.date.isAfter(startDate)).toList();
-      case 'thisYear':
-        return txList.where((tx) => tx.date.year == now.year).toList();
-      case 'customRange':
-        if (_customStartDate != null && _customEndDate != null) {
-          return txList
-              .where(
-                (tx) =>
-                    tx.date.isAfter(
-                      _customStartDate!.subtract(const Duration(days: 1)),
-                    ) &&
-                    tx.date.isBefore(
-                      _customEndDate!.add(const Duration(days: 1)),
-                    ),
-              )
-              .toList();
-        }
-        return txList;
-      case 'allTime':
-      default:
-        return txList;
-    }
-  }
-
-  int _getDaysInPeriod(String period) {
-    switch (period) {
-      case 'last7Days':
-        return 7;
-      case 'thisMonth':
-        return DateTime.now().day;
-      case 'last30Days':
-        return 30;
-      case 'thisYear':
-        final now = DateTime.now();
-        return now.difference(DateTime(now.year, 1, 1)).inDays + 1;
-      case 'allTime':
-      default:
-        return 365; // Rough estimate
-    }
-  }
-
-  String _getPeriodLabel(String period, AppLocalizations l) {
-    switch (period) {
-      case 'last7Days':
-        return l.last7Days;
-      case 'thisMonth':
-        return l.thisMonth;
-      case 'last30Days':
-        return l.last30Days;
-      case 'thisYear':
-        return l.thisYear;
-      case 'allTime':
-        return l.allTime;
-      default:
-        return l.thisMonth;
-    }
-  }
-
-  String? _getCategoryName(CategoryModel? category, AppLocalizations l) =>
-      localizedCategoryName(category, l);
-
-  IconData _getCategoryIcon(String? iconName) {
-    switch (iconName) {
-      case 'wallet':
-        return Icons.wallet;
-      case 'laptop':
-        return Icons.laptop;
-      case 'trending_up':
-        return Icons.trending_up;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'attach_money':
-        return Icons.attach_money;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'directions_car':
-        return Icons.directions_car;
-      case 'receipt':
-        return Icons.receipt;
-      case 'movie':
-        return Icons.movie;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'local_hospital':
-        return Icons.local_hospital;
-      case 'checkroom':
-        return Icons.checkroom;
-      case 'school':
-        return Icons.school;
-      case 'flight':
-        return Icons.flight;
-      case 'more_horiz':
-        return Icons.more_horiz;
-      default:
-        return Icons.category;
-    }
-  }
-
-  // ============ YENİ: Pasta Grafik Widget ============
-  Widget _buildCategoryPieChart(
-    Map<String, double> categoryExpenses,
-    Map<String, CategoryModel> categoryMap,
-    double totalExpense,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-    List<TransactionModel> filteredTx,
-  ) {
-    if (categoryExpenses.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Center(
-          child: Text(
-            l.noExpenseData,
-            style: TextStyle(color: colorTheme.textSecondary),
           ),
         ),
       );
     }
 
-    final sortedCategories = categoryExpenses.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final topCategories = sortedCategories.take(5).toList();
-
-    final colors = [
-      colorTheme.primary,
-      colorTheme.success,
-      colorTheme.warning,
-      colorTheme.error,
-      colorTheme.tertiary,
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+      height: 38,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
         children: [
-          Text(
-            l.categoryDistribution,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 180,
-            child: Row(
-              children: [
-                Expanded(
-                  child: PieChart(
-                    PieChartData(
-                      sectionsSpace: 2,
-                      centerSpaceRadius: 40,
-                      sections: topCategories.asMap().entries.map((entry) {
-                        final idx = entry.key;
-                        final cat = entry.value;
-                        final percent = (cat.value / totalExpense * 100);
-                        return PieChartSectionData(
-                          color: colors[idx % colors.length],
-                          value: cat.value,
-                          title: '${percent.toStringAsFixed(0)}%',
-                          radius: 35,
-                          titleStyle: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: topCategories.asMap().entries.map((entry) {
-                    final idx = entry.key;
-                    final cat = entry.value;
-                    final categoryModel = categoryMap[cat.key];
-                    final name = _getCategoryName(categoryModel, l) ?? l.other;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: colors[idx % colors.length],
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          SizedBox(
-                            width: 80,
-                            child: Text(
-                              name,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: colorTheme.textSecondary,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
+          chip(_Period.last7Days),
+          chip(_Period.thisMonth),
+          chip(_Period.last30Days),
+          chip(_Period.thisYear),
+          chip(_Period.allTime),
+          chip(_Period.custom, icon: Icons.calendar_month_rounded),
         ],
       ),
     );
   }
 
-  // ============ YENİ: Geçen Ay Karşılaştırma Hesaplama ============
-  Map<String, double> _calculateLastMonthStats(List<TransactionModel> allTx) {
-    final now = DateTime.now();
-    final lastMonthStart = DateTime(now.year, now.month - 1, 1);
-    final lastMonthEnd = DateTime(now.year, now.month, 0);
-
-    double lastMonthIncome = 0;
-    double lastMonthExpense = 0;
-
-    for (final tx in allTx) {
-      if (tx.date.isAfter(lastMonthStart.subtract(const Duration(days: 1))) &&
-          tx.date.isBefore(lastMonthEnd.add(const Duration(days: 1)))) {
-        if (tx.type == 'income') {
-          lastMonthIncome += tx.amount;
-        } else {
-          lastMonthExpense += tx.amount;
-        }
-      }
-    }
-
-    return {'income': lastMonthIncome, 'expense': lastMonthExpense};
+  Widget _buildEmptyState(AppLocalizations l, ColorTheme c) {
+    return _card(
+      c,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 36),
+        child: Column(
+          children: [
+            Icon(Icons.bar_chart_rounded, size: 52, color: c.textMuted),
+            const SizedBox(height: 12),
+            Text(
+              l.noData,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: c.textSecondary),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  // ============ YENİ: Karşılaştırma Kartı ============
-  Widget _buildComparisonCard(
-    double thisMonthExpense,
-    double lastMonthExpense,
-    double thisMonthIncome,
-    double lastMonthIncome,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
-  ) {
-    final expenseChange = lastMonthExpense > 0
-        ? ((thisMonthExpense - lastMonthExpense) / lastMonthExpense * 100)
-        : 0.0;
-    final incomeChange = lastMonthIncome > 0
-        ? ((thisMonthIncome - lastMonthIncome) / lastMonthIncome * 100)
-        : 0.0;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorTheme.primary.withValues(alpha: 0.2)),
+  Widget _card(ColorTheme c, {required Widget child, VoidCallback? onTap}) {
+    final radius = BorderRadius.circular(20);
+    return Material(
+      color: c.cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: radius,
+        side: BorderSide(color: c.outline),
       ),
+      child: InkWell(
+        borderRadius: radius,
+        onTap: onTap,
+        child: Padding(padding: const EdgeInsets.all(18), child: child),
+      ),
+    );
+  }
+
+  Widget _cardHeader(
+    String title,
+    ColorTheme c, {
+    String? action,
+    VoidCallback? onAction,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: c.textPrimary,
+            ),
+          ),
+        ),
+        if (action != null)
+          InkWell(
+            borderRadius: BorderRadius.circular(8),
+            // Ayrıntı ekranları Premium'a özel
+            onTap: onAction == null ? null : () => _requirePremium(onAction),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    action,
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w600,
+                      color: c.primary,
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                  Icon(
+                    _isPremium
+                        ? Icons.chevron_right_rounded
+                        : Icons.lock_outline_rounded,
+                    size: _isPremium ? 18 : 14,
+                    color: c.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  bool get _isPremium => ref.watch(isPremiumProvider);
+
+  /// Premium kullanıcıda [action]'ı çalıştırır; değilse Premium'u tanıtır.
+  void _requirePremium(VoidCallback action) {
+    if (ref.read(isPremiumProvider)) {
+      action();
+      return;
+    }
+    showPremiumRequiredDialog(
+      context,
+      AppLocalizations.of(context)!.premiumStatsMessage,
+    );
+  }
+
+  // ========== 1. Özet ==========
+
+  Widget _buildSummaryCard(
+    List<TransactionModel> all,
+    double income,
+    double expense,
+    AppLocalizations l,
+    ColorTheme c,
+  ) {
+    final net = income - expense;
+    final total = income + expense;
+
+    return _card(
+      c,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l.comparedToLastMonth,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: colorTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: _buildComparisonItem(
-                  l.expense,
-                  expenseChange,
-                  expenseChange > 0, // artış kötü
-                  isDark,
-                  colorTheme,
+                child: Text(
+                  l.balance,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: c.textSecondary,
+                  ),
                 ),
+              ),
+              if (_period == _Period.thisMonth)
+                _buildMonthChangeBadge(all, expense, l, c),
+            ],
+          ),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _money(net),
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.8,
+                color: net < 0 ? c.error : c.textPrimary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          // Gelir / gider oranı tek bakışta
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: SizedBox(
+              height: 8,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (income > 0)
+                    Expanded(
+                      flex: (income / total * 1000).round().clamp(1, 1000),
+                      child: ColoredBox(color: c.success),
+                    ),
+                  if (income > 0 && expense > 0) const SizedBox(width: 3),
+                  if (expense > 0)
+                    Expanded(
+                      flex: (expense / total * 1000).round().clamp(1, 1000),
+                      child: ColoredBox(color: c.error),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: _summaryStat(l.income, _money(income), c.success, c),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildComparisonItem(
-                  l.income,
-                  incomeChange,
-                  incomeChange < 0, // azalış kötü
-                  isDark,
-                  colorTheme,
-                ),
+                child: _summaryStat(l.expense, _money(expense), c.error, c),
               ),
             ],
           ),
@@ -1634,46 +503,93 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     );
   }
 
-  Widget _buildComparisonItem(
-    String label,
-    double changePercent,
-    bool isNegative,
-    bool isDark,
-    ColorTheme colorTheme,
+  Widget _summaryStat(String label, String value, Color color, ColorTheme c) {
+    return Row(
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(fontSize: 12, color: c.textSecondary),
+              ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Bu ayın harcaması, geçen ayın aynı gününe kadarki harcamaya göre
+  Widget _buildMonthChangeBadge(
+    List<TransactionModel> all,
+    double expense,
+    AppLocalizations l,
+    ColorTheme c,
   ) {
-    final color = isNegative ? colorTheme.error : colorTheme.success;
-    final icon = changePercent >= 0 ? Icons.arrow_upward : Icons.arrow_downward;
+    final today = _today;
+    final lastMonthStart = DateTime(today.year, today.month - 1);
+    final lastMonthLastDay = DateTime(today.year, today.month, 0).day;
+    final lastMonthEnd = DateTime(
+      lastMonthStart.year,
+      lastMonthStart.month,
+      today.day > lastMonthLastDay ? lastMonthLastDay : today.day,
+    ).add(const Duration(days: 1));
+
+    var lastExpense = 0.0;
+    for (final t in all) {
+      if (t.isExpense &&
+          !t.date.isBefore(lastMonthStart) &&
+          t.date.isBefore(lastMonthEnd)) {
+        lastExpense += t.amount;
+      }
+    }
+    if (lastExpense <= 0) return const SizedBox.shrink();
+
+    final change = (expense - lastExpense) / lastExpense * 100;
+    final spentLess = change <= 0;
+    final color = spentLess ? c.success : c.error;
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 18),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: colorTheme.textSecondary,
-                  ),
-                ),
-                Text(
-                  '${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(1)}%',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-                ),
-              ],
+          Icon(
+            spentLess ? Icons.trending_down_rounded : Icons.trending_up_rounded,
+            size: 14,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '%${change.abs().toStringAsFixed(0)} · ${l.comparedToLastMonth}',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: color,
             ),
           ),
         ],
@@ -1681,148 +597,582 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     );
   }
 
-  // ============ YENİ: Haftalık Trend Line Chart ============
-  Widget _buildWeeklyLineChart(
-    List<TransactionModel> txList,
-    AppLocalizations l,
-    bool isDark,
-    ColorTheme colorTheme,
+  // ========== 2. Harcama trendi ==========
+
+  List<_Bucket> _buildBuckets(
+    List<TransactionModel> inPeriod,
+    DateTime start,
+    DateTime end,
   ) {
-    final now = DateTime.now();
-    final spots = <FlSpot>[];
-    final labels = <String>[];
+    final locale = ref.watch(localeProvider);
+    final days = end.difference(start).inDays + 1;
+    final buckets = <_Bucket>[];
 
-    for (int i = 6; i >= 0; i--) {
-      final day = now.subtract(Duration(days: i));
-      final dayStart = DateTime(day.year, day.month, day.day);
-      final dayEnd = dayStart.add(const Duration(days: 1));
-
-      double dayExpense = 0;
-      for (final tx in txList) {
-        if (tx.type == 'expense' &&
-            tx.date.isAfter(dayStart.subtract(const Duration(seconds: 1))) &&
-            tx.date.isBefore(dayEnd)) {
-          dayExpense += tx.amount;
+    if (days <= _maxDailyBars) {
+      final labelEvery = days <= 7 ? 1 : (days / 6).ceil();
+      for (var i = 0; i < days; i++) {
+        final day = start.add(Duration(days: i));
+        final label = days <= 7
+            ? DateFormat.E(locale).format(day)
+            : (i % labelEvery == 0 ? '${day.day}' : '');
+        buckets.add(_Bucket(label, DateFormat.MMMd(locale).format(day)));
+      }
+      for (final t in inPeriod) {
+        if (!t.isExpense) continue;
+        final index = DateTime(
+          t.date.year,
+          t.date.month,
+          t.date.day,
+        ).difference(start).inDays;
+        if (index >= 0 && index < buckets.length) {
+          buckets[index].amount += t.amount;
         }
       }
-
-      spots.add(FlSpot((6 - i).toDouble(), dayExpense));
-      labels.add(DateFormat('E', 'tr').format(day).substring(0, 2));
-    }
-
-    final maxY = spots.map((s) => s.y).reduce(math.max);
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TrendDetailView(
-              transactions: txList,
-              periodLabel: _getPeriodLabel(_selectedPeriod, l),
-            ),
+    } else {
+      final months = (end.year - start.year) * 12 + end.month - start.month + 1;
+      final labelEvery = (months / 6).ceil();
+      for (var i = 0; i < months; i++) {
+        final month = DateTime(start.year, start.month + i);
+        buckets.add(
+          _Bucket(
+            i % labelEvery == 0 ? DateFormat.MMM(locale).format(month) : '',
+            DateFormat.yMMM(locale).format(month),
           ),
         );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l.last7DaysSpending,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: colorTheme.textPrimary,
-                  ),
+      }
+      for (final t in inPeriod) {
+        if (!t.isExpense) continue;
+        final index =
+            (t.date.year - start.year) * 12 + t.date.month - start.month;
+        if (index >= 0 && index < buckets.length) {
+          buckets[index].amount += t.amount;
+        }
+      }
+    }
+    return buckets;
+  }
+
+  Widget _buildTrendCard(
+    List<TransactionModel> inPeriod,
+    ({DateTime start, DateTime end}) range,
+    double expense,
+    int days,
+    String periodLabel,
+    AppLocalizations l,
+    ColorTheme c,
+  ) {
+    final buckets = _buildBuckets(inPeriod, range.start, range.end);
+    var maxAmount = 0.0;
+    for (final b in buckets) {
+      if (b.amount > maxAmount) maxAmount = b.amount;
+    }
+
+    return _card(
+      c,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _cardHeader(
+            l.spendingTrend,
+            c,
+            action: l.viewDetails,
+            onAction: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TrendDetailView(
+                  transactions: inPeriod,
+                  periodLabel: periodLabel,
                 ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 14,
-                  color: colorTheme.textMuted,
-                ),
-              ],
+              ),
             ),
-            const SizedBox(height: 16),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${l.averageDailySpending}: ${_money(expense / days)}',
+            style: TextStyle(fontSize: 12.5, color: c.textSecondary),
+          ),
+          const SizedBox(height: 16),
+          if (maxAmount <= 0)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 28),
+              child: Center(
+                child: Text(
+                  l.noExpenseData,
+                  style: TextStyle(color: c.textSecondary),
+                ),
+              ),
+            )
+          else
             SizedBox(
-              height: 150,
-              child: LineChart(
-                LineChartData(
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final idx = value.toInt();
-                          if (idx >= 0 && idx < labels.length) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                labels[idx],
+              height: 170,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final barWidth =
+                      (constraints.maxWidth / buckets.length * 0.62).clamp(
+                        3.0,
+                        22.0,
+                      );
+                  return BarChart(
+                    BarChartData(
+                      maxY: maxAmount * 1.12,
+                      alignment: BarChartAlignment.spaceAround,
+                      borderData: FlBorderData(show: false),
+                      gridData: FlGridData(
+                        drawVerticalLine: false,
+                        horizontalInterval: maxAmount / 3,
+                        getDrawingHorizontalLine: (_) =>
+                            FlLine(color: c.borderColor, strokeWidth: 1),
+                      ),
+                      titlesData: FlTitlesData(
+                        leftTitles: const AxisTitles(),
+                        rightTitles: const AxisTitles(),
+                        topTitles: const AxisTitles(),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 24,
+                            getTitlesWidget: (value, _) {
+                              final i = value.toInt();
+                              if (i < 0 || i >= buckets.length) {
+                                return const SizedBox.shrink();
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 6),
+                                child: Text(
+                                  buckets[i].label,
+                                  style: TextStyle(
+                                    fontSize: 10.5,
+                                    color: c.textSecondary,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      barTouchData: BarTouchData(
+                        touchTooltipData: BarTouchTooltipData(
+                          tooltipBgColor: c.surfaceVariant,
+                          tooltipRoundedRadius: 10,
+                          getTooltipItem: (group, _, rod, _) => BarTooltipItem(
+                            '${buckets[group.x].tooltipLabel}\n',
+                            TextStyle(
+                              fontSize: 11,
+                              color: c.onSurfaceVariant.withValues(alpha: 0.8),
+                            ),
+                            children: [
+                              TextSpan(
+                                text: _money(rod.toY),
                                 style: TextStyle(
-                                  fontSize: 10,
-                                  color: colorTheme.textSecondary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: c.onSurfaceVariant,
                                 ),
                               ),
-                            );
-                          }
-                          return const SizedBox();
-                        },
+                            ],
+                          ),
+                        ),
+                      ),
+                      barGroups: [
+                        for (var i = 0; i < buckets.length; i++)
+                          BarChartGroupData(
+                            x: i,
+                            barRods: [
+                              BarChartRodData(
+                                toY: buckets[i].amount,
+                                width: barWidth,
+                                color: c.primary,
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(barWidth / 2.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // ========== 3. Kategoriler ==========
+
+  /// Dilim renkleri: temanın ana rengi + ondan belirgin biçimde ayrışan sabit
+  /// renkler. Ana renge yakın tondakiler atlanır ki iki dilim karışmasın.
+  List<Color> _categoryPalette(ColorTheme c) {
+    const candidates = [
+      Color(0xFFF59E0B), // amber
+      Color(0xFF8B5CF6), // mor
+      Color(0xFFEC4899), // pembe
+      Color(0xFF14B8A6), // turkuaz
+      Color(0xFF3B82F6), // mavi
+      Color(0xFFEF4444), // kırmızı
+    ];
+    final primaryHsl = HSLColor.fromColor(c.primary);
+    final isNeutral = primaryHsl.saturation < 0.15;
+    bool farFromPrimary(Color color) {
+      if (isNeutral) return true;
+      final diff = (HSLColor.fromColor(color).hue - primaryHsl.hue).abs();
+      return (diff > 180 ? 360 - diff : diff) >= 40;
+    }
+
+    return [c.primary, ...candidates.where(farFromPrimary).take(4)];
+  }
+
+  Widget _buildCategoryCard(
+    List<TransactionModel> inPeriod,
+    Map<String?, double> byCategory,
+    Map<String, CategoryModel> categoryMap,
+    double expense,
+    String periodLabel,
+    AppLocalizations l,
+    ColorTheme c,
+  ) {
+    final sorted = byCategory.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final palette = _categoryPalette(c);
+
+    // En büyük kategoriler ayrı, kalanı "Diğer" olarak tek dilimde
+    final slices = <({String name, double amount, Color color})>[];
+    var rest = 0.0;
+    for (var i = 0; i < sorted.length; i++) {
+      if (i < _maxCategories) {
+        slices.add((
+          name:
+              localizedCategoryName(categoryMap[sorted[i].key], l) ??
+              l.cat_other,
+          amount: sorted[i].value,
+          color: palette[i % palette.length],
+        ));
+      } else {
+        rest += sorted[i].value;
+      }
+    }
+    if (rest > 0) {
+      slices.add((name: l.other, amount: rest, color: c.textMuted));
+    }
+
+    return _card(
+      c,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _cardHeader(
+            l.categoryDistribution,
+            c,
+            action: slices.isEmpty ? null : l.viewDetails,
+            onAction: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryAnalysisView(
+                  transactions: inPeriod,
+                  periodLabel: periodLabel,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          if (slices.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Center(
+                child: Text(
+                  l.noExpenseData,
+                  style: TextStyle(color: c.textSecondary),
+                ),
+              ),
+            )
+          else ...[
+            Center(
+              child: SizedBox(
+                width: 170,
+                height: 170,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    PieChart(
+                      PieChartData(
+                        sectionsSpace: 3,
+                        centerSpaceRadius: 58,
+                        startDegreeOffset: -90,
+                        sections: [
+                          for (final s in slices)
+                            PieChartSectionData(
+                              value: s.amount,
+                              color: s.color,
+                              radius: 24,
+                              showTitle: false,
+                            ),
+                        ],
                       ),
                     ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  minX: 0,
-                  maxX: 6,
-                  minY: 0,
-                  maxY: maxY > 0 ? maxY * 1.2 : 100,
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: spots,
-                      isCurved: true,
-                      color: colorTheme.primary,
-                      barWidth: 3,
-                      isStrokeCapRound: true,
-                      dotData: FlDotData(
-                        show: true,
-                        getDotPainter: (spot, percent, bar, index) {
-                          return FlDotCirclePainter(
-                            radius: 4,
-                            color: colorTheme.primary,
-                            strokeWidth: 2,
-                            strokeColor: colorTheme.cardColor,
-                          );
-                        },
-                      ),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        color: colorTheme.primary.withValues(alpha: 0.2),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 34),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l.expense,
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              color: c.textSecondary,
+                            ),
+                          ),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              _money(expense, decimals: 0),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: c.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
             ),
+            const SizedBox(height: 16),
+            for (final s in slices)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: s.color,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        s.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w600,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '%${(s.amount / expense * 100).toStringAsFixed(0)}',
+                      style: TextStyle(fontSize: 12.5, color: c.textSecondary),
+                    ),
+                    const SizedBox(width: 12),
+                    SizedBox(
+                      width: 96,
+                      child: Text(
+                        _money(s.amount),
+                        textAlign: TextAlign.end,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           ],
+        ],
+      ),
+    );
+  }
+
+  // ========== 4. Öne çıkanlar ==========
+
+  Widget _buildHighlightsCard(
+    TransactionModel? biggestExpense,
+    TransactionModel? biggestIncome,
+    Map<String, CategoryModel> categoryMap,
+    int count,
+    double volume,
+    AppLocalizations l,
+    ColorTheme c,
+  ) {
+    String title(TransactionModel t) =>
+        localizedCategoryName(categoryMap[t.categoryId], l) ??
+        t.description ??
+        (t.isIncome ? l.income : l.expense);
+
+    final rows = <Widget>[
+      if (biggestExpense != null)
+        _highlightRow(
+          Icons.arrow_downward_rounded,
+          c.error,
+          l.biggestExpense,
+          title(biggestExpense),
+          _money(biggestExpense.amount),
+          c,
         ),
+      if (biggestIncome != null)
+        _highlightRow(
+          Icons.arrow_upward_rounded,
+          c.success,
+          l.biggestIncome,
+          title(biggestIncome),
+          _money(biggestIncome.amount),
+          c,
+        ),
+      _highlightRow(
+        Icons.receipt_long_outlined,
+        c.info,
+        l.transactions,
+        l.averageTransaction,
+        '$count  ·  ${_money(volume / count)}',
+        c,
+      ),
+    ];
+
+    return _card(
+      c,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _cardHeader(l.transactionSummary, c),
+          const SizedBox(height: 6),
+          for (var i = 0; i < rows.length; i++) ...[
+            if (i > 0) Divider(height: 1, color: c.borderColor),
+            rows[i],
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _highlightRow(
+    IconData icon,
+    Color color,
+    String label,
+    String detail,
+    String value,
+    ColorTheme c,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 11),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(11),
+            ),
+            child: Icon(icon, size: 18, color: color),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    color: c.textPrimary,
+                  ),
+                ),
+                Text(
+                  detail,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 12, color: c.textSecondary),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 13.5,
+              fontWeight: FontWeight.w700,
+              color: c.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ========== 5. Aylık karşılaştırma ==========
+
+  Widget _buildComparisonLink(
+    List<TransactionModel> all,
+    Map<String, CategoryModel> categoryMap,
+    AppLocalizations l,
+    ColorTheme c,
+  ) {
+    return _card(
+      c,
+      onTap: () => _requirePremium(
+        () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MonthComparisonView(
+              allTransactions: all,
+              categoryMap: categoryMap,
+            ),
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: c.tertiary.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.compare_arrows_rounded, color: c.tertiary),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.monthlyComparison,
+                  style: TextStyle(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
+                ),
+                Text(
+                  l.monthlyComparisonDesc,
+                  style: TextStyle(fontSize: 12.5, color: c.textSecondary),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            _isPremium
+                ? Icons.chevron_right_rounded
+                : Icons.lock_outline_rounded,
+            size: _isPremium ? 24 : 18,
+            color: c.textMuted,
+          ),
+        ],
       ),
     );
   }

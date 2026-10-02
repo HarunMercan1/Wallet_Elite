@@ -1469,4 +1469,28 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Không thể lưu ảnh';
+
+  @override
+  String get premiumFeatureStats => 'Thống kê chi tiết và so sánh';
+
+  @override
+  String get premiumStatsMessage => 'Phân tích chi tiết có trong Premium.';
+
+  @override
+  String savePercent(int percent) {
+    return 'Tiết kiệm $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price mỗi tháng';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return 'Miễn phí $days ngày';
+  }
+
+  @override
+  String get startFreeTrial => 'Bắt đầu dùng thử miễn phí';
 }

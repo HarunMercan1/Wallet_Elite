@@ -525,5 +525,11 @@
   "saveToGallery": "Galeriye Kaydet",
   "share": "Paylaş",
   "imageSaved": "Görsel galeriye kaydedildi",
-  "imageSaveFailed": "Görsel kaydedilemedi"
+  "imageSaveFailed": "Görsel kaydedilemedi",
+  "premiumFeatureStats": "Ayrıntılı istatistikler ve karşılaştırmalar",
+  "premiumStatsMessage": "Ayrıntılı analizler Premium'a özeldir.",
+  "savePercent": "%{percent} indirim",
+  "pricePerMonth": "ayda {price}",
+  "freeTrialDays": "{days} gün ücretsiz",
+  "startFreeTrial": "Ücretsiz denemeyi başlat"
 }

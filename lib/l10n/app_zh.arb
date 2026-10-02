@@ -511,5 +511,11 @@
   "saveToGallery": "保存到相册",
   "share": "分享",
   "imageSaved": "图片已保存到相册",
-  "imageSaveFailed": "无法保存图片"
+  "imageSaveFailed": "无法保存图片",
+  "premiumFeatureStats": "详细统计与对比",
+  "premiumStatsMessage": "详细分析为 Premium 功能。",
+  "savePercent": "立省 {percent}%",
+  "pricePerMonth": "每月 {price}",
+  "freeTrialDays": "免费试用 {days} 天",
+  "startFreeTrial": "开始免费试用"
 }

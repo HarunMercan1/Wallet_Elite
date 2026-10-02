@@ -2955,6 +2955,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t save the image'**
   String get imageSaveFailed;
+
+  /// No description provided for @premiumFeatureStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed statistics and comparisons'**
+  String get premiumFeatureStats;
+
+  /// No description provided for @premiumStatsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed analysis is part of Premium.'**
+  String get premiumStatsMessage;
+
+  /// No description provided for @savePercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Save {percent}%'**
+  String savePercent(int percent);
+
+  /// No description provided for @pricePerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} / month'**
+  String pricePerMonth(String price);
+
+  /// No description provided for @freeTrialDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days free'**
+  String freeTrialDays(int days);
+
+  /// No description provided for @startFreeTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Start free trial'**
+  String get startFreeTrial;
 }
 
 class _AppLocalizationsDelegate

@@ -1,6 +1,7 @@
 // lib/features/auth/presentation/login_view.dart
 
 import 'package:flutter/material.dart';
+import '../../../core/widgets/app_logo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,11 +62,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo & Title
-                  Icon(
-                    Icons.account_balance_wallet_rounded,
-                    size: responsive.largeIconSize,
-                    color: colorTheme.onPrimary,
-                  ),
+                  AppLogo(size: responsive.wp(24)),
                   SizedBox(height: responsive.hp(2)),
 
                   Text(

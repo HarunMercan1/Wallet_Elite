@@ -1467,4 +1467,28 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'บันทึกรูปภาพไม่สำเร็จ';
+
+  @override
+  String get premiumFeatureStats => 'สถิติโดยละเอียดและการเปรียบเทียบ';
+
+  @override
+  String get premiumStatsMessage => 'การวิเคราะห์โดยละเอียดมีใน Premium';
+
+  @override
+  String savePercent(int percent) {
+    return 'ประหยัด $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price ต่อเดือน';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return 'ฟรี $days วัน';
+  }
+
+  @override
+  String get startFreeTrial => 'เริ่มทดลองใช้ฟรี';
 }

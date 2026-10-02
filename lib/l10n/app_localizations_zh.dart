@@ -1446,4 +1446,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get imageSaveFailed => '无法保存图片';
+
+  @override
+  String get premiumFeatureStats => '详细统计与对比';
+
+  @override
+  String get premiumStatsMessage => '详细分析为 Premium 功能。';
+
+  @override
+  String savePercent(int percent) {
+    return '立省 $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '每月 $price';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '免费试用 $days 天';
+  }
+
+  @override
+  String get startFreeTrial => '开始免费试用';
 }

@@ -1475,4 +1475,30 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Afbeelding kon niet worden opgeslagen';
+
+  @override
+  String get premiumFeatureStats =>
+      'Gedetailleerde statistieken en vergelijkingen';
+
+  @override
+  String get premiumStatsMessage =>
+      'Gedetailleerde analyses horen bij Premium.';
+
+  @override
+  String savePercent(int percent) {
+    return '$percent% korting';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price per maand';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days dagen gratis';
+  }
+
+  @override
+  String get startFreeTrial => 'Start gratis proefperiode';
 }

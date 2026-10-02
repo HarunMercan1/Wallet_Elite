@@ -511,5 +511,11 @@
   "saveToGallery": "ギャラリーに保存",
   "share": "共有",
   "imageSaved": "画像をギャラリーに保存しました",
-  "imageSaveFailed": "画像を保存できませんでした"
+  "imageSaveFailed": "画像を保存できませんでした",
+  "premiumFeatureStats": "詳細な統計と比較",
+  "premiumStatsMessage": "詳細な分析は Premium で利用できます。",
+  "savePercent": "{percent}%お得",
+  "pricePerMonth": "月あたり {price}",
+  "freeTrialDays": "{days}日間無料",
+  "startFreeTrial": "無料トライアルを開始"
 }

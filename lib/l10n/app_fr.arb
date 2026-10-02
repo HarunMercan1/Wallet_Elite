@@ -511,5 +511,11 @@
   "saveToGallery": "Enregistrer dans la galerie",
   "share": "Partager",
   "imageSaved": "Image enregistrée dans la galerie",
-  "imageSaveFailed": "Impossible d'enregistrer l'image"
+  "imageSaveFailed": "Impossible d'enregistrer l'image",
+  "premiumFeatureStats": "Statistiques détaillées et comparaisons",
+  "premiumStatsMessage": "Les analyses détaillées font partie de Premium.",
+  "savePercent": "-{percent} %",
+  "pricePerMonth": "{price} par mois",
+  "freeTrialDays": "{days} jours gratuits",
+  "startFreeTrial": "Commencer l'essai gratuit"
 }

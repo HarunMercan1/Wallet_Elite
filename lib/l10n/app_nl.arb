@@ -525,5 +525,11 @@
   "saveToGallery": "Opslaan in galerij",
   "share": "Delen",
   "imageSaved": "Afbeelding opgeslagen in galerij",
-  "imageSaveFailed": "Afbeelding kon niet worden opgeslagen"
+  "imageSaveFailed": "Afbeelding kon niet worden opgeslagen",
+  "premiumFeatureStats": "Gedetailleerde statistieken en vergelijkingen",
+  "premiumStatsMessage": "Gedetailleerde analyses horen bij Premium.",
+  "savePercent": "{percent}% korting",
+  "pricePerMonth": "{price} per maand",
+  "freeTrialDays": "{days} dagen gratis",
+  "startFreeTrial": "Start gratis proefperiode"
 }

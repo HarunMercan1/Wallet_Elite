@@ -165,17 +165,10 @@ class AppTheme {
         floatingLabelStyle: TextStyle(color: c.primary),
         prefixIconColor: c.textSecondary,
         suffixIconColor: c.textSecondary,
+        // Yalnızca genel `border` verilir: odak/hata renklerini Material
+        // renk şemasından türetir ve bir alan `InputBorder.none` isterse
+        // (ör. tutar girişi) temanın çerçevesi geri gelmez.
         border: inputBorder,
-        enabledBorder: inputBorder,
-        focusedBorder: inputBorder.copyWith(
-          borderSide: BorderSide(color: c.primary, width: 1.5),
-        ),
-        errorBorder: inputBorder.copyWith(
-          borderSide: BorderSide(color: c.error),
-        ),
-        focusedErrorBorder: inputBorder.copyWith(
-          borderSide: BorderSide(color: c.error, width: 1.5),
-        ),
       ),
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: c.primary,

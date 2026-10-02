@@ -14,6 +14,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/category_l10n.dart';
+import '../../../core/widgets/app_logo.dart';
 import '../../../core/utils/currency_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../settings/data/settings_provider.dart';
@@ -306,7 +307,6 @@ class MonthlySummaryCard extends StatelessWidget {
       }
     }
     final net = income - expense;
-    final savingsRate = income > 0 ? (net / income * 100) : null;
     final topCategories = expenseByCategory.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final categoriesById = {for (final cat in categories) cat.id: cat};
@@ -323,19 +323,7 @@ class MonthlySummaryCard extends StatelessWidget {
           // Başlık
           Row(
             children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  color: c.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  Icons.account_balance_wallet_rounded,
-                  size: 19,
-                  color: c.onPrimary,
-                ),
-              ),
+              const AppLogo(size: 34),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -431,22 +419,20 @@ class MonthlySummaryCard extends StatelessWidget {
               Expanded(
                 child: _infoTile(
                   c,
-                  l.savingsRate,
-                  savingsRate == null
-                      ? '-'
-                      : '%${savingsRate.toStringAsFixed(0)}',
-                  Icons.savings_outlined,
-                  c.success,
+                  l.transactions,
+                  '$count',
+                  Icons.receipt_long_outlined,
+                  c.info,
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: _infoTile(
                   c,
-                  l.transactions,
-                  '$count',
-                  Icons.receipt_long_outlined,
-                  c.info,
+                  l.averageDailySpending,
+                  _money(expense / now.day),
+                  Icons.calendar_today_outlined,
+                  c.warning,
                 ),
               ),
             ],

@@ -525,5 +525,11 @@
   "saveToGallery": "गैलरी में सहेजें",
   "share": "साझा करें",
   "imageSaved": "छवि गैलरी में सहेजी गई",
-  "imageSaveFailed": "छवि सहेजी नहीं जा सकी"
+  "imageSaveFailed": "छवि सहेजी नहीं जा सकी",
+  "premiumFeatureStats": "विस्तृत आँकड़े और तुलनाएँ",
+  "premiumStatsMessage": "विस्तृत विश्लेषण Premium में शामिल है।",
+  "savePercent": "{percent}% बचत",
+  "pricePerMonth": "{price} प्रति माह",
+  "freeTrialDays": "{days} दिन मुफ़्त",
+  "startFreeTrial": "मुफ़्त ट्रायल शुरू करें"
 }

@@ -37,6 +37,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
 
     final features = [
       (Icons.block, l.premiumFeatureNoAds),
+      (Icons.insights_outlined, l.premiumFeatureStats),
       (Icons.palette_outlined, l.premiumFeatureThemes),
       (Icons.all_inclusive, l.premiumFeatureUnlimited),
       (Icons.file_download_outlined, l.premiumFeatureExport),

@@ -525,5 +525,11 @@
   "saveToGallery": "Zapisz w galerii",
   "share": "Udostępnij",
   "imageSaved": "Obraz zapisano w galerii",
-  "imageSaveFailed": "Nie udało się zapisać obrazu"
+  "imageSaveFailed": "Nie udało się zapisać obrazu",
+  "premiumFeatureStats": "Szczegółowe statystyki i porównania",
+  "premiumStatsMessage": "Szczegółowe analizy są dostępne w Premium.",
+  "savePercent": "Oszczędzasz {percent}%",
+  "pricePerMonth": "{price} miesięcznie",
+  "freeTrialDays": "{days} dni za darmo",
+  "startFreeTrial": "Rozpocznij bezpłatny okres próbny"
 }

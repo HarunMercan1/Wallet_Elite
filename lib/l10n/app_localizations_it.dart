@@ -1476,4 +1476,29 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Impossibile salvare l\'immagine';
+
+  @override
+  String get premiumFeatureStats => 'Statistiche dettagliate e confronti';
+
+  @override
+  String get premiumStatsMessage =>
+      'Le analisi dettagliate fanno parte di Premium.';
+
+  @override
+  String savePercent(int percent) {
+    return 'Risparmi $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price al mese';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days giorni gratis';
+  }
+
+  @override
+  String get startFreeTrial => 'Inizia la prova gratuita';
 }

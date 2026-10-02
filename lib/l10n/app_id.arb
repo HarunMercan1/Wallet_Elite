@@ -525,5 +525,11 @@
   "saveToGallery": "Simpan ke galeri",
   "share": "Bagikan",
   "imageSaved": "Gambar disimpan ke galeri",
-  "imageSaveFailed": "Gambar tidak dapat disimpan"
+  "imageSaveFailed": "Gambar tidak dapat disimpan",
+  "premiumFeatureStats": "Statistik terperinci dan perbandingan",
+  "premiumStatsMessage": "Analisis terperinci tersedia di Premium.",
+  "savePercent": "Hemat {percent}%",
+  "pricePerMonth": "{price} per bulan",
+  "freeTrialDays": "Gratis {days} hari",
+  "startFreeTrial": "Mulai uji coba gratis"
 }

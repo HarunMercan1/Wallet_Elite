@@ -52,6 +52,24 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
     }
   }
 
+  /// Ürünün (Play'de tanımlı) ücretsiz deneme süresi, gün olarak; yoksa 0
+  int _freeTrialDays(StoreProduct? product) {
+    final period = product?.defaultOption?.freePhase?.billingPeriod;
+    if (period == null) return 0;
+    switch (period.unit) {
+      case PeriodUnit.day:
+        return period.value;
+      case PeriodUnit.week:
+        return period.value * 7;
+      case PeriodUnit.month:
+        return period.value * 30;
+      case PeriodUnit.year:
+        return period.value * 365;
+      default:
+        return 0;
+    }
+  }
+
   Future<void> _purchase() async {
     final l = AppLocalizations.of(context)!;
     final controller = ref.read(premiumControllerProvider.notifier);
@@ -117,10 +135,22 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
 
     final features = [
       (Icons.block, l.premiumFeatureNoAds),
+      (Icons.insights_outlined, l.premiumFeatureStats),
       (Icons.palette_outlined, l.premiumFeatureThemes),
       (Icons.all_inclusive, l.premiumFeatureUnlimited),
       (Icons.file_download_outlined, l.premiumFeatureExport),
     ];
+
+    final monthly = _packageFor(offering, _Plan.monthly)?.storeProduct;
+    final yearly = _packageFor(offering, _Plan.yearly)?.storeProduct;
+    // Yıllık plan, 12 ay aylık ödemeye göre yüzde kaç ucuz
+    final yearlySaving = monthly != null && yearly != null && monthly.price > 0
+        ? ((1 - yearly.price / (monthly.price * 12)) * 100).round()
+        : 0;
+    final yearlyTrialDays = _freeTrialDays(yearly);
+    final selectedTrialDays = _freeTrialDays(
+      _packageFor(offering, _selected)?.storeProduct,
+    );
 
     return Scaffold(
       backgroundColor: isDark ? colorTheme.backgroundDark : Colors.white,
@@ -187,7 +217,14 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                     l.perYear,
                     colorTheme.primary,
                     isDark,
-                    badge: l.bestValue,
+                    badge: yearlySaving > 0
+                        ? l.savePercent(yearlySaving)
+                        : l.bestValue,
+                    notes: [
+                      if (yearlyTrialDays > 0) l.freeTrialDays(yearlyTrialDays),
+                      if (yearly?.pricePerMonthString != null)
+                        l.pricePerMonth(yearly!.pricePerMonthString!),
+                    ],
                   ),
                   _buildPlan(
                     _Plan.monthly,
@@ -227,7 +264,9 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                               ),
                             )
                           : Text(
-                              l.continueButton,
+                              selectedTrialDays > 0
+                                  ? l.startFreeTrial
+                                  : l.continueButton,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -274,6 +313,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
     Color primary,
     bool isDark, {
     String? badge,
+    List<String> notes = const [],
   }) {
     final isSelected = _selected == plan;
     final price = package?.storeProduct.priceString ?? '—';
@@ -301,39 +341,56 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: context.colors.textPrimary,
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: context.colors.textPrimary,
+                          ),
+                        ),
                       ),
-                    ),
+                      if (badge != null) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: primary,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            badge,
+                            style: TextStyle(
+                              color: context.colors.onPrimary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                  if (badge != null) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: primary,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                  if (notes.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3),
                       child: Text(
-                        badge,
+                        notes.join('  ·  '),
                         style: TextStyle(
-                          color: context.colors.onPrimary,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: context.colors.success,
                         ),
                       ),
                     ),
-                  ],
                 ],
               ),
             ),

@@ -1472,4 +1472,28 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Gambar tidak dapat disimpan';
+
+  @override
+  String get premiumFeatureStats => 'Statistik terperinci dan perbandingan';
+
+  @override
+  String get premiumStatsMessage => 'Analisis terperinci tersedia di Premium.';
+
+  @override
+  String savePercent(int percent) {
+    return 'Hemat $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price per bulan';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return 'Gratis $days hari';
+  }
+
+  @override
+  String get startFreeTrial => 'Mulai uji coba gratis';
 }

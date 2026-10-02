@@ -1477,4 +1477,29 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Görsel kaydedilemedi';
+
+  @override
+  String get premiumFeatureStats =>
+      'Ayrıntılı istatistikler ve karşılaştırmalar';
+
+  @override
+  String get premiumStatsMessage => 'Ayrıntılı analizler Premium\'a özeldir.';
+
+  @override
+  String savePercent(int percent) {
+    return '%$percent indirim';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return 'ayda $price';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days gün ücretsiz';
+  }
+
+  @override
+  String get startFreeTrial => 'Ücretsiz denemeyi başlat';
 }

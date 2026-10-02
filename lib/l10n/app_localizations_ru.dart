@@ -1470,4 +1470,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get imageSaveFailed => 'Не удалось сохранить изображение';
+
+  @override
+  String get premiumFeatureStats => 'Подробная статистика и сравнения';
+
+  @override
+  String get premiumStatsMessage => 'Подробная аналитика доступна в Premium.';
+
+  @override
+  String savePercent(int percent) {
+    return 'Скидка $percent%';
+  }
+
+  @override
+  String pricePerMonth(String price) {
+    return '$price в месяц';
+  }
+
+  @override
+  String freeTrialDays(int days) {
+    return '$days дней бесплатно';
+  }
+
+  @override
+  String get startFreeTrial => 'Начать бесплатный период';
 }

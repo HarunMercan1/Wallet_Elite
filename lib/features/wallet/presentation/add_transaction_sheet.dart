@@ -362,7 +362,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                           fontWeight: FontWeight.bold,
                           color: color.withValues(alpha: 0.3),
                         ),
+                        // Çerçevesiz: kartın kendisi alanı çevreliyor
                         border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        focusedErrorBorder: InputBorder.none,
+                        filled: false,
                         contentPadding: EdgeInsets.zero,
                         isDense: true,
                       ),

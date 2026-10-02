@@ -525,5 +525,11 @@
   "saveToGallery": "Lưu vào thư viện",
   "share": "Chia sẻ",
   "imageSaved": "Đã lưu ảnh vào thư viện",
-  "imageSaveFailed": "Không thể lưu ảnh"
+  "imageSaveFailed": "Không thể lưu ảnh",
+  "premiumFeatureStats": "Thống kê chi tiết và so sánh",
+  "premiumStatsMessage": "Phân tích chi tiết có trong Premium.",
+  "savePercent": "Tiết kiệm {percent}%",
+  "pricePerMonth": "{price} mỗi tháng",
+  "freeTrialDays": "Miễn phí {days} ngày",
+  "startFreeTrial": "Bắt đầu dùng thử miễn phí"
 }

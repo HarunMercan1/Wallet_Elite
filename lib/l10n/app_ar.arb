@@ -511,5 +511,11 @@
   "saveToGallery": "حفظ في المعرض",
   "share": "مشاركة",
   "imageSaved": "تم حفظ الصورة في المعرض",
-  "imageSaveFailed": "تعذّر حفظ الصورة"
+  "imageSaveFailed": "تعذّر حفظ الصورة",
+  "premiumFeatureStats": "إحصاءات مفصّلة ومقارنات",
+  "premiumStatsMessage": "التحليلات المفصّلة متاحة لمشتركي Premium.",
+  "savePercent": "وفّر {percent}%",
+  "pricePerMonth": "{price} شهريًا",
+  "freeTrialDays": "{days} أيام مجانًا",
+  "startFreeTrial": "ابدأ التجربة المجانية"
 }
