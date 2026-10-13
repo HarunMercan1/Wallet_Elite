@@ -1,6 +1,7 @@
 // lib/features/statistics/presentation/statistics_view.dart
 
 import 'package:fl_chart/fl_chart.dart';
+import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -109,7 +110,19 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           end: today,
         );
       case _Period.custom:
-        return (start: _customStart ?? today, end: _customEnd ?? today);
+        var start = dateOnly(_customStart ?? today);
+        final end = dateOnly(_customEnd ?? today);
+        // Çok eski bir başlangıç (ör. "Tüm zamanlar") ilk işleme çekilir;
+        // yoksa günlük ortalama binlerce boş güne bölünür.
+        DateTime? first;
+        for (final t in all) {
+          if (first == null || t.date.isBefore(first)) first = t.date;
+        }
+        if (first != null && start.isBefore(dateOnly(first))) {
+          start = dateOnly(first);
+        }
+        if (start.isAfter(end)) start = end;
+        return (start: start, end: end);
     }
   }
 
@@ -151,10 +164,24 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
 
   // ========== İçerik ==========
 
+  /// Tek cüzdan seçiliyse o cüzdanın, değilse ayarlardaki para birimi
+  String _symbol = '';
+
+  String _resolveSymbol() {
+    final walletId = ref.watch(selectedWalletIdProvider);
+    if (walletId != null) {
+      final accounts = ref.watch(accountsProvider).valueOrNull ?? const [];
+      for (final account in accounts) {
+        if (account.id == walletId) return account.currencySymbol;
+      }
+    }
+    return CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+  }
+
   String _money(double value, {int decimals = 2}) {
-    final symbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+    final symbol = _symbol;
     final pattern = decimals == 0 ? '#,##0' : '#,##0.00';
-    final formatted = NumberFormat(pattern, 'tr_TR').format(value.abs());
+    final formatted = NumberFormat(pattern).format(value.abs());
     return '${value < 0 ? '-' : ''}$symbol$formatted';
   }
 
@@ -164,6 +191,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     AppLocalizations l,
     ColorTheme c,
   ) {
+    _symbol = _resolveSymbol();
     final range = _range(all);
     final endExclusive = range.end.add(const Duration(days: 1));
     final inPeriod = all
@@ -219,7 +247,16 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         else ...[
           _buildSummaryCard(all, income, expense, l, c),
           const SizedBox(height: 14),
-          _buildTrendCard(inPeriod, range, expense, days, periodLabel, l, c),
+          _buildTrendCard(
+            all,
+            inPeriod,
+            range,
+            expense,
+            days,
+            periodLabel,
+            l,
+            c,
+          ),
           const SizedBox(height: 14),
           _buildCategoryCard(
             inPeriod,
@@ -585,7 +622,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
           ),
           const SizedBox(width: 4),
           Text(
-            '%${change.abs().toStringAsFixed(0)} · ${l.comparedToLastMonth}',
+            '${formatPercent(change.abs())} · ${l.comparedToLastMonth}',
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -653,6 +690,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
   }
 
   Widget _buildTrendCard(
+    List<TransactionModel> all,
     List<TransactionModel> inPeriod,
     ({DateTime start, DateTime end}) range,
     double expense,
@@ -681,7 +719,9 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
               MaterialPageRoute(
                 builder: (context) => TrendDetailView(
                   transactions: inPeriod,
+                  allTransactions: all,
                   periodLabel: periodLabel,
+                  currencySymbol: _symbol,
                 ),
               ),
             ),
@@ -871,6 +911,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 builder: (context) => CategoryAnalysisView(
                   transactions: inPeriod,
                   periodLabel: periodLabel,
+                  currencySymbol: _symbol,
                 ),
               ),
             ),
@@ -968,7 +1009,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                       ),
                     ),
                     Text(
-                      '%${(s.amount / expense * 100).toStringAsFixed(0)}',
+                      formatPercent(s.amount / expense * 100),
                       style: TextStyle(fontSize: 12.5, color: c.textSecondary),
                     ),
                     const SizedBox(width: 12),
@@ -1014,7 +1055,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
     final rows = <Widget>[
       if (biggestExpense != null)
         _highlightRow(
-          Icons.arrow_downward_rounded,
+          Icons.arrow_upward_rounded,
           c.error,
           l.biggestExpense,
           title(biggestExpense),
@@ -1023,7 +1064,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
         ),
       if (biggestIncome != null)
         _highlightRow(
-          Icons.arrow_upward_rounded,
+          Icons.arrow_downward_rounded,
           c.success,
           l.biggestIncome,
           title(biggestIncome),
@@ -1130,6 +1171,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             builder: (context) => MonthComparisonView(
               allTransactions: all,
               categoryMap: categoryMap,
+              currencySymbol: _symbol,
             ),
           ),
         ),

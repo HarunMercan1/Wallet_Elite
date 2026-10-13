@@ -2,6 +2,8 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/category_analysis_view.dart
 
+import '../../../core/utils/number_utils.dart';
+import '../../../core/utils/icon_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -18,10 +20,14 @@ class CategoryAnalysisView extends ConsumerStatefulWidget {
   final List<TransactionModel> transactions;
   final String periodLabel;
 
+  /// Verilmezse ayarlardaki para birimi kullanılır
+  final String? currencySymbol;
+
   const CategoryAnalysisView({
     super.key,
     required this.transactions,
     required this.periodLabel,
+    this.currencySymbol,
   });
 
   @override
@@ -54,6 +60,10 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     super.dispose();
   }
 
+  String get _symbol =>
+      widget.currencySymbol ??
+      CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
@@ -78,14 +88,13 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     Map<String, int> categoryCounts = {};
     double totalExpense = 0;
 
+    // Kategorisiz harcamalar da "Diğer" altında sayılır; yoksa toplam,
+    // İstatistikler ekranındaki toplamdan düşük çıkar.
     for (final tx in expenseTransactions) {
-      if (tx.categoryId != null) {
-        categoryExpenses[tx.categoryId!] =
-            (categoryExpenses[tx.categoryId!] ?? 0) + tx.amount;
-        categoryCounts[tx.categoryId!] =
-            (categoryCounts[tx.categoryId!] ?? 0) + 1;
-        totalExpense += tx.amount;
-      }
+      final key = tx.categoryId ?? '';
+      categoryExpenses[key] = (categoryExpenses[key] ?? 0) + tx.amount;
+      categoryCounts[key] = (categoryCounts[key] ?? 0) + 1;
+      totalExpense += tx.amount;
     }
 
     // Sort categories by expense amount
@@ -162,7 +171,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         child: _buildSummaryCard(
                           title: l.totalExpense,
                           value:
-                              '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(totalExpense)}',
+                              '$_symbol${NumberFormat('#,##0.00').format(totalExpense)}',
                           icon: Icons.trending_down,
                           color: colorTheme.error,
                           isDark: isDark,
@@ -174,7 +183,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         child: _buildSummaryCard(
                           title: l.averageTransaction,
                           value:
-                              '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(avgTransaction)}',
+                              '$_symbol${NumberFormat('#,##0.00').format(avgTransaction)}',
                           icon: Icons.calculate,
                           color: colorTheme.primary,
                           isDark: isDark,
@@ -471,7 +480,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                                       ),
                                     ),
                                     Text(
-                                      '${percent.toStringAsFixed(1)}%',
+                                      formatPercent(percent, decimals: 1),
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
@@ -525,8 +534,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 Container(width: 1, height: 30, color: colorTheme.outline),
                 _buildMiniStat(
                   icon: Icons.trending_down,
-                  value:
-                      '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(total)}',
+                  value: '$_symbol${NumberFormat('#,##0').format(total)}',
                   label: l.totalExpense,
                   color: colorTheme.error,
                   isDark: isDark,
@@ -535,8 +543,8 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 _buildMiniStat(
                   icon: Icons.pie_chart,
                   value: categories.isNotEmpty
-                      ? '${(categories.first.value / total * 100).toStringAsFixed(0)}%'
-                      : '0%',
+                      ? formatPercent(categories.first.value / total * 100)
+                      : formatPercent(0),
                   label: l.topSpendingCategory,
                   color: colorTheme.success,
                   isDark: isDark,
@@ -604,11 +612,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              _getCategoryIcon(category?.icon),
-              color: color,
-              size: 24,
-            ),
+            child: Icon(categoryIcon(category?.icon), color: color, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -638,7 +642,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(amount)}',
+                '$_symbol${NumberFormat('#,##0.00').format(amount)}',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -646,7 +650,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 ),
               ),
               Text(
-                '${percent.toStringAsFixed(1)}%',
+                formatPercent(percent, decimals: 1),
                 style: TextStyle(fontSize: 12, color: colorTheme.textSecondary),
               ),
             ],
@@ -695,7 +699,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
-                      _getCategoryIcon(category?.icon),
+                      categoryIcon(category?.icon),
                       color: colorTheme.primary,
                       size: 20,
                     ),
@@ -727,7 +731,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(amount)}',
+                        '$_symbol${NumberFormat('#,##0.00').format(amount)}',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -735,7 +739,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         ),
                       ),
                       Text(
-                        '${(percent * 100).toStringAsFixed(1)}%',
+                        formatPercent(percent * 100, decimals: 1),
                         style: TextStyle(
                           fontSize: 12,
                           color: colorTheme.textSecondary,
@@ -849,7 +853,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                         l.ifYouReduce(
                           categoryName,
                           20,
-                          '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(potentialSavings)}',
+                          '$_symbol${NumberFormat('#,##0').format(potentialSavings)}',
                         ),
                         style: TextStyle(
                           fontSize: 13,
@@ -869,43 +873,6 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
 
   String? _getCategoryName(CategoryModel? category, AppLocalizations l) =>
       localizedCategoryName(category, l);
-
-  IconData _getCategoryIcon(String? iconName) {
-    switch (iconName) {
-      case 'wallet':
-        return Icons.wallet;
-      case 'laptop':
-        return Icons.laptop;
-      case 'trending_up':
-        return Icons.trending_up;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'attach_money':
-        return Icons.attach_money;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'directions_car':
-        return Icons.directions_car;
-      case 'receipt':
-        return Icons.receipt;
-      case 'movie':
-        return Icons.movie;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'local_hospital':
-        return Icons.local_hospital;
-      case 'checkroom':
-        return Icons.checkroom;
-      case 'school':
-        return Icons.school;
-      case 'flight':
-        return Icons.flight;
-      case 'more_horiz':
-        return Icons.more_horiz;
-      default:
-        return Icons.category;
-    }
-  }
 }
 
 // Pie Chart Painter
@@ -933,11 +900,13 @@ class PieChartPainter extends CustomPainter {
 
     double startAngle = -math.pi / 2;
 
-    for (int i = 0; i < categories.length && i < colors.length; i++) {
+    if (total <= 0) return;
+
+    for (int i = 0; i < categories.length; i++) {
       final sweepAngle = (categories[i].value / total) * 2 * math.pi * progress;
 
       final paint = Paint()
-        ..color = colors[i]
+        ..color = colors[i % colors.length]
         ..style = PaintingStyle.fill;
 
       canvas.drawArc(
@@ -960,6 +929,9 @@ class PieChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant PieChartPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.isDark != isDark;
+    return oldDelegate.progress != progress ||
+        oldDelegate.isDark != isDark ||
+        oldDelegate.total != total ||
+        oldDelegate.categories.length != categories.length;
   }
 }

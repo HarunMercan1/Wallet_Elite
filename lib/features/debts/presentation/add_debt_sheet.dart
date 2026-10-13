@@ -2,8 +2,8 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/add_debt_sheet.dart
 
+import '../../../core/utils/amount_input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../l10n/app_localizations.dart';
@@ -128,11 +128,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}'),
-                        ),
-                      ],
+                      inputFormatters: [const AmountInputFormatter()],
                       decoration: _buildInputDecoration(
                         hint: '0.00',
                         icon: Icons.attach_money,
@@ -145,10 +141,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
                         if (value == null || value.isEmpty) {
                           return l.enterAmount;
                         }
-                        final amount = double.tryParse(value);
-                        if (amount == null || amount <= 0) {
-                          return l.enterAmount;
-                        }
+                        if (parseAmount(value) == null) return l.enterAmount;
                         return null;
                       },
                     ),
@@ -413,7 +406,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     setState(() => _isLoading = true);
 
     final controller = ref.read(debtControllerProvider);
-    final amount = double.parse(_amountController.text);
+    final amount = parseAmount(_amountController.text)!;
 
     try {
       final success = await controller.createDebt(

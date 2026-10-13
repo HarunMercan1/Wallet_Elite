@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/ads/full_screen_ad_gate.dart';
 import '../../../core/utils/category_l10n.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../wallet/models/account_model.dart';
@@ -64,6 +65,7 @@ class ExportService {
     // ﻿ = UTF-8 BOM
     await file.writeAsBytes(utf8.encode('﻿${buffer.toString()}'));
 
+    FullScreenAdGate.externalFlowStarted();
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path, mimeType: 'text/csv')],

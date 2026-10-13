@@ -183,12 +183,15 @@ class BudgetModel {
     };
   }
 
-  /// Güncellenmiş kopya oluştur
+  static const _unset = Object();
+
+  /// Güncellenmiş kopya oluştur. [categoryId] açıkça `null` verilirse
+  /// kategori kaldırılır (tüm harcamalar bütçesi).
   BudgetModel copyWith({
     String? id,
     String? userId,
     String? name,
-    String? categoryId,
+    Object? categoryId = _unset,
     double? amount,
     BudgetPeriod? period,
     int? startDay,
@@ -205,7 +208,9 @@ class BudgetModel {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
-      categoryId: categoryId ?? this.categoryId,
+      categoryId: identical(categoryId, _unset)
+          ? this.categoryId
+          : categoryId as String?,
       amount: amount ?? this.amount,
       period: period ?? this.period,
       startDay: startDay ?? this.startDay,

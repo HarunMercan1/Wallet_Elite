@@ -1,3 +1,4 @@
+import '../../../core/utils/category_l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -230,8 +231,12 @@ class _TransactionFilterSheetState
 
           // Apply Button
           Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: colorTheme.cardColor),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MediaQuery.paddingOf(context).bottom,
+            ),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -398,8 +403,9 @@ class _TransactionFilterSheetState
     return FilterChip(
       selected: isSelected,
       label: Text(
-        category.name,
-      ), // Should use helper for localized name if possible
+        localizedCategoryName(category, AppLocalizations.of(context)!) ??
+            category.name,
+      ),
       onSelected: (bool selected) {
         final ids = List<String>.from(_state.selectedCategoryIds);
         if (selected) {

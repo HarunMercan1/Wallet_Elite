@@ -316,7 +316,6 @@ class RecurringTransactionsView extends ConsumerWidget {
                             .read(recurringControllerProvider.notifier)
                             .toggleActive(recurring.id, value);
                       },
-                      activeColor: colorTheme.primary,
                     ),
                   ],
                 ),

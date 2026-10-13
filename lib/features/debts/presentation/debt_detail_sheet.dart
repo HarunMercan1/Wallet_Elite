@@ -2,8 +2,8 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/debt_detail_sheet.dart
 
+import '../../../core/utils/amount_input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../l10n/app_localizations.dart';
@@ -273,11 +273,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}'),
-                              ),
-                            ],
+                            inputFormatters: [const AmountInputFormatter()],
                             decoration: InputDecoration(
                               hintText: currencyFormat.format(
                                 debt.remainingAmount,
@@ -468,7 +464,7 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         },
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
-                        error: (error, stack) => Text('Hata: $error'),
+                        error: (error, stack) => Text('${l.error}: $error'),
                       );
                     },
                   ),
@@ -689,51 +685,70 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
     final amountText = _paymentController.text.trim();
     if (amountText.isEmpty) {
       // Tüm kalan tutarı öde
-      _paymentController.text = widget.debt.remainingAmount.toString();
+      _paymentController.text = amountToInputText(widget.debt.remainingAmount);
     }
 
-    final amount = double.tryParse(_paymentController.text);
-    if (amount == null || amount <= 0) return;
+    final amount = parseAmount(_paymentController.text);
+    if (amount == null) return;
+
+    final l = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final colors = context.colors;
+
+    // Kalan tutardan fazlası ödenemez
+    if (amount > widget.debt.remainingAmount + 0.001) {
+      _paymentController.text = amountToInputText(widget.debt.remainingAmount);
+      return;
+    }
 
     setState(() => _isLoading = true);
 
-    final controller = ref.read(debtControllerProvider);
-    final success = await controller.recordPayment(
-      debtId: widget.debt.id,
-      amount: amount,
-    );
+    var success = false;
+    try {
+      success = await ref
+          .read(debtControllerProvider)
+          .recordPayment(debtId: widget.debt.id, amount: amount);
+    } catch (e) {
+      debugPrint('Ödeme kaydetme hatası: $e');
+    }
 
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (success && mounted) {
-      final l = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l.paymentRecorded),
-          backgroundColor: context.colors.success,
-        ),
-      );
-      Navigator.pop(context);
-    }
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(success ? l.paymentRecorded : l.errorOccurred),
+        backgroundColor: success ? colors.success : colors.error,
+      ),
+    );
+    if (success) Navigator.pop(context);
   }
 
   Future<void> _markAsCompleted() async {
+    final l = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final colors = context.colors;
+
     setState(() => _isLoading = true);
 
-    final controller = ref.read(debtControllerProvider);
-    final success = await controller.markAsCompleted(widget.debt.id);
+    var success = false;
+    try {
+      success = await ref
+          .read(debtControllerProvider)
+          .markAsCompleted(widget.debt.id);
+    } catch (e) {
+      debugPrint('Borç tamamlama hatası: $e');
+    }
 
+    if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (success && mounted) {
-      final l = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l.debtUpdated),
-          backgroundColor: context.colors.success,
-        ),
-      );
-      Navigator.pop(context);
-    }
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(success ? l.debtUpdated : l.errorOccurred),
+        backgroundColor: success ? colors.success : colors.error,
+      ),
+    );
+    if (success) Navigator.pop(context);
   }
 }

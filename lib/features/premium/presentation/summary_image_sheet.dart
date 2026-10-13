@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/ads/full_screen_ad_gate.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/category_l10n.dart';
 import '../../../core/widgets/app_logo.dart';
@@ -101,6 +103,7 @@ class _SummaryImageSheetState extends ConsumerState<SummaryImageSheet> {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/$_fileName.png');
     await file.writeAsBytes(bytes);
+    FullScreenAdGate.externalFlowStarted();
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path, mimeType: 'image/png')],
@@ -280,7 +283,7 @@ class MonthlySummaryCard extends StatelessWidget {
   static const int _maxCategories = 4;
 
   String _money(double value) {
-    final formatted = NumberFormat('#,##0.00', 'tr_TR').format(value.abs());
+    final formatted = NumberFormat('#,##0.00').format(value.abs());
     return '${value < 0 ? '-' : ''}$currencySymbol$formatted';
   }
 
@@ -392,7 +395,7 @@ class MonthlySummaryCard extends StatelessWidget {
                         c,
                         l.income,
                         _money(income),
-                        Icons.arrow_upward_rounded,
+                        Icons.arrow_downward_rounded,
                         c.success,
                       ),
                     ),
@@ -402,7 +405,7 @@ class MonthlySummaryCard extends StatelessWidget {
                         c,
                         l.expense,
                         _money(expense),
-                        Icons.arrow_downward_rounded,
+                        Icons.arrow_upward_rounded,
                         c.error,
                       ),
                     ),
@@ -629,7 +632,7 @@ class MonthlySummaryCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${_money(amount)}  ·  %${(share * 100).toStringAsFixed(0)}',
+                '${_money(amount)}  ·  ${formatPercent(share * 100)}',
                 style: TextStyle(fontSize: 11.5, color: c.textSecondary),
               ),
             ],

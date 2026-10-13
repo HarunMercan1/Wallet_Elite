@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/utils/app_languages.dart';
+
 /// SharedPreferences instance provider (initialized in main.dart)
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError(
@@ -72,9 +74,13 @@ class LocaleNotifier extends StateNotifier<String> {
 
   LocaleNotifier(this._prefs) : super(_loadInitial(_prefs));
 
+  /// Kayıtlı seçim yoksa cihaz dili (çevirisi yoksa İngilizce)
   static String _loadInitial(SharedPreferences? prefs) {
-    if (prefs == null) return 'tr';
-    return prefs.getString(_key) ?? 'tr';
+    final saved = prefs?.getString(_key);
+    if (saved != null) return saved;
+    return defaultLanguageFor(
+      WidgetsBinding.instance.platformDispatcher.locale.languageCode,
+    );
   }
 
   void setLocale(String locale) {

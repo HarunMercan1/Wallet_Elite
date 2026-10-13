@@ -25,9 +25,15 @@ class _NativeAdCardState extends ConsumerState<NativeAdCard>
   // Küçük şablonun (TemplateType.small) yüksekliği
   static const double _height = 104;
 
+  static const _retryAfter = Duration(seconds: 60);
+
   NativeAd? _ad;
   bool _loaded = false;
-  Brightness? _loadedForBrightness;
+  // Şablon renkleri yüklenirken sabitlenir: hangi palet için yüklendi
+  // ("tema kimliği/parlaklık"). Tema geçiş animasyonundaki ara renkler yeni
+  // istek tetiklemesin diye renklerin kendisi değil kimlik karşılaştırılır.
+  String? _loadedForPalette;
+  DateTime? _lastFailureAt;
 
   // Liste kaydırılınca reklam atılıp yeniden istenmesin
   @override
@@ -42,10 +48,18 @@ class _NativeAdCardState extends ConsumerState<NativeAdCard>
   void _maybeLoad() {
     if (!ref.read(showAdsProvider) || AdHelper.nativeAdUnitId.isEmpty) return;
     final theme = Theme.of(context);
-    // Şablon renkleri yüklenirken sabitlenir; tema değişince yeniden yükle
-    if (_ad != null && _loadedForBrightness == theme.brightness) return;
-    _loadedForBrightness = theme.brightness;
     final colorTheme = theme.extension<ColorTheme>()!;
+    // Açık/koyu ya da renk teması değişince yeniden yükle
+    final palette = '${colorTheme.id}/${theme.brightness.name}';
+    final samePalette = _loadedForPalette == palette;
+    if (_ad != null && samePalette) return;
+    final lastFailureAt = _lastFailureAt;
+    if (samePalette &&
+        lastFailureAt != null &&
+        DateTime.now().difference(lastFailureAt) < _retryAfter) {
+      return;
+    }
+    _loadedForPalette = palette;
 
     _disposeAd();
     final ad = NativeAd(
@@ -53,11 +67,13 @@ class _NativeAdCardState extends ConsumerState<NativeAdCard>
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (_) {
+          _lastFailureAt = null;
           if (mounted) setState(() => _loaded = true);
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('Native reklam yüklenemedi: $error');
           ad.dispose();
+          _lastFailureAt = DateTime.now();
           if (mounted) {
             setState(() {
               _ad = null;

@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'full_screen_ad_gate.dart';
+
 /// Google UMP (GDPR) iznini toplar ve Mobile Ads SDK'sını yalnızca izin durumu
 /// kesinleşince başlatır; böylece izinsiz/erken reklam isteği gönderilmez.
 class AdConsentService extends ChangeNotifier {
@@ -31,9 +33,9 @@ class AdConsentService extends ChangeNotifier {
   Future<void> _gatherConsent() async {
     try {
       await _requestConsentInfoUpdate().timeout(const Duration(seconds: 12));
-      await _loadAndShowConsentFormIfRequired().timeout(
-        const Duration(seconds: 30),
-      );
+      // Form açıkken süre sınırı yok: kullanıcı okumaya 30 saniyeden fazla
+      // zaman ayırırsa izin verse bile reklamlar o oturumda hiç başlamazdı.
+      await _loadAndShowConsentFormIfRequired();
     } catch (error) {
       // Ağ/form hatasında UMP'nin önceki oturumdan sakladığı durum kullanılır;
       // canRequestAds kontrolü yine yapılır.
@@ -45,6 +47,7 @@ class AdConsentService extends ChangeNotifier {
   }
 
   Future<void> showPrivacyOptionsForm() async {
+    FullScreenAdGate.externalFlowStarted();
     final completer = Completer<void>();
     ConsentForm.showPrivacyOptionsForm((error) {
       if (error == null) {

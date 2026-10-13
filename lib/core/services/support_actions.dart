@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../ads/full_screen_ad_gate.dart';
 import '../constants/app_info.dart';
 
 /// Kurulu sürüm bilgisi (Ayarlar altbilgisi ve geri bildirim e-postası için)
@@ -16,6 +17,13 @@ final packageInfoProvider = FutureProvider<PackageInfo>((ref) {
 
 /// Geliştiriciye yazma ve mağaza sayfasını açma
 class SupportActions {
+  /// Başka uygulamaya (e-posta, Play Store) geçer; dönüşte açılış reklamı
+  /// gösterilmez.
+  static Future<bool> _launchExternal(Uri uri, {LaunchMode? mode}) {
+    FullScreenAdGate.externalFlowStarted();
+    return mode == null ? launchUrl(uri) : launchUrl(uri, mode: mode);
+  }
+
   /// E-posta uygulamasını geliştirici adresi ve sürüm bilgisiyle açar.
   /// E-posta uygulaması yoksa false döner.
   static Future<bool> sendFeedbackEmail() async {
@@ -41,7 +49,7 @@ class SupportActions {
       }),
     );
     try {
-      return await launchUrl(uri);
+      return await _launchExternal(uri);
     } catch (e) {
       debugPrint('E-posta uygulaması açılamadı: $e');
       return false;
@@ -51,7 +59,7 @@ class SupportActions {
   /// Play Store'daki uygulama sayfasını açar (puan verme / güncelleme).
   static Future<bool> openStoreListing() async {
     try {
-      if (await launchUrl(
+      if (await _launchExternal(
         AppInfo.playStoreAppUri,
         mode: LaunchMode.externalApplication,
       )) {
@@ -61,7 +69,7 @@ class SupportActions {
       debugPrint('Play Store uygulaması açılamadı: $e');
     }
     try {
-      return await launchUrl(
+      return await _launchExternal(
         AppInfo.playStoreWebUri,
         mode: LaunchMode.externalApplication,
       );

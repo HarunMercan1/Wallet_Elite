@@ -1,5 +1,9 @@
 // lib/features/settings/presentation/settings_view.dart
 
+import '../../../core/utils/app_languages.dart';
+import '../../../core/utils/wallet_type.dart';
+import '../data/preferences_sync.dart';
+import '../../../core/utils/currency_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -69,6 +73,8 @@ class SettingsView extends ConsumerWidget {
                 _buildColorSchemeTile(context, ref, l, isDark, colorTheme),
                 Divider(height: 1, color: colorTheme.borderColor),
                 _buildLanguageTile(context, ref, locale, l, isDark, colorTheme),
+                Divider(height: 1, color: colorTheme.borderColor),
+                _buildCurrencyTile(context, ref, l, colorTheme),
               ],
             ),
 
@@ -327,6 +333,7 @@ class SettingsView extends ConsumerWidget {
                   ),
                   onTap: () => _showSignOutDialog(context, ref, l, colorTheme),
                 ),
+                Divider(height: 1, color: colorTheme.borderColor),
                 ListTile(
                   leading: Icon(
                     Icons.delete_forever_outlined,
@@ -487,7 +494,7 @@ class SettingsView extends ConsumerWidget {
       radius: 30,
       backgroundColor: colorTheme.primary,
       child: Text(
-        profile?.fullName?.substring(0, 1).toUpperCase() ?? 'U',
+        _initialOf(profile?.fullName),
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
@@ -713,46 +720,13 @@ class SettingsView extends ConsumerWidget {
       leading: Icon(Icons.language, color: colorTheme.primary),
       title: Text(l.language, style: TextStyle(color: colorTheme.textPrimary)),
       subtitle: Text(
-        _getLanguageName(locale),
+        appLanguageName(locale),
         style: TextStyle(color: colorTheme.textSecondary),
       ),
       trailing: Icon(Icons.chevron_right, color: colorTheme.textMuted),
       onTap: () =>
           _showLanguageDialog(context, ref, locale, l, isDark, colorTheme),
     );
-  }
-
-  String _getLanguageName(String code) {
-    switch (code) {
-      case 'tr':
-        return 'Türkçe';
-      case 'en':
-        return 'English';
-      case 'es':
-        return 'Español';
-      case 'fr':
-        return 'Français';
-      case 'de':
-        return 'Deutsch';
-      case 'zh':
-        return '中文';
-      case 'ja':
-        return '日本語';
-      case 'ru':
-        return 'Русский';
-      case 'ar':
-        return 'العربية';
-      case 'pt':
-        return 'Português';
-      case 'it':
-        return 'Italiano';
-      case 'id':
-        return 'Indonesia';
-      case 'ko':
-        return '한국어';
-      default:
-        return code.toUpperCase();
-    }
   }
 
   void _showThemeDialog(
@@ -911,21 +885,7 @@ class SettingsView extends ConsumerWidget {
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    final languages = [
-      {'code': 'en', 'name': 'English', 'flag': '🇺🇸'},
-      {'code': 'tr', 'name': 'Türkçe', 'flag': '🇹🇷'},
-      {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
-      {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
-      {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
-      {'code': 'it', 'name': 'Italiano', 'flag': '🇮🇹'},
-      {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
-      {'code': 'ru', 'name': 'Русский', 'flag': '🇷🇺'},
-      {'code': 'ar', 'name': 'العربية', 'flag': '🇸🇦'},
-      {'code': 'zh', 'name': '中文', 'flag': '🇨🇳'},
-      {'code': 'ja', 'name': '日本語', 'flag': '🇯🇵'},
-      {'code': 'ko', 'name': '한국어', 'flag': '🇰🇷'},
-      {'code': 'id', 'name': 'Indonesia', 'flag': '🇮🇩'},
-    ];
+    const languages = appLanguages;
 
     showModalBottomSheet(
       context: context,
@@ -971,9 +931,9 @@ class SettingsView extends ConsumerWidget {
                   return _buildLanguageOption(
                     context,
                     ref,
-                    lang['name']!,
-                    lang['flag']!,
-                    lang['code']!,
+                    lang.name,
+                    lang.flag,
+                    lang.code,
                     current,
                     isDark,
                     colorTheme,
@@ -1001,6 +961,7 @@ class SettingsView extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         ref.read(localeProvider.notifier).setLocale(localeCode);
+        savePreferenceToProfile(ref, language: localeCode);
         Navigator.pop(context);
       },
       child: Container(
@@ -1037,32 +998,68 @@ class SettingsView extends ConsumerWidget {
     );
   }
 
-  void _showWalletsSheet(
+  /// Uygulamada gösterilen para birimi simgesi. Tutarlar dönüştürülmez;
+  /// yalnızca simge değişir (cüzdanların kendi para birimi ayrıdır).
+  Widget _buildCurrencyTile(
     BuildContext context,
     WidgetRef ref,
     AppLocalizations l,
-    bool isDark,
     ColorTheme colorTheme,
   ) {
-    final accounts = ref.watch(accountsProvider);
+    final currency = ref.watch(currencyProvider);
+    return ListTile(
+      leading: Icon(Icons.payments_outlined, color: colorTheme.primary),
+      title: Text(
+        l.currencyLabel,
+        style: TextStyle(color: colorTheme.textPrimary),
+      ),
+      subtitle: Text(
+        '$currency (${CurrencyUtils.getSymbol(currency).trim()})',
+        style: TextStyle(color: colorTheme.textSecondary),
+      ),
+      trailing: Icon(Icons.chevron_right, color: colorTheme.textMuted),
+      onTap: () => _showCurrencySheet(context, ref, currency, l, colorTheme),
+    );
+  }
+
+  void _showCurrencySheet(
+    BuildContext context,
+    WidgetRef ref,
+    String current,
+    AppLocalizations l,
+    ColorTheme colorTheme,
+  ) {
+    final currencies = [
+      ('TRY', l.turkishLira),
+      ('USD', l.usDollar),
+      ('EUR', l.euro),
+      ('GBP', l.britishPound),
+      ('JPY', l.japaneseYen),
+      ('RUB', l.russianRuble),
+    ];
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        height: MediaQuery.sizeOf(context).height * 0.6,
+      builder: (sheetContext) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.7,
+        ),
+        padding: EdgeInsets.fromLTRB(
+          20,
+          12,
+          20,
+          20 + MediaQuery.paddingOf(sheetContext).bottom,
+        ),
         decoration: BoxDecoration(
-          color: isDark ? colorTheme.backgroundDark : Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
+          color: colorTheme.cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 12),
               width: 40,
               height: 4,
               decoration: BoxDecoration(
@@ -1070,208 +1067,377 @@ class SettingsView extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Icon(Icons.account_balance_wallet, color: colorTheme.primary),
-                  const SizedBox(width: 8),
-                  Text(
-                    l.wallets,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorTheme.textPrimary,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: Icon(Icons.add_circle, color: colorTheme.success),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _showAddWalletDialog(context, ref, l, isDark, colorTheme);
-                    },
-                  ),
-                ],
+            const SizedBox(height: 20),
+            Text(
+              l.selectCurrency,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: colorTheme.textPrimary,
               ),
             ),
-            const Divider(height: 1),
-            Expanded(
-              child: accounts.when(
-                data: (list) {
-                  if (list.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+            const SizedBox(height: 16),
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: currencies.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
+                itemBuilder: (_, index) {
+                  final (code, name) = currencies[index];
+                  final isSelected = code == current;
+                  return GestureDetector(
+                    onTap: () {
+                      ref.read(currencyProvider.notifier).setCurrency(code);
+                      savePreferenceToProfile(ref, currency: code);
+                      Navigator.pop(sheetContext);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? colorTheme.primary.withValues(alpha: 0.1)
+                            : colorTheme.subtleCardColor,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: isSelected
+                              ? colorTheme.primary
+                              : colorTheme.outline,
+                          width: isSelected ? 2 : 1,
+                        ),
+                      ),
+                      child: Row(
                         children: [
-                          Icon(
-                            Icons.account_balance_wallet_outlined,
-                            size: 48,
-                            color: colorTheme.textMuted,
+                          SizedBox(
+                            width: 36,
+                            child: Text(
+                              CurrencyUtils.getSymbol(code).trim(),
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: colorTheme.primary,
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 12),
+                          Expanded(
+                            child: Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.w500,
+                                color: colorTheme.textPrimary,
+                              ),
+                            ),
+                          ),
                           Text(
-                            l.noWallets,
+                            code,
                             style: TextStyle(color: colorTheme.textSecondary),
                           ),
+                          if (isSelected) ...[
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.check_circle,
+                              color: colorTheme.primary,
+                              size: 22,
+                            ),
+                          ],
                         ],
                       ),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      final account = list[index];
-                      return Dismissible(
-                        key: Key(account.id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20),
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          decoration: BoxDecoration(
-                            color: colorTheme.error,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        confirmDismiss: (direction) async {
-                          return await showDialog<bool>(
-                                context: context,
-                                builder: (ctx) => AlertDialog(
-                                  backgroundColor: colorTheme.cardColor,
-                                  title: Text(
-                                    l.deleteWallet,
-                                    style: TextStyle(
-                                      color: colorTheme.textPrimary,
-                                    ),
-                                  ),
-                                  content: Text(
-                                    l.deleteWalletConfirm,
-                                    style: TextStyle(
-                                      color: colorTheme.textSecondary,
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(ctx, false),
-                                      child: Text(l.cancel),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(ctx, true),
-                                      child: Text(
-                                        l.delete,
-                                        style: TextStyle(
-                                          color: colorTheme.error,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ) ??
-                              false;
-                        },
-                        onDismissed: (direction) async {
-                          await ref
-                              .read(walletControllerProvider)
-                              .deleteAccount(account.id);
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l.walletDeleted)),
-                            );
-                          }
-                        },
-                        child: GestureDetector(
-                          onTap: () => _showEditWalletDialog(
-                            context,
-                            ref,
-                            account,
-                            l,
-                            isDark,
-                            colorTheme,
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 4),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: colorTheme.cardColor,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: colorTheme.borderColor),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: _getWalletColor(
-                                      account.type,
-                                      colorTheme,
-                                    ).withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Icon(
-                                    _getWalletIcon(account.type),
-                                    color: _getWalletColor(
-                                      account.type,
-                                      colorTheme,
-                                    ),
-                                    size: 22,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        account.name,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15,
-                                          color: colorTheme.textPrimary,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        _getWalletTypeName(account.type, l),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: colorTheme.textSecondary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Text(
-                                  '${account.currencySymbol}${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: colorTheme.primary,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Icon(
-                                  Icons.edit_outlined,
-                                  size: 18,
-                                  color: colorTheme.textMuted,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                    ),
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('${l.error}: $e')),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showWalletsSheet(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    bool isDark,
+    ColorTheme colorTheme,
+  ) {
+    // Sheet kapandıktan sonra da geçerli olan bağlam ve mesajcı
+    final rootContext = context;
+    final messenger = ScaffoldMessenger.of(context);
+    // Kaydırılarak silinen cüzdanlar: liste sunucudan yenilenene kadar
+    // tekrar çizilmemeli (Dismissible ağaçta kalamaz).
+    final removedIds = <String>{};
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      // Consumer: cüzdan eklenince/silinince/adı değişince liste güncellenir
+      builder: (sheetContext) => Consumer(
+        builder: (context, sheetRef, _) {
+          final accounts = sheetRef
+              .watch(accountsProvider)
+              .whenData(
+                (list) =>
+                    list.where((a) => !removedIds.contains(a.id)).toList(),
+              );
+          return Container(
+            height: MediaQuery.sizeOf(context).height * 0.6,
+            decoration: BoxDecoration(
+              color: isDark ? colorTheme.backgroundDark : Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colorTheme.outline,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.account_balance_wallet,
+                        color: colorTheme.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        l.wallets,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: colorTheme.textPrimary,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: Icon(Icons.add_circle, color: colorTheme.success),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _showAddWalletDialog(
+                            rootContext,
+                            ref,
+                            l,
+                            isDark,
+                            colorTheme,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: accounts.when(
+                    data: (list) {
+                      if (list.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.account_balance_wallet_outlined,
+                                size: 48,
+                                color: colorTheme.textMuted,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                l.noWallets,
+                                style: TextStyle(
+                                  color: colorTheme.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          final account = list[index];
+                          return Dismissible(
+                            key: Key(account.id),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20),
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              decoration: BoxDecoration(
+                                color: colorTheme.error,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            confirmDismiss: (direction) async {
+                              return await showDialog<bool>(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      backgroundColor: colorTheme.cardColor,
+                                      title: Text(
+                                        l.deleteWallet,
+                                        style: TextStyle(
+                                          color: colorTheme.textPrimary,
+                                        ),
+                                      ),
+                                      content: Text(
+                                        l.deleteWalletConfirm,
+                                        style: TextStyle(
+                                          color: colorTheme.textSecondary,
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx, false),
+                                          child: Text(l.cancel),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx, true),
+                                          child: Text(
+                                            l.delete,
+                                            style: TextStyle(
+                                              color: colorTheme.error,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ) ??
+                                  false;
+                            },
+                            onDismissed: (direction) async {
+                              removedIds.add(account.id);
+                              final success = await ref
+                                  .read(walletControllerProvider)
+                                  .deleteAccount(account.id);
+                              if (!success) {
+                                // Silinemedi: cüzdan listeye geri gelsin
+                                removedIds.remove(account.id);
+                                ref.invalidate(accountsProvider);
+                              }
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    success ? l.walletDeleted : l.errorOccurred,
+                                  ),
+                                  backgroundColor: success
+                                      ? null
+                                      : colorTheme.error,
+                                ),
+                              );
+                            },
+                            child: GestureDetector(
+                              onTap: () => _showEditWalletDialog(
+                                context,
+                                ref,
+                                account,
+                                l,
+                                isDark,
+                                colorTheme,
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 4),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: colorTheme.cardColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: colorTheme.borderColor,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: walletTypeColor(
+                                          account.type,
+                                          colorTheme,
+                                        ).withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Icon(
+                                        walletTypeIcon(account.type),
+                                        color: walletTypeColor(
+                                          account.type,
+                                          colorTheme,
+                                        ),
+                                        size: 22,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            account.name,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15,
+                                              color: colorTheme.textPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            walletTypeName(account.type, l),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: colorTheme.textSecondary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      '${account.currencySymbol}${NumberFormat('#,##0.00').format(account.balance)}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: colorTheme.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      Icons.edit_outlined,
+                                      size: 18,
+                                      color: colorTheme.textMuted,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Center(child: Text('${l.error}: $e')),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -1295,10 +1461,13 @@ class SettingsView extends ConsumerWidget {
     }
 
     final nameController = TextEditingController();
-    final balanceController = TextEditingController(text: '0');
+    final balanceController = TextEditingController();
     String selectedType = 'cash';
-    String selectedCurrency = 'TRY';
-    final currencies = ['TRY', 'USD', 'EUR', 'GBP'];
+    final currencies = ['TRY', 'USD', 'EUR', 'GBP', 'JPY', 'RUB'];
+    final userCurrency = ref.read(currencyProvider);
+    String selectedCurrency = currencies.contains(userCurrency)
+        ? userCurrency
+        : currencies.first;
 
     showDialog(
       context: context,
@@ -1379,7 +1548,7 @@ class SettingsView extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  value: selectedCurrency,
+                  initialValue: selectedCurrency,
                   decoration: InputDecoration(
                     labelText: l.currencyLabel,
                     labelStyle: TextStyle(color: colorTheme.textSecondary),
@@ -1412,6 +1581,7 @@ class SettingsView extends ConsumerWidget {
                   style: TextStyle(color: colorTheme.textPrimary),
                   decoration: InputDecoration(
                     labelText: l.initialBalance,
+                    hintText: '0',
                     labelStyle: TextStyle(color: colorTheme.textSecondary),
                     border: const OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
@@ -1437,7 +1607,11 @@ class SettingsView extends ConsumerWidget {
                   name: nameController.text.trim(),
                   type: selectedType,
                   currency: selectedCurrency,
-                  initialBalance: double.tryParse(balanceController.text) ?? 0,
+                  initialBalance:
+                      double.tryParse(
+                        balanceController.text.trim().replaceAll(',', '.'),
+                      ) ??
+                      0,
                 );
 
                 if (context.mounted) {
@@ -1730,49 +1904,10 @@ class SettingsView extends ConsumerWidget {
       },
     ).then((_) => confirmController.dispose());
   }
+}
 
-  IconData _getWalletIcon(String type) {
-    switch (type) {
-      case 'bank':
-        return Icons.account_balance;
-      case 'cash':
-        return Icons.payments;
-      case 'credit_card':
-        return Icons.credit_card;
-      case 'savings':
-        return Icons.savings;
-      default:
-        return Icons.account_balance_wallet;
-    }
-  }
-
-  Color _getWalletColor(String type, ColorTheme colorTheme) {
-    switch (type) {
-      case 'bank':
-        return colorTheme.info;
-      case 'cash':
-        return colorTheme.success;
-      case 'credit_card':
-        return colorTheme.error;
-      case 'savings':
-        return colorTheme.warning;
-      default:
-        return colorTheme.primary;
-    }
-  }
-
-  String _getWalletTypeName(String type, AppLocalizations l) {
-    switch (type) {
-      case 'bank':
-        return l.bank;
-      case 'cash':
-        return l.cash;
-      case 'credit_card':
-        return l.creditCard;
-      case 'savings':
-        return l.savings;
-      default:
-        return l.wallet;
-    }
-  }
+/// Adın baş harfi; ad boşsa 'U'.
+String _initialOf(String? name) {
+  final trimmed = name?.trim() ?? '';
+  return trimmed.isEmpty ? 'U' : trimmed.characters.first.toUpperCase();
 }

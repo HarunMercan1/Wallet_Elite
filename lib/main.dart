@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -54,6 +55,9 @@ class WalletEliteApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
     final localeCode = ref.watch(localeProvider);
+    // Yerel ayar verilmeyen NumberFormat/DateFormat çağrıları uygulama dilini
+    // kullansın (ay adları, binlik/ondalık ayırıcılar).
+    Intl.defaultLocale = localeCode;
     // Seçili tema (premium hakkı yoksa ücretsiz temaya düşer)
     final colorTheme = ref.watch(currentColorThemeProvider);
 

@@ -14,8 +14,11 @@ import 'ads_providers.dart';
 class InterstitialAdService {
   static const _actionsPerAd = 3;
   static const _minInterval = Duration(minutes: 2);
+  // Yüklenen reklamlar bir saat sonra geçersiz olur
+  static const _maxCacheAge = Duration(minutes: 55);
 
   InterstitialAd? _ad;
+  DateTime? _loadedAt;
   bool _loading = false;
   bool _enabled = false;
   int _actions = 0;
@@ -41,6 +44,7 @@ class InterstitialAdService {
           _loading = false;
           if (_enabled) {
             _ad = ad;
+            _loadedAt = DateTime.now();
           } else {
             ad.dispose();
           }
@@ -58,6 +62,12 @@ class InterstitialAdService {
   void onUserAction() {
     if (!_enabled) return;
     _actions++;
+    final loadedAt = _loadedAt;
+    if (_ad != null &&
+        loadedAt != null &&
+        DateTime.now().difference(loadedAt) > _maxCacheAge) {
+      dispose(); // süresi doldu; yenisi istenir
+    }
     final ad = _ad;
     if (ad == null) {
       _load();
@@ -91,6 +101,7 @@ class InterstitialAdService {
   void dispose() {
     _ad?.dispose();
     _ad = null;
+    _loadedAt = null;
   }
 }
 
@@ -171,7 +182,11 @@ class AppOpenAdService {
 
     final backgroundedAt = _backgroundedAt;
     _backgroundedAt = null;
-    if (backgroundedAt == null ||
+    // Kullanıcı kendi başlattığı bir işten (satın alma, paylaşma, galeri)
+    // dönüyorsa araya reklam girmez
+    final returningFromExternalFlow = FullScreenAdGate.consumeExternalFlow();
+    if (returningFromExternalFlow ||
+        backgroundedAt == null ||
         DateTime.now().difference(backgroundedAt) < _minBackgroundTime ||
         FullScreenAdGate.closedWithin(_minInterval)) {
       return;
@@ -215,6 +230,7 @@ class AppOpenAdService {
   }
 
   void dispose() {
+    if (_appStateSubscription != null) AppStateEventNotifier.stopListening();
     _appStateSubscription?.cancel();
     _appStateSubscription = null;
     _disposeAd();

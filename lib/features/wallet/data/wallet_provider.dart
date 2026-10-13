@@ -170,9 +170,13 @@ class WalletController {
     final walletRepo = ref.read(walletRepositoryProvider);
     final success = await walletRepo.deleteAccount(accountId);
 
-    if (success) {
-      ref.invalidate(accountsProvider);
+    // Cüzdanla birlikte işlemleri de silinir; seçili cüzdan buysa "Tüm
+    // Cüzdanlar"a dön. Başarısız olursa liste sunucudaki haline döner.
+    if (success && ref.read(selectedWalletIdProvider) == accountId) {
+      ref.read(selectedWalletIdProvider.notifier).state = null;
     }
+    ref.invalidate(accountsProvider);
+    if (success) ref.invalidate(transactionsProvider);
 
     return success;
   }

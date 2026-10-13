@@ -1,7 +1,9 @@
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
+import '../../../core/utils/amount_input.dart';
+import '../../../core/utils/icon_helper.dart';
+import '../../../core/utils/wallet_type.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -349,11 +351,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                         fontWeight: FontWeight.bold,
                         color: color,
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d*\.?\d{0,2}'),
-                        ),
-                      ],
+                      inputFormatters: [const AmountInputFormatter()],
                       decoration: InputDecoration(
                         hintText: '0',
                         hintStyle: TextStyle(
@@ -373,13 +371,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                         isDense: true,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return l.enterAmount; // Translated
-                        }
-                        if (double.tryParse(value) == null ||
-                            double.parse(value) <= 0) {
-                          return l.enterAmount;
-                        }
+                        if (parseAmount(value) == null) return l.enterAmount;
                         return null;
                       },
                     ),
@@ -492,7 +484,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              _getCategoryIcon(category.icon ?? 'category'),
+              categoryIcon(category.icon ?? 'category'),
               size: 16,
               color: isSelected
                   ? colorTheme.onPrimary
@@ -695,7 +687,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        _getCategoryIcon(category.icon),
+                                        categoryIcon(category.icon),
                                         size: 14,
                                         color: isSelected
                                             ? colorTheme.onPrimary
@@ -765,8 +757,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           SnackBar(
             content: Text(
               newValue
-                  ? l.addedToFavorites(category.name)
-                  : l.removedFromFavorites(category.name),
+                  ? l.addedToFavorites(_getCategoryName(category, l))
+                  : l.removedFromFavorites(_getCategoryName(category, l)),
             ),
             backgroundColor: colorTheme.success,
             duration: const Duration(seconds: 1),
@@ -862,7 +854,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                         ),
                       ),
                       child: Icon(
-                        _getCategoryIcon(iconName),
+                        categoryIcon(iconName),
                         size: 20,
                         color: isSelected
                             ? colorTheme.onPrimary
@@ -891,26 +883,28 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                 final userId = Supabase.instance.client.auth.currentUser?.id;
                 if (userId != null) {
                   try {
-                    await Supabase.instance.client.from('categories').insert({
-                      'user_id': userId,
-                      'name': nameController.text.trim(),
-                      'type': _transactionType,
-                      'icon': selectedIcon,
-                      'is_custom': true,
-                    });
+                    final created = await Supabase.instance.client
+                        .from('categories')
+                        .insert({
+                          'user_id': userId,
+                          'name': nameController.text.trim(),
+                          'type': _transactionType,
+                          'icon': selectedIcon,
+                          'is_custom': true,
+                        })
+                        .select('id')
+                        .single();
 
                     // Provider'ları yenile
                     ref.invalidate(categoriesProvider);
                     ref.invalidate(incomeCategoriesProvider);
                     ref.invalidate(expenseCategoriesProvider);
 
-                    if (!parentContext.mounted) return;
-                    Navigator.pop(parentContext); // Sheet kapat
-                    messenger.showSnackBar(
-                      SnackBar(
-                        content: Text(l.categoryAdded),
-                        backgroundColor: colorTheme.success,
-                      ),
+                    // Sheet açık kalır (girilen tutar kaybolmaz); yeni
+                    // kategori seçili gelir.
+                    if (!mounted) return;
+                    setState(
+                      () => _selectedCategoryId = created['id'] as String?,
                     );
                   } catch (e) {
                     messenger.showSnackBar(
@@ -1036,12 +1030,26 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           context: context,
           initialDate: _selectedDate,
           firstDate: DateTime(2020),
-          lastDate: DateTime.now().add(const Duration(days: 1)),
+          lastDate: DateTime.now(),
           builder: (context, child) {
             return Theme(data: Theme.of(context), child: child!);
           },
         );
-        if (date != null) setState(() => _selectedDate = date);
+        if (date != null) {
+          // Seçilen güne şimdiki saat eklenir; gece yarısı yazılırsa işlem
+          // o günün en eskisi gibi sıralanır.
+          final now = DateTime.now();
+          setState(
+            () => _selectedDate = DateTime(
+              date.year,
+              date.month,
+              date.day,
+              now.hour,
+              now.minute,
+              now.second,
+            ),
+          );
+        }
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -1138,7 +1146,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                   child: Row(
                     children: [
                       Icon(
-                        _getAccountIcon(account.type),
+                        walletTypeIcon(account.type),
                         color: isSelected
                             ? colorTheme.onPrimary
                             : colorTheme.primary,
@@ -1160,7 +1168,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                             ),
                           ),
                           Text(
-                            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                            '${account.currencySymbol}${NumberFormat('#,##0.00').format(account.balance)}',
                             style: TextStyle(
                               fontSize: 11,
                               color: isSelected
@@ -1240,56 +1248,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
         date.day == now.day;
   }
 
-  IconData _getAccountIcon(String type) {
-    switch (type) {
-      case 'cash':
-        return Icons.payments_outlined;
-      case 'bank':
-        return Icons.account_balance_outlined;
-      case 'credit_card':
-        return Icons.credit_card_outlined;
-      case 'gold':
-        return Icons.diamond_outlined;
-      default:
-        return Icons.account_balance_wallet_outlined;
-    }
-  }
-
-  IconData _getCategoryIcon(String? iconName) {
-    switch (iconName) {
-      case 'wallet':
-        return Icons.wallet;
-      case 'laptop':
-        return Icons.laptop;
-      case 'trending_up':
-        return Icons.trending_up;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'attach_money':
-        return Icons.attach_money;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'directions_car':
-        return Icons.directions_car;
-      case 'receipt':
-        return Icons.receipt;
-      case 'movie':
-        return Icons.movie;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'local_hospital':
-        return Icons.local_hospital;
-      case 'checkroom':
-        return Icons.checkroom;
-      case 'school':
-        return Icons.school;
-      case 'more_horiz':
-        return Icons.more_horiz;
-      default:
-        return Icons.category;
-    }
-  }
-
   void _saveTransaction() async {
     final l = AppLocalizations.of(context)!;
     final colorTheme = ref.watch(currentColorThemeProvider);
@@ -1307,7 +1265,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
 
     setState(() => _isLoading = true);
 
-    final amount = double.parse(_amountController.text);
+    final amount = parseAmount(_amountController.text)!;
     final description = _descriptionController.text.isEmpty
         ? null
         : _descriptionController.text;

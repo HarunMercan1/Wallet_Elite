@@ -1,5 +1,6 @@
 // lib/features/transactions/presentation/transactions_view.dart
 
+import '../../../core/utils/icon_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -173,7 +174,17 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                         isDark,
                         colorTheme,
                       ),
-                    // Kategori sayısı kadar chip veya "X Kategori" eklenebilir
+                    if (_filterState.selectedCategoryIds.isNotEmpty)
+                      _buildActiveFilterChip(
+                        '${l.categories} (${_filterState.selectedCategoryIds.length})',
+                        () => setState(
+                          () => _filterState = _filterState.copyWith(
+                            selectedCategoryIds: const [],
+                          ),
+                        ),
+                        isDark,
+                        colorTheme,
+                      ),
                   ],
                 ),
               ),
@@ -265,8 +276,12 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                     if (_searchQuery.isNotEmpty) {
                       final query = _searchQuery.toLowerCase();
                       final desc = tx.description?.toLowerCase() ?? '';
+                      final category = categoryMap[tx.categoryId];
+                      // Hem ekranda görünen (çevrilmiş) hem de kayıtlı ad
                       final catName =
-                          categoryMap[tx.categoryId]?.name.toLowerCase() ?? '';
+                          '${localizedCategoryName(category, l) ?? ''} '
+                                  '${category?.name ?? ''}'
+                              .toLowerCase();
                       return desc.contains(query) || catName.contains(query);
                     }
                     return true;
@@ -357,7 +372,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                               ),
                             ),
                             Text(
-                              '${totalFiltered >= 0 ? '+' : ''}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(totalFiltered)}',
+                              '${totalFiltered >= 0 ? '+' : '-'}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00').format(totalFiltered.abs())}',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: totalFiltered >= 0
@@ -520,11 +535,16 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     final isIncome = tx.type == 'income';
     final color = isIncome ? colorTheme.success : colorTheme.error;
 
-    IconData categoryIcon = isIncome
-        ? Icons.arrow_downward
-        : Icons.arrow_upward;
+    // İşlemin cüzdanının para birimi (ana sayfadaki ile aynı)
+    final accounts = ref.watch(accountsProvider).valueOrNull ?? const [];
+    final account = accounts.where((a) => a.id == tx.accountId).firstOrNull;
+    final currencySymbol =
+        account?.currencySymbol ??
+        CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+
+    IconData icon = isIncome ? Icons.arrow_downward : Icons.arrow_upward;
     if (category != null) {
-      categoryIcon = _getCategoryIcon(category.icon);
+      icon = categoryIcon(category.icon);
     }
 
     return GestureDetector(
@@ -552,7 +572,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(categoryIcon, color: color, size: 20),
+              child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -606,7 +626,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
               ),
             ),
             Text(
-              '${isIncome ? '+' : '-'}${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(tx.amount)}',
+              '${isIncome ? '+' : '-'}$currencySymbol${NumberFormat('#,##0.00').format(tx.amount)}',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -621,39 +641,4 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
 
   String? _getCategoryName(CategoryModel? category, AppLocalizations l) =>
       localizedCategoryName(category, l);
-
-  IconData _getCategoryIcon(String? iconName) {
-    switch (iconName) {
-      case 'wallet':
-        return Icons.wallet;
-      case 'laptop':
-        return Icons.laptop;
-      case 'trending_up':
-        return Icons.trending_up;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'attach_money':
-        return Icons.attach_money;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'directions_car':
-        return Icons.directions_car;
-      case 'receipt':
-        return Icons.receipt;
-      case 'movie':
-        return Icons.movie;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'local_hospital':
-        return Icons.local_hospital;
-      case 'checkroom':
-        return Icons.checkroom;
-      case 'school':
-        return Icons.school;
-      case 'more_horiz':
-        return Icons.more_horiz;
-      default:
-        return Icons.category;
-    }
-  }
 }

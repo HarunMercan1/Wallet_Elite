@@ -21,9 +21,15 @@ class AdaptiveBannerAd extends ConsumerStatefulWidget {
 }
 
 class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
+  // Yüklenemeyen reklam için yeniden deneme aralığı (klavye açılıp kapanması
+  // gibi her ekran değişikliğinde yeni istek gönderilmesin)
+  static const _retryAfter = Duration(seconds: 60);
+
   BannerAd? _banner;
   bool _loaded = false;
+  bool _requesting = false;
   int? _loadedForWidth;
+  DateTime? _lastFailureAt;
 
   @override
   void didChangeDependencies() {
@@ -32,15 +38,28 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
   }
 
   Future<void> _maybeLoad() async {
-    if (!ref.read(showAdsProvider)) return;
+    if (!ref.read(showAdsProvider) || _requesting) return;
     final width = MediaQuery.sizeOf(context).width.truncate();
     if (_loadedForWidth == width && _banner != null) return;
+    final lastFailureAt = _lastFailureAt;
+    if (_loadedForWidth == width &&
+        lastFailureAt != null &&
+        DateTime.now().difference(lastFailureAt) < _retryAfter) {
+      return;
+    }
     _loadedForWidth = width;
 
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      width,
-    );
-    if (!mounted || size == null) return;
+    // Boyut beklenirken ikinci bir çağrı aynı reklamı tekrar istemesin
+    _requesting = true;
+    final AdSize? size;
+    try {
+      size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        width,
+      );
+    } finally {
+      _requesting = false;
+    }
+    if (!mounted || size == null || !ref.read(showAdsProvider)) return;
 
     _disposeBanner();
     final banner = BannerAd(
@@ -49,11 +68,13 @@ class _AdaptiveBannerAdState extends ConsumerState<AdaptiveBannerAd> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
+          _lastFailureAt = null;
           if (mounted) setState(() => _loaded = true);
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('Banner yüklenemedi: $error');
           ad.dispose();
+          _lastFailureAt = DateTime.now();
           if (mounted) {
             setState(() {
               _banner = null;

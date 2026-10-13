@@ -1,5 +1,6 @@
 // lib/features/premium/presentation/paywall_view.dart
 
+import '../../auth/data/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -30,14 +31,31 @@ class PaywallView extends ConsumerStatefulWidget {
 
 class _PaywallViewState extends ConsumerState<PaywallView> {
   _Plan _selected = _Plan.yearly;
+  bool _loadingOfferings = true;
 
   @override
   void initState() {
     super.initState();
-    // Fiyatları güncel çek
-    Future.microtask(
-      () => ref.read(premiumControllerProvider.notifier).refreshOfferings(),
-    );
+    // Fiyatları güncel çek (gerekirse satın almayı yeniden yapılandır)
+    Future.microtask(() async {
+      await ref
+          .read(premiumControllerProvider.notifier)
+          .prepare(ref.read(currentUserIdProvider));
+      if (mounted) setState(() => _loadingOfferings = false);
+    });
+  }
+
+  /// Teklifte bulunan planlar (gösterim sırasıyla)
+  List<_Plan> _availablePlans(Offering? offering) => [
+    for (final plan in const [_Plan.yearly, _Plan.monthly, _Plan.lifetime])
+      if (_packageFor(offering, plan) != null) plan,
+  ];
+
+  /// Seçili plan teklifte yoksa satın alınabilir ilk plan
+  _Plan _effectivePlan(Offering? offering) {
+    final available = _availablePlans(offering);
+    if (available.isEmpty || available.contains(_selected)) return _selected;
+    return available.first;
   }
 
   Package? _packageFor(Offering? offering, _Plan plan) {
@@ -73,10 +91,8 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
   Future<void> _purchase() async {
     final l = AppLocalizations.of(context)!;
     final controller = ref.read(premiumControllerProvider.notifier);
-    final package = _packageFor(
-      ref.read(premiumControllerProvider).offering,
-      _selected,
-    );
+    final offering = ref.read(premiumControllerProvider).offering;
+    final package = _packageFor(offering, _effectivePlan(offering));
     if (package == null) {
       _showMessage(l.purchaseNotAvailable);
       return;
@@ -148,9 +164,12 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
         ? ((1 - yearly.price / (monthly.price * 12)) * 100).round()
         : 0;
     final yearlyTrialDays = _freeTrialDays(yearly);
-    final selectedTrialDays = _freeTrialDays(
-      _packageFor(offering, _selected)?.storeProduct,
-    );
+    final selectedPlan = _effectivePlan(offering);
+    final selectedPackage = _packageFor(offering, selectedPlan);
+    final selectedTrialDays = _freeTrialDays(selectedPackage?.storeProduct);
+    // Teklif yüklendiyse yalnızca satın alınabilen planlar listelenir
+    bool showPlan(_Plan plan) =>
+        offering == null || _packageFor(offering, plan) != null;
 
     return Scaffold(
       backgroundColor: isDark ? colorTheme.backgroundDark : Colors.white,
@@ -210,43 +229,52 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                       ),
                     ),
                   const SizedBox(height: 16),
-                  _buildPlan(
-                    _Plan.yearly,
-                    l.planYearly,
-                    _packageFor(offering, _Plan.yearly),
-                    l.perYear,
-                    colorTheme.primary,
-                    isDark,
-                    badge: yearlySaving > 0
-                        ? l.savePercent(yearlySaving)
-                        : l.bestValue,
-                    notes: [
-                      if (yearlyTrialDays > 0) l.freeTrialDays(yearlyTrialDays),
-                      if (yearly?.pricePerMonthString != null)
-                        l.pricePerMonth(yearly!.pricePerMonthString!),
-                    ],
-                  ),
-                  _buildPlan(
-                    _Plan.monthly,
-                    l.planMonthly,
-                    _packageFor(offering, _Plan.monthly),
-                    l.perMonth,
-                    colorTheme.primary,
-                    isDark,
-                  ),
-                  _buildPlan(
-                    _Plan.lifetime,
-                    l.planLifetime,
-                    _packageFor(offering, _Plan.lifetime),
-                    l.oneTimePayment,
-                    colorTheme.primary,
-                    isDark,
-                  ),
+                  if (showPlan(_Plan.yearly))
+                    _buildPlan(
+                      selectedPlan,
+                      _Plan.yearly,
+                      l.planYearly,
+                      _packageFor(offering, _Plan.yearly),
+                      l.perYear,
+                      colorTheme.primary,
+                      isDark,
+                      badge: yearlySaving > 0
+                          ? l.savePercent(yearlySaving)
+                          : l.bestValue,
+                      notes: [
+                        if (yearlyTrialDays > 0)
+                          l.freeTrialDays(yearlyTrialDays),
+                        if (yearly?.pricePerMonthString != null)
+                          l.pricePerMonth(yearly!.pricePerMonthString!),
+                      ],
+                    ),
+                  if (showPlan(_Plan.monthly))
+                    _buildPlan(
+                      selectedPlan,
+                      _Plan.monthly,
+                      l.planMonthly,
+                      _packageFor(offering, _Plan.monthly),
+                      l.perMonth,
+                      colorTheme.primary,
+                      isDark,
+                    ),
+                  if (showPlan(_Plan.lifetime))
+                    _buildPlan(
+                      selectedPlan,
+                      _Plan.lifetime,
+                      l.planLifetime,
+                      _packageFor(offering, _Plan.lifetime),
+                      l.oneTimePayment,
+                      colorTheme.primary,
+                      isDark,
+                    ),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 52,
                     child: ElevatedButton(
-                      onPressed: premium.isBusy ? null : _purchase,
+                      onPressed: premium.isBusy || selectedPackage == null
+                          ? null
+                          : _purchase,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorTheme.primary,
                         foregroundColor: colorTheme.onPrimary,
@@ -278,7 +306,18 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
                     onPressed: premium.isBusy ? null : _restore,
                     child: Text(l.restorePurchases),
                   ),
-                  if (offering == null)
+                  if (offering == null && _loadingOfferings)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Center(
+                        child: SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    )
+                  else if (offering == null)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
@@ -306,6 +345,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
   }
 
   Widget _buildPlan(
+    _Plan selectedPlan,
     _Plan plan,
     String title,
     Package? package,
@@ -315,7 +355,7 @@ class _PaywallViewState extends ConsumerState<PaywallView> {
     String? badge,
     List<String> notes = const [],
   }) {
-    final isSelected = _selected == plan;
+    final isSelected = selectedPlan == plan;
     final price = package?.storeProduct.priceString ?? '—';
 
     return GestureDetector(

@@ -1,4 +1,5 @@
 // lib/features/home/presentation/dashboard_view.dart
+import '../../../core/utils/icon_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -389,7 +390,7 @@ class DashboardView extends ConsumerWidget {
       radius: radius,
       backgroundColor: colorTheme.primary,
       child: Text(
-        profile?.fullName?.substring(0, 1).toUpperCase() ?? 'U',
+        _initialOf(profile?.fullName),
         style: TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.bold,
@@ -541,7 +542,7 @@ class DashboardView extends ConsumerWidget {
                           child: _buildBalanceStat(
                             l.income,
                             _formatMoney(totalIncome, currencySymbol),
-                            Icons.arrow_upward_rounded,
+                            Icons.arrow_downward_rounded,
                             colorTheme.success,
                             onPrimary,
                           ),
@@ -551,7 +552,7 @@ class DashboardView extends ConsumerWidget {
                           child: _buildBalanceStat(
                             l.expense,
                             _formatMoney(totalExpense, currencySymbol),
-                            Icons.arrow_downward_rounded,
+                            Icons.arrow_upward_rounded,
                             colorTheme.error,
                             onPrimary,
                           ),
@@ -572,7 +573,7 @@ class DashboardView extends ConsumerWidget {
 
   /// Eksi işareti para biriminin önüne gelir: -₺200,00
   String _formatMoney(double value, String currencySymbol) {
-    final formatted = NumberFormat('#,##0.00', 'tr_TR').format(value.abs());
+    final formatted = NumberFormat('#,##0.00').format(value.abs());
     return '${value < 0 ? '-' : ''}$currencySymbol$formatted';
   }
 
@@ -744,7 +745,7 @@ class DashboardView extends ConsumerWidget {
     final isIncome = transaction.type == 'income';
     final color = isIncome ? colorTheme.success : colorTheme.error;
 
-    final accountsList = ref.read(accountsProvider).value ?? [];
+    final accountsList = ref.watch(accountsProvider).value ?? [];
     final txAccount = accountsList.firstWhere(
       (a) => a.id == transaction.accountId,
       orElse: () => AccountModel(
@@ -759,11 +760,9 @@ class DashboardView extends ConsumerWidget {
     );
     final String currencySymbol = txAccount.currencySymbol;
 
-    IconData categoryIcon = isIncome
-        ? Icons.arrow_downward
-        : Icons.arrow_upward;
+    IconData icon = isIncome ? Icons.arrow_downward : Icons.arrow_upward;
     if (category != null) {
-      categoryIcon = _getCategoryIcon(category.icon);
+      icon = categoryIcon(category.icon);
     }
 
     return GestureDetector(
@@ -791,7 +790,7 @@ class DashboardView extends ConsumerWidget {
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(categoryIcon, color: color, size: 20),
+              child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -814,7 +813,7 @@ class DashboardView extends ConsumerWidget {
                   Row(
                     children: [
                       Text(
-                        DateFormat('dd MMM', 'tr_TR').format(transaction.date),
+                        DateFormat('dd MMM').format(transaction.date),
                         style: TextStyle(
                           fontSize: 12,
                           color: colorTheme.textSecondary,
@@ -847,7 +846,7 @@ class DashboardView extends ConsumerWidget {
               ),
             ),
             Text(
-              '${isIncome ? '+' : '-'}$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(transaction.amount)}',
+              '${isIncome ? '+' : '-'}$currencySymbol${NumberFormat('#,##0.00').format(transaction.amount)}',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -862,41 +861,6 @@ class DashboardView extends ConsumerWidget {
 
   String? _getCategoryName(CategoryModel? category, AppLocalizations l) =>
       localizedCategoryName(category, l);
-
-  IconData _getCategoryIcon(String? iconName) {
-    switch (iconName) {
-      case 'wallet':
-        return Icons.wallet;
-      case 'laptop':
-        return Icons.laptop;
-      case 'trending_up':
-        return Icons.trending_up;
-      case 'card_giftcard':
-        return Icons.card_giftcard;
-      case 'attach_money':
-        return Icons.attach_money;
-      case 'shopping_cart':
-        return Icons.shopping_cart;
-      case 'directions_car':
-        return Icons.directions_car;
-      case 'receipt':
-        return Icons.receipt;
-      case 'movie':
-        return Icons.movie;
-      case 'restaurant':
-        return Icons.restaurant;
-      case 'local_hospital':
-        return Icons.local_hospital;
-      case 'checkroom':
-        return Icons.checkroom;
-      case 'school':
-        return Icons.school;
-      case 'more_horiz':
-        return Icons.more_horiz;
-      default:
-        return Icons.category;
-    }
-  }
 
   Widget _buildQuickActionTile({
     required String label,
@@ -978,4 +942,10 @@ class DashboardView extends ConsumerWidget {
     return '${words.sublist(0, bestSplit).join(' ')}\n'
         '${words.sublist(bestSplit).join(' ')}';
   }
+}
+
+/// Adın baş harfi; ad boşsa 'U'.
+String _initialOf(String? name) {
+  final trimmed = name?.trim() ?? '';
+  return trimmed.isEmpty ? 'U' : trimmed.characters.first.toUpperCase();
 }

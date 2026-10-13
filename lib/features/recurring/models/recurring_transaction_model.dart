@@ -19,6 +19,59 @@ enum RecurringFrequency {
   }
 }
 
+/// Bir tekrarlayan işlemin, [notBefore] gününde ya da sonrasında çalışacağı
+/// ilk tarih. Başlangıç tarihi daha ilerideyse oradan başlar.
+///
+/// - Haftalık: [dayOfWeek] (0 = Pazar … 6 = Cumartesi) verilmişse o güne denk
+///   gelen ilk tarih; sonraki tekrarlar sunucuda +7 gün ile ilerler.
+/// - Aylık: [dayOfMonth] (yoksa başlangıç günü); kısa aylarda ayın son günü.
+/// - Yıllık: başlangıç tarihinin ay/günü.
+DateTime firstRecurringDate({
+  required RecurringFrequency frequency,
+  required DateTime startDate,
+  required DateTime notBefore,
+  int? dayOfMonth,
+  int? dayOfWeek,
+}) {
+  final start = DateTime(startDate.year, startDate.month, startDate.day);
+  final floor = DateTime(notBefore.year, notBefore.month, notBefore.day);
+  final base = start.isAfter(floor) ? start : floor;
+
+  DateTime clamped(int year, int month, int day) {
+    final first = DateTime(year, month, 1);
+    final lastDay = DateTime(first.year, first.month + 1, 0).day;
+    return DateTime(first.year, first.month, day > lastDay ? lastDay : day);
+  }
+
+  switch (frequency) {
+    case RecurringFrequency.daily:
+      return base;
+
+    case RecurringFrequency.weekly:
+      if (dayOfWeek == null) {
+        // Başlangıç tarihinin haftalık ritmini koru
+        final passed = base.difference(start).inDays;
+        final remainder = passed % 7;
+        return remainder == 0
+            ? base
+            : DateTime(base.year, base.month, base.day + (7 - remainder));
+      }
+      final delta = (dayOfWeek - base.weekday % 7 + 7) % 7;
+      return DateTime(base.year, base.month, base.day + delta);
+
+    case RecurringFrequency.monthly:
+      final day = dayOfMonth ?? start.day;
+      final thisMonth = clamped(base.year, base.month, day);
+      if (!thisMonth.isBefore(base)) return thisMonth;
+      return clamped(base.year, base.month + 1, day);
+
+    case RecurringFrequency.yearly:
+      final thisYear = clamped(base.year, start.month, start.day);
+      if (!thisYear.isBefore(base)) return thisYear;
+      return clamped(base.year + 1, start.month, start.day);
+  }
+}
+
 /// Tekrarlayan işlem modeli
 class RecurringTransactionModel {
   final String id;
@@ -149,6 +202,24 @@ class RecurringTransactionModel {
     return isActive && !isEnded && !nextExec.isAfter(today);
   }
 
+  /// [from] gününden itibaren takvime uyan ilk çalışma tarihi. Zaten
+  /// çalıştırılmış bir gün (son çalışma tarihi) tekrar seçilmez.
+  DateTime nextDateFrom(DateTime from) {
+    var floor = DateTime(from.year, from.month, from.day);
+    final last = lastExecutionDate;
+    if (last != null) {
+      final afterLast = DateTime(last.year, last.month, last.day + 1);
+      if (afterLast.isAfter(floor)) floor = afterLast;
+    }
+    return firstRecurringDate(
+      frequency: frequency,
+      startDate: startDate,
+      notBefore: floor,
+      dayOfMonth: dayOfMonth,
+      dayOfWeek: dayOfWeek,
+    );
+  }
+
   /// Sonraki çalışma tarihini hesapla
   DateTime calculateNextExecutionDate() {
     final now = DateTime.now();
@@ -190,20 +261,23 @@ class RecurringTransactionModel {
     return next;
   }
 
-  /// Kopyala ve güncelle
+  static const _unset = Object();
+
+  /// Kopyala ve güncelle. Boş bırakılabilen alanlar (kategori, açıklama,
+  /// gün seçimleri, bitiş tarihi) açıkça `null` verilerek temizlenebilir.
   RecurringTransactionModel copyWith({
     String? id,
     String? userId,
     String? accountId,
-    String? categoryId,
+    Object? categoryId = _unset,
     double? amount,
     String? type,
-    String? description,
+    Object? description = _unset,
     RecurringFrequency? frequency,
-    int? dayOfMonth,
-    int? dayOfWeek,
+    Object? dayOfMonth = _unset,
+    Object? dayOfWeek = _unset,
     DateTime? startDate,
-    DateTime? endDate,
+    Object? endDate = _unset,
     DateTime? nextExecutionDate,
     DateTime? lastExecutionDate,
     bool? isActive,
@@ -214,15 +288,23 @@ class RecurringTransactionModel {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       accountId: accountId ?? this.accountId,
-      categoryId: categoryId ?? this.categoryId,
+      categoryId: identical(categoryId, _unset)
+          ? this.categoryId
+          : categoryId as String?,
       amount: amount ?? this.amount,
       type: type ?? this.type,
-      description: description ?? this.description,
+      description: identical(description, _unset)
+          ? this.description
+          : description as String?,
       frequency: frequency ?? this.frequency,
-      dayOfMonth: dayOfMonth ?? this.dayOfMonth,
-      dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+      dayOfMonth: identical(dayOfMonth, _unset)
+          ? this.dayOfMonth
+          : dayOfMonth as int?,
+      dayOfWeek: identical(dayOfWeek, _unset)
+          ? this.dayOfWeek
+          : dayOfWeek as int?,
       startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      endDate: identical(endDate, _unset) ? this.endDate : endDate as DateTime?,
       nextExecutionDate: nextExecutionDate ?? this.nextExecutionDate,
       lastExecutionDate: lastExecutionDate ?? this.lastExecutionDate,
       isActive: isActive ?? this.isActive,

@@ -2,8 +2,9 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/wallet/presentation/edit_transaction_sheet.dart
 
+import '../../../core/utils/amount_input.dart';
+import '../../../core/utils/category_l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -39,7 +40,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
   void initState() {
     super.initState();
     _amountController = TextEditingController(
-      text: widget.transaction.amount.toString(),
+      text: amountToInputText(widget.transaction.amount),
     );
     _descriptionController = TextEditingController(
       text: widget.transaction.description ?? '',
@@ -189,11 +190,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d*\.?\d{0,2}'),
-                        ),
-                      ],
+                      inputFormatters: [const AmountInputFormatter()],
                       decoration: InputDecoration(
                         prefixText:
                             '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))} ',
@@ -220,13 +217,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                             : colorTheme.success,
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return l.enterAmount;
-                        }
-                        if (double.tryParse(value) == null ||
-                            double.parse(value) <= 0) {
-                          return l.enterAmount;
-                        }
+                        if (parseAmount(value) == null) return l.enterAmount;
                         return null;
                       },
                     ),
@@ -267,7 +258,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                                   ),
                                 ),
                                 child: Text(
-                                  cat.name,
+                                  localizedCategoryName(cat, l) ?? cat.name,
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: isSelected
@@ -318,10 +309,26 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         final date = await showDatePicker(
                           context: context,
                           initialDate: _selectedDate,
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now().add(const Duration(days: 1)),
+                          firstDate: _selectedDate.isBefore(DateTime(2020))
+                              ? _selectedDate
+                              : DateTime(2020),
+                          lastDate: _selectedDate.isAfter(DateTime.now())
+                              ? _selectedDate
+                              : DateTime.now(),
                         );
-                        if (date != null) setState(() => _selectedDate = date);
+                        if (date != null) {
+                          // Yalnızca gün değişir; saat korunur
+                          setState(
+                            () => _selectedDate = DateTime(
+                              date.year,
+                              date.month,
+                              date.day,
+                              _selectedDate.hour,
+                              _selectedDate.minute,
+                              _selectedDate.second,
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.all(14),
@@ -360,8 +367,11 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                     const SizedBox(height: 8),
                     accounts.when(
                       data: (accountsList) {
+                        final hasSelected = accountsList.any(
+                          (a) => a.id == _selectedAccountId,
+                        );
                         return DropdownButtonFormField<String>(
-                          value: _selectedAccountId,
+                          initialValue: hasSelected ? _selectedAccountId : null,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -489,6 +499,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
       widget.transaction.id,
     );
 
+    if (!mounted) return;
     setState(() => _isDeleting = false);
 
     if (mounted) {
@@ -529,7 +540,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
       final supabase = Supabase.instance.client;
 
       // New values
-      final newAmount = double.parse(_amountController.text);
+      final newAmount = parseAmount(_amountController.text)!;
       final newDescription = _descriptionController.text.isEmpty
           ? null
           : _descriptionController.text;
@@ -551,6 +562,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
       ref.invalidate(transactionsProvider);
       ref.invalidate(accountsProvider);
 
+      if (!mounted) return;
       setState(() => _isLoading = false);
 
       if (mounted) {
@@ -563,6 +575,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         Navigator.pop(context);
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

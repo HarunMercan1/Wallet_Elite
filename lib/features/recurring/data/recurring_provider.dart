@@ -119,6 +119,9 @@ class RecurringController extends StateNotifier<AsyncValue<void>> {
       _ref.invalidate(recurringTransactionsProvider);
       _ref.invalidate(activeRecurringTransactionsProvider);
 
+      // Bugüne denk gelen kayıt hemen işleme dönüşsün
+      await executeDueTransactions();
+
       state = const AsyncValue.data(null);
       return true;
     } catch (e, st) {
@@ -136,6 +139,9 @@ class RecurringController extends StateNotifier<AsyncValue<void>> {
 
       _ref.invalidate(recurringTransactionsProvider);
       _ref.invalidate(activeRecurringTransactionsProvider);
+
+      // Bugüne denk gelen kayıt hemen işleme dönüşsün
+      await executeDueTransactions();
 
       state = const AsyncValue.data(null);
       return true;
@@ -170,6 +176,7 @@ class RecurringController extends StateNotifier<AsyncValue<void>> {
 
       _ref.invalidate(recurringTransactionsProvider);
       _ref.invalidate(activeRecurringTransactionsProvider);
+      if (isActive) await executeDueTransactions();
 
       return true;
     } catch (e) {

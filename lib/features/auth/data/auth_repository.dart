@@ -42,6 +42,14 @@ class AuthRepository {
         '📧 Kayıt response: user=${response.user?.id}, session=${response.session != null}',
       );
 
+      // E-posta onayı açıkken, zaten kayıtlı bir adres için Supabase hata
+      // vermez; kimliği (identities) boş sahte bir kullanıcı döner.
+      if (response.user != null &&
+          response.session == null &&
+          (response.user!.identities?.isEmpty ?? false)) {
+        return {'success': false, 'error': 'email_in_use'};
+      }
+
       if (response.user != null) {
         debugPrint('✅ Kayıt başarılı! User ID: ${response.user!.id}');
 
@@ -216,7 +224,13 @@ class AuthRepository {
 
   /// Çıkış yap
   Future<void> signOut() async {
-    await _supabase.auth.signOut();
+    // Yerel oturum her durumda kapanır; sunucuya ulaşılamazsa (çevrimdışı)
+    // hata Google oturumunun kapatılmasını engellemesin.
+    try {
+      await _supabase.auth.signOut();
+    } catch (e) {
+      debugPrint('Supabase çıkış hatası: $e');
+    }
     try {
       await _googleSignIn
           .disconnect(); // Disconnect önemli, hesabı unutmasını sağlar
@@ -282,8 +296,9 @@ class AuthRepository {
       final fullName =
           user?.userMetadata?['full_name'] ??
           user?.userMetadata?['display_name'] ??
-          user?.email?.split('@').first ??
-          'Kullanıcı';
+          user?.email?.split('@').first;
+      // Ad bulunamazsa boş kalır; ekranlar kullanıcının dilinde "Kullanıcı"
+      // gösterir.
 
       // Yeni profil oluştur
       await _supabase.from('profiles').insert({

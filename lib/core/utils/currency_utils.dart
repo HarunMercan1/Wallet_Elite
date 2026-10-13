@@ -11,8 +11,13 @@ class CurrencyUtils {
         return '£';
       case 'TRY':
         return '₺';
+      case 'JPY':
+        return '¥';
+      case 'RUB':
+        return '₽';
       default:
-        return currencyCode;
+        // Simgesi bilinmeyen para birimi: kod ile tutar bitişmesin
+        return '$currencyCode ';
     }
   }
 }

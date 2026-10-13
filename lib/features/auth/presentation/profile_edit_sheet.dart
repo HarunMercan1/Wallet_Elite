@@ -1,6 +1,7 @@
 // lib/features/auth/presentation/profile_edit_sheet.dart
 
 import 'dart:io';
+import '../../../core/ads/full_screen_ad_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -306,7 +307,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
       radius: 56,
       backgroundColor: colorTheme.cardColor,
       child: Text(
-        widget.profile.fullName?.substring(0, 1).toUpperCase() ?? 'U',
+        _initialOf(widget.profile.fullName),
         style: TextStyle(
           fontSize: 40,
           fontWeight: FontWeight.bold,
@@ -317,6 +318,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
   }
 
   Future<void> _pickImageFromGallery() async {
+    FullScreenAdGate.externalFlowStarted();
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -631,4 +633,10 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
       ),
     );
   }
+}
+
+/// Adın baş harfi; ad boşsa 'U'.
+String _initialOf(String? name) {
+  final trimmed = name?.trim() ?? '';
+  return trimmed.isEmpty ? 'U' : trimmed.characters.first.toUpperCase();
 }

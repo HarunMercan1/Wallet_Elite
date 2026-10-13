@@ -2,6 +2,8 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/month_comparison_view.dart
 
+import '../../../core/utils/number_utils.dart';
+import '../../../core/utils/category_l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -17,10 +19,14 @@ class MonthComparisonView extends ConsumerWidget {
   final List<TransactionModel> allTransactions;
   final Map<String, CategoryModel> categoryMap;
 
+  /// Verilmezse ayarlardaki para birimi kullanılır
+  final String? currencySymbol;
+
   const MonthComparisonView({
     super.key,
     required this.allTransactions,
     required this.categoryMap,
+    this.currencySymbol,
   });
 
   @override
@@ -33,24 +39,22 @@ class MonthComparisonView extends ConsumerWidget {
     final now = DateTime.now();
     final thisMonthStart = DateTime(now.year, now.month, 1);
     final lastMonthStart = DateTime(now.year, now.month - 1, 1);
-    final lastMonthEnd = DateTime(now.year, now.month, 0);
+    final nextMonthStart = DateTime(now.year, now.month + 1, 1);
 
-    // Bu ay işlemleri
+    // Her ay kendi ilk gününden (dahil) sonraki ayın ilk gününe (hariç)
     final thisMonthTx = allTransactions
         .where(
           (tx) =>
-              tx.date.isAfter(thisMonthStart.subtract(const Duration(days: 1))),
+              !tx.date.isBefore(thisMonthStart) &&
+              tx.date.isBefore(nextMonthStart),
         )
         .toList();
 
-    // Geçen ay işlemleri
     final lastMonthTx = allTransactions
         .where(
           (tx) =>
-              tx.date.isAfter(
-                lastMonthStart.subtract(const Duration(days: 1)),
-              ) &&
-              tx.date.isBefore(lastMonthEnd.add(const Duration(days: 1))),
+              !tx.date.isBefore(lastMonthStart) &&
+              tx.date.isBefore(thisMonthStart),
         )
         .toList();
 
@@ -58,7 +62,9 @@ class MonthComparisonView extends ConsumerWidget {
     final thisMonthStats = _calculateStats(thisMonthTx);
     final lastMonthStats = _calculateStats(lastMonthTx);
 
-    final currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+    final currencySymbol =
+        this.currencySymbol ??
+        CurrencyUtils.getSymbol(ref.watch(currencyProvider));
 
     return Scaffold(
       backgroundColor: colorTheme.background,
@@ -142,7 +148,7 @@ class MonthComparisonView extends ConsumerWidget {
       if (tx.type == 'income') {
         income += tx.amount;
         incomeCount++;
-      } else {
+      } else if (tx.type == 'expense') {
         expense += tx.amount;
         expenseCount++;
       }
@@ -165,16 +171,17 @@ class MonthComparisonView extends ConsumerWidget {
     dynamic colorTheme,
     String currencySymbol,
   ) {
-    final incomeChange = lastMonth['income']! > 0
+    // Geçen ay hiç veri yoksa yüzde hesaplanamaz (null → "—")
+    final double? incomeChange = lastMonth['income']! > 0
         ? ((thisMonth['income']! - lastMonth['income']!) /
               lastMonth['income']! *
               100)
-        : 0.0;
-    final expenseChange = lastMonth['expense']! > 0
+        : null;
+    final double? expenseChange = lastMonth['expense']! > 0
         ? ((thisMonth['expense']! - lastMonth['expense']!) /
               lastMonth['expense']! *
               100)
-        : 0.0;
+        : null;
     final savingsChange = thisMonth['balance']! - lastMonth['balance']!;
 
     return Container(
@@ -191,7 +198,7 @@ class MonthComparisonView extends ConsumerWidget {
             thisMonth: thisMonth['income']!,
             lastMonth: lastMonth['income']!,
             change: incomeChange,
-            isPositive: incomeChange >= 0, // Gelir artışı iyi
+            isPositive: (incomeChange ?? 0) >= 0, // Gelir artışı iyi
             colorTheme: colorTheme,
             isDark: isDark,
             currencySymbol: currencySymbol,
@@ -203,7 +210,7 @@ class MonthComparisonView extends ConsumerWidget {
             thisMonth: thisMonth['expense']!,
             lastMonth: lastMonth['expense']!,
             change: expenseChange,
-            isPositive: expenseChange <= 0, // Gider azalışı iyi
+            isPositive: (expenseChange ?? 0) <= 0, // Gider azalışı iyi
             colorTheme: colorTheme,
             isDark: isDark,
             currencySymbol: currencySymbol,
@@ -230,15 +237,28 @@ class MonthComparisonView extends ConsumerWidget {
     required String label,
     required double thisMonth,
     required double lastMonth,
-    required double change,
+    required double? change,
     required bool isPositive,
     required dynamic colorTheme,
     required bool isDark,
     required String currencySymbol,
     bool isAmount = false,
   }) {
-    final formatter = NumberFormat('#,##0.00', 'tr_TR');
-    final color = isPositive ? colorTheme.success : colorTheme.error;
+    final formatter = NumberFormat('#,##0.00');
+    final color = change == null
+        ? colorTheme.textSecondary
+        : (isPositive ? colorTheme.success : colorTheme.error);
+
+    final String changeText;
+    if (change == null) {
+      changeText = '—';
+    } else if (isAmount) {
+      changeText =
+          '${change >= 0 ? '+' : '-'}$currencySymbol${formatter.format(change.abs())}';
+    } else {
+      changeText =
+          '${change >= 0 ? '↑' : '↓'} ${formatPercent(change.abs(), decimals: 1)}';
+    }
 
     return Row(
       children: [
@@ -255,7 +275,7 @@ class MonthComparisonView extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '$currencySymbol${formatter.format(thisMonth)}',
+                '${thisMonth < 0 ? '-' : ''}$currencySymbol${formatter.format(thisMonth.abs())}',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -263,7 +283,7 @@ class MonthComparisonView extends ConsumerWidget {
                 ),
               ),
               Text(
-                '${isAmount ? "" : ""}${isAmount ? (change >= 0 ? "+" : "") : (change >= 0 ? "↑" : "↓")}${isAmount ? formatter.format(change) : "${change.abs().toStringAsFixed(1)}%"}',
+                changeText,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -315,7 +335,7 @@ class MonthComparisonView extends ConsumerWidget {
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
-                maxY: maxValue * 1.2,
+                maxY: maxValue > 0 ? maxValue * 1.2 : 1,
                 barTouchData: BarTouchData(enabled: true),
                 titlesData: FlTitlesData(
                   leftTitles: const AxisTitles(
@@ -407,11 +427,15 @@ class MonthComparisonView extends ConsumerWidget {
             children: [
               _buildLegendItem(
                 l.lastMonth,
-                colorTheme.primary.withValues(alpha: 0.5),
+                colorTheme.textSecondary.withValues(alpha: 0.45),
                 colorTheme,
               ),
               const SizedBox(width: 24),
-              _buildLegendItem(l.thisMonth, colorTheme.primary, colorTheme),
+              _buildLegendItem(
+                l.thisMonth,
+                colorTheme.textSecondary,
+                colorTheme,
+              ),
             ],
           ),
         ],
@@ -535,7 +559,7 @@ class MonthComparisonView extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        category?.name ?? l.other,
+                        localizedCategoryName(category, l) ?? l.other,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -543,7 +567,7 @@ class MonthComparisonView extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        '$currencySymbol${NumberFormat('#,##0.00', 'tr_TR').format(thisMonthAmount)}',
+                        '$currencySymbol${NumberFormat('#,##0.00').format(thisMonthAmount)}',
                         style: TextStyle(
                           fontSize: 12,
                           color: colorTheme.textSecondary,
@@ -574,7 +598,7 @@ class MonthComparisonView extends ConsumerWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        '${change.abs().toStringAsFixed(0)}%',
+                        formatPercent(change.abs()),
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,

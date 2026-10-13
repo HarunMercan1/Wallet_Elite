@@ -1,10 +1,11 @@
 // lib/features/auth/presentation/login_view.dart
 
+import '../../../core/services/support_actions.dart';
 import 'package:flutter/material.dart';
 import '../../../core/widgets/app_logo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../core/widgets/google_logo.dart';
 import 'package:go_router/go_router.dart';
 import '../data/auth_provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -66,7 +67,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   SizedBox(height: responsive.hp(2)),
 
                   Text(
-                    'Wallet Elite',
+                    // Uygulama adı ülkeye göre değişir (bkz. main.dart)
+                    ref.watch(packageInfoProvider).valueOrNull?.appName ??
+                        'Wallet Elite',
                     style: TextStyle(
                       fontSize: responsive.titleFontSize,
                       fontWeight: FontWeight.bold,
@@ -135,6 +138,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                             TextFormField(
                               controller: _nameController,
                               textCapitalization: TextCapitalization.words,
+                              textInputAction: TextInputAction.next,
+                              autofillHints: const [AutofillHints.name],
                               style: TextStyle(color: colorTheme.textPrimary),
                               decoration: InputDecoration(
                                 labelText: l.fullName,
@@ -184,6 +189,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            autocorrect: false,
+                            autofillHints: const [AutofillHints.email],
                             style: TextStyle(color: colorTheme.textPrimary),
                             decoration: InputDecoration(
                               labelText: l.email,
@@ -216,12 +224,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               ),
                             ),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l.enterEmail;
-                              }
-                              if (!value.contains('@')) {
-                                return l.validEmail;
-                              }
+                              final email = value?.trim() ?? '';
+                              if (email.isEmpty) return l.enterEmail;
+                              if (!_isValidEmail(email)) return l.validEmail;
                               return null;
                             },
                           ),
@@ -232,6 +237,17 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
+                            textInputAction: TextInputAction.done,
+                            autofillHints: [
+                              _isLogin
+                                  ? AutofillHints.password
+                                  : AutofillHints.newPassword,
+                            ],
+                            onFieldSubmitted: (_) {
+                              if (!_isLoading && !_isGoogleLoading) {
+                                _handleEmailAuth(l);
+                              }
+                            },
                             style: TextStyle(color: colorTheme.textPrimary),
                             decoration: InputDecoration(
                               labelText: l.password,
@@ -305,7 +321,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           SizedBox(
                             height: responsive.buttonHeight,
                             child: ElevatedButton(
-                              onPressed: _isLoading
+                              onPressed: _isLoading || _isGoogleLoading
                                   ? null
                                   : () => _handleEmailAuth(l),
                               style: ElevatedButton.styleFrom(
@@ -412,11 +428,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : FaIcon(
-                                    FontAwesomeIcons.google,
-                                    size: responsive.iconM,
-                                    color: colorTheme.error,
-                                  ),
+                                : GoogleLogo(size: responsive.iconM),
                             label: Text(
                               _isGoogleLoading
                                   ? l.signingIn
@@ -452,6 +464,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
       ),
     );
   }
+
+  static final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+  bool _isValidEmail(String email) => _emailPattern.hasMatch(email);
 
   Widget _buildTabButton(
     String label,
@@ -587,52 +603,88 @@ class _LoginViewState extends ConsumerState<LoginView> {
   }
 
   void _showForgotPasswordDialog(AppLocalizations l) {
-    final emailController = TextEditingController();
+    // Giriş formuna yazılan adres hazır gelsin
+    final emailController = TextEditingController(
+      text: _emailController.text.trim(),
+    );
+    final messenger = ScaffoldMessenger.of(context);
+    final colors = context.colors;
+    var isSending = false;
+    String? errorText;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l.forgotPasswordTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l.forgotPasswordText),
-            const SizedBox(height: 16),
-            TextField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: l.email,
-                border: const OutlineInputBorder(),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          title: Text(l.forgotPasswordTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l.forgotPasswordText),
+              const SizedBox(height: 16),
+              TextField(
+                controller: emailController,
+                enabled: !isSending,
+                keyboardType: TextInputType.emailAddress,
+                autocorrect: false,
+                autofillHints: const [AutofillHints.email],
+                decoration: InputDecoration(
+                  labelText: l.email,
+                  errorText: errorText,
+                  border: const OutlineInputBorder(),
+                ),
               ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: isSending ? null : () => Navigator.pop(dialogContext),
+              child: Text(l.cancel),
+            ),
+            ElevatedButton(
+              onPressed: isSending
+                  ? null
+                  : () async {
+                      final email = emailController.text.trim();
+                      if (!_isValidEmail(email)) {
+                        setDialogState(() => errorText = l.validEmail);
+                        return;
+                      }
+                      setDialogState(() {
+                        isSending = true;
+                        errorText = null;
+                      });
+                      final sent = await ref
+                          .read(authControllerProvider)
+                          .resetPassword(email);
+                      if (!dialogContext.mounted) return;
+                      if (sent) {
+                        Navigator.pop(dialogContext);
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(l.passwordResetSent),
+                            backgroundColor: colors.success,
+                          ),
+                        );
+                      } else {
+                        // Gönderilemedi: pencere açık kalır, tekrar denenebilir
+                        setDialogState(() {
+                          isSending = false;
+                          errorText = l.errorOccurred;
+                        });
+                      }
+                    },
+              child: isSending
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(l.send),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (emailController.text.isNotEmpty) {
-                final authController = ref.read(authControllerProvider);
-                await authController.resetPassword(emailController.text.trim());
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(l.passwordResetSent),
-                      backgroundColor: context.colors.success,
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text(l.send),
-          ),
-        ],
       ),
-    );
+    ).then((_) => emailController.dispose());
   }
 }

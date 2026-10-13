@@ -1,5 +1,6 @@
 // lib/features/home/presentation/main_shell.dart
 
+import '../../settings/data/preferences_sync.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
@@ -46,6 +47,8 @@ class MainShell extends ConsumerWidget {
       if (info != null) showUpdateAvailableDialog(context, info);
     });
     ref.watch(localeProvider); // dil değişince yeniden çiz
+    // Yeni cihazda/yeniden kurulumda dil, tema ve para birimini profilden al
+    ref.watch(preferencesRestoreProvider);
     final colorTheme = ref.watch(currentColorThemeProvider);
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;

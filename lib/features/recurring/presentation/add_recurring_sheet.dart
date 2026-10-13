@@ -2,6 +2,8 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/recurring/presentation/add_recurring_sheet.dart
 
+import '../../../core/utils/category_l10n.dart';
+import '../../../core/utils/amount_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -31,12 +33,13 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
   bool _isIncome = false;
   RecurringFrequency _frequency = RecurringFrequency.monthly;
   int _dayOfMonth = 1;
-  int _dayOfWeek = 1; // Pazartesi
+  int _dayOfWeek = 1; // 1 = Pazartesi … 7 = Pazar (DateTime.weekday)
   DateTime _startDate = DateTime.now();
   DateTime? _endDate;
   String? _selectedAccountId;
   String? _selectedCategoryId;
   bool _isLoading = false;
+  bool _saveFailed = false;
 
   bool get isEditing => widget.recurring != null;
 
@@ -45,12 +48,14 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     super.initState();
     if (widget.recurring != null) {
       final r = widget.recurring!;
-      _amountController.text = r.amount.toStringAsFixed(2);
+      _amountController.text = amountToInputText(r.amount);
       _descriptionController.text = r.description ?? '';
       _isIncome = r.isIncome;
       _frequency = r.frequency;
       _dayOfMonth = r.dayOfMonth ?? 1;
-      _dayOfWeek = r.dayOfWeek ?? 1;
+      // Veritabanında 0 = Pazar … 6 = Cumartesi
+      final storedDay = r.dayOfWeek ?? 1;
+      _dayOfWeek = storedDay == 0 ? 7 : storedDay;
       _startDate = r.startDate;
       _endDate = r.endDate;
       _selectedAccountId = r.accountId;
@@ -76,6 +81,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
 
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.85,
+      // Klavye açılınca kaydet butonu ve alanlar altında kalmasın
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       decoration: BoxDecoration(
         color: colorTheme.cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -193,6 +200,15 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
             ),
           ),
 
+          if (_saveFailed)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Text(
+                l.errorOccurred,
+                style: TextStyle(color: colorTheme.error, fontSize: 13),
+              ),
+            ),
+
           // Kaydet butonu
           Padding(
             padding: EdgeInsets.fromLTRB(
@@ -242,7 +258,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
       children: [
         Expanded(
           child: GestureDetector(
-            onTap: () => setState(() => _isIncome = false),
+            onTap: () => _setType(isIncome: false),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
@@ -281,7 +297,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         const SizedBox(width: 12),
         Expanded(
           child: GestureDetector(
-            onTap: () => setState(() => _isIncome = true),
+            onTap: () => _setType(isIncome: true),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
@@ -321,6 +337,15 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     );
   }
 
+  /// Gelir/gider değişince kategori listesi de değişir; eski seçim geçersizdir.
+  void _setType({required bool isIncome}) {
+    if (_isIncome == isIncome) return;
+    setState(() {
+      _isIncome = isIncome;
+      _selectedCategoryId = null;
+    });
+  }
+
   Widget _buildAmountField(
     AppLocalizations l,
     bool isDark,
@@ -329,6 +354,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     return TextFormField(
       controller: _amountController,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: const [AmountInputFormatter()],
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -353,10 +379,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         if (value == null || value.isEmpty) {
           return l.pleaseEnterAmount;
         }
-        final amount = double.tryParse(value.replaceAll(',', '.'));
-        if (amount == null || amount <= 0) {
-          return l.pleaseEnterValidAmount;
-        }
+        if (parseAmount(value) == null) return l.pleaseEnterValidAmount;
         return null;
       },
     );
@@ -389,13 +412,14 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    // İlk hesabı varsayılan olarak seç
-    if (_selectedAccountId == null && accounts.isNotEmpty) {
-      _selectedAccountId = accounts.first.id;
+    // İlk hesabı varsayılan olarak seç (seçili hesap silinmişse de)
+    if (!accounts.any((a) => a.id == _selectedAccountId)) {
+      _selectedAccountId = accounts.isNotEmpty ? accounts.first.id : null;
     }
 
     return DropdownButtonFormField<String>(
-      value: _selectedAccountId,
+      initialValue: _selectedAccountId,
+      isExpanded: true,
       decoration: InputDecoration(
         labelText: l.selectAccount,
         filled: true,
@@ -411,6 +435,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
           value: account.id,
           child: Text(
             account.name,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(color: colorTheme.textPrimary),
           ),
         );
@@ -429,8 +454,13 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     bool isDark,
     ColorTheme colorTheme,
   ) {
+    final hasSelected = categories.any((c) => c.id == _selectedCategoryId);
+
     return DropdownButtonFormField<String>(
-      value: _selectedCategoryId,
+      // Tür değişince alanın iç durumu da sıfırlansın
+      key: ValueKey(_isIncome),
+      initialValue: hasSelected ? _selectedCategoryId : null,
+      isExpanded: true,
       decoration: InputDecoration(
         labelText: l.selectCategory,
         filled: true,
@@ -445,7 +475,8 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         return DropdownMenuItem(
           value: category.id,
           child: Text(
-            category.name,
+            localizedCategoryName(category, l) ?? category.name,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(color: colorTheme.textPrimary),
           ),
         );
@@ -499,7 +530,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     ColorTheme colorTheme,
   ) {
     return DropdownButtonFormField<int>(
-      value: _dayOfMonth,
+      initialValue: _dayOfMonth,
       decoration: InputDecoration(
         labelText: l.dayOfMonth,
         filled: true,
@@ -539,7 +570,7 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     ];
 
     return DropdownButtonFormField<int>(
-      value: _dayOfWeek,
+      initialValue: _dayOfWeek,
       decoration: InputDecoration(
         labelText: l.dayOfWeek,
         filled: true,
@@ -672,19 +703,31 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
   }
 
   Future<void> _selectDate({required bool isEndDate}) async {
+    // Başlangıç tarihi kayıt oluşturulduktan sonra değiştirilemez
+    if (!isEndDate && isEditing) return;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    // Bitiş tarihi başlangıçtan (ve bugünden) önce olamaz
+    final endFloor = _startDate.isAfter(today) ? _startDate : today;
+    final endInitial = (_endDate != null && !_endDate!.isBefore(endFloor))
+        ? _endDate!
+        : endFloor;
+
     final picked = await showDatePicker(
       context: context,
-      initialDate: isEndDate ? (_endDate ?? DateTime.now()) : _startDate,
-      firstDate: DateTime(2020),
+      initialDate: isEndDate ? endInitial : _startDate,
+      firstDate: isEndDate ? endFloor : DateTime(2020),
       lastDate: DateTime(2100),
     );
 
-    if (picked != null) {
+    if (picked != null && mounted) {
       setState(() {
         if (isEndDate) {
           _endDate = picked;
         } else {
           _startDate = picked;
+          if (_endDate != null && _endDate!.isBefore(picked)) _endDate = null;
         }
       });
     }
@@ -694,29 +737,47 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedAccountId == null) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _saveFailed = false;
+    });
 
-    final amount = double.parse(_amountController.text.replaceAll(',', '.'));
+    final amount = parseAmount(_amountController.text)!;
+    final description = _descriptionController.text.trim();
+    final dayOfMonth = _frequency == RecurringFrequency.monthly
+        ? _dayOfMonth
+        : null;
+    // Veritabanı 0 = Pazar … 6 = Cumartesi bekler
+    final dayOfWeek = _frequency == RecurringFrequency.weekly
+        ? _dayOfWeek % 7
+        : null;
 
     final controller = ref.read(recurringControllerProvider.notifier);
 
     bool success;
     if (isEditing) {
-      final updated = widget.recurring!.copyWith(
+      final original = widget.recurring!;
+      var updated = original.copyWith(
         accountId: _selectedAccountId,
         categoryId: _selectedCategoryId,
         amount: amount,
         type: _isIncome ? 'income' : 'expense',
-        description: _descriptionController.text.isEmpty
-            ? null
-            : _descriptionController.text,
+        description: description.isEmpty ? null : description,
         frequency: _frequency,
-        dayOfMonth: _frequency == RecurringFrequency.monthly
-            ? _dayOfMonth
-            : null,
-        dayOfWeek: _frequency == RecurringFrequency.weekly ? _dayOfWeek : null,
+        dayOfMonth: dayOfMonth,
+        dayOfWeek: dayOfWeek,
         endDate: _endDate,
       );
+      // Takvim değiştiyse sıradaki çalışma tarihi de yeniden hesaplanır
+      final scheduleChanged =
+          original.frequency != updated.frequency ||
+          original.dayOfMonth != updated.dayOfMonth ||
+          original.dayOfWeek != updated.dayOfWeek;
+      if (scheduleChanged) {
+        updated = updated.copyWith(
+          nextExecutionDate: updated.nextDateFrom(DateTime.now()),
+        );
+      }
       success = await controller.update(updated);
     } else {
       success = await controller.create(
@@ -724,24 +785,22 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
         categoryId: _selectedCategoryId,
         amount: amount,
         type: _isIncome ? 'income' : 'expense',
-        description: _descriptionController.text.isEmpty
-            ? null
-            : _descriptionController.text,
+        description: description.isEmpty ? null : description,
         frequency: _frequency,
-        dayOfMonth: _frequency == RecurringFrequency.monthly
-            ? _dayOfMonth
-            : null,
-        dayOfWeek: _frequency == RecurringFrequency.weekly ? _dayOfWeek : null,
+        dayOfMonth: dayOfMonth,
+        dayOfWeek: dayOfWeek,
         startDate: _startDate,
         endDate: _endDate,
       );
     }
 
-    setState(() => _isLoading = false);
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+      _saveFailed = !success;
+    });
 
-    if (success && mounted) {
-      Navigator.of(context).pop();
-    }
+    if (success) Navigator.of(context).pop();
   }
 
   Future<void> _deleteRecurring() async {

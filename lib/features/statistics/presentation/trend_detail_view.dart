@@ -2,6 +2,7 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/statistics/presentation/trend_detail_view.dart
 
+import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -15,10 +16,20 @@ class TrendDetailView extends ConsumerStatefulWidget {
   final List<TransactionModel> transactions;
   final String periodLabel;
 
+  /// Seçili dönemden bağımsız tüm işlemler. Grafik (son 7 gün / 4 hafta /
+  /// 3 ay) ve ay karşılaştırması kendi zaman aralığını kullandığı için
+  /// bunlardan hesaplanır; verilmezse dönem işlemleri kullanılır.
+  final List<TransactionModel>? allTransactions;
+
+  /// Verilmezse ayarlardaki para birimi kullanılır
+  final String? currencySymbol;
+
   const TrendDetailView({
     super.key,
     required this.transactions,
     required this.periodLabel,
+    this.allTransactions,
+    this.currencySymbol,
   });
 
   @override
@@ -51,6 +62,13 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     _animationController.dispose();
     super.dispose();
   }
+
+  String get _symbol =>
+      widget.currencySymbol ??
+      CurrencyUtils.getSymbol(ref.watch(currencyProvider));
+
+  List<TransactionModel> get _allTransactions =>
+      widget.allTransactions ?? widget.transactions;
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +295,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
           ),
           const SizedBox(height: 8),
           Text(
-            '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(chartData.values.fold<double>(0, (sum, v) => sum + v))}',
+            '$_symbol${NumberFormat('#,##0.00').format(chartData.values.fold<double>(0, (sum, v) => sum + v))}',
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -408,8 +426,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             Expanded(
               child: _buildStatCard(
                 title: l.averageTransaction,
-                value:
-                    '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(avg)}',
+                value: '$_symbol${NumberFormat('#,##0').format(avg)}',
                 icon: Icons.calculate,
                 color: colorTheme.warning,
                 isDark: isDark,
@@ -425,7 +442,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               child: _buildStatCard(
                 title: _showExpenses ? l.biggestExpense : l.biggestIncome,
                 value: maxTx != null
-                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(maxTx.amount)}'
+                    ? '$_symbol${NumberFormat('#,##0').format(maxTx.amount)}'
                     : '-',
                 icon: Icons.arrow_upward,
                 color: _showExpenses ? colorTheme.error : colorTheme.success,
@@ -436,9 +453,9 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             const SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
-                title: _showExpenses ? l.leastSpendingCategory : l.income,
+                title: l.lowestAmount,
                 value: minTx != null
-                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(minTx.amount)}'
+                    ? '$_symbol${NumberFormat('#,##0').format(minTx.amount)}'
                     : '-',
                 icon: Icons.arrow_downward,
                 color: colorTheme.info,
@@ -599,7 +616,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               style: TextStyle(fontSize: 13, color: colorTheme.textSecondary),
             ),
             Text(
-              '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(value)} avg',
+              '$_symbol${NumberFormat('#,##0').format(value)}',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -629,7 +646,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
   ) {
     // Calculate this period vs last period
     final now = DateTime.now();
-    final thisMonth = widget.transactions
+    final thisMonth = _allTransactions
         .where(
           (tx) =>
               tx.type == (_showExpenses ? 'expense' : 'income') &&
@@ -638,7 +655,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
         )
         .fold<double>(0, (sum, tx) => sum + tx.amount);
 
-    final lastMonth = widget.transactions
+    final lastMonth = _allTransactions
         .where((tx) {
           final lastMonthDate = DateTime(now.year, now.month - 1, 1);
           return tx.type == (_showExpenses ? 'expense' : 'income') &&
@@ -650,6 +667,11 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
     final diff = thisMonth - lastMonth;
     final percentChange = lastMonth > 0 ? (diff / lastMonth * 100) : 0.0;
     final isPositive = diff >= 0;
+    final changeText = diff == 0
+        ? l.noChange
+        : _showExpenses
+        ? '${formatPercent(percentChange.abs(), decimals: 1)} ${isPositive ? l.youSpentMore : l.youSpentLess}'
+        : '${isPositive ? '+' : '-'}${formatPercent(percentChange.abs(), decimals: 1)}';
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -690,7 +712,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(thisMonth)}',
+                      '$_symbol${NumberFormat('#,##0').format(thisMonth)}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -713,7 +735,7 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0', 'tr_TR').format(lastMonth)}',
+                      '$_symbol${NumberFormat('#,##0').format(lastMonth)}',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -725,50 +747,56 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color:
-                  (isPositive
-                          ? (_showExpenses
-                                ? colorTheme.error
-                                : colorTheme.success)
-                          : (_showExpenses
-                                ? colorTheme.success
-                                : colorTheme.error))
-                      .withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  isPositive ? Icons.trending_up : Icons.trending_down,
-                  color: isPositive
-                      ? (_showExpenses ? colorTheme.error : colorTheme.success)
-                      : (_showExpenses ? colorTheme.success : colorTheme.error),
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '${percentChange.abs().toStringAsFixed(1)}% ${isPositive ? l.youSpentMore : l.youSpentLess}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: isPositive
-                          ? (_showExpenses
-                                ? colorTheme.error
-                                : colorTheme.success)
-                          : (_showExpenses
-                                ? colorTheme.success
-                                : colorTheme.error),
+          // Geçen ay veri yoksa yüzde anlamsızdır
+          if (lastMonth > 0) const SizedBox(height: 16),
+          if (lastMonth > 0)
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color:
+                    (isPositive
+                            ? (_showExpenses
+                                  ? colorTheme.error
+                                  : colorTheme.success)
+                            : (_showExpenses
+                                  ? colorTheme.success
+                                  : colorTheme.error))
+                        .withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    isPositive ? Icons.trending_up : Icons.trending_down,
+                    color: isPositive
+                        ? (_showExpenses
+                              ? colorTheme.error
+                              : colorTheme.success)
+                        : (_showExpenses
+                              ? colorTheme.success
+                              : colorTheme.error),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      changeText,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: isPositive
+                            ? (_showExpenses
+                                  ? colorTheme.error
+                                  : colorTheme.success)
+                            : (_showExpenses
+                                  ? colorTheme.success
+                                  : colorTheme.error),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -776,24 +804,27 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
 
   Map<String, double> _getChartData() {
     final l = AppLocalizations.of(context)!;
-    final transactions = widget.transactions
-        .where((tx) => tx.type == (_showExpenses ? 'expense' : 'income'))
-        .toList();
+    final type = _showExpenses ? 'expense' : 'income';
+    final transactions = _allTransactions.where((tx) => tx.type == type);
 
-    Map<String, double> data = {};
-    final now = DateTime.now();
+    final data = <String, double>{};
+    final today = dateOnly(DateTime.now());
+
+    // Takvim günü farkı (saat farkı kullanılırsa 7 gün önceki bir işlem
+    // bugünün çubuğuna karışabilir)
+    int daysAgo(DateTime date) =>
+        (today.difference(dateOnly(date)).inHours / 24).round();
 
     switch (_selectedTimeframe) {
       case 'weekly':
         final dayNames = [l.mon, l.tue, l.wed, l.thu, l.fri, l.sat, l.sun];
         for (int i = 6; i >= 0; i--) {
-          final date = now.subtract(Duration(days: i));
-          final dayName = dayNames[date.weekday - 1];
-          data[dayName] = 0;
+          final date = DateTime(today.year, today.month, today.day - i);
+          data[dayNames[date.weekday - 1]] = 0;
         }
         for (final tx in transactions) {
-          final daysDiff = now.difference(tx.date).inDays;
-          if (daysDiff >= 0 && daysDiff < 7) {
+          final diff = daysAgo(tx.date);
+          if (diff >= 0 && diff < 7) {
             final dayName = dayNames[tx.date.weekday - 1];
             data[dayName] = (data[dayName] ?? 0) + tx.amount;
           }
@@ -801,21 +832,28 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
         break;
 
       case 'monthly':
+        // Son 4 hafta; her çubuk haftanın ilk gününün tarihiyle etiketlenir
+        final labels = <int, String>{};
         for (int i = 3; i >= 0; i--) {
-          final weekLabel = '${l.weekly} ${4 - i}';
-          data[weekLabel] = 0;
-          for (final tx in transactions) {
-            final txWeek = now.difference(tx.date).inDays ~/ 7;
-            if (txWeek == i) {
-              data[weekLabel] = (data[weekLabel] ?? 0) + tx.amount;
-            }
-          }
+          final weekStart = DateTime(
+            today.year,
+            today.month,
+            today.day - (i * 7 + 6),
+          );
+          labels[i] = DateFormat('d MMM').format(weekStart);
+          data[labels[i]!] = 0;
+        }
+        for (final tx in transactions) {
+          final diff = daysAgo(tx.date);
+          if (diff < 0) continue;
+          final label = labels[diff ~/ 7];
+          if (label != null) data[label] = (data[label] ?? 0) + tx.amount;
         }
         break;
 
       case 'last3Months':
         for (int i = 2; i >= 0; i--) {
-          final month = DateTime(now.year, now.month - i, 1);
+          final month = DateTime(today.year, today.month - i, 1);
           final monthLabel = DateFormat('MMM').format(month);
           data[monthLabel] = 0;
           for (final tx in transactions) {

@@ -2,6 +2,7 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/wallet/presentation/wallet_selection_sheet.dart
 
+import '../../../core/utils/wallet_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -203,7 +204,7 @@ class WalletSelectionSheet extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: isAllWallets
                     ? colorTheme.primary.withValues(alpha: 0.1)
-                    : _getWalletColor(
+                    : walletTypeColor(
                         account.type,
                         colorTheme,
                       ).withValues(alpha: 0.1),
@@ -212,10 +213,10 @@ class WalletSelectionSheet extends ConsumerWidget {
               child: Icon(
                 isAllWallets
                     ? Icons.all_inclusive
-                    : _getWalletIcon(account.type),
+                    : walletTypeIcon(account.type),
                 color: isAllWallets
                     ? colorTheme.primary
-                    : _getWalletColor(account.type, colorTheme),
+                    : walletTypeColor(account.type, colorTheme),
               ),
             ),
             const SizedBox(width: 12),
@@ -234,7 +235,7 @@ class WalletSelectionSheet extends ConsumerWidget {
                   if (!isAllWallets) ...[
                     const SizedBox(height: 2),
                     Text(
-                      _getWalletTypeName(account.type, l),
+                      walletTypeName(account.type, l),
                       style: TextStyle(
                         fontSize: 12,
                         color: colorTheme.textSecondary,
@@ -249,8 +250,8 @@ class WalletSelectionSheet extends ConsumerWidget {
             else
               Text(
                 isAllWallets
-                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(totalBalance)}'
-                    : '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00', 'tr_TR').format(account.balance)}',
+                    ? '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}${NumberFormat('#,##0.00').format(totalBalance)}'
+                    : '${account.currencySymbol}${NumberFormat('#,##0.00').format(account.balance)}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -261,50 +262,5 @@ class WalletSelectionSheet extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  IconData _getWalletIcon(String type) {
-    switch (type) {
-      case 'bank':
-        return Icons.account_balance;
-      case 'cash':
-        return Icons.payments;
-      case 'credit_card':
-        return Icons.credit_card;
-      case 'savings':
-        return Icons.savings;
-      default:
-        return Icons.account_balance_wallet;
-    }
-  }
-
-  Color _getWalletColor(String type, ColorTheme colorTheme) {
-    switch (type) {
-      case 'bank':
-        return colorTheme.info;
-      case 'cash':
-        return colorTheme.success;
-      case 'credit_card':
-        return colorTheme.error;
-      case 'savings':
-        return colorTheme.warning;
-      default:
-        return colorTheme.primary;
-    }
-  }
-
-  String _getWalletTypeName(String type, AppLocalizations l) {
-    switch (type) {
-      case 'bank':
-        return l.bank;
-      case 'cash':
-        return l.cash;
-      case 'credit_card':
-        return l.creditCard;
-      case 'savings':
-        return l.savings;
-      default:
-        return l.wallet;
-    }
   }
 }

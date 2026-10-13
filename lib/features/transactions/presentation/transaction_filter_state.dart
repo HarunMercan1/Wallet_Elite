@@ -19,22 +19,31 @@ class TransactionFilterState {
     this.sortOption = SortOption.dateDesc,
   });
 
+  static const _unset = Object();
+
+  /// Tarih ve tutar sınırları açıkça `null` verilerek kaldırılabilir.
   TransactionFilterState copyWith({
     String? type,
     List<String>? selectedCategoryIds,
-    DateTime? startDate,
-    DateTime? endDate,
-    double? minAmount,
-    double? maxAmount,
+    Object? startDate = _unset,
+    Object? endDate = _unset,
+    Object? minAmount = _unset,
+    Object? maxAmount = _unset,
     SortOption? sortOption,
   }) {
     return TransactionFilterState(
       type: type ?? this.type,
       selectedCategoryIds: selectedCategoryIds ?? this.selectedCategoryIds,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      minAmount: minAmount ?? this.minAmount,
-      maxAmount: maxAmount ?? this.maxAmount,
+      startDate: identical(startDate, _unset)
+          ? this.startDate
+          : startDate as DateTime?,
+      endDate: identical(endDate, _unset) ? this.endDate : endDate as DateTime?,
+      minAmount: identical(minAmount, _unset)
+          ? this.minAmount
+          : minAmount as double?,
+      maxAmount: identical(maxAmount, _unset)
+          ? this.maxAmount
+          : maxAmount as double?,
       sortOption: sortOption ?? this.sortOption,
     );
   }

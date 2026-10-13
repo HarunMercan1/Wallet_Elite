@@ -42,7 +42,7 @@ class RecurringRepository {
   Future<List<RecurringTransactionModel>> getDueTransactions(
     String userId,
   ) async {
-    final today = DateTime.now().toIso8601String().split('T')[0];
+    final today = _dateOnly(DateTime.now());
 
     final response = await _supabase
         .from('recurring_transactions')
@@ -70,19 +70,15 @@ class RecurringRepository {
     required DateTime startDate,
     DateTime? endDate,
   }) async {
-    // İlk çalışma tarihini hesapla
-    DateTime nextExecutionDate = startDate;
-    final now = DateTime.now();
-
-    if (startDate.isBefore(now)) {
-      // Başlangıç tarihi geçmişteyse, sonraki uygun tarihi bul
-      nextExecutionDate = _calculateNextDate(
-        frequency: frequency,
-        dayOfMonth: dayOfMonth,
-        dayOfWeek: dayOfWeek,
-        startDate: startDate,
-      );
-    }
+    // İlk çalışma tarihi: başlangıç gününden (geçmişteyse bugünden) itibaren
+    // takvime uyan ilk gün. Bugüne denk gelirse işlem bugün oluşturulur.
+    final nextExecutionDate = firstRecurringDate(
+      frequency: frequency,
+      startDate: startDate,
+      notBefore: DateTime.now(),
+      dayOfMonth: dayOfMonth,
+      dayOfWeek: dayOfWeek,
+    );
 
     final data = {
       'user_id': userId,
@@ -94,9 +90,9 @@ class RecurringRepository {
       'frequency': frequency.value,
       'day_of_month': dayOfMonth,
       'day_of_week': dayOfWeek,
-      'start_date': startDate.toIso8601String().split('T')[0],
-      'end_date': endDate?.toIso8601String().split('T')[0],
-      'next_execution_date': nextExecutionDate.toIso8601String().split('T')[0],
+      'start_date': _dateOnly(startDate),
+      'end_date': endDate == null ? null : _dateOnly(endDate),
+      'next_execution_date': _dateOnly(nextExecutionDate),
       'is_active': true,
     };
 
@@ -124,7 +120,10 @@ class RecurringRepository {
           'frequency': recurring.frequency.value,
           'day_of_month': recurring.dayOfMonth,
           'day_of_week': recurring.dayOfWeek,
-          'end_date': recurring.endDate?.toIso8601String().split('T')[0],
+          'end_date': recurring.endDate == null
+              ? null
+              : _dateOnly(recurring.endDate!),
+          'next_execution_date': _dateOnly(recurring.nextExecutionDate),
           'is_active': recurring.isActive,
         })
         .eq('id', recurring.id)
@@ -139,12 +138,27 @@ class RecurringRepository {
     await _supabase.from('recurring_transactions').delete().eq('id', id);
   }
 
-  /// Tekrarlayan işlemi pasife al / aktifleştir
+  /// Tekrarlayan işlemi pasife al / aktifleştir.
+  /// Yeniden aktifleştirirken sıradaki tarih bugüne/ileriye alınır; aksi halde
+  /// duraklatılan süre boyunca kaçan tüm dönemler toplu olarak oluşturulurdu.
   Future<void> toggleActive(String id, bool isActive) async {
-    await _supabase
-        .from('recurring_transactions')
-        .update({'is_active': isActive})
-        .eq('id', id);
+    final update = <String, dynamic>{'is_active': isActive};
+
+    if (isActive) {
+      final row = await _supabase
+          .from('recurring_transactions')
+          .select()
+          .eq('id', id)
+          .maybeSingle();
+      if (row != null) {
+        final r = RecurringTransactionModel.fromJson(row);
+        update['next_execution_date'] = _dateOnly(
+          r.nextDateFrom(DateTime.now()),
+        );
+      }
+    }
+
+    await _supabase.from('recurring_transactions').update(update).eq('id', id);
   }
 
   /// Vadesi gelen tüm işlemleri çalıştır (kullanıcının kendi kayıtları).
@@ -156,42 +170,9 @@ class RecurringRepository {
     return (result as num?)?.toInt() ?? 0;
   }
 
-  /// Sonraki çalışma tarihini hesapla
-  DateTime _calculateNextDate({
-    required RecurringFrequency frequency,
-    int? dayOfMonth,
-    int? dayOfWeek,
-    required DateTime startDate,
-    DateTime? lastExecutionDate,
-  }) {
-    final now = DateTime.now();
-    final baseDate = lastExecutionDate ?? now;
-
-    switch (frequency) {
-      case RecurringFrequency.daily:
-        return DateTime(baseDate.year, baseDate.month, baseDate.day + 1);
-
-      case RecurringFrequency.weekly:
-        final daysToAdd = dayOfWeek != null
-            ? ((dayOfWeek - baseDate.weekday + 7) % 7)
-            : 7;
-        final nextWeek = daysToAdd == 0 ? 7 : daysToAdd;
-        return DateTime(baseDate.year, baseDate.month, baseDate.day + nextWeek);
-
-      case RecurringFrequency.monthly:
-        int nextMonth = baseDate.month + 1;
-        int nextYear = baseDate.year;
-        if (nextMonth > 12) {
-          nextMonth = 1;
-          nextYear++;
-        }
-        final targetDay = dayOfMonth ?? startDate.day;
-        final daysInMonth = DateTime(nextYear, nextMonth + 1, 0).day;
-        final safeDay = targetDay > daysInMonth ? daysInMonth : targetDay;
-        return DateTime(nextYear, nextMonth, safeDay);
-
-      case RecurringFrequency.yearly:
-        return DateTime(baseDate.year + 1, startDate.month, startDate.day);
-    }
-  }
+  /// Yerel tarihin `yyyy-MM-dd` karşılığı (DATE sütunları için)
+  static String _dateOnly(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-'
+      '${d.month.toString().padLeft(2, '0')}-'
+      '${d.day.toString().padLeft(2, '0')}';
 }

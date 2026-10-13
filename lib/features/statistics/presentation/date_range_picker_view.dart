@@ -1,5 +1,6 @@
 // lib/features/statistics/presentation/date_range_picker_view.dart
 
+import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -42,8 +43,10 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
   @override
   void initState() {
     super.initState();
-    _startDate = widget.initialStartDate;
-    _endDate = widget.initialEndDate;
+    final start = widget.initialStartDate;
+    final end = widget.initialEndDate;
+    _startDate = start == null ? null : dateOnly(start);
+    _endDate = end == null ? null : dateOnly(end);
   }
 
   @override
@@ -179,7 +182,8 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
   }
 
   Widget _buildPresetGrid(AppLocalizations l, bool isDark, dynamic colorTheme) {
-    final now = DateTime.now();
+    // Yalnızca gün: saat taşınırsa aralığın ilk gününün sabahı dışarıda kalır
+    final now = dateOnly(DateTime.now());
     final presets = [
       {
         'key': 'thisWeek',
@@ -318,7 +322,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
                   const SizedBox(height: 4),
                   Text(
                     date != null
-                        ? DateFormat('d MMMM yyyy', 'tr').format(date)
+                        ? DateFormat('d MMMM yyyy').format(date)
                         : '---',
                     style: TextStyle(
                       fontSize: 15,
@@ -361,7 +365,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${DateFormat('d MMM', 'tr').format(_startDate!)} - ${DateFormat('d MMM yyyy', 'tr').format(_endDate!)}',
+                  '${DateFormat('d MMM').format(_startDate!)} - ${DateFormat('d MMM yyyy').format(_endDate!)}',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -426,7 +430,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
     if (_startDate != null && _endDate != null) {
       final label = _selectedPreset != null
           ? _getPresetLabel(_selectedPreset!)
-          : '${DateFormat('d MMM', 'tr').format(_startDate!)} - ${DateFormat('d MMM', 'tr').format(_endDate!)}';
+          : '${DateFormat('d MMM').format(_startDate!)} - ${DateFormat('d MMM').format(_endDate!)}';
 
       Navigator.pop(
         context,

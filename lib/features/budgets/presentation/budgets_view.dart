@@ -2,6 +2,9 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/budgets/presentation/budgets_view.dart
 
+import '../../../core/utils/category_l10n.dart';
+import '../../wallet/data/wallet_provider.dart';
+import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -150,11 +153,21 @@ class BudgetsView extends ConsumerWidget {
       symbol: CurrencyUtils.getSymbol(ref.watch(currencyProvider)),
       decimalDigits: 2,
     );
-    final progressColor = budget.isExceeded
+    final progressColor = !budget.isActive
+        ? colorTheme.textSecondary
+        : budget.isExceeded
         ? colorTheme.error
         : budget.isWarning
         ? colorTheme.warning
         : colorTheme.success;
+
+    // Kategori adı kullanıcının dilinde
+    final categories = ref.watch(categoriesProvider).valueOrNull ?? const [];
+    final category = categories
+        .where((c) => c.id == budget.categoryId)
+        .firstOrNull;
+    final categoryName =
+        localizedCategoryName(category, l) ?? budget.categoryName;
 
     return GestureDetector(
       onTap: () => _showAddSheet(context, budget: budget),
@@ -163,7 +176,7 @@ class BudgetsView extends ConsumerWidget {
         decoration: BoxDecoration(
           color: colorTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: budget.isExceeded
+          border: budget.isExceeded && budget.isActive
               ? Border.all(
                   color: colorTheme.error.withValues(alpha: 0.5),
                   width: 2,
@@ -198,15 +211,21 @@ class BudgetsView extends ConsumerWidget {
                     children: [
                       Text(
                         budget.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: colorTheme.textPrimary,
+                          color: budget.isActive
+                              ? colorTheme.textPrimary
+                              : colorTheme.textSecondary,
                         ),
                       ),
-                      if (budget.categoryName != null)
+                      if (categoryName != null)
                         Text(
-                          budget.categoryName!,
+                          categoryName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 13,
                             color: colorTheme.textSecondary,
@@ -219,11 +238,29 @@ class BudgetsView extends ConsumerWidget {
                 Switch(
                   value: budget.isActive,
                   onChanged: (value) {
+                    // Ücretsiz sürüm sınırı yeniden etkinleştirmede de geçerli
+                    if (value && !ref.read(isPremiumProvider)) {
+                      final activeCount =
+                          ref
+                              .read(budgetsProvider)
+                              .valueOrNull
+                              ?.where((b) => b.isActive)
+                              .length ??
+                          0;
+                      if (activeCount >= PremiumConstants.freeBudgetLimit) {
+                        showPremiumRequiredDialog(
+                          context,
+                          l.budgetLimitReached(
+                            PremiumConstants.freeBudgetLimit,
+                          ),
+                        );
+                        return;
+                      }
+                    }
                     ref
                         .read(budgetControllerProvider.notifier)
                         .toggleActive(budget.id, value);
                   },
-                  activeColor: colorTheme.primary,
                 ),
               ],
             ),
@@ -237,14 +274,21 @@ class BudgetsView extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      currencyFormat.format(budget.spent ?? 0),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: progressColor,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          currencyFormat.format(budget.spent ?? 0),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: progressColor,
+                          ),
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 8),
                     Text(
                       currencyFormat.format(budget.amount),
                       style: TextStyle(
@@ -269,18 +313,24 @@ class BudgetsView extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${budget.usagePercent.toStringAsFixed(0)}% ${l.used}',
+                      '${formatPercent(budget.usagePercent)} ${l.used}',
                       style: TextStyle(
                         fontSize: 12,
                         color: progressColor,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Text(
-                      '${l.remaining}: ${currencyFormat.format(budget.remaining.abs())}${budget.isExceeded ? ' (${l.exceeded})' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colorTheme.textSecondary,
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        '${l.remaining}: ${currencyFormat.format(budget.remaining.abs())}${budget.isExceeded ? ' (${l.exceeded})' : ''}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorTheme.textSecondary,
+                        ),
                       ),
                     ),
                   ],

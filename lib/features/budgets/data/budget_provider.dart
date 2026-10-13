@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/budget_model.dart';
 import 'budget_repository.dart';
 import '../../auth/data/auth_provider.dart';
+import '../../wallet/data/wallet_provider.dart';
 
 /// Repository provider
 final budgetRepositoryProvider = Provider<BudgetRepository>((ref) {
@@ -16,6 +17,9 @@ final budgetsProvider = FutureProvider<List<BudgetModel>>((ref) async {
 
   if (userId == null) return [];
 
+  // Harcanan tutar işlemlerden hesaplanır: işlem eklenince/silinince yenile
+  await ref.watch(transactionsProvider.future);
+
   final repo = ref.read(budgetRepositoryProvider);
   return repo.getBudgets(userId);
 });
@@ -26,6 +30,9 @@ final activeBudgetsProvider = FutureProvider<List<BudgetModel>>((ref) async {
 
   if (userId == null) return [];
 
+  // Harcanan tutar işlemlerden hesaplanır: işlem eklenince/silinince yenile
+  await ref.watch(transactionsProvider.future);
+
   final repo = ref.read(budgetRepositoryProvider);
   return repo.getActiveBudgets(userId);
 });
@@ -35,6 +42,9 @@ final warningBudgetsProvider = FutureProvider<List<BudgetModel>>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
 
   if (userId == null) return [];
+
+  // Harcanan tutar işlemlerden hesaplanır: işlem eklenince/silinince yenile
+  await ref.watch(transactionsProvider.future);
 
   final repo = ref.read(budgetRepositoryProvider);
   return repo.getWarningBudgets(userId);

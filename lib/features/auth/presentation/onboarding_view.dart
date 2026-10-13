@@ -1,5 +1,6 @@
 // lib/features/auth/presentation/onboarding_view.dart
 import 'dart:math' as math;
+import '../../../core/utils/app_languages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,15 +29,34 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
 
   // Controllers
   final _accountNameController = TextEditingController();
-  final _initialBalanceController = TextEditingController(text: '0.0');
+  final _initialBalanceController = TextEditingController();
 
   // Selections
   String _selectedLanguage = 'tr';
   String _selectedTheme = 'midnight';
   String _selectedCurrency = 'TRY';
   String _selectedAccountType = 'cash';
-  bool _isDarkMode = false;
   bool _isLoading = false;
+
+  /// Ekran uygulamanın gerçek temasını gösterir; karanlık mod anahtarı
+  /// doğrudan tema modunu değiştirir (dil ve renk teması gibi anında
+  /// uygulanır ve onboarding bitince de geçerli kalır).
+  bool get _isDarkMode => Theme.of(context).brightness == Brightness.dark;
+
+  void _setDarkMode(bool value) {
+    ref
+        .read(themeModeProvider.notifier)
+        .setTheme(value ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Seçimler mevcut ayarlarla başlar (ör. cihaz diline göre seçilmiş dil)
+    _selectedLanguage = ref.read(localeProvider);
+    _selectedTheme = ref.read(colorSchemeProvider);
+    _selectedCurrency = ref.read(currencyProvider);
+  }
 
   @override
   void dispose() {
@@ -65,7 +85,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
   }
 
   Future<void> _completeOnboarding() async {
-    if (_accountNameController.text.isEmpty) {
+    if (_accountNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.enterWalletName)),
       );
@@ -99,10 +119,13 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
       final existingAccounts = await walletRepo.getAccounts(user.id);
       if (existingAccounts.isEmpty) {
         final initialBalance =
-            double.tryParse(_initialBalanceController.text) ?? 0.0;
+            double.tryParse(
+              _initialBalanceController.text.trim().replaceAll(',', '.'),
+            ) ??
+            0.0;
         final newWallet = await walletRepo.createAccount(
           userId: user.id,
-          name: _accountNameController.text,
+          name: _accountNameController.text.trim(),
           type: _selectedAccountType,
           currency: _selectedCurrency,
           initialBalance: initialBalance,
@@ -626,18 +649,8 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
     final l10n = AppLocalizations.of(context)!;
 
     final languages = [
-      {'code': 'tr', 'name': 'Türkçe', 'flag': '🇹🇷'},
-      {'code': 'en', 'name': 'English', 'flag': '🇬🇧'},
-      {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
-      {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
-      {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
-      {'code': 'it', 'name': 'Italiano', 'flag': '🇮🇹'},
-      {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
-      {'code': 'ru', 'name': 'Русский', 'flag': '🇷🇺'},
-      {'code': 'ar', 'name': 'العربية', 'flag': '🇸🇦'},
-      {'code': 'ja', 'name': '日本語', 'flag': '🇯🇵'},
-      {'code': 'ko', 'name': '한국어', 'flag': '🇰🇷'},
-      {'code': 'zh', 'name': '中文', 'flag': '🇨🇳'},
+      for (final language in appLanguages)
+        {'code': language.code, 'name': language.name, 'flag': language.flag},
     ];
 
     return Padding(
@@ -934,8 +947,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
             direction: SlideDirection.up,
             child: GestureDetector(
               onTap: () {
-                setState(() => _isDarkMode = !_isDarkMode);
-                // Notifier'a bildirmek gerekebilir ama şimdilik local state yeterli çünkü view rebuild oluyor
+                _setDarkMode(!_isDarkMode);
               },
               child: Container(
                 padding: EdgeInsets.all(r.paddingM),
@@ -967,11 +979,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       ),
                     ),
                     const Spacer(),
-                    Switch(
-                      value: _isDarkMode,
-                      onChanged: (val) => setState(() => _isDarkMode = val),
-                      activeColor: colorTheme.primary,
-                    ),
+                    Switch(value: _isDarkMode, onChanged: _setDarkMode),
                   ],
                 ),
               ),
@@ -1330,14 +1338,18 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                               size: r.iconS,
                             ),
                             SizedBox(width: r.spaceS),
-                            Text(
-                              type['name'] as String,
-                              style: TextStyle(
-                                fontSize: r.fontXS,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: colorTheme.textPrimary,
+                            Flexible(
+                              child: Text(
+                                type['name'] as String,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: r.fontXS,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: colorTheme.textPrimary,
+                                ),
                               ),
                             ),
                           ],
@@ -1376,10 +1388,10 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                   style: TextStyle(color: colorTheme.textPrimary),
                   decoration: InputDecoration(
                     suffixText: _selectedCurrency,
-                    hintText: '0.0',
+                    hintText: '0',
                     hintStyle: TextStyle(color: colorTheme.textMuted),
                     prefixIcon: Icon(
-                      Icons.attach_money,
+                      Icons.payments_outlined,
                       color: colorTheme.primary,
                     ),
                     filled: true,

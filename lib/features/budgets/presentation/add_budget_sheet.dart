@@ -2,6 +2,9 @@ import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/budgets/presentation/add_budget_sheet.dart
 
+import '../../../core/utils/category_l10n.dart';
+import '../../../core/utils/amount_input.dart';
+import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../l10n/app_localizations.dart';
@@ -32,6 +35,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
   bool _notifyWhenExceeded = true;
   String? _selectedCategoryId;
   bool _isLoading = false;
+  bool _saveFailed = false;
 
   bool get isEditing => widget.budget != null;
 
@@ -41,7 +45,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
     if (widget.budget != null) {
       final b = widget.budget!;
       _nameController.text = b.name;
-      _amountController.text = b.amount.toStringAsFixed(2);
+      _amountController.text = amountToInputText(b.amount);
       _period = b.period;
       _startDay = b.startDay;
       _notifyAtPercent = b.notifyAtPercent;
@@ -66,6 +70,8 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
 
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.85,
+      // Klavye açılınca kaydet butonu ve alanlar altında kalmasın
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       decoration: BoxDecoration(
         color: colorTheme.cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -130,7 +136,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                         ),
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.trim().isEmpty) {
                           return l.pleaseEnterBudgetName;
                         }
                         return null;
@@ -144,6 +150,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
+                      inputFormatters: const [AmountInputFormatter()],
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -169,10 +176,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                         if (value == null || value.isEmpty) {
                           return l.pleaseEnterAmount;
                         }
-                        final amount = double.tryParse(
-                          value.replaceAll(',', '.'),
-                        );
-                        if (amount == null || amount <= 0) {
+                        if (parseAmount(value) == null) {
                           return l.pleaseEnterValidAmount;
                         }
                         return null;
@@ -220,7 +224,6 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                         l.notifyWhenExceeded,
                         style: TextStyle(color: colorTheme.textPrimary),
                       ),
-                      activeColor: colorTheme.primary,
                       contentPadding: EdgeInsets.zero,
                     ),
 
@@ -230,6 +233,15 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
               ),
             ),
           ),
+
+          if (_saveFailed)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Text(
+                l.errorOccurred,
+                style: TextStyle(color: colorTheme.error, fontSize: 13),
+              ),
+            ),
 
           // Kaydet butonu
           Padding(
@@ -315,7 +327,9 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
             ...categories.map((category) {
               final isSelected = _selectedCategoryId == category.id;
               return ChoiceChip(
-                label: Text(category.name),
+                label: Text(
+                  localizedCategoryName(category, l) ?? category.name,
+                ),
                 selected: isSelected,
                 onSelected: (selected) {
                   setState(() {
@@ -380,7 +394,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
     ColorTheme colorTheme,
   ) {
     return DropdownButtonFormField<int>(
-      value: _startDay,
+      initialValue: _startDay.clamp(1, 28),
       decoration: InputDecoration(
         labelText: l.budgetStartDay,
         filled: true,
@@ -427,7 +441,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                '%$_notifyAtPercent',
+                formatPercent(_notifyAtPercent),
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: colorTheme.primary,
@@ -463,15 +477,18 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _saveFailed = false;
+    });
 
-    final amount = double.parse(_amountController.text.replaceAll(',', '.'));
+    final amount = parseAmount(_amountController.text)!;
     final controller = ref.read(budgetControllerProvider.notifier);
 
     bool success;
     if (isEditing) {
       final updated = widget.budget!.copyWith(
-        name: _nameController.text,
+        name: _nameController.text.trim(),
         categoryId: _selectedCategoryId,
         amount: amount,
         period: _period,
@@ -482,7 +499,7 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
       success = await controller.update(updated);
     } else {
       success = await controller.create(
-        name: _nameController.text,
+        name: _nameController.text.trim(),
         categoryId: _selectedCategoryId,
         amount: amount,
         period: _period,
@@ -492,11 +509,13 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
       );
     }
 
-    setState(() => _isLoading = false);
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+      _saveFailed = !success;
+    });
 
-    if (success && mounted) {
-      Navigator.of(context).pop();
-    }
+    if (success) Navigator.of(context).pop();
   }
 
   Future<void> _deleteBudget() async {

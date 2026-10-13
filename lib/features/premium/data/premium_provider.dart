@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
+import '../../../core/ads/full_screen_ad_gate.dart';
 import '../../auth/data/auth_provider.dart';
 import 'premium_constants.dart';
 
@@ -30,11 +31,17 @@ class PremiumState {
   final Offering? offering;
   final bool isBusy;
 
+  /// Premium durumu öğrenildi mi (ya da öğrenilemeyeceği kesinleşti mi).
+  /// Açılışta bu olmadan reklam gösterilmez; yoksa premium kullanıcı durumu
+  /// gelene kadar birkaç saniye reklam görür.
+  final bool isResolved;
+
   const PremiumState({
     this.isPremium = false,
     this.isAvailable = false,
     this.offering,
     this.isBusy = false,
+    this.isResolved = false,
   });
 
   PremiumState copyWith({
@@ -42,12 +49,14 @@ class PremiumState {
     bool? isAvailable,
     Offering? offering,
     bool? isBusy,
+    bool? isResolved,
   }) {
     return PremiumState(
       isPremium: isPremium ?? this.isPremium,
       isAvailable: isAvailable ?? this.isAvailable,
       offering: offering ?? this.offering,
       isBusy: isBusy ?? this.isBusy,
+      isResolved: isResolved ?? this.isResolved,
     );
   }
 }
@@ -57,7 +66,19 @@ class PremiumState {
 /// RevenueCat kullanıcısı Supabase kullanıcı ID'si ile eşlenir, böylece premium
 /// hesaba bağlı kalır (aynı hesapla başka cihazda da geçerli).
 class PremiumController extends StateNotifier<PremiumState> {
-  PremiumController() : super(const PremiumState());
+  PremiumController() : super(const PremiumState()) {
+    // RevenueCat yanıt vermezse durum sonsuza dek belirsiz kalmasın
+    _resolveTimer = Timer(const Duration(seconds: 8), _markResolved);
+  }
+
+  Timer? _resolveTimer;
+
+  void _markResolved() {
+    _resolveTimer?.cancel();
+    if (mounted && !state.isResolved) {
+      state = state.copyWith(isResolved: true);
+    }
+  }
 
   Future<void>? _configureFuture;
   Future<void> _identityQueue = Future<void>.value();
@@ -69,20 +90,44 @@ class PremiumController extends StateNotifier<PremiumState> {
 
   Future<void> _ensureConfigured(String? userId) {
     return _configureFuture ??= () async {
-      if (!_canConfigure) return;
+      if (!_canConfigure) {
+        _markResolved();
+        return;
+      }
       try {
         final configuration = PurchasesConfiguration(
           PremiumConstants.revenueCatGoogleApiKey,
         )..appUserID = userId;
         await Purchases.configure(configuration);
-        Purchases.addCustomerInfoUpdateListener(_applyCustomerInfo);
-        if (mounted) state = state.copyWith(isAvailable: true);
-        _applyCustomerInfo(await Purchases.getCustomerInfo());
-        await refreshOfferings();
       } catch (e) {
         debugPrint('RevenueCat yapılandırılamadı: $e');
+        // Sonraki denemede (ör. satın alma ekranı açılınca) yeniden dene
+        _configureFuture = null;
+        _markResolved();
+        return;
       }
+      Purchases.addCustomerInfoUpdateListener(_applyCustomerInfo);
+      if (mounted) state = state.copyWith(isAvailable: true);
+      // Yapılandırma tamam; aşağıdakiler çevrimdışıyken başarısız olabilir
+      // ve yapılandırmayı geçersiz kılmaz.
+      try {
+        _applyCustomerInfo(await Purchases.getCustomerInfo());
+      } catch (e) {
+        debugPrint('RevenueCat müşteri bilgisi alınamadı: $e');
+      }
+      _markResolved();
+      await refreshOfferings();
     }();
+  }
+
+  /// Satın alma ekranı açılırken çağrılır: yapılandırma daha önce başarısız
+  /// olduysa yeniden dener ve güncel fiyatları çeker.
+  Future<void> prepare(String? userId) async {
+    if (!state.isAvailable) {
+      onUserChanged(userId);
+      await _identityQueue;
+    }
+    await refreshOfferings();
   }
 
   /// Oturum açan/kapanan Supabase kullanıcısıyla RevenueCat kimliğini eşle
@@ -120,6 +165,8 @@ class PremiumController extends StateNotifier<PremiumState> {
   Future<PurchaseOutcome> purchase(Package package) async {
     if (!state.isAvailable) return PurchaseOutcome.notAvailable;
     state = state.copyWith(isBusy: true);
+    // Google Play ekranından dönüşte açılış reklamı gösterilmesin
+    FullScreenAdGate.externalFlowStarted();
     try {
       final result = await Purchases.purchase(PurchaseParams.package(package));
       _applyCustomerInfo(result.customerInfo);
@@ -158,6 +205,7 @@ class PremiumController extends StateNotifier<PremiumState> {
   }
 
   Future<PurchaseOutcome> _restore() async {
+    FullScreenAdGate.externalFlowStarted();
     try {
       _applyCustomerInfo(await Purchases.restorePurchases());
       return state.isPremium
@@ -179,13 +227,15 @@ class PremiumController extends StateNotifier<PremiumState> {
     final isPremium =
         info.entitlements.all[PremiumConstants.entitlementId]?.isActive ??
         false;
-    if (mounted && state.isPremium != isPremium) {
-      state = state.copyWith(isPremium: isPremium);
+    _resolveTimer?.cancel();
+    if (mounted && (state.isPremium != isPremium || !state.isResolved)) {
+      state = state.copyWith(isPremium: isPremium, isResolved: true);
     }
   }
 
   @override
   void dispose() {
+    _resolveTimer?.cancel();
     if (_configureFuture != null && state.isAvailable) {
       Purchases.removeCustomerInfoUpdateListener(_applyCustomerInfo);
     }

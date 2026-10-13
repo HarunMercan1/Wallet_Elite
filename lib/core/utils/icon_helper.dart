@@ -1,44 +1,43 @@
 // lib/core/utils/icon_helper.dart
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-/// Kategori ikonlarını string'den IconData'ya çeviren helper
-class IconHelper {
-  static IconData getIcon(String? iconName) {
-    if (iconName == null) return FontAwesomeIcons.circleQuestion;
-
-    switch (iconName) {
-      // Gider İkonları
-      case 'cartShopping':
-        return FontAwesomeIcons.cartShopping;
-      case 'utensils':
-        return FontAwesomeIcons.utensils;
-      case 'bus':
-        return FontAwesomeIcons.bus;
-      case 'fileInvoiceDollar':
-        return FontAwesomeIcons.fileInvoiceDollar;
-      case 'youtube':
-        return FontAwesomeIcons.youtube;
-      case 'heartPulse':
-        return FontAwesomeIcons.heartPulse;
-      case 'gamepad':
-        return FontAwesomeIcons.gamepad;
-      case 'shirt':
-        return FontAwesomeIcons.shirt;
-
-      // Gelir İkonları
-      case 'moneyBillWave':
-        return FontAwesomeIcons.moneyBillWave;
-      case 'laptopCode':
-        return FontAwesomeIcons.laptopCode;
-      case 'chartLine':
-        return FontAwesomeIcons.chartLine;
-      case 'moneyBill':
-        return FontAwesomeIcons.moneyBill;
-
-      default:
-        return FontAwesomeIcons.circleQuestion;
-    }
+/// Kategori kaydındaki ikon adını (categories.icon) IconData'ya çevirir.
+/// Tüm ekranlar bunu kullanır; böylece aynı kategori her yerde aynı ikonla
+/// görünür.
+IconData categoryIcon(String? iconName) {
+  switch (iconName) {
+    case 'wallet':
+      return Icons.wallet;
+    case 'laptop':
+      return Icons.laptop;
+    case 'trending_up':
+      return Icons.trending_up;
+    case 'card_giftcard':
+      return Icons.card_giftcard;
+    case 'attach_money':
+      return Icons.attach_money;
+    case 'shopping_cart':
+      return Icons.shopping_cart;
+    case 'directions_car':
+      return Icons.directions_car;
+    case 'receipt':
+      return Icons.receipt;
+    case 'movie':
+      return Icons.movie;
+    case 'restaurant':
+      return Icons.restaurant;
+    case 'local_hospital':
+      return Icons.local_hospital;
+    case 'checkroom':
+      return Icons.checkroom;
+    case 'school':
+      return Icons.school;
+    case 'flight':
+      return Icons.flight;
+    case 'more_horiz':
+      return Icons.more_horiz;
+    default:
+      return Icons.category;
   }
 }
