@@ -59,3 +59,21 @@ android {
 flutter {
     source = "../.."
 }
+
+// Release AAB'nin sürüm numaralı bir kopyası da bırakılır
+// (ör. wallet_elite-1.1.2+5.aab); eski sürümlerin dosyaları üzerine yazılmaz.
+// Flutter kendi kontrolleri için app-release.aab adını beklediği için o dosya
+// olduğu gibi kalır.
+tasks.matching { it.name == "bundleRelease" }.configureEach {
+    val bundleDir = layout.buildDirectory.dir("outputs/bundle/release")
+    val versionedName = "wallet_elite-${flutter.versionName}+${flutter.versionCode}.aab"
+    doLast {
+        val dir = bundleDir.get().asFile
+        val source = File(dir, "app-release.aab")
+        if (source.exists()) {
+            val target = File(dir, versionedName)
+            source.copyTo(target, overwrite = true)
+            println("Sürüm numaralı AAB: ${target.absolutePath}")
+        }
+    }
+}
