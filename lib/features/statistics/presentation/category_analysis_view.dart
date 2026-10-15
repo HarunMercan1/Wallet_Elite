@@ -354,18 +354,9 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     bool isDark,
     ColorTheme colorTheme,
   ) {
-    final List<Color> colors = [
-      colorTheme.primary,
-      colorTheme.error,
-      colorTheme.success,
-      colorTheme.warning,
-      colorTheme.tertiary,
-      colorTheme.info,
-      Colors.pink,
-      Colors.teal,
-      Colors.amber,
-      Colors.cyan,
-    ];
+    // İstatistik ekranıyla aynı dilim renkleri; gelir/gider anlamı taşıyan
+    // yeşil/kırmızı kategori rengi olarak kullanılmaz
+    final colors = colorTheme.chartPalette;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -403,26 +394,32 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                           );
                         },
                       ),
-                      // Center stats
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${categories.length}',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: colorTheme.textPrimary,
-                            ),
+                      // Center stats: halkanın iç boşluğuna sığacak kadar
+                      SizedBox(
+                        width: 84,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${categories.length}',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: colorTheme.textPrimary,
+                                ),
+                              ),
+                              Text(
+                                l.categories,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: colorTheme.textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            l.categories,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: colorTheme.textSecondary,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -479,6 +476,7 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
+                                    const SizedBox(width: 6),
                                     Text(
                                       formatPercent(percent, decimals: 1),
                                       style: TextStyle(
@@ -490,15 +488,20 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                                   ],
                                 ),
                                 const SizedBox(height: 4),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(2),
-                                  child: LinearProgressIndicator(
-                                    value: percent / 100 * _animation.value,
-                                    backgroundColor: colorTheme.borderColor,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      color,
+                                // Animasyonu dinler; yoksa çubuk ilk karedeki
+                                // (neredeyse boş) hâlinde kalıyordu
+                                AnimatedBuilder(
+                                  animation: _animation,
+                                  builder: (context, _) => ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      value: percent / 100 * _animation.value,
+                                      backgroundColor: colorTheme.borderColor,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        color,
+                                      ),
+                                      minHeight: 4,
                                     ),
-                                    minHeight: 4,
                                   ),
                                 ),
                               ],
@@ -531,7 +534,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   color: colorTheme.primary,
                   isDark: isDark,
                 ),
-                Container(width: 1, height: 30, color: colorTheme.outline),
+                Container(
+                  width: 1,
+                  height: 30,
+                  margin: const EdgeInsets.symmetric(horizontal: 6),
+                  color: colorTheme.outline,
+                ),
                 _buildMiniStat(
                   icon: Icons.trending_down,
                   value: '$_symbol${NumberFormat('#,##0').format(total)}',
@@ -539,7 +547,12 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                   color: colorTheme.error,
                   isDark: isDark,
                 ),
-                Container(width: 1, height: 30, color: colorTheme.outline),
+                Container(
+                  width: 1,
+                  height: 30,
+                  margin: const EdgeInsets.symmetric(horizontal: 6),
+                  color: colorTheme.outline,
+                ),
                 _buildMiniStat(
                   icon: Icons.pie_chart,
                   value: categories.isNotEmpty
@@ -564,25 +577,33 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
     required Color color,
     required bool isDark,
   }) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 18),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-            color: context.colors.textPrimary,
+    // Eşit genişlikte sütunlar; uzun tutar dar ekranda küçülür, taşmaz
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: context.colors.textPrimary,
+              ),
+            ),
           ),
-        ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 9, color: context.colors.textSecondary),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 9, color: context.colors.textSecondary),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
@@ -805,12 +826,16 @@ class _CategoryAnalysisViewState extends ConsumerState<CategoryAnalysisView>
                 size: 24,
               ),
               const SizedBox(width: 8),
-              Text(
-                l.budgetTips,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: colorTheme.textPrimary,
+              Flexible(
+                child: Text(
+                  l.budgetTips,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorTheme.textPrimary,
+                  ),
                 ),
               ),
             ],

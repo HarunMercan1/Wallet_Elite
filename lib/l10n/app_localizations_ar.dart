@@ -1488,4 +1488,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'ابدأ التجربة المجانية';
+
+  @override
+  String get retry => 'حاول مرة أخرى';
+
+  @override
+  String get loadErrorMessage =>
+      'تعذّر تحميل بياناتك. تحقق من اتصالك وحاول مرة أخرى.';
 }

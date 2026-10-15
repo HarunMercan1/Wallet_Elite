@@ -1,8 +1,11 @@
+import '../../../core/widgets/load_error_view.dart';
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/debts_view.dart
 
 import 'package:flutter/material.dart';
+import '../../../core/widgets/hero_surface.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../l10n/app_localizations.dart';
@@ -92,7 +95,10 @@ class DebtsView extends ConsumerWidget {
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('${l.error}: $e')),
+        error: (e, _) => LoadErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(debtsProvider),
+        ),
       ),
       bottomNavigationBar: const AdaptiveBannerAd(bottomSafeArea: true),
     );
@@ -114,148 +120,145 @@ class DebtsView extends ConsumerWidget {
       decimalDigits: 2,
     );
 
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [colorTheme.primary, colorTheme.primaryLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: HeroSurface(
+        colors: colorTheme,
         borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              // Toplam Alacak
-              Expanded(
-                child: _buildSummaryItem(
-                  title: l.totalLent,
-                  value: totalLent.when(
-                    data: (v) => currencyFormat.format(v),
-                    loading: () => '...',
-                    error: (_, __) =>
-                        '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                // Toplam Alacak
+                Expanded(
+                  child: _buildSummaryItem(
+                    title: l.totalLent,
+                    value: totalLent.when(
+                      data: (v) => currencyFormat.format(v),
+                      loading: () => '...',
+                      error: (_, __) =>
+                          '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
+                    ),
+                    icon: Icons.arrow_upward,
+                    color: colorTheme.onHero,
                   ),
-                  icon: Icons.arrow_upward,
-                  color: colorTheme.onPrimary,
                 ),
-              ),
-              Container(
-                height: 50,
-                width: 1,
-                color: colorTheme.onPrimary.withValues(alpha: 0.24),
-              ),
-              // Toplam Borç
-              Expanded(
-                child: _buildSummaryItem(
-                  title: l.totalBorrowed,
-                  value: totalBorrowed.when(
-                    data: (v) => currencyFormat.format(v),
-                    loading: () => '...',
-                    error: (_, __) =>
-                        '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
+                Container(
+                  height: 50,
+                  width: 1,
+                  color: colorTheme.onHero.withValues(alpha: 0.24),
+                ),
+                // Toplam Borç
+                Expanded(
+                  child: _buildSummaryItem(
+                    title: l.totalBorrowed,
+                    value: totalBorrowed.when(
+                      data: (v) => currencyFormat.format(v),
+                      loading: () => '...',
+                      error: (_, __) =>
+                          '${CurrencyUtils.getSymbol(ref.watch(currencyProvider))}0.00',
+                    ),
+                    icon: Icons.arrow_downward,
+                    color: colorTheme.onHero,
                   ),
-                  icon: Icons.arrow_downward,
-                  color: colorTheme.onPrimary,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Net durum ve kişi sayısı
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Net durum
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: colorTheme.cardColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Builder(
-                      builder: (context) {
-                        final lent = totalLent.valueOrNull ?? 0;
-                        final borrowed = totalBorrowed.valueOrNull ?? 0;
-                        final net = lent - borrowed;
-                        final isPositive = net >= 0;
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              isPositive
-                                  ? Icons.trending_up
-                                  : Icons.trending_down,
-                              color: isPositive
-                                  ? colorTheme.success
-                                  : colorTheme.error,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              '${isPositive ? '+' : ''}${currencyFormat.format(net)}',
-                              style: TextStyle(
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Net durum ve kişi sayısı; dar ekranda alt alta geçer
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 12,
+              runSpacing: 8,
+              children: [
+                // Net durum
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorTheme.cardColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Builder(
+                        builder: (context) {
+                          final lent = totalLent.valueOrNull ?? 0;
+                          final borrowed = totalBorrowed.valueOrNull ?? 0;
+                          final net = lent - borrowed;
+                          final isPositive = net >= 0;
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isPositive
+                                    ? Icons.trending_up
+                                    : Icons.trending_down,
                                 color: isPositive
                                     ? colorTheme.success
                                     : colorTheme.error,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                                size: 16,
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              // Kişi sayısı
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: colorTheme.onPrimary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.people,
-                      color: colorTheme.onPrimary.withValues(alpha: 0.7),
-                      size: 16,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      peopleCount.when(
-                        data: (count) => l.people(count),
-                        loading: () => '...',
-                        error: (_, __) => l.people(0),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${isPositive ? '+' : ''}${currencyFormat.format(net)}',
+                                style: TextStyle(
+                                  color: isPositive
+                                      ? colorTheme.success
+                                      : colorTheme.error,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      style: TextStyle(
-                        color: colorTheme.onPrimary,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                // Kişi sayısı
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorTheme.onHero.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.people,
+                        color: colorTheme.onHero.withValues(alpha: 0.7),
+                        size: 16,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        peopleCount.when(
+                          data: (count) => l.people(count),
+                          loading: () => '...',
+                          error: (_, __) => l.people(0),
+                        ),
+                        style: TextStyle(
+                          color: colorTheme.onHero,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -273,22 +276,30 @@ class DebtsView extends ConsumerWidget {
           children: [
             Icon(icon, color: color, size: 16),
             const SizedBox(width: 4),
-            Text(
-              title,
-              style: TextStyle(
-                color: color.withValues(alpha: 0.8),
-                fontSize: 12,
+            Flexible(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: color.withValues(alpha: 0.8),
+                  fontSize: 12,
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            color: color,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            maxLines: 1,
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -672,15 +683,9 @@ class DebtsView extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
+      builder: (ctx) => SheetSurface(
+        color: isDark ? colorTheme.backgroundDark : Colors.white,
         height: MediaQuery.sizeOf(context).height * 0.75,
-        decoration: BoxDecoration(
-          color: isDark ? colorTheme.backgroundDark : Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
         child: Column(
           children: [
             // Handle

@@ -1,5 +1,6 @@
 // lib/features/premium/presentation/summary_image_sheet.dart
 
+import '../../../core/widgets/sheet_surface.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -60,7 +61,7 @@ class _SummaryImageSheetState extends ConsumerState<SummaryImageSheet> {
   }
 
   String get _fileName =>
-      'wallet_elite_${DateFormat('yyyyMMdd_HHmm').format(DateTime.now())}';
+      'wallet_elite_${DateFormat('yyyyMMdd_HHmm', 'en').format(DateTime.now())}';
 
   Future<void> _run(
     Future<String?> Function(AppLocalizations l) action,
@@ -123,13 +124,10 @@ class _SummaryImageSheetState extends ConsumerState<SummaryImageSheet> {
     final currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
     final localeCode = ref.watch(localeProvider);
 
-    return Container(
+    return SheetSurface(
+      color: colors.cardColor,
       constraints: BoxConstraints(
         maxHeight: MediaQuery.sizeOf(context).height * 0.92,
-      ),
-      decoration: BoxDecoration(
-        color: colors.cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: SafeArea(
         top: false,
@@ -355,11 +353,7 @@ class MonthlySummaryCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [c.primary, c.primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: c.heroGradient,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Column(
@@ -370,7 +364,7 @@ class MonthlySummaryCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: c.onPrimary.withValues(alpha: 0.85),
+                    color: c.onHero.withValues(alpha: 0.85),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -383,7 +377,7 @@ class MonthlySummaryCard extends StatelessWidget {
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.5,
-                      color: c.onPrimary,
+                      color: c.onHero,
                     ),
                   ),
                 ),
@@ -505,7 +499,7 @@ class MonthlySummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: c.onPrimary.withValues(alpha: 0.14),
+        color: c.onHero.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -530,7 +524,7 @@ class MonthlySummaryCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 10,
-                    color: c.onPrimary.withValues(alpha: 0.8),
+                    color: c.onHero.withValues(alpha: 0.8),
                   ),
                 ),
                 FittedBox(
@@ -541,7 +535,7 @@ class MonthlySummaryCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.bold,
-                      color: c.onPrimary,
+                      color: c.onHero,
                     ),
                   ),
                 ),

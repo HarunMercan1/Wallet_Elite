@@ -517,5 +517,7 @@
   "savePercent": "立省 {percent}%",
   "pricePerMonth": "每月 {price}",
   "freeTrialDays": "免费试用 {days} 天",
-  "startFreeTrial": "开始免费试用"
+  "startFreeTrial": "开始免费试用",
+  "retry": "重试",
+  "loadErrorMessage": "无法加载你的数据。请检查网络连接后重试。"
 }

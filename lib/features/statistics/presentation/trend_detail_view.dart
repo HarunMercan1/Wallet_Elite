@@ -96,23 +96,28 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             // Period indicator
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorTheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    widget.periodLabel,
-                    style: TextStyle(
-                      color: colorTheme.primary,
-                      fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorTheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      widget.periodLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: colorTheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 const Spacer(),
                 // Toggle expenses/income
                 _buildToggleButton(l, isDark, colorTheme),
@@ -314,8 +319,8 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                     final heightPercent = maxValue > 0
                         ? entry.value / maxValue
                         : 0.0;
-                    final barHeight = (heightPercent * 160 * _animation.value)
-                        .clamp(4.0, 160.0);
+                    final barHeight = (heightPercent * 140 * _animation.value)
+                        .clamp(4.0, 140.0);
 
                     return Expanded(
                       child: Padding(
@@ -335,27 +340,31 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
                                   ),
                                 ),
                               ),
-                            Container(
-                              height: barHeight,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: _showExpenses
-                                      ? [
-                                          colorTheme.error.withValues(
-                                            alpha: 0.6,
-                                          ),
-                                          colorTheme.error,
-                                        ]
-                                      : [
-                                          colorTheme.success.withValues(
-                                            alpha: 0.6,
-                                          ),
-                                          colorTheme.success,
-                                        ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
+                            // Büyük yazı boyutunda etiketlere yer açmak için
+                            // çubuk gerekirse kısalır
+                            Flexible(
+                              child: Container(
+                                height: barHeight,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: _showExpenses
+                                        ? [
+                                            colorTheme.error.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                            colorTheme.error,
+                                          ]
+                                        : [
+                                            colorTheme.success.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                            colorTheme.success,
+                                          ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
-                                borderRadius: BorderRadius.circular(6),
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -562,12 +571,16 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             children: [
               Icon(Icons.insights, color: colorTheme.primary, size: 20),
               const SizedBox(width: 8),
-              Text(
-                l.spendingPatterns,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: colorTheme.textPrimary,
+              Flexible(
+                child: Text(
+                  l.spendingPatterns,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorTheme.textPrimary,
+                  ),
                 ),
               ),
             ],
@@ -611,10 +624,15 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: TextStyle(fontSize: 13, color: colorTheme.textSecondary),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 13, color: colorTheme.textSecondary),
+              ),
             ),
+            const SizedBox(width: 8),
             Text(
               '$_symbol${NumberFormat('#,##0').format(value)}',
               style: TextStyle(
@@ -686,12 +704,16 @@ class _TrendDetailViewState extends ConsumerState<TrendDetailView>
             children: [
               Icon(Icons.compare_arrows, color: colorTheme.primary, size: 20),
               const SizedBox(width: 8),
-              Text(
-                l.monthlyComparison,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: colorTheme.textPrimary,
+              Flexible(
+                child: Text(
+                  l.monthlyComparison,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorTheme.textPrimary,
+                  ),
                 ),
               ),
             ],

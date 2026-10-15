@@ -422,15 +422,16 @@ class MonthComparisonView extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           // Legend
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 24,
+            runSpacing: 8,
             children: [
               _buildLegendItem(
                 l.lastMonth,
                 colorTheme.textSecondary.withValues(alpha: 0.45),
                 colorTheme,
               ),
-              const SizedBox(width: 24),
               _buildLegendItem(
                 l.thisMonth,
                 colorTheme.textSecondary,
@@ -445,6 +446,7 @@ class MonthComparisonView extends ConsumerWidget {
 
   Widget _buildLegendItem(String label, Color color, ColorTheme colorTheme) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: 12,

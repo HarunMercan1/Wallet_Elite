@@ -531,5 +531,7 @@
   "savePercent": "Tiết kiệm {percent}%",
   "pricePerMonth": "{price} mỗi tháng",
   "freeTrialDays": "Miễn phí {days} ngày",
-  "startFreeTrial": "Bắt đầu dùng thử miễn phí"
+  "startFreeTrial": "Bắt đầu dùng thử miễn phí",
+  "retry": "Thử lại",
+  "loadErrorMessage": "Không thể tải dữ liệu. Hãy kiểm tra kết nối và thử lại."
 }

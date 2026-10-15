@@ -531,5 +531,7 @@
   "savePercent": "Oszczędzasz {percent}%",
   "pricePerMonth": "{price} miesięcznie",
   "freeTrialDays": "{days} dni za darmo",
-  "startFreeTrial": "Rozpocznij bezpłatny okres próbny"
+  "startFreeTrial": "Rozpocznij bezpłatny okres próbny",
+  "retry": "Spróbuj ponownie",
+  "loadErrorMessage": "Nie udało się wczytać danych. Sprawdź połączenie i spróbuj ponownie."
 }

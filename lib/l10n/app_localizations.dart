@@ -2991,6 +2991,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start free trial'**
   String get startFreeTrial;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
+
+  /// Shown when a list or screen fails to load from the server
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your data. Check your connection and try again.'**
+  String get loadErrorMessage;
 }
 
 class _AppLocalizationsDelegate

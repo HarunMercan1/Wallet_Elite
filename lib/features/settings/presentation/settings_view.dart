@@ -1,5 +1,7 @@
 // lib/features/settings/presentation/settings_view.dart
 
+import '../../../core/widgets/load_error_view.dart';
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../core/utils/app_languages.dart';
 import '../../../core/utils/wallet_type.dart';
 import '../data/preferences_sync.dart';
@@ -10,10 +12,10 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/settings_provider.dart';
 import 'theme_picker_sheet.dart';
+import '../../../core/widgets/hero_surface.dart';
 import '../../../core/ads/ads_providers.dart';
 import '../../premium/data/premium_provider.dart';
 import '../../premium/data/premium_constants.dart';
@@ -40,7 +42,7 @@ class SettingsView extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
     final userProfile = ref.watch(userProfileProvider);
     final accounts = ref.watch(accountsProvider);
-    final colorTheme = ref.watch(currentColorThemeProvider);
+    final colorTheme = context.colors; // Tema geçişinde animasyonlu
 
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -512,57 +514,46 @@ class SettingsView extends ConsumerWidget {
     ColorTheme colorTheme,
   ) {
     final isPremium = ref.watch(isPremiumProvider);
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => showPaywall(context),
-        child: Ink(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              colors: [colorTheme.primary, colorTheme.primaryDark],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+    return HeroSurface(
+      colors: colorTheme,
+      borderRadius: BorderRadius.circular(16),
+      padding: const EdgeInsets.all(16),
+      shadow: false,
+      sheen: !isPremium,
+      onTap: () => showPaywall(context),
+      child: Row(
+        children: [
+          Icon(
+            isPremium ? Icons.verified : Icons.workspace_premium,
+            color: colorTheme.onHero,
+            size: 32,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isPremium ? l.premiumActive : l.goPremium,
+                  style: TextStyle(
+                    color: colorTheme.onHero,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  isPremium ? l.premiumActiveDesc : l.goPremiumDesc,
+                  style: TextStyle(
+                    color: colorTheme.onHero.withValues(alpha: 0.85),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Row(
-            children: [
-              Icon(
-                isPremium ? Icons.verified : Icons.workspace_premium,
-                color: colorTheme.onPrimary,
-                size: 32,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      isPremium ? l.premiumActive : l.goPremium,
-                      style: TextStyle(
-                        color: colorTheme.onPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      isPremium ? l.premiumActiveDesc : l.goPremiumDesc,
-                      style: TextStyle(
-                        color: colorTheme.onPrimary.withValues(alpha: 0.85),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (!isPremium)
-                Icon(Icons.chevron_right, color: colorTheme.onPrimary),
-            ],
-          ),
-        ),
+          if (!isPremium) Icon(Icons.chevron_right, color: colorTheme.onHero),
+        ],
       ),
     );
   }
@@ -615,11 +606,12 @@ class SettingsView extends ConsumerWidget {
     required bool isDark,
     required ColorTheme colorTheme,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    // Material zemin: ListTile'ların dokunma dalgası kartın üstünde çizilir
+    // (renkli bir Container'da dalga zeminin altında kalıp görünmüyordu).
+    return Material(
+      color: colorTheme.cardColor,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
       child: Column(children: children),
     );
   }
@@ -671,19 +663,16 @@ class SettingsView extends ConsumerWidget {
     ColorTheme colorTheme,
   ) {
     // Etkin tema (kilitli bir tema seçiliyse ücretsiz tema gösterilir)
-    final theme = ref.watch(currentColorThemeProvider);
+    final theme = context.colors;
 
     return ListTile(
       leading: Container(
         width: 28,
         height: 28,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [theme.primary, theme.primaryDark],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: theme.heroGradient,
           borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: theme.primary, width: 2),
         ),
       ),
       title: Text(
@@ -741,18 +730,12 @@ class SettingsView extends ConsumerWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
+      builder: (context) => SheetSurface(
+        color: colorTheme.cardColor,
         constraints: BoxConstraints(
           maxHeight: MediaQuery.sizeOf(context).height * 0.45,
         ),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -891,16 +874,10 @@ class SettingsView extends ConsumerWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
+      builder: (context) => SheetSurface(
+        color: colorTheme.cardColor,
         height: MediaQuery.sizeOf(context).height * 0.7,
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
         child: Column(
           children: [
             Container(
@@ -1042,7 +1019,8 @@ class SettingsView extends ConsumerWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (sheetContext) => Container(
+      builder: (sheetContext) => SheetSurface(
+        color: colorTheme.cardColor,
         constraints: BoxConstraints(
           maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.7,
         ),
@@ -1051,10 +1029,6 @@ class SettingsView extends ConsumerWidget {
           12,
           20,
           20 + MediaQuery.paddingOf(sheetContext).bottom,
-        ),
-        decoration: BoxDecoration(
-          color: colorTheme.cardColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -1185,15 +1159,9 @@ class SettingsView extends ConsumerWidget {
                 (list) =>
                     list.where((a) => !removedIds.contains(a.id)).toList(),
               );
-          return Container(
+          return SheetSurface(
+            color: isDark ? colorTheme.backgroundDark : Colors.white,
             height: MediaQuery.sizeOf(context).height * 0.6,
-            decoration: BoxDecoration(
-              color: isDark ? colorTheme.backgroundDark : Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-            ),
             child: Column(
               children: [
                 Container(
@@ -1431,7 +1399,10 @@ class SettingsView extends ConsumerWidget {
                     },
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
-                    error: (e, _) => Center(child: Text('${l.error}: $e')),
+                    error: (e, _) => LoadErrorView(
+                      error: e,
+                      onRetry: () => sheetRef.invalidate(accountsProvider),
+                    ),
                   ),
                 ),
               ],

@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../core/utils/category_l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,15 +38,9 @@ class _TransactionFilterSheetState
     final colorTheme = ref.watch(currentColorThemeProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
-    return Container(
+    return SheetSurface(
+      color: isDark ? colorTheme.backgroundDark : Colors.white,
       height: MediaQuery.sizeOf(context).height * 0.85,
-      decoration: BoxDecoration(
-        color: isDark ? colorTheme.backgroundDark : Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
       child: Column(
         children: [
           // Handle

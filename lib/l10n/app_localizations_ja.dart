@@ -1472,4 +1472,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get startFreeTrial => '無料トライアルを開始';
+
+  @override
+  String get retry => '再試行';
+
+  @override
+  String get loadErrorMessage => 'データを読み込めませんでした。接続を確認してもう一度お試しください。';
 }

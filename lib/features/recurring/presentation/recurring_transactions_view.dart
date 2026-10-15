@@ -1,3 +1,4 @@
+import '../../../core/widgets/load_error_view.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/recurring/presentation/recurring_transactions_view.dart
@@ -104,7 +105,10 @@ class RecurringTransactionsView extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(child: Text('${l.error}: $error')),
+        error: (error, _) => LoadErrorView(
+          error: error,
+          onRetry: () => ref.invalidate(recurringTransactionsProvider),
+        ),
       ),
       floatingActionButton: transactionsAsync.maybeWhen(
         data: (transactions) => transactions.isEmpty
@@ -299,14 +303,17 @@ class RecurringTransactionsView extends ConsumerWidget {
                       color: colorTheme.textSecondary,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      '${l.nextExecution}: ${DateFormat('dd MMM yyyy').format(recurring.nextExecutionDate)}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colorTheme.textSecondary,
+                    Expanded(
+                      child: Text(
+                        '${l.nextExecution}: ${DateFormat('dd MMM yyyy').format(recurring.nextExecutionDate)}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorTheme.textSecondary,
+                        ),
                       ),
                     ),
-                    const Spacer(),
 
                     // Aktif/Pasif toggle
                     Switch(

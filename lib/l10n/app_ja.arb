@@ -517,5 +517,7 @@
   "savePercent": "{percent}%お得",
   "pricePerMonth": "月あたり {price}",
   "freeTrialDays": "{days}日間無料",
-  "startFreeTrial": "無料トライアルを開始"
+  "startFreeTrial": "無料トライアルを開始",
+  "retry": "再試行",
+  "loadErrorMessage": "データを読み込めませんでした。接続を確認してもう一度お試しください。"
 }

@@ -173,9 +173,10 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
         context.go('/home');
       }
     } catch (e) {
+      debugPrint('Hata: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorOccurred)),
         );
       }
     } finally {
@@ -845,7 +846,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [theme.primary, theme.primaryDark],
+                          colors: [theme.heroStart, theme.heroEnd],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -859,7 +860,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: theme.primary.withValues(alpha: 0.5),
+                                  color: theme.heroShadow,
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -874,7 +875,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                               children: [
                                 Icon(
                                   isLocked ? Icons.lock : Icons.palette,
-                                  color: theme.onPrimary,
+                                  color: theme.onHero,
                                   size: r.iconL,
                                 ),
                                 SizedBox(height: r.hp(1)),
@@ -890,7 +891,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                     style: TextStyle(
                                       fontSize: r.fontM,
                                       fontWeight: FontWeight.bold,
-                                      color: theme.onPrimary,
+                                      color: theme.onHero,
                                     ),
                                   ),
                                 ),
@@ -913,7 +914,7 @@ class _OnboardingViewState extends ConsumerState<OnboardingView>
                                 child: Text(
                                   'PRO',
                                   style: TextStyle(
-                                    color: theme.onPrimary,
+                                    color: theme.onHero,
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                   ),

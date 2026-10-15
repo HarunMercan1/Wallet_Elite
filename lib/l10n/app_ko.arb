@@ -531,5 +531,7 @@
   "savePercent": "{percent}% 할인",
   "pricePerMonth": "월 {price}",
   "freeTrialDays": "{days}일 무료",
-  "startFreeTrial": "무료 체험 시작"
+  "startFreeTrial": "무료 체험 시작",
+  "retry": "다시 시도",
+  "loadErrorMessage": "데이터를 불러오지 못했습니다. 연결을 확인하고 다시 시도하세요."
 }

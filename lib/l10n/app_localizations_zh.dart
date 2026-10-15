@@ -1470,4 +1470,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get startFreeTrial => '开始免费试用';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get loadErrorMessage => '无法加载你的数据。请检查网络连接后重试。';
 }

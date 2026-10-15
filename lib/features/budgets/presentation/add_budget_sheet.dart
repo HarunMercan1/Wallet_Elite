@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/budgets/presentation/add_budget_sheet.dart
@@ -68,14 +69,11 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
     final colorTheme = ref.watch(currentColorThemeProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
-    return Container(
+    return SheetSurface(
+      color: colorTheme.cardColor,
       height: MediaQuery.sizeOf(context).height * 0.85,
       // Klavye açılınca kaydet butonu ve alanlar altında kalmasın
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       child: Column(
         children: [
           // Handle
@@ -426,12 +424,16 @@ class _AddBudgetSheetState extends ConsumerState<AddBudgetSheet> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l.notifyAtPercent,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: colorTheme.textSecondary,
+            Flexible(
+              child: Text(
+                l.notifyAtPercent,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: colorTheme.textSecondary,
+                ),
               ),
             ),
             Container(

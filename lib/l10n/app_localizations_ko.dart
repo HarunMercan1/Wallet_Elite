@@ -1473,4 +1473,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get startFreeTrial => '무료 체험 시작';
+
+  @override
+  String get retry => '다시 시도';
+
+  @override
+  String get loadErrorMessage => '데이터를 불러오지 못했습니다. 연결을 확인하고 다시 시도하세요.';
 }

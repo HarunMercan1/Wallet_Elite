@@ -2,6 +2,24 @@
 
 import 'package:flutter/services.dart';
 
+/// Arapça (٠-٩) ve Farsça (۰-۹) rakamları ile Arapça ondalık ayırıcıyı (٫)
+/// Latin karşılıklarına çevirir; bu klavyelerle de tutar yazılabilsin.
+String normalizeDigits(String input) {
+  final out = StringBuffer();
+  for (final rune in input.runes) {
+    if (rune >= 0x0660 && rune <= 0x0669) {
+      out.writeCharCode(0x30 + rune - 0x0660);
+    } else if (rune >= 0x06F0 && rune <= 0x06F9) {
+      out.writeCharCode(0x30 + rune - 0x06F0);
+    } else if (rune == 0x066B) {
+      out.write('.');
+    } else {
+      out.writeCharCode(rune);
+    }
+  }
+  return out.toString();
+}
+
 /// Tutar alanları için: en çok iki ondalık haneli pozitif sayı. Virgül de
 /// ondalık ayırıcı kabul edilir (Türkçe ve çoğu Avrupa klavyesi sayısal
 /// tuş takımında nokta yerine virgül gösterir) ve noktaya çevrilir.
@@ -15,8 +33,9 @@ class AmountInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final text = newValue.text.replaceAll(',', '.');
+    final text = normalizeDigits(newValue.text).replaceAll(',', '.');
     if (!_valid.hasMatch(text)) return oldValue;
+    // Çeviri metin uzunluğunu değiştirmez; imleç konumu korunur
     return newValue.copyWith(text: text);
   }
 }
@@ -25,7 +44,9 @@ class AmountInputFormatter extends TextInputFormatter {
 /// `null` döner.
 double? parseAmount(String? input) {
   if (input == null) return null;
-  final value = double.tryParse(input.trim().replaceAll(',', '.'));
+  final value = double.tryParse(
+    normalizeDigits(input.trim()).replaceAll(',', '.'),
+  );
   if (value == null || value <= 0) return null;
   return value;
 }

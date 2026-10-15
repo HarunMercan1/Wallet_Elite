@@ -531,5 +531,7 @@
   "savePercent": "{percent}% बचत",
   "pricePerMonth": "{price} प्रति माह",
   "freeTrialDays": "{days} दिन मुफ़्त",
-  "startFreeTrial": "मुफ़्त ट्रायल शुरू करें"
+  "startFreeTrial": "मुफ़्त ट्रायल शुरू करें",
+  "retry": "फिर से कोशिश करें",
+  "loadErrorMessage": "आपका डेटा लोड नहीं हो सका। अपना कनेक्शन जाँचें और फिर से कोशिश करें।"
 }

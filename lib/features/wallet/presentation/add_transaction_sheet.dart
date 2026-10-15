@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 import '../../../core/utils/amount_input.dart';
@@ -106,15 +107,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
     final r = ResponsiveHelper.of(context);
     final colorTheme = ref.watch(currentColorThemeProvider);
 
-    return Container(
+    return SheetSurface(
+      color: isDark ? colorTheme.backgroundDark : Colors.white,
       height: r.hp(92),
-      decoration: BoxDecoration(
-        color: isDark ? colorTheme.backgroundDark : Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(r.radiusXL),
-          topRight: Radius.circular(r.radiusXL),
-        ),
-      ),
+      radius: r.radiusXL,
       // Tutar kartı ve kaydet butonu altta sabit durur, klavye açılınca onun
       // hemen üstüne çıkar; geri kalan alanlar aralarında kayar.
       child: _KeyboardInset(
@@ -263,7 +259,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               children: [
                 const Icon(Icons.arrow_upward_rounded, size: 16),
                 const SizedBox(width: 4),
-                Text(l.expense),
+                Flexible(
+                  child: Text(
+                    l.expense,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
           ),
@@ -273,7 +275,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               children: [
                 const Icon(Icons.arrow_downward_rounded, size: 16),
                 const SizedBox(width: 4),
-                Text(l.income),
+                Flexible(
+                  child: Text(
+                    l.income,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
           ),
@@ -550,15 +558,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       builder: (ctx) {
         final l = AppLocalizations.of(context)!;
         return StatefulBuilder(
-          builder: (ctx, setSheetState) => Container(
+          builder: (ctx, setSheetState) => SheetSurface(
+            color: isDark ? colorTheme.backgroundDark : Colors.white,
             height: MediaQuery.sizeOf(context).height * 0.7,
-            decoration: BoxDecoration(
-              color: isDark ? colorTheme.backgroundDark : Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-            ),
             child: Column(
               children: [
                 // Handle
@@ -963,13 +965,19 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
               setState(() => _isLoading = true);
               final walletRepo = ref.read(walletRepositoryProvider);
               final userId = Supabase.instance.client.auth.currentUser?.id;
-              if (userId != null) {
-                await walletRepo.createDefaultCategories(userId);
-                ref.invalidate(categoriesProvider);
-                ref.invalidate(incomeCategoriesProvider);
-                ref.invalidate(expenseCategoriesProvider);
+              try {
+                if (userId != null) {
+                  await walletRepo.createDefaultCategories(userId);
+                  ref.invalidate(categoriesProvider);
+                  ref.invalidate(incomeCategoriesProvider);
+                  ref.invalidate(expenseCategoriesProvider);
+                }
+              } catch (e) {
+                debugPrint('Varsayılan kategoriler oluşturulamadı: $e');
+              } finally {
+                // Hata olsa da buton dönen hâlde kalmasın
+                if (mounted) setState(() => _isLoading = false);
               }
-              setState(() => _isLoading = false);
             },
             icon: _isLoading
                 ? const SizedBox(
@@ -1039,6 +1047,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           // Seçilen güne şimdiki saat eklenir; gece yarısı yazılırsa işlem
           // o günün en eskisi gibi sıralanır.
           final now = DateTime.now();
+          if (!mounted) return;
           setState(
             () => _selectedDate = DateTime(
               date.year,
@@ -1111,8 +1120,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           );
         }
 
+        // İki satırlık kart; büyük yazı boyutunda da sığsın
+        final textScale = MediaQuery.textScalerOf(context).scale(1);
         return SizedBox(
-          height: 60,
+          height: 24 + 38 * textScale,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: accountsList.length,
@@ -1153,30 +1164,37 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
                         size: 20,
                       ),
                       const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            account.name,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: isSelected
-                                  ? colorTheme.onPrimary
-                                  : colorTheme.textPrimary,
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 170),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              account.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected
+                                    ? colorTheme.onPrimary
+                                    : colorTheme.textPrimary,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '${account.currencySymbol}${NumberFormat('#,##0.00').format(account.balance)}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: isSelected
-                                  ? colorTheme.onPrimary.withValues(alpha: 0.7)
-                                  : colorTheme.textSecondary,
+                            Text(
+                              '${account.currencySymbol}${NumberFormat('#,##0.00').format(account.balance)}',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: isSelected
+                                    ? colorTheme.onPrimary.withValues(
+                                        alpha: 0.7,
+                                      )
+                                    : colorTheme.textSecondary,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -1280,7 +1298,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
       date: _selectedDate,
     );
 
-    setState(() => _isLoading = false);
+    if (mounted) setState(() => _isLoading = false);
 
     if (mounted) {
       if (success) {

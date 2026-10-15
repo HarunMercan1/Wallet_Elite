@@ -58,6 +58,15 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
   final Color tertiary; // 3. renk (rozet, ikincil vurgu)
   final Color onTertiary; // tertiary üzerindeki yazı
 
+  // Hero yüzeyler (bakiye kartı, premium kartları gibi büyük dolgular).
+  // [primary] küçük vurgular içindir; büyük bir alanı onunla boyamak koyu
+  // temalarda göz yoran neon bloklar üretir. Hero renkleri temanın kimliğini
+  // taşıyan, daha derin/doygunluğu dengeli tonlardır.
+  final Color heroStart; // Gradyanın başlangıcı (sol üst)
+  final Color heroEnd; // Gradyanın bitişi (sağ alt)
+  final Color onHero; // Hero üzerindeki yazı/simge
+  final Color heroAccent; // Hero üzerindeki parıltı/süs rengi
+
   // Surface & Background (her iki parlaklıkta aynı değerler)
   final Color backgroundLight;
   final Color backgroundDark;
@@ -95,6 +104,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     required this.accentLight,
     required this.tertiary,
     required this.onTertiary,
+    required this.heroStart,
+    required this.heroEnd,
+    required this.onHero,
+    required this.heroAccent,
     required this.backgroundLight,
     required this.backgroundDark,
     required this.surfaceLight,
@@ -121,6 +134,55 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
   /// Kapalı/pasif simgeler ve ipuçları için soluk yazı rengi
   Color get textMuted => textSecondary.withValues(alpha: 0.7);
 
+  /// Büyük vurgu yüzeyleri için gradyan
+  LinearGradient get heroGradient => LinearGradient(
+    colors: [heroStart, heroEnd],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  /// Hero zemine yakın tondaysa (siyah kart siyah arka planda gibi) kartı
+  /// ayırmak için ince kenarlık; yeterince ayrışıyorsa `null`.
+  Color? get heroBorder {
+    final hero = Color.lerp(heroStart, heroEnd, 0.5)!;
+    final a = hero.computeLuminance();
+    final b = background.computeLuminance();
+    final ratio = (a > b ? a + 0.05 : b + 0.05) / (a > b ? b + 0.05 : a + 0.05);
+    return ratio < 1.8 ? heroAccent.withValues(alpha: 0.35) : null;
+  }
+
+  /// Hero kartın altındaki renkli gölge
+  Color get heroShadow => Color.lerp(
+    heroStart,
+    heroEnd,
+    0.5,
+  )!.withValues(alpha: isDark ? 0.45 : 0.3);
+
+  /// Grafik dilim renkleri: temanın ana rengi + ondan belirgin biçimde
+  /// ayrışan sabit renkler. Ana renge yakın tondakiler atlanır ki iki dilim
+  /// karışmasın; gelir/gider ile karışan yeşil ve kırmızı listede yoktur.
+  List<Color> get chartPalette {
+    const candidates = [
+      Color(0xFFF59E0B), // amber
+      Color(0xFF8B5CF6), // mor
+      Color(0xFFEC4899), // pembe
+      Color(0xFF14B8A6), // turkuaz
+      Color(0xFF3B82F6), // mavi
+      Color(0xFFF97316), // turuncu
+      Color(0xFF06B6D4), // camgöbeği
+      Color(0xFFA3E635), // limon
+    ];
+    final primaryHsl = HSLColor.fromColor(primary);
+    final isNeutral = primaryHsl.saturation < 0.15;
+    bool farFromPrimary(Color color) {
+      if (isNeutral) return true;
+      final diff = (HSLColor.fromColor(color).hue - primaryHsl.hue).abs();
+      return (diff > 180 ? 360 - diff : diff) >= 40;
+    }
+
+    return [primary, ...candidates.where(farFromPrimary)];
+  }
+
   /// Aynı temanın istenen parlaklıktaki paleti
   ColorTheme forBrightness(Brightness brightness) {
     if (brightness == this.brightness) return this;
@@ -138,6 +200,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     Color? accentLight,
     Color? tertiary,
     Color? onTertiary,
+    Color? heroStart,
+    Color? heroEnd,
+    Color? onHero,
+    Color? heroAccent,
     Color? backgroundLight,
     Color? backgroundDark,
     Color? surfaceLight,
@@ -168,6 +234,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
       accentLight: accentLight ?? this.accentLight,
       tertiary: tertiary ?? this.tertiary,
       onTertiary: onTertiary ?? this.onTertiary,
+      heroStart: heroStart ?? this.heroStart,
+      heroEnd: heroEnd ?? this.heroEnd,
+      onHero: onHero ?? this.onHero,
+      heroAccent: heroAccent ?? this.heroAccent,
       backgroundLight: backgroundLight ?? this.backgroundLight,
       backgroundDark: backgroundDark ?? this.backgroundDark,
       surfaceLight: surfaceLight ?? this.surfaceLight,
@@ -206,6 +276,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
       accentLight: Color.lerp(accentLight, other.accentLight, t)!,
       tertiary: Color.lerp(tertiary, other.tertiary, t)!,
       onTertiary: Color.lerp(onTertiary, other.onTertiary, t)!,
+      heroStart: Color.lerp(heroStart, other.heroStart, t)!,
+      heroEnd: Color.lerp(heroEnd, other.heroEnd, t)!,
+      onHero: Color.lerp(onHero, other.onHero, t)!,
+      heroAccent: Color.lerp(heroAccent, other.heroAccent, t)!,
       backgroundLight: Color.lerp(backgroundLight, other.backgroundLight, t)!,
       backgroundDark: Color.lerp(backgroundDark, other.backgroundDark, t)!,
       surfaceLight: Color.lerp(surfaceLight, other.surfaceLight, t)!,
@@ -244,6 +318,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF1E3A5F),
     tertiary: Color(0xFF818CF8),
     onTertiary: Color(0xFF0B1026),
+    heroStart: Color(0xFF2F6FE6),
+    heroEnd: Color(0xFF4F8AF7),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFF93C5FD),
     backgroundLight: Color(0xFFF8FAFC),
     backgroundDark: Color(0xFF020617),
     surfaceLight: Color(0xFFFFFFFF),
@@ -275,6 +353,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFDBEAFE),
     tertiary: Color(0xFF4F46E5),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF2563EB),
+    heroEnd: Color(0xFF3B82F6),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFBFDBFE),
     backgroundLight: Color(0xFFF8FAFC),
     backgroundDark: Color(0xFF020617),
     surfaceLight: Color(0xFFFFFFFF),
@@ -306,6 +388,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF3A2F0B),
     tertiary: Color(0xFFF5E6B3),
     onTertiary: Color(0xFF1A1400),
+    heroStart: Color(0xFF2E2617),
+    heroEnd: Color(0xFF0D0B06),
+    onHero: Color(0xFFF2D675),
+    heroAccent: Color(0xFFD4AF37),
     backgroundLight: Color(0xFFFAF8F2),
     backgroundDark: Color(0xFF000000),
     surfaceLight: Color(0xFFFFFFFF),
@@ -335,8 +421,12 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     onPrimary: Color(0xFFFFFFFF),
     accent: Color(0xFF75590B),
     accentLight: Color(0xFFF5ECCB),
-    tertiary: Color(0xFF57534E),
+    tertiary: Color(0xFF92400E),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF2A2416),
+    heroEnd: Color(0xFF14110A),
+    onHero: Color(0xFFF2D675),
+    heroAccent: Color(0xFFD4AF37),
     backgroundLight: Color(0xFFFAF8F2),
     backgroundDark: Color(0xFF000000),
     surfaceLight: Color(0xFFFFFFFF),
@@ -368,6 +458,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF2E1F5E),
     tertiary: Color(0xFFE879F9),
     onTertiary: Color(0xFF2A0A30),
+    heroStart: Color(0xFF5B21B6),
+    heroEnd: Color(0xFF9333EA),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFF0ABFC),
     backgroundLight: Color(0xFFFAF7FF),
     backgroundDark: Color(0xFF0D0A17),
     surfaceLight: Color(0xFFFFFFFF),
@@ -399,6 +493,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFEDE9FE),
     tertiary: Color(0xFFC026D3),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF6D28D9),
+    heroEnd: Color(0xFFA21CAF),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFF0ABFC),
     backgroundLight: Color(0xFFFAF7FF),
     backgroundDark: Color(0xFF0D0A17),
     surfaceLight: Color(0xFFFFFFFF),
@@ -430,6 +528,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF0F3D30),
     tertiary: Color(0xFFFCD34D),
     onTertiary: Color(0xFF2A1F00),
+    heroStart: Color(0xFF0B5D45),
+    heroEnd: Color(0xFF08362B),
+    onHero: Color(0xFFECFDF5),
+    heroAccent: Color(0xFFFCD34D),
     backgroundLight: Color(0xFFF3FBF7),
     backgroundDark: Color(0xFF03120D),
     surfaceLight: Color(0xFFFFFFFF),
@@ -461,6 +563,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFD1FAE5),
     tertiary: Color(0xFFA16207),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF047857),
+    heroEnd: Color(0xFF064E3B),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFFCD34D),
     backgroundLight: Color(0xFFF3FBF7),
     backgroundDark: Color(0xFF03120D),
     surfaceLight: Color(0xFFFFFFFF),
@@ -492,6 +598,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF4A1414),
     tertiary: Color(0xFFFB923C),
     onTertiary: Color(0xFF2B1000),
+    heroStart: Color(0xFF2B2B30),
+    heroEnd: Color(0xFF111113),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFE5383B),
     backgroundLight: Color(0xFFFDF6F6),
     backgroundDark: Color(0xFF0C0606),
     surfaceLight: Color(0xFFFFFFFF),
@@ -523,6 +633,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFFEE2E2),
     tertiary: Color(0xFFC2410C),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF2B2B30),
+    heroEnd: Color(0xFF111113),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFE5383B),
     backgroundLight: Color(0xFFFDF6F6),
     backgroundDark: Color(0xFF0C0606),
     surfaceLight: Color(0xFFFFFFFF),
@@ -554,6 +668,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF3F3F46),
     tertiary: Color(0xFFA1A1AA),
     onTertiary: Color(0xFF18181B),
+    heroStart: Color(0xFF34343A),
+    heroEnd: Color(0xFF18181B),
+    onHero: Color(0xFFFAFAFA),
+    heroAccent: Color(0xFFFFFFFF),
     backgroundLight: Color(0xFFFAFAFA),
     backgroundDark: Color(0xFF0F0F10),
     surfaceLight: Color(0xFFFFFFFF),
@@ -585,6 +703,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFE4E4E7),
     tertiary: Color(0xFF52525B),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF18181B),
+    heroEnd: Color(0xFF3F3F46),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFFFFFFF),
     backgroundLight: Color(0xFFFAFAFA),
     backgroundDark: Color(0xFF0F0F10),
     surfaceLight: Color(0xFFFFFFFF),
@@ -616,6 +738,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF0E3F4F),
     tertiary: Color(0xFF5EEAD4),
     onTertiary: Color(0xFF03241F),
+    heroStart: Color(0xFF0E7490),
+    heroEnd: Color(0xFF0C4A6E),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFF67E8F9),
     backgroundLight: Color(0xFFF2FBFD),
     backgroundDark: Color(0xFF04161F),
     surfaceLight: Color(0xFFFFFFFF),
@@ -647,6 +773,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFCFFAFE),
     tertiary: Color(0xFF0F766E),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF0E7490),
+    heroEnd: Color(0xFF0369A1),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFF67E8F9),
     backgroundLight: Color(0xFFF2FBFD),
     backgroundDark: Color(0xFF04161F),
     surfaceLight: Color(0xFFFFFFFF),
@@ -678,6 +808,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF4A2A0A),
     tertiary: Color(0xFFFDA4AF),
     onTertiary: Color(0xFF3A0A14),
+    heroStart: Color(0xFF7A1632),
+    heroEnd: Color(0xFF3D0A18),
+    onHero: Color(0xFFFDE68A),
+    heroAccent: Color(0xFFF59E0B),
     backgroundLight: Color(0xFFFDF6F4),
     backgroundDark: Color(0xFF14060A),
     surfaceLight: Color(0xFFFFFFFF),
@@ -709,6 +843,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFFFE4E6),
     tertiary: Color(0xFFB45309),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF881337),
+    heroEnd: Color(0xFF4C0519),
+    onHero: Color(0xFFFDE68A),
+    heroAccent: Color(0xFFF59E0B),
     backgroundLight: Color(0xFFFDF6F4),
     backgroundDark: Color(0xFF14060A),
     surfaceLight: Color(0xFFFFFFFF),
@@ -740,6 +878,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF1E4258),
     tertiary: Color(0xFFA78BFA),
     onTertiary: Color(0xFF160A33),
+    heroStart: Color(0xFF3B4A61),
+    heroEnd: Color(0xFF172033),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFF38BDF8),
     backgroundLight: Color(0xFFF5F7FA),
     backgroundDark: Color(0xFF0F172A),
     surfaceLight: Color(0xFFFFFFFF),
@@ -771,6 +913,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFE0F2FE),
     tertiary: Color(0xFF6D28D9),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFF1E293B),
+    heroEnd: Color(0xFF334155),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFF38BDF8),
     backgroundLight: Color(0xFFF5F7FA),
     backgroundDark: Color(0xFF0F172A),
     surfaceLight: Color(0xFFFFFFFF),
@@ -802,6 +948,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFF4A1F28),
     tertiary: Color(0xFFFDBA74),
     onTertiary: Color(0xFF2B1400),
+    heroStart: Color(0xFFA3355C),
+    heroEnd: Color(0xFF5C1F36),
+    onHero: Color(0xFFFFE4EA),
+    heroAccent: Color(0xFFFDA4AF),
     backgroundLight: Color(0xFFFFF5F6),
     backgroundDark: Color(0xFF141110),
     surfaceLight: Color(0xFFFFFFFF),
@@ -833,6 +983,10 @@ class ColorTheme extends ThemeExtension<ColorTheme> {
     accentLight: Color(0xFFFFE4E6),
     tertiary: Color(0xFFC2410C),
     onTertiary: Color(0xFFFFFFFF),
+    heroStart: Color(0xFFC93A62),
+    heroEnd: Color(0xFF8C2347),
+    onHero: Color(0xFFFFFFFF),
+    heroAccent: Color(0xFFFDA4AF),
     backgroundLight: Color(0xFFFFF5F6),
     backgroundDark: Color(0xFF141110),
     surfaceLight: Color(0xFFFFFFFF),

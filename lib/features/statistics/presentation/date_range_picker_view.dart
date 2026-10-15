@@ -401,6 +401,7 @@ class _DateRangePickerViewState extends ConsumerState<DateRangePickerView> {
     );
 
     if (picked != null) {
+      if (!mounted) return;
       setState(() {
         _selectedPreset = null;
         if (isStart) {

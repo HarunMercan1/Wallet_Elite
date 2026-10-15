@@ -531,5 +531,7 @@
   "savePercent": "%{percent} indirim",
   "pricePerMonth": "ayda {price}",
   "freeTrialDays": "{days} gün ücretsiz",
-  "startFreeTrial": "Ücretsiz denemeyi başlat"
+  "startFreeTrial": "Ücretsiz denemeyi başlat",
+  "retry": "Tekrar dene",
+  "loadErrorMessage": "Veriler yüklenemedi. İnternet bağlantınızı kontrol edip tekrar deneyin."
 }

@@ -72,6 +72,24 @@ void main() {
         expect(contrast(Colors.white, c.success), greaterThanOrEqualTo(3));
         expect(contrast(Colors.white, c.error), greaterThanOrEqualTo(3));
       });
+
+      test('$label: hero surfaces keep their content readable', () {
+        // Bakiye/premium kartları: etiketler ve tutar sol üstte (heroStart)
+        // durur; sağ alt uç yalnızca büyük yazı/simge taşır.
+        expect(contrast(c.onHero, c.heroStart), greaterThanOrEqualTo(4.5));
+        expect(contrast(c.onHero, c.heroEnd), greaterThanOrEqualTo(3));
+        // Hero, temanın kendi kimliğini taşır; aynı tema iki parlaklıkta da
+        // aynı ton ailesinde kalmalı (Velvet koyuda sarı, açıkta kırmızı idi).
+        final other = c.forBrightness(
+          c.isDark ? Brightness.light : Brightness.dark,
+        );
+        final h1 = HSLColor.fromColor(c.heroStart);
+        final h2 = HSLColor.fromColor(other.heroStart);
+        if (h1.saturation > 0.2 && h2.saturation > 0.2) {
+          final diff = (h1.hue - h2.hue).abs();
+          expect(diff > 180 ? 360 - diff : diff, lessThan(25));
+        }
+      });
     }
   }
 

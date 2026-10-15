@@ -52,7 +52,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [colorTheme.primary, colorTheme.primaryDark],
+            colors: [colorTheme.heroStart, colorTheme.heroEnd],
           ),
         ),
         child: SafeArea(
@@ -73,7 +73,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     style: TextStyle(
                       fontSize: responsive.titleFontSize,
                       fontWeight: FontWeight.bold,
-                      color: colorTheme.onPrimary,
+                      color: colorTheme.onHero,
                     ),
                   ),
 
@@ -83,7 +83,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     l.tagline,
                     style: TextStyle(
                       fontSize: responsive.bodyFontSize,
-                      color: colorTheme.onPrimary.withValues(alpha: 0.85),
+                      color: colorTheme.onHero.withValues(alpha: 0.85),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -452,7 +452,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     l.privacyText,
                     style: TextStyle(
                       fontSize: responsive.subtitleFontSize,
-                      color: colorTheme.onPrimary.withValues(alpha: 0.85),
+                      color: colorTheme.onHero.withValues(alpha: 0.85),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -587,10 +587,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
         }
       }
     } catch (e) {
+      debugPrint('Hata: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l.errorOccurred}: $e'),
+            content: Text(l.errorOccurred),
             backgroundColor: context.colors.error,
           ),
         );

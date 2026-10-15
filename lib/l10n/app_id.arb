@@ -531,5 +531,7 @@
   "savePercent": "Hemat {percent}%",
   "pricePerMonth": "{price} per bulan",
   "freeTrialDays": "Gratis {days} hari",
-  "startFreeTrial": "Mulai uji coba gratis"
+  "startFreeTrial": "Mulai uji coba gratis",
+  "retry": "Coba lagi",
+  "loadErrorMessage": "Data Anda tidak dapat dimuat. Periksa koneksi Anda lalu coba lagi."
 }

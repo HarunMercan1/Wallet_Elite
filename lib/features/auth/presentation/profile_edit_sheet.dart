@@ -1,5 +1,6 @@
 // lib/features/auth/presentation/profile_edit_sheet.dart
 
+import '../../../core/widgets/sheet_surface.dart';
 import 'dart:io';
 import '../../../core/ads/full_screen_ad_gate.dart';
 import 'package:flutter/material.dart';
@@ -70,15 +71,9 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
+      builder: (context) => SheetSurface(
+        color: isDark ? colorTheme.backgroundDark : Colors.white,
         height: MediaQuery.sizeOf(context).height * 0.6,
-        decoration: BoxDecoration(
-          color: isDark ? colorTheme.backgroundDark : Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-        ),
         child: Column(
           children: [
             // Handle
@@ -328,6 +323,7 @@ class _ProfileEditSheetState extends ConsumerState<ProfileEditSheet> {
     );
 
     if (pickedFile != null) {
+      if (!mounted) return;
       setState(() {
         _selectedImage = File(pickedFile.path);
         _selectedPresetAvatar = null; // Clear preset selection

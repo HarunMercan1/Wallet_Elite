@@ -531,5 +531,7 @@
   "savePercent": "ประหยัด {percent}%",
   "pricePerMonth": "{price} ต่อเดือน",
   "freeTrialDays": "ฟรี {days} วัน",
-  "startFreeTrial": "เริ่มทดลองใช้ฟรี"
+  "startFreeTrial": "เริ่มทดลองใช้ฟรี",
+  "retry": "ลองอีกครั้ง",
+  "loadErrorMessage": "โหลดข้อมูลไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"
 }

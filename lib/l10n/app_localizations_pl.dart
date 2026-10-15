@@ -1498,4 +1498,11 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Rozpocznij bezpłatny okres próbny';
+
+  @override
+  String get retry => 'Spróbuj ponownie';
+
+  @override
+  String get loadErrorMessage =>
+      'Nie udało się wczytać danych. Sprawdź połączenie i spróbuj ponownie.';
 }

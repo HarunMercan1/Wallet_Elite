@@ -1,5 +1,6 @@
 // lib/main.dart
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,6 +19,10 @@ import 'core/services/support_actions.dart';
 import 'features/settings/data/settings_provider.dart';
 
 void main() async {
+  // Release'de debugPrint de logcat'e yazar; loglarda e-posta, ad ve kullanıcı
+  // kimliği geçtiği için yayın sürümünde tamamen susturulur.
+  if (kReleaseMode) debugPrint = (String? message, {int? wrapWidth}) {};
+
   // Flutter Engine başlatma
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -92,6 +97,9 @@ class WalletEliteApp extends ConsumerWidget {
       ),
 
       themeMode: themeMode, // Settings'den gelen tema
+      // Tema/renk değişiminde renkler yumuşakça geçsin
+      themeAnimationDuration: const Duration(milliseconds: 450),
+      themeAnimationCurve: Curves.easeInOutCubic,
       // Router
       routerConfig: router,
     );

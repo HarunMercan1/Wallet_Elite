@@ -1491,4 +1491,11 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'เริ่มทดลองใช้ฟรี';
+
+  @override
+  String get retry => 'ลองอีกครั้ง';
+
+  @override
+  String get loadErrorMessage =>
+      'โหลดข้อมูลไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง';
 }

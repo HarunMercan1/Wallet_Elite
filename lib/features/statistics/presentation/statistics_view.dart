@@ -1,5 +1,6 @@
 // lib/features/statistics/presentation/statistics_view.dart
 
+import '../../../core/widgets/load_error_view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/category_l10n.dart';
 import '../../../core/utils/currency_utils.dart';
 import '../../../l10n/app_localizations.dart';
@@ -58,7 +58,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
   Widget build(BuildContext context) {
     final transactions = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesProvider);
-    final colorTheme = ref.watch(currentColorThemeProvider);
+    final colorTheme = context.colors; // Tema geçişinde animasyonlu
     final l = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -75,7 +75,10 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             colorTheme,
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('${l.error}: $e')),
+          error: (e, _) => LoadErrorView(
+            error: e,
+            onRetry: () => ref.invalidate(transactionsProvider),
+          ),
         ),
       ),
     );
@@ -154,6 +157,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
       ),
     );
     if (result == null) return;
+    if (!mounted) return;
     setState(() {
       _period = _Period.custom;
       _customStart = result.startDate;
@@ -482,7 +486,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
                 ),
               ),
               if (_period == _Period.thisMonth)
-                _buildMonthChangeBadge(all, expense, l, c),
+                Flexible(child: _buildMonthChangeBadge(all, expense, l, c)),
             ],
           ),
           const SizedBox(height: 4),
@@ -621,12 +625,17 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
             color: color,
           ),
           const SizedBox(width: 4),
-          Text(
-            '${formatPercent(change.abs())} · ${l.comparedToLastMonth}',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: color,
+          Flexible(
+            child: Text(
+              // Karşılaştırılan gider; bakiye kartında durduğu için belirtilir
+              '${l.expense} ${formatPercent(change.abs())} · ${l.comparedToLastMonth}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
             ),
           ),
         ],
@@ -841,28 +850,6 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
 
   // ========== 3. Kategoriler ==========
 
-  /// Dilim renkleri: temanın ana rengi + ondan belirgin biçimde ayrışan sabit
-  /// renkler. Ana renge yakın tondakiler atlanır ki iki dilim karışmasın.
-  List<Color> _categoryPalette(ColorTheme c) {
-    const candidates = [
-      Color(0xFFF59E0B), // amber
-      Color(0xFF8B5CF6), // mor
-      Color(0xFFEC4899), // pembe
-      Color(0xFF14B8A6), // turkuaz
-      Color(0xFF3B82F6), // mavi
-      Color(0xFFEF4444), // kırmızı
-    ];
-    final primaryHsl = HSLColor.fromColor(c.primary);
-    final isNeutral = primaryHsl.saturation < 0.15;
-    bool farFromPrimary(Color color) {
-      if (isNeutral) return true;
-      final diff = (HSLColor.fromColor(color).hue - primaryHsl.hue).abs();
-      return (diff > 180 ? 360 - diff : diff) >= 40;
-    }
-
-    return [c.primary, ...candidates.where(farFromPrimary).take(4)];
-  }
-
   Widget _buildCategoryCard(
     List<TransactionModel> inPeriod,
     Map<String?, double> byCategory,
@@ -874,7 +861,7 @@ class _StatisticsViewState extends ConsumerState<StatisticsView> {
   ) {
     final sorted = byCategory.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    final palette = _categoryPalette(c);
+    final palette = c.chartPalette.take(5).toList();
 
     // En büyük kategoriler ayrı, kalanı "Diğer" olarak tek dilimde
     final slices = <({String name, double amount, Color color})>[];

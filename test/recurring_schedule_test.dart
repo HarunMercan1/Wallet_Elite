@@ -207,5 +207,16 @@ void main() {
       expect(type('12.55', '12.555').text, '12.55');
       expect(type('12', '12a').text, '12');
     });
+
+    test('Arabic and Persian digits are accepted', () {
+      const formatter = AmountInputFormatter();
+      final typed = formatter.formatEditUpdate(
+        TextEditingValue.empty,
+        const TextEditingValue(text: '١٢٫٥'),
+      );
+      expect(typed.text, '12.5');
+      expect(parseAmount('۲۵۰'), 250);
+      expect(parseAmount('٣,٧٥'), 3.75);
+    });
   });
 }

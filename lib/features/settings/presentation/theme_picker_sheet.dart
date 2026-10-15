@@ -1,5 +1,6 @@
 // lib/features/settings/presentation/theme_picker_sheet.dart
 
+import '../../../core/widgets/sheet_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,6 +10,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/theme/premium_theme_provider.dart';
 import '../../../core/utils/currency_utils.dart';
+import '../../../core/widgets/hero_surface.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../premium/presentation/paywall_view.dart';
 import '../data/settings_provider.dart';
@@ -46,12 +48,9 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
     ).forBrightness(brightness);
     final currencySymbol = CurrencyUtils.getSymbol(ref.watch(currencyProvider));
 
-    return Container(
+    return SheetSurface(
+      color: colors.cardColor,
       height: MediaQuery.sizeOf(context).height * 0.9,
-      decoration: BoxDecoration(
-        color: colors.cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       child: SafeArea(
         top: false,
         child: Column(
@@ -107,7 +106,8 @@ class _ThemePickerSheetState extends ConsumerState<ThemePickerSheet> {
 
             // Tema listesi
             SizedBox(
-              height: 112,
+              // Kutu + iki satırlık ad; büyük yazı boyutunda da sığsın
+              height: 86 + 26 * MediaQuery.textScalerOf(context).scale(1),
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -345,7 +345,14 @@ class _ThemeChip extends StatelessWidget {
         child: Column(
           children: [
             AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              transform: Matrix4.diagonal3Values(
+                isPreviewing ? 1.06 : 1,
+                isPreviewing ? 1.06 : 1,
+                1,
+              ),
+              transformAlignment: Alignment.center,
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
@@ -365,18 +372,14 @@ class _ThemeChip extends StatelessWidget {
                 clipBehavior: Clip.antiAlias,
                 child: Stack(
                   children: [
-                    // Üst yarı: ana renk gradyanı, alt yarı: tema zemini
+                    // Üst yarı: hero gradyanı, alt yarı: tema zemini
                     Positioned(
                       left: 0,
                       right: 0,
                       top: 0,
                       height: 30,
                       child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [theme.primary, theme.primaryLight],
-                          ),
-                        ),
+                        decoration: BoxDecoration(gradient: theme.heroGradient),
                       ),
                     ),
                     Positioned(
@@ -384,6 +387,8 @@ class _ThemeChip extends StatelessWidget {
                       bottom: 6,
                       child: Row(
                         children: [
+                          _dot(theme.primary),
+                          const SizedBox(width: 3),
                           _dot(theme.tertiary),
                           const SizedBox(width: 3),
                           _dot(theme.success),
@@ -539,63 +544,60 @@ class _PreviewBody extends StatelessWidget {
           const SizedBox(height: 12),
 
           // Bakiye kartı
-          Container(
+          SizedBox(
             width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [c.primary, c.primaryLight],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+            child: HeroSurface(
+              colors: c,
+              padding: const EdgeInsets.all(14),
               borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l.totalBalance,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: c.onPrimary.withValues(alpha: 0.85),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${currencySymbol}12.450,00',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
-                    color: c.onPrimary,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _balanceStat(
-                        c,
-                        l.income,
-                        '${currencySymbol}18.000',
-                        Icons.arrow_upward_rounded,
-                        c.success,
-                      ),
+              shadow: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.totalBalance,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: c.onHero.withValues(alpha: 0.85),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _balanceStat(
-                        c,
-                        l.expense,
-                        '${currencySymbol}5.550',
-                        Icons.arrow_downward_rounded,
-                        c.error,
-                      ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${currencySymbol}12.450,00',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
+                      color: c.onHero,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _balanceStat(
+                          c,
+                          l.income,
+                          '${currencySymbol}18.000',
+                          Icons.arrow_upward_rounded,
+                          c.success,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _balanceStat(
+                          c,
+                          l.expense,
+                          '${currencySymbol}5.550',
+                          Icons.arrow_downward_rounded,
+                          c.error,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -701,7 +703,7 @@ class _PreviewBody extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       decoration: BoxDecoration(
-        color: c.onPrimary.withValues(alpha: 0.14),
+        color: c.onHero.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(11),
       ),
       child: Row(
@@ -726,7 +728,7 @@ class _PreviewBody extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 9.5,
-                    color: c.onPrimary.withValues(alpha: 0.8),
+                    color: c.onHero.withValues(alpha: 0.8),
                   ),
                 ),
                 Text(
@@ -736,7 +738,7 @@ class _PreviewBody extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.bold,
-                    color: c.onPrimary,
+                    color: c.onHero,
                   ),
                 ),
               ],

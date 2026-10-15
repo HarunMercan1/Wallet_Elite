@@ -1493,4 +1493,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Bắt đầu dùng thử miễn phí';
+
+  @override
+  String get retry => 'Thử lại';
+
+  @override
+  String get loadErrorMessage =>
+      'Không thể tải dữ liệu. Hãy kiểm tra kết nối và thử lại.';
 }

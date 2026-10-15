@@ -24,6 +24,8 @@ import '../../budgets/presentation/budgets_view.dart';
 import '../../recurring/presentation/recurring_transactions_view.dart';
 import '../../../core/utils/category_l10n.dart';
 import '../../../core/utils/currency_utils.dart';
+import '../../../core/widgets/hero_surface.dart';
+import '../../../core/widgets/motion.dart';
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
@@ -105,40 +107,52 @@ class DashboardView extends ConsumerWidget {
                     child: Row(
                       children: [
                         Expanded(
-                          child: _buildQuickActionTile(
-                            label: l.debtTracking,
-                            icon: Icons.handshake_outlined,
-                            accentColor: colorTheme.primary,
-                            colorTheme: colorTheme,
-                            onTap: () =>
-                                _openSubScreen(context, ref, const DebtsView()),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: _buildQuickActionTile(
-                            label: l.budgets,
-                            icon: Icons.pie_chart_outline_rounded,
-                            accentColor: colorTheme.success,
-                            colorTheme: colorTheme,
-                            onTap: () => _openSubScreen(
-                              context,
-                              ref,
-                              const BudgetsView(),
+                          child: FadeSlideIn(
+                            delay: const Duration(milliseconds: 130),
+                            child: _buildQuickActionTile(
+                              label: l.debtTracking,
+                              icon: Icons.handshake_outlined,
+                              accentColor: colorTheme.primary,
+                              colorTheme: colorTheme,
+                              onTap: () => _openSubScreen(
+                                context,
+                                ref,
+                                const DebtsView(),
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: _buildQuickActionTile(
-                            label: l.recurringTransactions,
-                            icon: Icons.autorenew_rounded,
-                            accentColor: colorTheme.tertiary,
-                            colorTheme: colorTheme,
-                            onTap: () => _openSubScreen(
-                              context,
-                              ref,
-                              const RecurringTransactionsView(),
+                          child: FadeSlideIn(
+                            delay: const Duration(milliseconds: 200),
+                            child: _buildQuickActionTile(
+                              label: l.budgets,
+                              icon: Icons.pie_chart_outline_rounded,
+                              accentColor: colorTheme.success,
+                              colorTheme: colorTheme,
+                              onTap: () => _openSubScreen(
+                                context,
+                                ref,
+                                const BudgetsView(),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: FadeSlideIn(
+                            delay: const Duration(milliseconds: 270),
+                            child: _buildQuickActionTile(
+                              label: l.recurringTransactions,
+                              icon: Icons.autorenew_rounded,
+                              accentColor: colorTheme.tertiary,
+                              colorTheme: colorTheme,
+                              onTap: () => _openSubScreen(
+                                context,
+                                ref,
+                                const RecurringTransactionsView(),
+                              ),
                             ),
                           ),
                         ),
@@ -444,123 +458,92 @@ class DashboardView extends ConsumerWidget {
         }
 
         final pillRadius = BorderRadius.circular(20);
-        final onPrimary = colorTheme.onPrimary;
+        final onPrimary = colorTheme.onHero;
 
-        return Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [colorTheme.primary, colorTheme.primaryLight],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: colorTheme.primary.withValues(alpha: 0.3),
-                blurRadius: 24,
-                offset: const Offset(0, 12),
-              ),
-            ],
-          ),
-          child: Stack(
+        return HeroSurface(
+          colors: colorTheme,
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Dekoratif halkalar
-              Positioned(
-                top: -56,
-                right: -36,
-                child: _buildDecorCircle(160, onPrimary),
-              ),
-              Positioned(
-                bottom: -80,
-                left: -48,
-                child: _buildDecorCircle(180, onPrimary),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Wallet Selector
-                    Material(
-                      color: onPrimary.withValues(alpha: 0.18),
-                      borderRadius: pillRadius,
-                      child: InkWell(
-                        borderRadius: pillRadius,
-                        onTap: () => WalletSelectionSheet.show(context),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 6, 6, 6),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.account_balance_wallet_outlined,
-                                color: onPrimary,
-                                size: 15,
-                              ),
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  walletLabel,
-                                  style: TextStyle(
-                                    color: onPrimary,
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: onPrimary,
-                                size: 18,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        _formatMoney(totalBalance, currencySymbol),
-                        style: TextStyle(
-                          color: onPrimary,
-                          fontSize: 34,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -1,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Row(
+              // Wallet Selector
+              Material(
+                color: onPrimary.withValues(alpha: 0.18),
+                borderRadius: pillRadius,
+                child: InkWell(
+                  borderRadius: pillRadius,
+                  onTap: () => WalletSelectionSheet.show(context),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 6, 6, 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: _buildBalanceStat(
-                            l.income,
-                            _formatMoney(totalIncome, currencySymbol),
-                            Icons.arrow_downward_rounded,
-                            colorTheme.success,
-                            onPrimary,
+                        Icon(
+                          Icons.account_balance_wallet_outlined,
+                          color: onPrimary,
+                          size: 15,
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            walletLabel,
+                            style: TextStyle(
+                              color: onPrimary,
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: _buildBalanceStat(
-                            l.expense,
-                            _formatMoney(totalExpense, currencySymbol),
-                            Icons.arrow_upward_rounded,
-                            colorTheme.error,
-                            onPrimary,
-                          ),
+                        Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: onPrimary,
+                          size: 18,
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
+              ),
+              const SizedBox(height: 14),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: AnimatedAmount(
+                  value: totalBalance,
+                  format: (v) => _formatMoney(v, currencySymbol),
+                  style: TextStyle(
+                    color: onPrimary,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -1,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildBalanceStat(
+                      l.income,
+                      _formatMoney(totalIncome, currencySymbol),
+                      Icons.arrow_downward_rounded,
+                      colorTheme.success,
+                      onPrimary,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildBalanceStat(
+                      l.expense,
+                      _formatMoney(totalExpense, currencySymbol),
+                      Icons.arrow_upward_rounded,
+                      colorTheme.error,
+                      onPrimary,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -575,17 +558,6 @@ class DashboardView extends ConsumerWidget {
   String _formatMoney(double value, String currencySymbol) {
     final formatted = NumberFormat('#,##0.00').format(value.abs());
     return '${value < 0 ? '-' : ''}$currencySymbol$formatted';
-  }
-
-  Widget _buildDecorCircle(double size, Color onPrimary) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: onPrimary.withValues(alpha: 0.08),
-      ),
-    );
   }
 
   Widget _buildBalanceStat(
@@ -624,15 +596,19 @@ class DashboardView extends ConsumerWidget {
                     fontSize: 11,
                   ),
                 ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: onPrimary,
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.bold,
+                // Büyük tutar dar ekranda kesilmek yerine küçülür
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: onPrimary,
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -705,13 +681,17 @@ class DashboardView extends ConsumerWidget {
               final category = transaction.categoryId != null
                   ? categoryMap[transaction.categoryId]
                   : null;
-              return _buildTransactionItem(
-                context,
-                ref,
-                transaction,
-                category,
-                l,
-                colorTheme,
+              return FadeSlideIn(
+                key: ValueKey(transaction.id),
+                delay: Duration(milliseconds: 180 + 45 * index.clamp(0, 6)),
+                child: _buildTransactionItem(
+                  context,
+                  ref,
+                  transaction,
+                  category,
+                  l,
+                  colorTheme,
+                ),
               );
             },
           ),

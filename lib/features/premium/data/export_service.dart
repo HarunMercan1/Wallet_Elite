@@ -28,8 +28,14 @@ class ExportService {
   }) async {
     final accountNames = {for (final a in accounts) a.id: a.name};
     final categoriesById = {for (final c in categories) c.id: c};
-    final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
-    final amountFormat = NumberFormat('0.00', localeCode);
+    // Tablolar sayıyı/tarihi okuyabilsin diye rakamlar her dilde Latin
+    // rakamlarıdır (ar dilinde DateFormat/NumberFormat ٠١٢ üretir); yalnızca
+    // ondalık ayırıcı kullanıcının dilinden alınır.
+    final dateFormat = DateFormat('yyyy-MM-dd HH:mm', 'en');
+    final localeSep = NumberFormat('0.00', localeCode).symbols.DECIMAL_SEP;
+    final decimalSep = localeSep == ',' ? ',' : '.';
+    String formatAmount(double v) =>
+        v.toStringAsFixed(2).replaceAll('.', decimalSep);
 
     final sorted = [...transactions]..sort((a, b) => b.date.compareTo(a.date));
 
@@ -51,7 +57,7 @@ class ExportService {
         _row([
           dateFormat.format(t.date),
           t.isIncome ? l.income : l.expense,
-          amountFormat.format(t.amount),
+          formatAmount(t.amount),
           localizedCategoryName(categoriesById[t.categoryId], l) ?? '',
           accountNames[t.accountId] ?? '',
           t.description ?? '',
@@ -60,7 +66,7 @@ class ExportService {
     }
 
     final dir = await getTemporaryDirectory();
-    final stamp = DateFormat('yyyyMMdd_HHmm').format(DateTime.now());
+    final stamp = DateFormat('yyyyMMdd_HHmm', 'en').format(DateTime.now());
     final file = File('${dir.path}/wallet_elite_$stamp.csv');
     // ﻿ = UTF-8 BOM
     await file.writeAsBytes(utf8.encode('﻿${buffer.toString()}'));

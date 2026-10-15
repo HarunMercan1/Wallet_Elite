@@ -1501,4 +1501,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Empezar prueba gratis';
+
+  @override
+  String get retry => 'Reintentar';
+
+  @override
+  String get loadErrorMessage =>
+      'No se pudieron cargar tus datos. Revisa tu conexión e inténtalo de nuevo.';
 }

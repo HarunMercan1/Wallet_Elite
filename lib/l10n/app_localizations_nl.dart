@@ -1501,4 +1501,11 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Start gratis proefperiode';
+
+  @override
+  String get retry => 'Opnieuw proberen';
+
+  @override
+  String get loadErrorMessage =>
+      'Je gegevens konden niet worden geladen. Controleer je verbinding en probeer het opnieuw.';
 }

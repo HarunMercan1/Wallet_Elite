@@ -1494,4 +1494,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'मुफ़्त ट्रायल शुरू करें';
+
+  @override
+  String get retry => 'फिर से कोशिश करें';
+
+  @override
+  String get loadErrorMessage =>
+      'आपका डेटा लोड नहीं हो सका। अपना कनेक्शन जाँचें और फिर से कोशिश करें।';
 }

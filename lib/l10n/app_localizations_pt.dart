@@ -1496,4 +1496,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Iniciar teste grátis';
+
+  @override
+  String get retry => 'Tentar novamente';
+
+  @override
+  String get loadErrorMessage =>
+      'Não foi possível carregar seus dados. Verifique sua conexão e tente novamente.';
 }

@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/recurring/presentation/add_recurring_sheet.dart
@@ -79,14 +80,11 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
     final accountsAsync = ref.watch(accountsProvider);
     final categoriesAsync = ref.watch(categoriesProvider);
 
-    return Container(
+    return SheetSurface(
+      color: colorTheme.cardColor,
       height: MediaQuery.sizeOf(context).height * 0.85,
       // Klavye açılınca kaydet butonu ve alanlar altında kalmasın
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       child: Column(
         children: [
           // Handle
@@ -105,17 +103,20 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Text(
-                  isEditing
-                      ? l.editRecurringTransaction
-                      : l.addRecurringTransaction,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: colorTheme.textPrimary,
+                Expanded(
+                  child: Text(
+                    isEditing
+                        ? l.editRecurringTransaction
+                        : l.addRecurringTransaction,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: colorTheme.textPrimary,
+                    ),
                   ),
                 ),
-                const Spacer(),
                 if (isEditing)
                   IconButton(
                     onPressed: _deleteRecurring,
@@ -280,13 +281,17 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                         : colorTheme.textSecondary,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    l.expense,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: !_isIncome
-                          ? colorTheme.expense
-                          : colorTheme.textSecondary,
+                  Flexible(
+                    child: Text(
+                      l.expense,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: !_isIncome
+                            ? colorTheme.expense
+                            : colorTheme.textSecondary,
+                      ),
                     ),
                   ),
                 ],
@@ -319,13 +324,17 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                         : colorTheme.textSecondary,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    l.income,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: _isIncome
-                          ? colorTheme.income
-                          : colorTheme.textSecondary,
+                  Flexible(
+                    child: Text(
+                      l.income,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: _isIncome
+                            ? colorTheme.income
+                            : colorTheme.textSecondary,
+                      ),
                     ),
                   ),
                 ],
@@ -649,11 +658,15 @@ class _AddRecurringSheetState extends ConsumerState<AddRecurringSheet> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        l.endDate,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colorTheme.textSecondary,
+                      Flexible(
+                        child: Text(
+                          l.endDate,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colorTheme.textSecondary,
+                          ),
                         ),
                       ),
                       if (_endDate != null)

@@ -1494,4 +1494,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Начать бесплатный период';
+
+  @override
+  String get retry => 'Повторить';
+
+  @override
+  String get loadErrorMessage =>
+      'Не удалось загрузить данные. Проверьте подключение и попробуйте снова.';
 }

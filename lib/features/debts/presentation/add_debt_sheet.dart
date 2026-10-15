@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/add_debt_sheet.dart
@@ -43,12 +44,9 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     final colorTheme = ref.watch(currentColorThemeProvider);
     final bottomPadding = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Container(
+    return SheetSurface(
+      color: colorTheme.background,
       margin: EdgeInsets.only(bottom: bottomPadding),
-      decoration: BoxDecoration(
-        color: colorTheme.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -68,15 +66,18 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Text(
-                  l.addDebt,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: colorTheme.textPrimary,
+                Expanded(
+                  child: Text(
+                    l.addDebt,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: colorTheme.textPrimary,
+                    ),
                   ),
                 ),
-                const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
@@ -324,12 +325,20 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
           children: [
             Icon(icon, color: isSelected ? color : colorTheme.textSecondary),
             const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? color : colorTheme.textPrimary,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                fontSize: 15,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: isSelected ? color : colorTheme.textPrimary,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ),
           ],
@@ -396,7 +405,7 @@ class _AddDebtSheetState extends ConsumerState<AddDebtSheet> {
     );
 
     if (date != null) {
-      setState(() => _dueDate = date);
+      if (mounted) setState(() => _dueDate = date);
     }
   }
 

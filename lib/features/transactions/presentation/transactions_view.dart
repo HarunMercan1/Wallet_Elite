@@ -1,11 +1,11 @@
 // lib/features/transactions/presentation/transactions_view.dart
 
+import '../../../core/widgets/load_error_view.dart';
 import '../../../core/utils/icon_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../wallet/models/transaction_model.dart';
@@ -45,6 +45,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     );
 
     if (result != null) {
+      if (!mounted) return;
       setState(() {
         _filterState = result;
       });
@@ -56,7 +57,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     final transactionsAsync = ref.watch(filteredTransactionsProvider);
     final categories = ref.watch(categoriesProvider);
 
-    final colorTheme = ref.watch(currentColorThemeProvider);
+    final colorTheme = context.colors; // Tema geçişinde animasyonlu
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -72,14 +73,21 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    l.transactions,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: colorTheme.textPrimary,
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        l.transactions,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: colorTheme.textPrimary,
+                        ),
+                      ),
                     ),
                   ),
+                  const SizedBox(width: 12),
                   GestureDetector(
                     onTap: () => _openFilterSheet(context),
                     child: Container(
@@ -435,7 +443,10 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('${l.error}: $e')),
+                error: (e, _) => LoadErrorView(
+                  error: e,
+                  onRetry: () => ref.invalidate(transactionsProvider),
+                ),
               ),
             ),
           ],
@@ -500,7 +511,7 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
   ) {
     final Map<String, List<TransactionModel>> grouped = {};
     for (final tx in txList) {
-      final dateKey = DateFormat('yyyy-MM-dd').format(tx.date);
+      final dateKey = _dayKey.format(tx.date);
       grouped.putIfAbsent(dateKey, () => []);
       grouped[dateKey]!.add(tx);
     }
@@ -508,14 +519,18 @@ class _TransactionsViewState extends ConsumerState<TransactionsView> {
     return {for (var key in sortedKeys) key: grouped[key]!};
   }
 
+  /// Gruplama anahtarı; geri `DateTime.parse` edildiği için her dilde Latin
+  /// rakamlarıyla (ar dilinde varsayılan biçim ٢٠٢٦-١٠-١٤ üretip çöküyordu)
+  static final _dayKey = DateFormat('yyyy-MM-dd', 'en');
+
   String _formatDate(String dateKey, AppLocalizations l) {
     final date = DateTime.parse(dateKey);
     final now = DateTime.now();
     final yesterday = now.subtract(const Duration(days: 1));
 
-    if (DateFormat('yyyy-MM-dd').format(now) == dateKey) {
+    if (_dayKey.format(now) == dateKey) {
       return l.today;
-    } else if (DateFormat('yyyy-MM-dd').format(yesterday) == dateKey) {
+    } else if (_dayKey.format(yesterday) == dateKey) {
       return l.yesterday;
     } else {
       return DateFormat(

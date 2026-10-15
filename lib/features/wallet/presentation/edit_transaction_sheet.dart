@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/wallet/presentation/edit_transaction_sheet.dart
@@ -67,15 +68,9 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         ? ref.watch(incomeCategoriesProvider)
         : ref.watch(expenseCategoriesProvider);
 
-    return Container(
+    return SheetSurface(
+      color: colorTheme.cardColor,
       height: MediaQuery.sizeOf(context).height * 0.85,
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
       child: Column(
         children: [
           // Handle bar
@@ -318,6 +313,7 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         );
                         if (date != null) {
                           // Yalnızca gün değişir; saat korunur
+                          if (!mounted) return;
                           setState(
                             () => _selectedDate = DateTime(
                               date.year,
@@ -372,6 +368,8 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                         );
                         return DropdownButtonFormField<String>(
                           initialValue: hasSelected ? _selectedAccountId : null,
+                          // Uzun cüzdan adı dar ekranda taşmasın
+                          isExpanded: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -384,7 +382,11 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
                           items: accountsList.map((acc) {
                             return DropdownMenuItem(
                               value: acc.id,
-                              child: Text(acc.name),
+                              child: Text(
+                                acc.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: (v) =>
@@ -575,12 +577,13 @@ class _EditTransactionSheetState extends ConsumerState<EditTransactionSheet> {
         Navigator.pop(context);
       }
     } catch (e) {
+      debugPrint('Hata: $e');
       if (!mounted) return;
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l.error}: $e'),
+            content: Text(l.errorOccurred),
             backgroundColor: colorTheme.error,
           ),
         );

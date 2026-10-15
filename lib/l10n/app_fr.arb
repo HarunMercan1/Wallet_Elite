@@ -517,5 +517,7 @@
   "savePercent": "-{percent} %",
   "pricePerMonth": "{price} par mois",
   "freeTrialDays": "{days} jours gratuits",
-  "startFreeTrial": "Commencer l'essai gratuit"
+  "startFreeTrial": "Commencer l'essai gratuit",
+  "retry": "Réessayer",
+  "loadErrorMessage": "Impossible de charger vos données. Vérifiez votre connexion et réessayez."
 }

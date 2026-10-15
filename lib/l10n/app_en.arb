@@ -542,5 +542,10 @@
   "@pricePerMonth": {"placeholders": {"price": {"type": "String"}}},
   "freeTrialDays": "{days} days free",
   "@freeTrialDays": {"placeholders": {"days": {"type": "int"}}},
-  "startFreeTrial": "Start free trial"
+  "startFreeTrial": "Start free trial",
+  "retry": "Try again",
+  "loadErrorMessage": "Couldn't load your data. Check your connection and try again.",
+  "@loadErrorMessage": {
+    "description": "Shown when a list or screen fails to load from the server"
+  }
 }

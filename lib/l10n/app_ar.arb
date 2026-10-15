@@ -517,5 +517,7 @@
   "savePercent": "وفّر {percent}%",
   "pricePerMonth": "{price} شهريًا",
   "freeTrialDays": "{days} أيام مجانًا",
-  "startFreeTrial": "ابدأ التجربة المجانية"
+  "startFreeTrial": "ابدأ التجربة المجانية",
+  "retry": "حاول مرة أخرى",
+  "loadErrorMessage": "تعذّر تحميل بياناتك. تحقق من اتصالك وحاول مرة أخرى."
 }

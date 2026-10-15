@@ -4,9 +4,9 @@ import '../../settings/data/preferences_sync.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_theme_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/utils/responsive_helper.dart';
+import '../../../core/widgets/motion.dart';
 import '../../settings/data/settings_provider.dart';
 import 'dashboard_view.dart';
 import '../../wallet/presentation/add_transaction_sheet.dart';
@@ -49,7 +49,7 @@ class MainShell extends ConsumerWidget {
     ref.watch(localeProvider); // dil değişince yeniden çiz
     // Yeni cihazda/yeniden kurulumda dil, tema ve para birimini profilden al
     ref.watch(preferencesRestoreProvider);
-    final colorTheme = ref.watch(currentColorThemeProvider);
+    final colorTheme = context.colors; // Tema geçişinde animasyonlu
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final r = ResponsiveHelper.of(context);
@@ -79,76 +79,79 @@ class MainShell extends ConsumerWidget {
             maintainState: true,
             child: const AdaptiveBannerAd(),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: colorTheme.cardColor,
-              border: Border(
-                top: BorderSide(color: colorTheme.borderColor, width: 0.5),
-              ),
-            ),
-            child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: r.paddingS,
-                  vertical: r.paddingS,
+          // Material zemin: sekmelerin dokunma dalgası görünür kalsın
+          Material(
+            color: colorTheme.cardColor,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: colorTheme.borderColor, width: 0.5),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _NavItem(
-                      icon: Icons.home_outlined,
-                      selectedIcon: Icons.home,
-                      label: l.home,
-                      isSelected: selectedTab == 0,
-                      isDark: isDark,
-                      primaryColor: colorTheme.primary,
-                      onTap: () =>
-                          ref.read(selectedTabProvider.notifier).state = 0,
-                    ),
-                    _NavItem(
-                      icon: Icons.receipt_long_outlined,
-                      selectedIcon: Icons.receipt_long,
-                      label: l.transactions,
-                      isSelected: selectedTab == 1,
-                      isDark: isDark,
-                      primaryColor: colorTheme.primary,
-                      onTap: () =>
-                          ref.read(selectedTabProvider.notifier).state = 1,
-                    ),
-                    // Ortadaki büyük + butonu
-                    _AddButton(
-                      primaryColor: colorTheme.primary,
-                      primaryLightColor: colorTheme.primaryLight,
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => const AddTransactionSheet(),
-                        );
-                      },
-                    ),
-                    _NavItem(
-                      icon: Icons.bar_chart_outlined,
-                      selectedIcon: Icons.bar_chart,
-                      label: l.statistics,
-                      isSelected: selectedTab == 3,
-                      isDark: isDark,
-                      primaryColor: colorTheme.primary,
-                      onTap: () =>
-                          ref.read(selectedTabProvider.notifier).state = 3,
-                    ),
-                    _NavItem(
-                      icon: Icons.settings_outlined,
-                      selectedIcon: Icons.settings,
-                      label: l.settings,
-                      isSelected: selectedTab == 4,
-                      isDark: isDark,
-                      primaryColor: colorTheme.primary,
-                      onTap: () =>
-                          ref.read(selectedTabProvider.notifier).state = 4,
-                    ),
-                  ],
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: r.paddingS,
+                    vertical: r.paddingS,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _NavItem(
+                        icon: Icons.home_outlined,
+                        selectedIcon: Icons.home,
+                        label: l.home,
+                        isSelected: selectedTab == 0,
+                        isDark: isDark,
+                        primaryColor: colorTheme.primary,
+                        onTap: () =>
+                            ref.read(selectedTabProvider.notifier).state = 0,
+                      ),
+                      _NavItem(
+                        icon: Icons.receipt_long_outlined,
+                        selectedIcon: Icons.receipt_long,
+                        label: l.transactions,
+                        isSelected: selectedTab == 1,
+                        isDark: isDark,
+                        primaryColor: colorTheme.primary,
+                        onTap: () =>
+                            ref.read(selectedTabProvider.notifier).state = 1,
+                      ),
+                      // Ortadaki büyük + butonu
+                      _AddButton(
+                        primaryColor: colorTheme.primary,
+                        primaryLightColor: colorTheme.primaryLight,
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => const AddTransactionSheet(),
+                          );
+                        },
+                      ),
+                      _NavItem(
+                        icon: Icons.bar_chart_outlined,
+                        selectedIcon: Icons.bar_chart,
+                        label: l.statistics,
+                        isSelected: selectedTab == 3,
+                        isDark: isDark,
+                        primaryColor: colorTheme.primary,
+                        onTap: () =>
+                            ref.read(selectedTabProvider.notifier).state = 3,
+                      ),
+                      _NavItem(
+                        icon: Icons.settings_outlined,
+                        selectedIcon: Icons.settings,
+                        label: l.settings,
+                        isSelected: selectedTab == 4,
+                        isDark: isDark,
+                        primaryColor: colorTheme.primary,
+                        onTap: () =>
+                            ref.read(selectedTabProvider.notifier).state = 4,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -195,16 +198,42 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isSelected ? selectedIcon : icon,
-              color: isSelected ? primaryColor : context.colors.textSecondary,
-              size: r.navIconSize,
+            // Seçili sekmede simgenin arkasında büyüyen yumuşak hap
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.easeOutCubic,
+              padding: EdgeInsets.symmetric(
+                horizontal: isSelected ? 14 : 6,
+                vertical: 3,
+              ),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? primaryColor.withValues(alpha: 0.14)
+                    : primaryColor.withValues(alpha: 0),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: AnimatedScale(
+                scale: isSelected ? 1.08 : 1,
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.easeOutBack,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    isSelected ? selectedIcon : icon,
+                    key: ValueKey(isSelected),
+                    color: isSelected
+                        ? primaryColor
+                        : context.colors.textSecondary,
+                    size: r.navIconSize,
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: r.spaceXS),
             FittedBox(
               fit: BoxFit.scaleDown,
-              child: Text(
-                label,
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 220),
                 style: TextStyle(
                   fontSize: r.navFontSize,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -212,8 +241,11 @@ class _NavItem extends StatelessWidget {
                       ? primaryColor
                       : context.colors.textSecondary,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ],
@@ -240,8 +272,9 @@ class _AddButton extends StatelessWidget {
     final r = ResponsiveHelper.of(context);
     final size = r.wp(14); // Dinamik boyut
 
-    return GestureDetector(
+    return PressScale(
       onTap: onTap,
+      scale: 0.88,
       child: Container(
         width: size,
         height: size,
@@ -252,6 +285,13 @@ class _AddButton extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: primaryColor.withValues(alpha: 0.35),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
         child: Icon(Icons.add, color: context.colors.onPrimary, size: r.iconXL),
       ),

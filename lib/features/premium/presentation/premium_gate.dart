@@ -1,5 +1,6 @@
 // lib/features/premium/presentation/premium_gate.dart
 
+import '../../../core/widgets/sheet_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -43,11 +44,8 @@ class _PremiumRequiredSheet extends ConsumerWidget {
       (Icons.file_download_outlined, l.premiumFeatureExport),
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorTheme.cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+    return SheetSurface(
+      color: colorTheme.cardColor,
       child: SafeArea(
         top: false,
         child: Column(
@@ -61,11 +59,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(24),
                 ),
-                gradient: LinearGradient(
-                  colors: [colorTheme.primary, colorTheme.primaryDark],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient: colorTheme.heroGradient,
               ),
               child: Column(
                 children: [
@@ -73,7 +67,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: colorTheme.onPrimary.withValues(alpha: 0.5),
+                      color: colorTheme.onHero.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -81,12 +75,12 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: colorTheme.onPrimary.withValues(alpha: 0.2),
+                      color: colorTheme.onHero.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.workspace_premium,
-                      color: colorTheme.onPrimary,
+                      color: colorTheme.onHero,
                       size: 36,
                     ),
                   ),
@@ -94,7 +88,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                   Text(
                     l.premiumTitle,
                     style: TextStyle(
-                      color: colorTheme.onPrimary,
+                      color: colorTheme.onHero,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -104,7 +98,7 @@ class _PremiumRequiredSheet extends ConsumerWidget {
                     message,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: colorTheme.onPrimary.withValues(alpha: 0.9),
+                      color: colorTheme.onHero.withValues(alpha: 0.9),
                       fontSize: 14,
                       height: 1.35,
                     ),

@@ -1,3 +1,4 @@
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/wallet/presentation/wallet_selection_sheet.dart
@@ -34,15 +35,9 @@ class WalletSelectionSheet extends ConsumerWidget {
     final accounts = ref.watch(accountsProvider);
     final selectedWalletId = ref.watch(selectedWalletIdProvider);
 
-    return Container(
+    return SheetSurface(
+      color: isDark ? colorTheme.backgroundDark : Colors.white,
       height: MediaQuery.sizeOf(context).height * 0.6,
-      decoration: BoxDecoration(
-        color: isDark ? colorTheme.backgroundDark : Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-      ),
       child: Column(
         children: [
           // Handle

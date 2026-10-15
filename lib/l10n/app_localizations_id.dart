@@ -1496,4 +1496,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Mulai uji coba gratis';
+
+  @override
+  String get retry => 'Coba lagi';
+
+  @override
+  String get loadErrorMessage =>
+      'Data Anda tidak dapat dimuat. Periksa koneksi Anda lalu coba lagi.';
 }

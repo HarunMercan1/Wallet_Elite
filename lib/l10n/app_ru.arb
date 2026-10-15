@@ -517,5 +517,7 @@
   "savePercent": "Скидка {percent}%",
   "pricePerMonth": "{price} в месяц",
   "freeTrialDays": "{days} дней бесплатно",
-  "startFreeTrial": "Начать бесплатный период"
+  "startFreeTrial": "Начать бесплатный период",
+  "retry": "Повторить",
+  "loadErrorMessage": "Не удалось загрузить данные. Проверьте подключение и попробуйте снова."
 }

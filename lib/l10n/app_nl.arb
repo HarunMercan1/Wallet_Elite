@@ -531,5 +531,7 @@
   "savePercent": "{percent}% korting",
   "pricePerMonth": "{price} per maand",
   "freeTrialDays": "{days} dagen gratis",
-  "startFreeTrial": "Start gratis proefperiode"
+  "startFreeTrial": "Start gratis proefperiode",
+  "retry": "Opnieuw proberen",
+  "loadErrorMessage": "Je gegevens konden niet worden geladen. Controleer je verbinding en probeer het opnieuw."
 }

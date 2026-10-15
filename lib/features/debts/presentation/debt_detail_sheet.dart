@@ -1,3 +1,5 @@
+import '../../../core/widgets/load_error_view.dart';
+import '../../../core/widgets/sheet_surface.dart';
 import '../../../features/settings/data/settings_provider.dart';
 import '../../../core/utils/currency_utils.dart';
 // lib/features/debts/presentation/debt_detail_sheet.dart
@@ -56,11 +58,8 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
         ? (debt.amount - debt.remainingAmount) / debt.amount
         : 0.0;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorTheme.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+    return SheetSurface(
+      color: colorTheme.background,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -464,7 +463,12 @@ class _DebtDetailSheetState extends ConsumerState<DebtDetailSheet> {
                         },
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
-                        error: (error, stack) => Text('${l.error}: $error'),
+                        error: (error, stack) => LoadErrorView(
+                          error: error,
+                          onRetry: () => ref.invalidate(
+                            debtPaymentsProvider(widget.debt.id),
+                          ),
+                        ),
                       );
                     },
                   ),

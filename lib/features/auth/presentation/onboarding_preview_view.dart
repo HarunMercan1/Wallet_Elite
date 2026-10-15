@@ -689,14 +689,14 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [theme.primary, theme.primaryDark],
+                        colors: [theme.heroStart, theme.heroEnd],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: r.borderRadiusM,
                       boxShadow: [
                         BoxShadow(
-                          color: theme.primary.withValues(alpha: 0.4),
+                          color: theme.heroShadow,
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -711,7 +711,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                               Icon(
                                 Icons.palette,
                                 size: r.iconXL,
-                                color: theme.onPrimary,
+                                color: theme.onHero,
                               ),
                               SizedBox(height: r.hp(1)),
                               Padding(
@@ -726,7 +726,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                                   style: TextStyle(
                                     fontSize: r.fontM,
                                     fontWeight: FontWeight.bold,
-                                    color: theme.onPrimary,
+                                    color: theme.onHero,
                                   ),
                                 ),
                               ),
@@ -749,7 +749,7 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                               child: Text(
                                 'PRO',
                                 style: TextStyle(
-                                  color: theme.onPrimary,
+                                  color: theme.onHero,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),

@@ -1502,4 +1502,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get startFreeTrial => 'Ücretsiz denemeyi başlat';
+
+  @override
+  String get retry => 'Tekrar dene';
+
+  @override
+  String get loadErrorMessage =>
+      'Veriler yüklenemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.';
 }
