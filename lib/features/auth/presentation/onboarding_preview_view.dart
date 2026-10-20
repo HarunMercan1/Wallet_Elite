@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_theme_provider.dart';
 import '../../../core/utils/responsive_helper.dart';
+import '../../../core/widgets/app_logo.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Onboarding Preview - Ayarlardan erişilebilen demo modu
@@ -186,28 +187,18 @@ class _OnboardingPreviewViewState extends ConsumerState<OnboardingPreviewView>
                 delay: 0,
                 direction: SlideDirection.up,
                 child: _PulseWidget(
-                  child: Container(
-                    padding: EdgeInsets.all(r.paddingXL),
+                  child: DecoratedBox(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [colorTheme.primary, colorTheme.primaryDark],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(r.hp(16) * 0.23),
                       boxShadow: [
                         BoxShadow(
-                          color: colorTheme.primary.withValues(alpha: 0.4),
+                          color: AppLogo.glowColor.withValues(alpha: 0.35),
                           blurRadius: 30,
-                          spreadRadius: 5,
+                          spreadRadius: 4,
                         ),
                       ],
                     ),
-                    child: Icon(
-                      Icons.account_balance_wallet_rounded,
-                      size: r.hp(10),
-                      color: colorTheme.onPrimary,
-                    ),
+                    child: AppLogo(size: r.hp(16)),
                   ),
                 ),
               ),

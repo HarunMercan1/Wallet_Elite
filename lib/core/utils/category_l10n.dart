@@ -72,6 +72,8 @@ String? localizedCategoryName(CategoryModel? category, AppLocalizations l) {
   if (name.contains('insuranc') || name.contains('sigorta')) {
     return l.cat_insurance;
   }
+  // "transport" içinde "spor" geçtiği için ulaşım, spordan önce bakılır.
+  if (name.contains('transport')) return l.cat_transport;
   if (name.contains('gym') || name.contains('spor')) return l.cat_gym;
   if (name.contains('health')) return l.cat_health;
   if (name.contains('gift')) return l.cat_gift;
@@ -82,7 +84,6 @@ String? localizedCategoryName(CategoryModel? category, AppLocalizations l) {
     return l.cat_clothing;
   }
   if (name.contains('shop')) return l.cat_shopping;
-  if (name.contains('transport')) return l.cat_transport;
   if (name.contains('travel') || name.contains('seyahat')) {
     return l.cat_travel;
   }

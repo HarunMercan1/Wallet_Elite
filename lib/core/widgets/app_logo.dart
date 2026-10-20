@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 
-/// Uygulama logosu (taçlı cüzdan), simge gibi yuvarlatılmış köşelerle.
+/// Uygulama logosu (altın para + taç), simge gibi yuvarlatılmış köşelerle.
 class AppLogo extends StatelessWidget {
+  /// Logonun altın tonu; logonun etrafındaki parıltı için.
+  static const glowColor = Color(0xFFE39A1C);
+
   final double size;
 
   const AppLogo({super.key, required this.size});

@@ -3,6 +3,7 @@ import '../../../core/utils/currency_utils.dart';
 // lib/features/budgets/presentation/budgets_view.dart
 
 import '../../../core/utils/category_l10n.dart';
+import '../../../core/utils/icon_helper.dart';
 import '../../wallet/data/wallet_provider.dart';
 import '../../../core/utils/number_utils.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +200,7 @@ class BudgetsView extends ConsumerWidget {
                   ),
                   child: Icon(
                     budget.categoryId != null
-                        ? Icons.category
+                        ? categoryIcon(category?.icon ?? budget.categoryIcon)
                         : Icons.account_balance_wallet,
                     color: progressColor,
                   ),
