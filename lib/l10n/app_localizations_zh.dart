@@ -825,7 +825,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get allWallets => '所有钱包';
 
   @override
-  String get budgets => 'Budgets';
+  String get budgets => '预算';
 
   @override
   String get history => '历史';

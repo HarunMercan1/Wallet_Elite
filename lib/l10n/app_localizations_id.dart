@@ -836,7 +836,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get allWallets => 'Semua Dompet';
 
   @override
-  String get budgets => 'Budgets';
+  String get budgets => 'Anggaran';
 
   @override
   String get history => 'Riwayat';

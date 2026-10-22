@@ -1,17 +1,17 @@
 """Wallet Elite marka görsellerini üretir (altın para + taç logosu).
 
 Kaynak geometri assets/icon/logo.svg ile aynıdır (512 birimlik kanvas).
-Çıktılar: launcher ikonları, Play simgesi ve iki dilde öne çıkan grafik.
+Çıktılar: launcher ikonları ve Play simgesi. Öne çıkan grafikler ve ekran
+görüntüleri test/tools/store_screens_test.dart ile çizilir.
 
     python tool/gen_brand_assets.py
 """
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
 ICON = ROOT / "assets" / "icon"
-STORE = ROOT / "store_assets"
 
 GOLD_A = (0xFF, 0xE0, 0x8A)
 GOLD_B = (0xE3, 0x9A, 0x1C)
@@ -61,30 +61,6 @@ def icon(size: int, scale: float = 1.0, bg=(0, 0, 0)) -> Image.Image:
     return base
 
 
-def feature_graphic(title: str, subtitle: str, out: Path) -> None:
-    w, h = 1024, 500
-    img = Image.new("RGB", (w, h), (0, 0, 0))
-    glow = Image.new("L", (w, h), 0)
-    ImageDraw.Draw(glow).ellipse([60, 30, 440, 410], fill=60)
-    glow = glow.filter(ImageFilter.GaussianBlur(90))
-    img.paste(Image.new("RGB", (w, h), GOLD_B), (0, 0), glow)
-    logo = icon(380, bg=None)
-    img.paste(logo, (60, 30), logo)
-    d = ImageDraw.Draw(img)
-    fonts = Path("C:/Windows/Fonts")
-    d.text((470, 250), title, font=ImageFont.truetype(str(fonts / "segoeuib.ttf"), 88),
-           fill=(255, 255, 255), anchor="ls")
-    d.rounded_rectangle([474, 278, 574, 286], radius=4, fill=GOLD_B)
-    size = 38
-    while True:
-        font = ImageFont.truetype(str(fonts / "segoeui.ttf"), size)
-        if d.textlength(subtitle, font=font) <= w - 472 - 48:
-            break
-        size -= 1
-    d.text((472, 340), subtitle, font=font, fill=(0xC9, 0xC2, 0xB0), anchor="ls")
-    img.save(out)
-
-
 def main() -> None:
     icon(1024).convert("RGB").save(ICON / "logo.png")
     # Adaptive ikon: 108dp kanvasın ortadaki 66dp'lik güvenli dairesine sığsın.
@@ -93,10 +69,6 @@ def main() -> None:
     mono.putalpha(glyph_mask(1024, 0.74))
     mono.save(ICON / "logo_monochrome.png")
     icon(512).convert("RGB").save(ICON / "play_store_512.png")
-    feature_graphic("Wallet Elite", "Track income, expenses and budgets",
-                    STORE / "feature_graphic_en.png")
-    feature_graphic("Wallet Elite", "Gelir, gider ve bütçe takibi",
-                    STORE / "feature_graphic_tr.png")
 
 
 if __name__ == "__main__":

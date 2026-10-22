@@ -832,7 +832,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get allWallets => 'Todas as Carteiras';
 
   @override
-  String get budgets => 'Budgets';
+  String get budgets => 'Orçamentos';
 
   @override
   String get history => 'Histórico';

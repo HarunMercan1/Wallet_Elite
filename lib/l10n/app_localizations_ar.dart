@@ -829,7 +829,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allWallets => 'جميع المحافظ';
 
   @override
-  String get budgets => 'Budgets';
+  String get budgets => 'الميزانيات';
 
   @override
   String get history => 'السجل';

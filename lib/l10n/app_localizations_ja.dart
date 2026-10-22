@@ -825,7 +825,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get allWallets => 'すべてのウォレット';
 
   @override
-  String get budgets => 'Budgets';
+  String get budgets => '予算';
 
   @override
   String get history => '履歴';

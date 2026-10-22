@@ -825,7 +825,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get allWallets => '모든 지갑';
 
   @override
-  String get budgets => 'Budgets';
+  String get budgets => '예산';
 
   @override
   String get history => '기록';

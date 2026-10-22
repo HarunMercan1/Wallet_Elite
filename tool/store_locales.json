@@ -1,0 +1,167 @@
+{
+  "_comment": "Mağaza girişi metinleri ve ekran görüntüsü demo verisi. en ve tr mevcut girişlerle aynıdır. app_locale: uygulamanın l10n dili; play: Play Console dil kodu.",
+  "locales": [
+    {
+      "play": ["en-US"], "app_locale": "en", "app_name": "Wallet Elite", "currency": "USD", "scale": 0.1,
+      "title": "Wallet Elite: Budget Tracker",
+      "short": "Track income and expenses, set budgets and manage debts in one simple app.",
+      "feature": "Track income, expenses and budgets",
+      "captions": [["All your money", "in one place"], ["Every transaction,", "neatly organised"], ["See where", "your money goes"], ["Budgets that", "keep you on track"], ["Never forget", "who owes what"]],
+      "person": "Alex Morgan",
+      "words": {"cash": "Cash", "bank": "Bank account", "food": "Groceries", "rent": "Rent", "fun": "Entertainment", "bills": "Bills", "transport": "Transport", "salary": "Salary", "freelance": "Freelance", "d_food1": "Whole Foods", "d_salary1": "October salary", "d_fun1": "Cinema", "d_bills1": "Electricity", "d_rent1": "October rent", "d_food2": "Farmers market", "d_transport1": "Fuel", "d_fun2": "Concert tickets", "d_bills2": "Internet", "d_freelance1": "Logo project", "d_salary2": "September salary", "d_rent2": "September rent", "d_food3": "Groceries", "b_food": "Groceries", "b_fun": "Fun money", "b_transport": "Transport", "p1": "Emma", "p2": "Daniel", "p3": "Sophie"}
+    },
+    {
+      "play": ["tr-TR"], "app_locale": "tr", "app_name": "Cüzdan Elite", "currency": "TRY", "scale": 1,
+      "title": "Cüzdan Elite: Gelir Gider",
+      "short": null,
+      "feature": "Gelir, gider ve bütçe takibi",
+      "captions": [["Tüm paran", "tek bir yerde"], ["Her işlem", "düzenli ve net"], ["Paranın nereye", "gittiğini gör"], ["Bütçeni koy,", "hedefte kal"], ["Kimin kime ne kadar", "borcu var, unutma"]],
+      "person": "Elif Yılmaz",
+      "words": {"cash": "Nakit", "bank": "Banka hesabı", "food": "Market", "rent": "Kira", "fun": "Eğlence", "bills": "Faturalar", "transport": "Ulaşım", "salary": "Maaş", "freelance": "Serbest iş", "d_food1": "Migros", "d_salary1": "Ekim maaşı", "d_fun1": "Sinema", "d_bills1": "Elektrik", "d_rent1": "Ekim kirası", "d_food2": "Pazar", "d_transport1": "Benzin", "d_fun2": "Konser bileti", "d_bills2": "İnternet", "d_freelance1": "Logo projesi", "d_salary2": "Eylül maaşı", "d_rent2": "Eylül kirası", "d_food3": "Market alışverişi", "b_food": "Market", "b_fun": "Eğlence", "b_transport": "Ulaşım", "p1": "Ayşe", "p2": "Mehmet", "p3": "Zeynep"}
+    },
+    {
+      "play": ["de-DE"], "app_locale": "de", "app_name": "Budget Elite", "currency": "EUR", "scale": 0.09,
+      "title": "Budget Elite: Haushaltsbuch",
+      "short": "Einnahmen und Ausgaben erfassen, Budgets planen und Schulden im Blick behalten.",
+      "feature": "Einnahmen, Ausgaben und Budgets im Blick",
+      "captions": [["Dein ganzes Geld", "an einem Ort"], ["Jede Buchung", "sauber sortiert"], ["Sieh, wohin", "dein Geld fließt"], ["Budgets, die", "dich auf Kurs halten"], ["Vergiss nie,", "wer wem was schuldet"]],
+      "person": "Lena Schmidt",
+      "words": {"cash": "Bargeld", "bank": "Girokonto", "food": "Lebensmittel", "rent": "Miete", "fun": "Freizeit", "bills": "Rechnungen", "transport": "Mobilität", "salary": "Gehalt", "freelance": "Nebenjob", "d_food1": "REWE", "d_salary1": "Gehalt Oktober", "d_fun1": "Kino", "d_bills1": "Strom", "d_rent1": "Miete Oktober", "d_food2": "Wochenmarkt", "d_transport1": "Tanken", "d_fun2": "Konzertkarten", "d_bills2": "Internet", "d_freelance1": "Logo-Projekt", "d_salary2": "Gehalt September", "d_rent2": "Miete September", "d_food3": "Einkauf", "b_food": "Lebensmittel", "b_fun": "Freizeit", "b_transport": "Mobilität", "p1": "Anna", "p2": "Jonas", "p3": "Mia"}
+    },
+    {
+      "play": ["es-ES", "es-419"], "app_locale": "es", "app_name": "Cartera Elite", "currency": "EUR", "scale": 0.09,
+      "title": "Cartera Elite: Presupuesto",
+      "short": "Controla ingresos y gastos, crea presupuestos y gestiona deudas en una app.",
+      "feature": "Ingresos, gastos y presupuestos bajo control",
+      "captions": [["Todo tu dinero", "en un solo lugar"], ["Cada movimiento,", "bien organizado"], ["Descubre adónde", "va tu dinero"], ["Presupuestos que", "te mantienen en rumbo"], ["Recuerda siempre", "quién debe qué"]],
+      "person": "Lucía García",
+      "words": {"cash": "Efectivo", "bank": "Cuenta bancaria", "food": "Supermercado", "rent": "Alquiler", "fun": "Ocio", "bills": "Facturas", "transport": "Movilidad", "salary": "Nómina", "freelance": "Trabajos extra", "d_food1": "Mercadona", "d_salary1": "Nómina de octubre", "d_fun1": "Cine", "d_bills1": "Luz", "d_rent1": "Alquiler de octubre", "d_food2": "Mercado", "d_transport1": "Gasolina", "d_fun2": "Entradas concierto", "d_bills2": "Internet", "d_freelance1": "Proyecto de logo", "d_salary2": "Nómina de septiembre", "d_rent2": "Alquiler de septiembre", "d_food3": "Compra semanal", "b_food": "Supermercado", "b_fun": "Ocio", "b_transport": "Movilidad", "p1": "Carmen", "p2": "Pablo", "p3": "Sofía"}
+    },
+    {
+      "play": ["fr-FR"], "app_locale": "fr", "app_name": "Budget Élite", "currency": "EUR", "scale": 0.09,
+      "title": "Budget Élite : Suivi Dépenses",
+      "short": "Suivez revenus et dépenses, fixez des budgets et gérez vos dettes simplement.",
+      "feature": "Revenus, dépenses et budgets sous contrôle",
+      "captions": [["Tout votre argent", "au même endroit"], ["Chaque opération,", "bien rangée"], ["Voyez où", "part votre argent"], ["Des budgets qui", "vous gardent le cap"], ["N'oubliez plus", "qui doit quoi"]],
+      "person": "Camille Martin",
+      "words": {"cash": "Espèces", "bank": "Compte courant", "food": "Courses", "rent": "Loyer", "fun": "Loisirs", "bills": "Factures", "transport": "Déplacements", "salary": "Salaire", "freelance": "Missions", "d_food1": "Carrefour", "d_salary1": "Salaire d'octobre", "d_fun1": "Cinéma", "d_bills1": "Électricité", "d_rent1": "Loyer d'octobre", "d_food2": "Marché", "d_transport1": "Carburant", "d_fun2": "Billets de concert", "d_bills2": "Box internet", "d_freelance1": "Projet de logo", "d_salary2": "Salaire de septembre", "d_rent2": "Loyer de septembre", "d_food3": "Courses de la semaine", "b_food": "Courses", "b_fun": "Loisirs", "b_transport": "Déplacements", "p1": "Léa", "p2": "Hugo", "p3": "Chloé"}
+    },
+    {
+      "play": ["it-IT"], "app_locale": "it", "app_name": "Budget Elite", "currency": "EUR", "scale": 0.09,
+      "title": "Budget Elite: Gestione Spese",
+      "short": "Registra entrate e uscite, imposta budget e gestisci i debiti in un'unica app.",
+      "feature": "Entrate, uscite e budget sotto controllo",
+      "captions": [["Tutti i tuoi soldi", "in un unico posto"], ["Ogni movimento,", "ben organizzato"], ["Scopri dove", "vanno i tuoi soldi"], ["Budget che", "ti tengono in rotta"], ["Ricorda sempre", "chi deve cosa"]],
+      "person": "Giulia Rossi",
+      "words": {"cash": "Contanti", "bank": "Conto corrente", "food": "Spesa", "rent": "Affitto", "fun": "Svago", "bills": "Bollette", "transport": "Spostamenti", "salary": "Stipendio", "freelance": "Lavori extra", "d_food1": "Esselunga", "d_salary1": "Stipendio di ottobre", "d_fun1": "Cinema", "d_bills1": "Luce", "d_rent1": "Affitto di ottobre", "d_food2": "Mercato", "d_transport1": "Benzina", "d_fun2": "Biglietti concerto", "d_bills2": "Internet", "d_freelance1": "Progetto logo", "d_salary2": "Stipendio di settembre", "d_rent2": "Affitto di settembre", "d_food3": "Spesa settimanale", "b_food": "Spesa", "b_fun": "Svago", "b_transport": "Spostamenti", "p1": "Marco", "p2": "Luca", "p3": "Sara"}
+    },
+    {
+      "play": ["nl-NL"], "app_locale": "nl", "app_name": "Budget Elite", "currency": "EUR", "scale": 0.09,
+      "title": "Budget Elite: Huishoudboekje",
+      "short": "Houd inkomsten en uitgaven bij, stel budgetten in en beheer schulden in één app.",
+      "feature": "Inkomsten, uitgaven en budgetten op orde",
+      "captions": [["Al je geld", "op één plek"], ["Elke transactie", "netjes geordend"], ["Zie waar", "je geld heen gaat"], ["Budgetten die", "je op koers houden"], ["Vergeet nooit", "wie wat schuldig is"]],
+      "person": "Sanne de Vries",
+      "words": {"cash": "Contant", "bank": "Betaalrekening", "food": "Boodschappen", "rent": "Huur", "fun": "Uitjes", "bills": "Vaste lasten", "transport": "Vervoer", "salary": "Salaris", "freelance": "Bijverdienste", "d_food1": "Albert Heijn", "d_salary1": "Salaris oktober", "d_fun1": "Bioscoop", "d_bills1": "Energie", "d_rent1": "Huur oktober", "d_food2": "Markt", "d_transport1": "Tanken", "d_fun2": "Concertkaartjes", "d_bills2": "Internet", "d_freelance1": "Logo-opdracht", "d_salary2": "Salaris september", "d_rent2": "Huur september", "d_food3": "Weekboodschappen", "b_food": "Boodschappen", "b_fun": "Uitjes", "b_transport": "Vervoer", "p1": "Emma", "p2": "Daan", "p3": "Julia"}
+    },
+    {
+      "play": ["pl-PL"], "app_locale": "pl", "app_name": "Portfel Elite", "currency": "EUR", "scale": 0.09,
+      "title": "Portfel Elite: Budżet Domowy",
+      "short": "Zapisuj przychody i wydatki, planuj budżety i pilnuj długów w jednej aplikacji.",
+      "feature": "Przychody, wydatki i budżety pod kontrolą",
+      "captions": [["Wszystkie pieniądze", "w jednym miejscu"], ["Każda transakcja", "uporządkowana"], ["Zobacz, na co", "idą Twoje pieniądze"], ["Budżety, które", "trzymają Cię w ryzach"], ["Pamiętaj zawsze,", "kto komu ile winien"]],
+      "person": "Anna Kowalska",
+      "words": {"cash": "Gotówka", "bank": "Konto bankowe", "food": "Zakupy spożywcze", "rent": "Czynsz", "fun": "Rozrywka", "bills": "Rachunki", "transport": "Dojazdy", "salary": "Wynagrodzenie", "freelance": "Zlecenia", "d_food1": "Biedronka", "d_salary1": "Pensja za październik", "d_fun1": "Kino", "d_bills1": "Prąd", "d_rent1": "Czynsz za październik", "d_food2": "Targ", "d_transport1": "Paliwo", "d_fun2": "Bilety na koncert", "d_bills2": "Internet", "d_freelance1": "Projekt logo", "d_salary2": "Pensja za wrzesień", "d_rent2": "Czynsz za wrzesień", "d_food3": "Zakupy tygodniowe", "b_food": "Zakupy", "b_fun": "Rozrywka", "b_transport": "Dojazdy", "p1": "Kasia", "p2": "Tomek", "p3": "Ola"}
+    },
+    {
+      "play": ["pt-BR", "pt-PT"], "app_locale": "pt", "app_name": "Carteira Elite", "currency": "USD", "scale": 0.1,
+      "title": "Carteira Elite: Orçamento",
+      "short": "Controle receitas e despesas, crie orçamentos e gerencie dívidas em um só app.",
+      "feature": "Receitas, despesas e orçamentos sob controle",
+      "captions": [["Todo o seu dinheiro", "em um só lugar"], ["Cada transação,", "bem organizada"], ["Veja para onde", "vai o seu dinheiro"], ["Orçamentos que", "mantêm você no rumo"], ["Nunca esqueça", "quem deve o quê"]],
+      "person": "Ana Souza",
+      "words": {"cash": "Dinheiro", "bank": "Conta bancária", "food": "Mercado", "rent": "Aluguel", "fun": "Lazer", "bills": "Contas", "transport": "Locomoção", "salary": "Salário", "freelance": "Freelas", "d_food1": "Supermercado", "d_salary1": "Salário de outubro", "d_fun1": "Cinema", "d_bills1": "Conta de luz", "d_rent1": "Aluguel de outubro", "d_food2": "Feira", "d_transport1": "Combustível", "d_fun2": "Ingressos de show", "d_bills2": "Internet", "d_freelance1": "Projeto de logo", "d_salary2": "Salário de setembro", "d_rent2": "Aluguel de setembro", "d_food3": "Compras do mês", "b_food": "Mercado", "b_fun": "Lazer", "b_transport": "Locomoção", "p1": "Beatriz", "p2": "Lucas", "p3": "Mariana"}
+    },
+    {
+      "play": ["ru-RU"], "app_locale": "ru", "app_name": "Кошелёк Elite", "currency": "RUB", "scale": 2.5,
+      "title": "Кошелёк Elite: Учёт расходов",
+      "short": "Учёт доходов и расходов, бюджеты и контроль долгов в одном простом приложении.",
+      "feature": "Доходы, расходы и бюджеты под контролем",
+      "captions": [["Все ваши деньги", "в одном месте"], ["Каждая операция", "на своём месте"], ["Узнайте, куда", "уходят деньги"], ["Бюджеты, которые", "держат вас в рамках"], ["Помните,", "кто кому должен"]],
+      "person": "Анна Иванова",
+      "words": {"cash": "Наличные", "bank": "Банковский счёт", "food": "Продукты", "rent": "Аренда", "fun": "Развлечения", "bills": "Счета", "transport": "Поездки", "salary": "Зарплата", "freelance": "Подработка", "d_food1": "Пятёрочка", "d_salary1": "Зарплата за октябрь", "d_fun1": "Кино", "d_bills1": "Электричество", "d_rent1": "Аренда за октябрь", "d_food2": "Рынок", "d_transport1": "Бензин", "d_fun2": "Билеты на концерт", "d_bills2": "Интернет", "d_freelance1": "Проект логотипа", "d_salary2": "Зарплата за сентябрь", "d_rent2": "Аренда за сентябрь", "d_food3": "Закупка на неделю", "b_food": "Продукты", "b_fun": "Развлечения", "b_transport": "Поездки", "p1": "Мария", "p2": "Дмитрий", "p3": "Ольга"}
+    },
+    {
+      "play": ["ar"], "app_locale": "ar", "app_name": "محفظة إيليت", "currency": "USD", "scale": 0.1,
+      "title": "محفظة إيليت: إدارة الميزانية",
+      "short": "تتبّع الدخل والمصروفات، وضع ميزانيات وأدِر الديون في تطبيق واحد بسيط.",
+      "feature": "تتبّع الدخل والمصروفات والميزانيات",
+      "captions": [["كل أموالك", "في مكان واحد"], ["كل معاملة", "منظّمة بوضوح"], ["اعرف أين", "تذهب أموالك"], ["ميزانيات", "تبقيك على المسار"], ["لا تنسَ أبدًا", "من يدين لمن"]],
+      "person": "سارة أحمد",
+      "words": {"cash": "نقدًا", "bank": "حساب بنكي", "food": "البقالة", "rent": "الإيجار", "fun": "الترفيه", "bills": "الفواتير", "transport": "المواصلات", "salary": "الراتب", "freelance": "عمل حر", "d_food1": "كارفور", "d_salary1": "راتب أكتوبر", "d_fun1": "السينما", "d_bills1": "الكهرباء", "d_rent1": "إيجار أكتوبر", "d_food2": "سوق الخضار", "d_transport1": "وقود", "d_fun2": "تذاكر حفلة", "d_bills2": "الإنترنت", "d_freelance1": "مشروع شعار", "d_salary2": "راتب سبتمبر", "d_rent2": "إيجار سبتمبر", "d_food3": "مشتريات الأسبوع", "b_food": "البقالة", "b_fun": "الترفيه", "b_transport": "المواصلات", "p1": "ليلى", "p2": "عمر", "p3": "نور"}
+    },
+    {
+      "play": ["hi-IN"], "app_locale": "hi", "app_name": "वॉलेट एलीट", "currency": "USD", "scale": 0.1,
+      "title": "वॉलेट एलीट: बजट ट्रैकर",
+      "short": "आय और खर्च ट्रैक करें, बजट बनाएं और कर्ज़ संभालें — एक ही आसान ऐप में।",
+      "feature": "आय, खर्च और बजट एक जगह",
+      "captions": [["आपका सारा पैसा", "एक ही जगह"], ["हर लेन-देन", "सलीके से"], ["देखें आपका पैसा", "कहाँ जाता है"], ["बजट जो आपको", "सही राह पर रखें"], ["कभी न भूलें", "किसका कितना बाकी है"]],
+      "person": "प्रिया शर्मा",
+      "words": {"cash": "नकद", "bank": "बैंक खाता", "food": "किराना", "rent": "किराया", "fun": "मनोरंजन", "bills": "बिल", "transport": "यात्रा", "salary": "वेतन", "freelance": "फ्रीलांस", "d_food1": "बिग बाज़ार", "d_salary1": "अक्टूबर वेतन", "d_fun1": "सिनेमा", "d_bills1": "बिजली", "d_rent1": "अक्टूबर किराया", "d_food2": "सब्ज़ी मंडी", "d_transport1": "पेट्रोल", "d_fun2": "कॉन्सर्ट टिकट", "d_bills2": "इंटरनेट", "d_freelance1": "लोगो प्रोजेक्ट", "d_salary2": "सितंबर वेतन", "d_rent2": "सितंबर किराया", "d_food3": "हफ़्ते की खरीदारी", "b_food": "किराना", "b_fun": "मनोरंजन", "b_transport": "यात्रा", "p1": "अनन्या", "p2": "राहुल", "p3": "नेहा"}
+    },
+    {
+      "play": ["id"], "app_locale": "id", "app_name": "Dompet Elite", "currency": "USD", "scale": 0.1,
+      "title": "Dompet Elite: Catatan Keuangan",
+      "short": "Catat pemasukan dan pengeluaran, atur anggaran, dan kelola utang dalam satu app.",
+      "feature": "Pemasukan, pengeluaran, dan anggaran terkendali",
+      "captions": [["Semua uangmu", "di satu tempat"], ["Setiap transaksi", "tertata rapi"], ["Lihat ke mana", "uangmu pergi"], ["Anggaran yang", "menjagamu tetap on track"], ["Jangan lupa", "siapa berutang apa"]],
+      "person": "Putri Lestari",
+      "words": {"cash": "Tunai", "bank": "Rekening bank", "food": "Belanja dapur", "rent": "Sewa", "fun": "Hiburan", "bills": "Tagihan", "transport": "Transportasi", "salary": "Gaji", "freelance": "Kerja lepas", "d_food1": "Indomaret", "d_salary1": "Gaji Oktober", "d_fun1": "Bioskop", "d_bills1": "Listrik", "d_rent1": "Sewa Oktober", "d_food2": "Pasar", "d_transport1": "Bensin", "d_fun2": "Tiket konser", "d_bills2": "Internet", "d_freelance1": "Proyek logo", "d_salary2": "Gaji September", "d_rent2": "Sewa September", "d_food3": "Belanja mingguan", "b_food": "Belanja dapur", "b_fun": "Hiburan", "b_transport": "Transportasi", "p1": "Dewi", "p2": "Budi", "p3": "Sinta"}
+    },
+    {
+      "play": ["ja-JP"], "app_locale": "ja", "app_name": "家計簿エリート", "currency": "JPY", "scale": 7,
+      "title": "家計簿エリート: 支出と予算の管理",
+      "short": "収入と支出を記録し、予算を立て、貸し借りも管理できるシンプルな家計簿アプリ。",
+      "feature": "収入・支出・予算をひと目で",
+      "captions": [["お金のすべてを", "ひとつの場所に"], ["すべての取引を", "すっきり整理"], ["お金の行き先が", "ひと目でわかる"], ["予算を決めて", "使いすぎを防ぐ"], ["貸し借りを", "もう忘れない"]],
+      "person": "佐藤 美咲",
+      "words": {"cash": "現金", "bank": "銀行口座", "food": "食費", "rent": "家賃", "fun": "娯楽", "bills": "光熱費", "transport": "交通費", "salary": "給料", "freelance": "副業", "d_food1": "イオン", "d_salary1": "10月分給料", "d_fun1": "映画", "d_bills1": "電気代", "d_rent1": "10月分家賃", "d_food2": "八百屋", "d_transport1": "ガソリン", "d_fun2": "コンサート", "d_bills2": "ネット回線", "d_freelance1": "ロゴ制作", "d_salary2": "9月分給料", "d_rent2": "9月分家賃", "d_food3": "まとめ買い", "b_food": "食費", "b_fun": "娯楽", "b_transport": "交通費", "p1": "陽子", "p2": "健太", "p3": "さくら"}
+    },
+    {
+      "play": ["ko-KR"], "app_locale": "ko", "app_name": "가계부 엘리트", "currency": "USD", "scale": 0.1,
+      "title": "가계부 엘리트: 예산 관리",
+      "short": "수입과 지출을 기록하고, 예산을 세우고, 빌린 돈까지 한 앱에서 관리하세요.",
+      "feature": "수입, 지출, 예산을 한눈에",
+      "captions": [["모든 돈을", "한 곳에서"], ["모든 거래를", "깔끔하게 정리"], ["돈이 어디로", "가는지 확인"], ["예산으로", "계획대로 지출"], ["누가 얼마 빌렸는지", "잊지 마세요"]],
+      "person": "김지민",
+      "words": {"cash": "현금", "bank": "은행 계좌", "food": "장보기", "rent": "월세", "fun": "여가", "bills": "공과금", "transport": "교통", "salary": "월급", "freelance": "부업", "d_food1": "이마트", "d_salary1": "10월 월급", "d_fun1": "영화", "d_bills1": "전기 요금", "d_rent1": "10월 월세", "d_food2": "전통시장", "d_transport1": "주유", "d_fun2": "콘서트 티켓", "d_bills2": "인터넷", "d_freelance1": "로고 작업", "d_salary2": "9월 월급", "d_rent2": "9월 월세", "d_food3": "주간 장보기", "b_food": "장보기", "b_fun": "여가", "b_transport": "교통", "p1": "서연", "p2": "민준", "p3": "하은"}
+    },
+    {
+      "play": ["th"], "app_locale": "th", "app_name": "วอลเล็ต Elite", "currency": "USD", "scale": 0.1,
+      "title": "วอลเล็ต Elite: บันทึกรายจ่าย",
+      "short": "บันทึกรายรับรายจ่าย ตั้งงบประมาณ และจัดการหนี้ได้ในแอปเดียว",
+      "feature": "รายรับ รายจ่าย และงบประมาณในที่เดียว",
+      "captions": [["เงินทั้งหมดของคุณ", "ในที่เดียว"], ["ทุกรายการ", "เป็นระเบียบ"], ["ดูว่าเงินของคุณ", "ไปอยู่ที่ไหน"], ["งบประมาณที่", "ช่วยให้คุณไม่หลุดแผน"], ["ไม่ลืมอีกต่อไป", "ว่าใครติดเงินใคร"]],
+      "person": "สมหญิง ใจดี",
+      "words": {"cash": "เงินสด", "bank": "บัญชีธนาคาร", "food": "ของใช้ในบ้าน", "rent": "ค่าเช่า", "fun": "บันเทิง", "bills": "ค่าบิล", "transport": "การเดินทาง", "salary": "เงินเดือน", "freelance": "งานฟรีแลนซ์", "d_food1": "บิ๊กซี", "d_salary1": "เงินเดือนตุลาคม", "d_fun1": "ดูหนัง", "d_bills1": "ค่าไฟ", "d_rent1": "ค่าเช่าตุลาคม", "d_food2": "ตลาดสด", "d_transport1": "เติมน้ำมัน", "d_fun2": "ตั๋วคอนเสิร์ต", "d_bills2": "อินเทอร์เน็ต", "d_freelance1": "งานออกแบบโลโก้", "d_salary2": "เงินเดือนกันยายน", "d_rent2": "ค่าเช่ากันยายน", "d_food3": "ซื้อของประจำสัปดาห์", "b_food": "ของใช้ในบ้าน", "b_fun": "บันเทิง", "b_transport": "การเดินทาง", "p1": "มาลี", "p2": "สมชาย", "p3": "นภา"}
+    },
+    {
+      "play": ["vi"], "app_locale": "vi", "app_name": "Ví Elite", "currency": "USD", "scale": 0.1,
+      "title": "Ví Elite: Quản Lý Chi Tiêu",
+      "short": "Ghi thu chi, lập ngân sách và quản lý khoản nợ trong một ứng dụng đơn giản.",
+      "feature": "Thu nhập, chi tiêu và ngân sách trong tầm tay",
+      "captions": [["Toàn bộ tiền của bạn", "ở một nơi"], ["Mọi giao dịch", "gọn gàng rõ ràng"], ["Biết tiền của bạn", "đi đâu"], ["Ngân sách giúp bạn", "luôn đúng kế hoạch"], ["Không bao giờ quên", "ai nợ ai"]],
+      "person": "Nguyễn Lan",
+      "words": {"cash": "Tiền mặt", "bank": "Tài khoản ngân hàng", "food": "Đi chợ", "rent": "Tiền nhà", "fun": "Giải trí", "bills": "Hóa đơn", "transport": "Đi lại", "salary": "Lương", "freelance": "Làm thêm", "d_food1": "Co.opmart", "d_salary1": "Lương tháng 10", "d_fun1": "Xem phim", "d_bills1": "Tiền điện", "d_rent1": "Tiền nhà tháng 10", "d_food2": "Chợ", "d_transport1": "Đổ xăng", "d_fun2": "Vé hòa nhạc", "d_bills2": "Internet", "d_freelance1": "Dự án logo", "d_salary2": "Lương tháng 9", "d_rent2": "Tiền nhà tháng 9", "d_food3": "Mua sắm tuần", "b_food": "Đi chợ", "b_fun": "Giải trí", "b_transport": "Đi lại", "p1": "Mai", "p2": "Minh", "p3": "Hương"}
+    },
+    {
+      "play": ["zh-CN"], "app_locale": "zh", "app_name": "钱包 Elite", "currency": "USD", "scale": 0.1,
+      "title": "钱包 Elite：记账与预算",
+      "short": "记录收入和支出，设定预算，管理借款，一个简单的记账应用全搞定。",
+      "feature": "收入、支出和预算一目了然",
+      "captions": [["你的所有资金", "尽在一处"], ["每一笔交易", "井井有条"], ["看清你的钱", "花在哪里"], ["预算帮你", "按计划花钱"], ["谁欠谁多少", "再也不会忘"]],
+      "person": "王晓雨",
+      "words": {"cash": "现金", "bank": "银行账户", "food": "买菜", "rent": "房租", "fun": "娱乐", "bills": "水电账单", "transport": "交通", "salary": "工资", "freelance": "兼职", "d_food1": "永辉超市", "d_salary1": "10月工资", "d_fun1": "电影", "d_bills1": "电费", "d_rent1": "10月房租", "d_food2": "菜市场", "d_transport1": "加油", "d_fun2": "演唱会门票", "d_bills2": "宽带", "d_freelance1": "标志设计", "d_salary2": "9月工资", "d_rent2": "9月房租", "d_food3": "每周采购", "b_food": "买菜", "b_fun": "娱乐", "b_transport": "交通", "p1": "李娜", "p2": "张伟", "p3": "刘洋"}
+    }
+  ]
+}
